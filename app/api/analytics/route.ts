@@ -31,12 +31,12 @@ const getCachedAnalytics = unstable_cache(
         totalCount += currentKeys.length;
         // Get all resumes in current batch
         const resumes = (await Promise.all(
-          currentKeys.map((key) => upstashRedis.get(key))
+          currentKeys.map((key) => upstashRedis.get(key)),
         )) as (Resume | null)[];
 
         // Count published resumes in current batch
         publishedCount += resumes.filter(
-          (resume): resume is Resume => resume?.status === 'live'
+          (resume): resume is Resume => resume?.status === 'live',
         ).length;
       }
     } while (cursor !== '0');
@@ -50,7 +50,7 @@ const getCachedAnalytics = unstable_cache(
   {
     tags: ['analytics'],
     revalidate: 60, // Cache for 1 minute
-  }
+  },
 );
 
 // GET endpoint to fetch resume analytics
@@ -62,7 +62,7 @@ export async function GET(): Promise<NextResponse<GetResponse>> {
     console.error('Error fetching resume analytics:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -31,7 +31,7 @@ const WorkExperienceSection = z.array(
     location: z
       .string()
       .describe(
-        "Location with format 'City, Country' or could be Hybrid or Remote"
+        "Location with format 'City, Country' or could be Hybrid or Remote",
       ),
     contract: z
       .string()
@@ -44,7 +44,7 @@ const WorkExperienceSection = z.array(
       .nullable()
       .describe("End date in format 'YYYY-MM-DD'"),
     description: z.string().describe('Job description'),
-  })
+  }),
 );
 
 const EducationSection = z.array(
@@ -53,7 +53,7 @@ const EducationSection = z.array(
     degree: z.string().describe('Degree or certification obtained'),
     start: z.string().describe('Start year'),
     end: z.string().describe('End year'),
-  })
+  }),
 );
 
 export const ResumeDataSchema = z.object({
