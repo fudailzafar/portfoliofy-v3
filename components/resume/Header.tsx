@@ -55,7 +55,7 @@ export function Header({
   const socialLinks = useMemo(() => {
     const formatSocialUrl = (
       url: string | undefined,
-      platform: 'github' | 'twitter' | 'linkedin'
+      platform: 'github' | 'twitter' | 'linkedin',
     ) => {
       if (!url) return undefined;
 
@@ -109,7 +109,7 @@ export function Header({
           <a
             className="inline-flex gap-x-1.5 align-baseline leading-none hover:underline text-[#9CA0A8]"
             href={`https://www.google.com/maps/search/${encodeURIComponent(
-              header.location || ''
+              header.location || '',
             )}`}
             target="_blank"
             rel="noopener noreferrer"

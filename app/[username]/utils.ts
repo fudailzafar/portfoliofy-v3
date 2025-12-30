@@ -20,7 +20,7 @@ export async function getUserData(username: string) {
     {
       tags: ['users'],
       revalidate: 60, // 1 minute in seconds
-    }
+    },
   );
   const clerkUser = await getCachedUser();
 

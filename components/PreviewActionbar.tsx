@@ -41,7 +41,7 @@ export default function PreviewActionbar({
               src="/link-icon.png"
               className={cn(
                 'w-4 h-4 text-design-black ',
-                status === 'live' && 'cursor-pointer'
+                status === 'live' && 'cursor-pointer',
               )}
               onClick={() => {
                 if (!initialUsername || status !== 'live') return;
