@@ -24,7 +24,7 @@ function SocialButton({ href, icon: Icon, label }: SocialButtonProps) {
         href={
           href.startsWith('mailto:') || href.startsWith('tel:')
             ? href
-            : `${href}${href.includes('?') ? '&' : '?'}ref=selfso`
+            : `${href}${href.includes('?') ? '&' : '?'}`
         }
         aria-label={label}
         target="_blank"

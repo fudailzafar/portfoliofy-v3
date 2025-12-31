@@ -4,7 +4,7 @@
 </a>
 
 <p align="center">
-  An open source personal site builder. Powered by Together.ai.
+  An open source personal site builder. Powered by Gemini and AWS.
 </p>
 
 ## Tech stack
@@ -21,14 +21,14 @@
 ## How it works
 
 1. Create an account on the site with Clerk
-2. Upload a PDF which gets uploaded to S3 and does a safety check with Llama Guard
-3. Send the PDF as context to Qwen 2.5 72B to extract out relevant information with structured outputs (JSON mode)
+2. Upload a PDF which gets uploaded to S3
+3. Send the PDF as context to Gemini 2.5 Flash to extract out relevant information with structured outputs (JSON mode)
 4. Get all the information & put it on a dynamic route for the user to be able to view & publish their site
 
 ## Cloning & running
 
 1. Fork or clone the repo
-2. Create an account at [Together AI](https://togetherai.link) for the LLM
+2. Create an account at [Gemini](https://gemini.google.com) for the LLM
 3. Create an account at [Upstash](https://upstash.com/) for the Redis DB
 4. Create an account at [AWS](https://aws.amazon.com/) for the S3 bucket
 5. Create a `.env` (use the `.example.env` for reference) and replace the API keys
