@@ -1,4 +1,4 @@
-import { ImageResponse } from '@vercel/og';
+import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 import { getUserData } from '../utils';
 
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const name = resume?.resumeData?.header?.name;
     const role = resume?.resumeData?.header?.shortAbout;
     const location = resume?.resumeData?.header?.location;
-    const website = `www.self.so/${username}`;
+    const website = `www.portfoliofy.me/${username}`;
 
     // Use profile image from Clerk user
     const profileImageUrl = clerkUser?.imageUrl;
@@ -49,8 +49,8 @@ export async function GET(request: NextRequest) {
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <img
-              src="https://self.so/logo.svg"
-              alt="Self.so Logo"
+              src="https://portfoliofy.me/logo.png"
+              alt="Portfoliofy Logo"
               style={{
                 width: '144px',
                 height: '46px',
