@@ -1,6 +1,6 @@
-<a href="https://www.self.so">
+<a href="https://www.portfoliofy.me">
   <img alt="Self" src="./public/og.png">
-  <h1 align="center">Self</h1>
+  <h1 align="center">Portfoliofy</h1>
 </a>
 
 <p align="center">

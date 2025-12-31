@@ -14,30 +14,30 @@ export async function generateMetadata({
 
   if (!user_id) {
     return {
-      title: 'User Not Found | Self.so',
-      description: 'This user profile could not be found on Self.so',
+      title: 'User Not Found | Portfoliofy',
+      description: 'This user profile could not be found on Portfoliofy',
     };
   }
 
   if (!resume?.resumeData || resume.status !== 'live') {
     return {
-      title: 'Resume Not Found | Self.so',
-      description: 'This resume could not be found on Self.so',
+      title: 'Resume Not Found | Portfoliofy',
+      description: 'This resume could not be found on Portfoliofy',
     };
   }
 
   return {
-    title: `${resume.resumeData.header.name}'s Resume | Self.so`,
+    title: `${resume.resumeData.header.name}'s Resume | Portfoliofy`,
     description: resume.resumeData.summary,
     openGraph: {
-      title: `${resume.resumeData.header.name}'s Resume | Self.so`,
+      title: `${resume.resumeData.header.name}'s Resume | Portfoliofy`,
       description: resume.resumeData.summary,
       images: [
         {
-          url: `https://self.so/${username}/og`,
+          url: `https://portfoliofy.me/${username}/og`,
           width: 1200,
           height: 630,
-          alt: 'Self.so Profile',
+          alt: 'Portfoliofy Profile',
         },
       ],
     },
@@ -69,7 +69,7 @@ export default async function ProfilePage({
     email:
       resume.resumeData.header.contacts.email &&
       `mailto:${resume.resumeData.header.contacts.email}`,
-    url: `https://self.so/${username}`,
+    url: `https://portfoliofy.me/${username}`,
     skills: resume.resumeData.header.skills,
   };
 
@@ -89,7 +89,7 @@ export default async function ProfilePage({
         >
           Made by{' '}
           <span className="text-design-black underline underline-offset-2">
-            Self.so
+            Portfoliofy
           </span>
         </Link>
       </div>

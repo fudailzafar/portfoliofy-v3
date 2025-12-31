@@ -165,7 +165,7 @@ export default function UsernameEditorView({
   initialUsername,
   isOpen,
   onClose,
-  prefix = 'self.so/',
+  prefix = 'portfoliofy.me/',
 }: {
   initialUsername: string;
   isOpen: boolean;
