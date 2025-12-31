@@ -27,10 +27,10 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${resume.resumeData.header.name}'s Resume | Portfoliofy`,
+    title: `${resume.resumeData.header.name} | Portfoliofy`,
     description: resume.resumeData.summary,
     openGraph: {
-      title: `${resume.resumeData.header.name}'s Resume | Portfoliofy`,
+      title: `${resume.resumeData.header.name} | Portfoliofy`,
       description: resume.resumeData.summary,
       images: [
         {
