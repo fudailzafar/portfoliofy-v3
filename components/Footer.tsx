@@ -6,18 +6,18 @@ export function Footer() {
           Powered by{' '}
           <a
             target="_blank"
-            href="https://togetherai.link"
+            href="https://gemini.google.com/"
             className="text-design-black underline underline-offset-2"
           >
-            Together.ai
+            Gemini
           </a>{' '}
           &{' '}
           <a
             target="_blank"
-            href="https://togetherai.link"
+            href="https://aws.amazon.com/"
             className="text-design-black underline underline-offset-2"
           >
-            Llama 3.3
+            AWS
           </a>
         </div>
 
@@ -25,7 +25,7 @@ export function Footer() {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://github.com/Nutlope/self.so"
+            href="https://github.com/fudailzafar/portfoliofy"
             className="size-6 flex items-center justify-center border-design-gray border rounded-md"
           >
             <img src="/footer/github.svg" className="size-4" />
@@ -34,7 +34,7 @@ export function Footer() {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://x.com/nutlope"
+            href="https://x.com/fudailzafar"
             className="size-6 flex items-center justify-center border-design-gray border rounded-md"
           >
             <img src="/footer/x.svg" className="size-4" />

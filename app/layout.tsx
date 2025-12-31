@@ -10,8 +10,8 @@ import PlausibleProvider from 'next-plausible';
 const mono = JetBrains_Mono({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://self.so'),
-  title: 'Self.so - Resume to Website',
+  metadataBase: new URL('https://portfoliofy.me'),
+  title: 'Portfoliofy - Resume to Website',
   description:
     'LinkedIn to Website in one click! Powered by Together AI and Llama 3.3',
   openGraph: {
@@ -26,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <PlausibleProvider domain="self.so">
+      <PlausibleProvider domain="portfoliofy.me">
         <ReactQueryClientProvider>
           <html lang="en">
             <head>
