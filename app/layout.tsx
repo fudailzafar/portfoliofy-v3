@@ -6,14 +6,15 @@ import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryClientProvider } from '@/components/ReactQueryClientProvider';
 import { Metadata } from 'next';
 import PlausibleProvider from 'next-plausible';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 
 const mono = JetBrains_Mono({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://portfoliofy.me'),
   title: 'Portfoliofy - Resume to Website',
-  description:
-    'LinkedIn to Website in one click! Powered by Gemini and AWS',
+  description: 'LinkedIn to Website in one click! Powered by Gemini and AWS',
   openGraph: {
     images: '/og.png',
   },
@@ -39,7 +40,11 @@ export default function RootLayout({
               {/* rest of your scripts go under */}
             </head>
             <body className={`${mono.className} min-h-screen flex flex-col`}>
-              <main className="flex-1 flex flex-col">{children}</main>
+              <main className="flex-1 flex flex-col">
+                {children}
+                <SpeedInsights />
+                <Analytics />
+              </main>
               <Toaster richColors position="bottom-center" />
             </body>
           </html>
