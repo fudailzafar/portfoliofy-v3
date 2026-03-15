@@ -11,10 +11,7 @@ export function WorkExperience({
   // Filter out invalid work experiences and pre-format dates
   const validWork = useMemo(() => {
     return work
-      .filter(
-        (item) =>
-          item.company && item.title && item.description,
-      )
+      .filter((item) => item.company && item.title && item.description)
       .map((item) => ({
         ...item,
         formattedDate: `${getShortMonth(item.start)} ${getYear(item.start)} - ${
@@ -51,11 +48,15 @@ export function WorkExperience({
                   <p className="text-base font-semibold text-left text-[#050914]">
                     {item.title}
                   </p>
-                  <div className="flex justify-center items-center relative overflow-hidden gap-2.5 px-[7px] py-0.5 rounded bg-[#eeeff0]">
-                    <p className="text-[12px] font-semibold text-center text-[#54575e]">
-                      {item.location}
-                    </p>
-                  </div>
+                  {item.location ? (
+                    <div className="flex justify-center items-center relative overflow-hidden gap-2.5 px-[7px] py-0.5 rounded bg-[#eeeff0]">
+                      <p className="text-[12px] font-semibold text-center text-[#54575e]">
+                        {item.location}
+                      </p>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </div>
                 <p className="text-sm text-right text-[#54575e]">
                   {item.formattedDate}
