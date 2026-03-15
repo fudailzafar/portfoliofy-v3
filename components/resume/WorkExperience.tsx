@@ -13,7 +13,7 @@ export function WorkExperience({
     return work
       .filter(
         (item) =>
-          item.company && item.location && item.title && item.description,
+          item.company && item.title && item.description,
       )
       .map((item) => ({
         ...item,
