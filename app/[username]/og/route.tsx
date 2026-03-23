@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
               src="https://portfoliofy.me/logo.png"
               alt="Portfoliofy Logo"
               style={{
-                width: '144px',
+                width: '203px',
                 height: '46px',
               }}
             />
