@@ -8,6 +8,7 @@ import { Metadata } from 'next';
 import PlausibleProvider from 'next-plausible';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
+import Script from 'next/script';
 
 const mono = JetBrains_Mono({ subsets: ['latin'] });
 
@@ -25,6 +26,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID || 'G-WW2D1GVX99';
+
   return (
     <ClerkProvider>
       <PlausibleProvider domain="portfoliofy.me">
@@ -38,6 +41,13 @@ export default function RootLayout({
               />
             )} */}
               {/* rest of your scripts go under */}
+              <Script
+                src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+                strategy="afterInteractive"
+              />
+              <Script id="google-analytics" strategy="afterInteractive">
+                {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${gaId}');`}
+              </Script>
             </head>
             <body className={`${mono.className} min-h-screen flex flex-col`}>
               <main className="flex-1 flex flex-col">
