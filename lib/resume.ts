@@ -81,12 +81,34 @@ const ContactSection = z.array(
   })
 );
 
+const SideProjectSection = z.array(
+  z.object({
+    id: z.string().optional().describe('Unique identifier for the side project'),
+    title: z.string().describe('Side project title'),
+    year: z.string().describe('Year of the side project'),
+    link: z.string().optional().describe('Link to side project'),
+    description: z.string().optional().describe('Rich text description of the side project'),
+  })
+);
+
+const SpeakingSection = z.array(
+  z.object({
+    id: z.string().optional().describe('Unique identifier for the speaking engagement'),
+    title: z.string().describe('Speaking engagement title'),
+    year: z.string().describe('Year of the engagement'),
+    link: z.string().optional().describe('Link to recording or slides'),
+    location: z.string().optional().describe('Location or venue name'),
+  })
+);
+
 export const ResumeDataSchema = z.object({
   header: HeaderSection,
   summary: SummarySection,
   workExperience: WorkExperienceSection,
   education: EducationSection,
   projects: ProjectSection.optional().default([]),
+  sideProjects: SideProjectSection.optional().default([]),
+  speaking: SpeakingSection.optional().default([]),
   contacts: ContactSection.optional().default([]),
 });
 
