@@ -5,6 +5,8 @@ import { Header } from './Header';
 import { Skills } from './Skills';
 import { Summary } from './Summary';
 import { WorkExperience } from './WorkExperience';
+import { SideProjects } from './SideProjects';
+import { Speaking } from './Speaking';
 import { Projects } from './Projects';
 import { Contact } from './Contact';
 
@@ -30,6 +32,10 @@ export const FullResume = ({
         <Summary summary={resume?.summary} />
 
         <WorkExperience work={resume?.workExperience} />
+
+        <SideProjects sideProjects={resume?.sideProjects} />
+
+        <Speaking speaking={resume?.speaking} />
 
         <Projects projects={resume?.projects} />
 

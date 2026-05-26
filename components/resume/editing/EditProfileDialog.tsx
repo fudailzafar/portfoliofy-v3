@@ -62,6 +62,18 @@ export function EditProfileDialog({
   const [currentProject, setCurrentProject] = useState<any>(null);
   const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
 
+  // Local state for side projects tab
+  const [sideProjects, setSideProjects] = useState(resume.sideProjects || []);
+  const [sideProjectsView, setSideProjectsView] = useState<'list' | 'form'>('list');
+  const [currentSideProject, setCurrentSideProject] = useState<any>(null);
+  const [sideProjectToDelete, setSideProjectToDelete] = useState<string | null>(null);
+
+  // Local state for speaking tab
+  const [speaking, setSpeaking] = useState(resume.speaking || []);
+  const [speakingView, setSpeakingView] = useState<'list' | 'form'>('list');
+  const [currentSpeaking, setCurrentSpeaking] = useState<any>(null);
+  const [speakingToDelete, setSpeakingToDelete] = useState<string | null>(null);
+
   // Local state for education tab
   const [education, setEducation] = useState(resume.education || []);
   const [eduView, setEduView] = useState<'list' | 'form'>('list');
@@ -134,6 +146,8 @@ export function EditProfileDialog({
         },
         summary,
         projects,
+        sideProjects,
+        speaking,
         education,
         workExperience: work,
         contacts,
@@ -177,6 +191,60 @@ export function EditProfileDialog({
     setProjectsView('list');
     setCurrentProject(null);
     setProjectToDelete(null);
+  };
+
+  const handleSaveSideProject = () => {
+    if (!currentSideProject.title || !currentSideProject.year) return;
+    
+    const isEdit = !!currentSideProject.id;
+    const newProject = isEdit ? currentSideProject : { ...currentSideProject, id: Date.now().toString() };
+    
+    const newSideProjects = isEdit 
+      ? sideProjects.map((p: any) => p.id === newProject.id ? newProject : p)
+      : [...sideProjects, newProject];
+      
+    setSideProjects(newSideProjects);
+    setHasUnsavedChanges(true);
+    toast.success('Side project saved');
+    setSideProjectsView('list');
+    setCurrentSideProject(null);
+  };
+
+  const handleDeleteSideProject = (id: string) => {
+    const newSideProjects = sideProjects.filter((p: any) => p.id !== id);
+    setSideProjects(newSideProjects);
+    setHasUnsavedChanges(true);
+    toast.success('Side project deleted');
+    setSideProjectsView('list');
+    setCurrentSideProject(null);
+    setSideProjectToDelete(null);
+  };
+
+  const handleSaveSpeaking = () => {
+    if (!currentSpeaking.title || !currentSpeaking.year) return;
+    
+    const isEdit = !!currentSpeaking.id;
+    const newSpeaking = isEdit ? currentSpeaking : { ...currentSpeaking, id: Date.now().toString() };
+    
+    const newSpeakingList = isEdit 
+      ? speaking.map((p: any) => p.id === newSpeaking.id ? newSpeaking : p)
+      : [...speaking, newSpeaking];
+      
+    setSpeaking(newSpeakingList);
+    setHasUnsavedChanges(true);
+    toast.success('Speaking engagement saved');
+    setSpeakingView('list');
+    setCurrentSpeaking(null);
+  };
+
+  const handleDeleteSpeaking = (id: string) => {
+    const newSpeakingList = speaking.filter((p: any) => p.id !== id);
+    setSpeaking(newSpeakingList);
+    setHasUnsavedChanges(true);
+    toast.success('Speaking engagement deleted');
+    setSpeakingView('list');
+    setCurrentSpeaking(null);
+    setSpeakingToDelete(null);
   };
 
   const handleSaveWork = () => {
@@ -264,14 +332,14 @@ export function EditProfileDialog({
     { label: 'Profile', isLabel: true },
     { id: 'general', label: 'General', disabled: false },
     { id: 'work', label: 'Work Experience', disabled: false },
-    { id: 'side_projects', label: 'Side Projects', disabled: true },
+    { id: 'side_projects', label: 'Side Projects', disabled: false },
+    { id: 'speaking', label: 'Speaking', disabled: false },
     { id: 'projects', label: 'Projects', disabled: false },
     { id: 'features', label: 'Features', disabled: true },
     { id: 'education', label: 'Education', disabled: false },
     { id: 'contact', label: 'Contact', disabled: false },
     { id: 'awards', label: 'Awards', disabled: true },
     { id: 'exhibitions', label: 'Exhibitions', disabled: true },
-    { id: 'speaking', label: 'Speaking', disabled: true },
     { id: 'writing', label: 'Writing', disabled: true },
     { label: 'Account', isLabel: true },
     { id: 'settings', label: 'Settings', disabled: false },
@@ -286,6 +354,8 @@ export function EditProfileDialog({
 
     const isFormView = 
       (activeTab === 'projects' && projectsView === 'form') ||
+      (activeTab === 'side_projects' && sideProjectsView === 'form') ||
+      (activeTab === 'speaking' && speakingView === 'form') ||
       (activeTab === 'work' && workView === 'form') ||
       (activeTab === 'education' && eduView === 'form') ||
       (activeTab === 'contact' && contactView === 'form');
@@ -625,6 +695,273 @@ export function EditProfileDialog({
                         content={currentProject.description || ''} 
                         onChange={(val) => setCurrentProject({ ...currentProject, description: val })} 
                       />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'side_projects' && (
+              <div className="max-w-3xl mx-auto h-full flex flex-col">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+                  <h2 className="text-2xl font-bold">Side Projects</h2>
+                  {sideProjectsView === 'list' && (
+                    <Button 
+                      variant="secondary" 
+                      onClick={() => {
+                        setCurrentSideProject({ title: '', year: currentYear.toString(), link: '', description: '' });
+                        setSideProjectsView('form');
+                      }}
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none h-8 text-xs px-4 rounded-md"
+                    >
+                      Add side project
+                    </Button>
+                  )}
+                </div>
+
+                {sideProjectsView === 'list' && sideProjects.length === 0 && (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 opacity-80 mt-12">
+                    <div className="p-8 bg-gray-50 rounded-full">
+                      <FolderCode className="w-16 h-16 text-gray-400" strokeWidth={1} />
+                    </div>
+                    <Button 
+                      variant="secondary" 
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none rounded-md px-6 py-5 h-auto text-sm"
+                      onClick={() => {
+                        setCurrentSideProject({ title: '', year: currentYear.toString(), link: '', description: '' });
+                        setSideProjectsView('form');
+                      }}
+                    >
+                      Add a side project you're proud of
+                    </Button>
+                  </div>
+                )}
+
+                {sideProjectsView === 'list' && sideProjects.length > 0 && (
+                  <div className="space-y-8">
+                    {sideProjects.map((project: any) => (
+                      <div 
+                        key={project.id}
+                        className="flex flex-col sm:flex-row gap-4 sm:gap-12"
+                      >
+                        <div className="sm:w-16 shrink-0 text-gray-400 text-sm pt-0.5">
+                          {project.year}
+                        </div>
+                        
+                        <div className="flex-1 flex flex-col justify-start items-start">
+                          <p className="text-base font-semibold text-gray-900">
+                            {project.title}
+                          </p>
+                          
+                          {project.description && project.description !== '<p></p>' && (
+                            <div 
+                              className="mt-1 text-sm text-gray-500 line-clamp-2"
+                              dangerouslySetInnerHTML={{ __html: project.description }}
+                            />
+                          )}
+
+                          <div className="flex items-center gap-4 mt-3 text-xs font-medium text-gray-400">
+                            <button 
+                              onClick={() => {
+                                setCurrentSideProject(project);
+                                setSideProjectsView('form');
+                              }}
+                              className="hover:text-gray-900 transition-colors"
+                            >
+                              Edit
+                            </button>
+                            <button 
+                              onClick={() => setSideProjectToDelete(project.id)}
+                              className="hover:text-red-600 transition-colors"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {sideProjectsView === 'form' && currentSideProject && (
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label className="text-gray-600 text-xs">Title*</Label>
+                        <Input
+                          value={currentSideProject.title}
+                          onChange={(e) => setCurrentSideProject({ ...currentSideProject, title: e.target.value })}
+                          placeholder="My Great Project"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-gray-600 text-xs">Year*</Label>
+                        <Select 
+                          value={currentSideProject.year} 
+                          onValueChange={(val) => setCurrentSideProject({ ...currentSideProject, year: val })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Year" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {years.map((y) => (
+                              <SelectItem key={y} value={y}>{y}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label className="text-gray-600 text-xs">Link to side project</Label>
+                        <Input
+                          value={currentSideProject.link || ''}
+                          onChange={(e) => setCurrentSideProject({ ...currentSideProject, link: e.target.value })}
+                          placeholder="https://example.com"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 pt-2">
+                      <Label className="text-gray-600 text-xs">Description</Label>
+                      <RichTextEditor 
+                        content={currentSideProject.description || ''} 
+                        onChange={(val) => setCurrentSideProject({ ...currentSideProject, description: val })} 
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'speaking' && (
+              <div className="max-w-3xl mx-auto h-full flex flex-col">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+                  <h2 className="text-2xl font-bold">Speaking</h2>
+                  {speakingView === 'list' && (
+                    <Button 
+                      variant="secondary" 
+                      onClick={() => {
+                        setCurrentSpeaking({ title: '', year: currentYear.toString(), link: '', location: '' });
+                        setSpeakingView('form');
+                      }}
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none h-8 text-xs px-4 rounded-md"
+                    >
+                      Add engagement
+                    </Button>
+                  )}
+                </div>
+
+                {speakingView === 'list' && speaking.length === 0 && (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 opacity-80 mt-12">
+                    <div className="p-8 bg-gray-50 rounded-full">
+                      <FolderCode className="w-16 h-16 text-gray-400" strokeWidth={1} />
+                    </div>
+                    <Button 
+                      variant="secondary" 
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none rounded-md px-6 py-5 h-auto text-sm"
+                      onClick={() => {
+                        setCurrentSpeaking({ title: '', year: currentYear.toString(), link: '', location: '' });
+                        setSpeakingView('form');
+                      }}
+                    >
+                      Add a speaking engagement
+                    </Button>
+                  </div>
+                )}
+
+                {speakingView === 'list' && speaking.length > 0 && (
+                  <div className="space-y-8">
+                    {speaking.map((engagement: any) => (
+                      <div 
+                        key={engagement.id}
+                        className="flex flex-col sm:flex-row gap-4 sm:gap-12"
+                      >
+                        <div className="sm:w-16 shrink-0 text-gray-400 text-sm pt-0.5">
+                          {engagement.year}
+                        </div>
+                        
+                        <div className="flex-1 flex flex-col justify-start items-start">
+                          <p className="text-base font-semibold text-gray-900">
+                            {engagement.title}
+                          </p>
+                          
+                          {engagement.location && (
+                            <div className="mt-1 text-sm text-gray-500 line-clamp-2">
+                              {engagement.location}
+                            </div>
+                          )}
+
+                          <div className="flex items-center gap-4 mt-3 text-xs font-medium text-gray-400">
+                            <button 
+                              onClick={() => {
+                                setCurrentSpeaking(engagement);
+                                setSpeakingView('form');
+                              }}
+                              className="hover:text-gray-900 transition-colors"
+                            >
+                              Edit
+                            </button>
+                            <button 
+                              onClick={() => setSpeakingToDelete(engagement.id)}
+                              className="hover:text-red-600 transition-colors"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {speakingView === 'form' && currentSpeaking && (
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label className="text-gray-600 text-xs">Title*</Label>
+                        <Input
+                          value={currentSpeaking.title}
+                          onChange={(e) => setCurrentSpeaking({ ...currentSpeaking, title: e.target.value })}
+                          placeholder="React Conf 2024"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-gray-600 text-xs">Year*</Label>
+                        <Select 
+                          value={currentSpeaking.year} 
+                          onValueChange={(val) => setCurrentSpeaking({ ...currentSpeaking, year: val })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Year" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {years.map((y) => (
+                              <SelectItem key={y} value={y}>{y}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label className="text-gray-600 text-xs">Location</Label>
+                        <Input
+                          value={currentSpeaking.location || ''}
+                          onChange={(e) => setCurrentSpeaking({ ...currentSpeaking, location: e.target.value })}
+                          placeholder="Las Vegas, NV"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-gray-600 text-xs">Link</Label>
+                        <Input
+                          value={currentSpeaking.link || ''}
+                          onChange={(e) => setCurrentSpeaking({ ...currentSpeaking, link: e.target.value })}
+                          placeholder="https://example.com"
+                        />
+                      </div>
                     </div>
                   </div>
                 )}
@@ -1249,6 +1586,46 @@ export function EditProfileDialog({
             </div>
           )}
 
+          {activeTab === 'side_projects' && sideProjectsView === 'form' && (
+            <div className="absolute bottom-0 right-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent flex justify-between items-center pointer-events-none">
+              <div className="pointer-events-auto">
+                {currentSideProject?.id && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSideProjectToDelete(currentSideProject.id)}
+                    className="text-red-500 hover:text-red-600 hover:bg-red-50 rounded-full"
+                    disabled={isSaving}
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </Button>
+                )}
+              </div>
+              
+              <div className="flex items-center gap-3 pointer-events-auto">
+                <Button 
+                  onClick={() => {
+                    setSideProjectsView('list');
+                    setCurrentSideProject(null);
+                  }}
+                  variant="ghost"
+                  className="rounded-full text-gray-500 hover:text-gray-700"
+                  disabled={isSaving}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleSaveSideProject} 
+                  disabled={isSaving || !currentSideProject?.title || !currentSideProject?.year} 
+                  variant="default"
+                  className="bg-design-black hover:bg-design-black/90 text-white rounded-full px-6"
+                >
+                  {isSaving ? 'Saving...' : 'Save'}
+                </Button>
+              </div>
+            </div>
+          )}
+
           {activeTab === 'work' && workView === 'form' && (
             <div className="absolute bottom-0 right-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent flex justify-between items-center pointer-events-none">
               <div className="pointer-events-auto">
@@ -1280,6 +1657,46 @@ export function EditProfileDialog({
                 <Button 
                   onClick={handleSaveWork} 
                   disabled={isSaving || !currentWork?.company || !currentWork?.title || !currentWork?.start || !currentWork?.end} 
+                  variant="default"
+                  className="bg-design-black hover:bg-design-black/90 text-white rounded-full px-6"
+                >
+                  {isSaving ? 'Saving...' : 'Save'}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'speaking' && speakingView === 'form' && (
+            <div className="absolute bottom-0 right-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent flex justify-between items-center pointer-events-none">
+              <div className="pointer-events-auto">
+                {currentSpeaking?.id && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSpeakingToDelete(currentSpeaking.id)}
+                    className="text-red-500 hover:text-red-600 hover:bg-red-50 rounded-full"
+                    disabled={isSaving}
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </Button>
+                )}
+              </div>
+              
+              <div className="flex items-center gap-3 pointer-events-auto">
+                <Button 
+                  onClick={() => {
+                    setSpeakingView('list');
+                    setCurrentSpeaking(null);
+                  }}
+                  variant="ghost"
+                  className="rounded-full text-gray-500 hover:text-gray-700"
+                  disabled={isSaving}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleSaveSpeaking} 
+                  disabled={isSaving || !currentSpeaking?.title || !currentSpeaking?.year} 
                   variant="default"
                   className="bg-design-black hover:bg-design-black/90 text-white rounded-full px-6"
                 >
@@ -1443,6 +1860,8 @@ export function EditProfileDialog({
               setWebsite(resume.header.website || '');
               setSummary(resume.summary || '');
               setProjects(resume.projects || []);
+              setSideProjects(resume.sideProjects || []);
+              setSpeaking(resume.speaking || []);
               setEducation(resume.education || []);
               setWork(resume.workExperience || []);
               setContacts(resume.contacts || []);
@@ -1455,7 +1874,27 @@ export function EditProfileDialog({
       </AlertDialogContent>
     </AlertDialog>
 
-    <AlertDialog open={!!eduToDelete} onOpenChange={(open) => !open && setEduToDelete(null)}>
+      <AlertDialog open={!!speakingToDelete} onOpenChange={(open) => !open && setSpeakingToDelete(null)}>
+        <AlertDialogContent className="max-w-sm rounded-xl p-6">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Speaking Engagement</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this speaking engagement? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700"
+              onClick={() => speakingToDelete && handleDeleteSpeaking(speakingToDelete)}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!eduToDelete} onOpenChange={(open) => !open && setEduToDelete(null)}>
       <AlertDialogContent className="font-mono">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
