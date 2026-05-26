@@ -1,59 +1,9 @@
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Section } from '@/components/ui/section';
 import { ResumeDataSchemaType } from '@/lib/resume';
-import { getShortMonth, getYear } from './resumeUtils';
 import { useMemo } from 'react';
 
 /**
- * Individual education card component
- */
-function EducationItem({
-  education,
-}: {
-  education: ResumeDataSchemaType['education'][0];
-}) {
-  const { school, start, end, degree } = education;
-
-  // Skip rendering if required fields are missing
-  if (!school || !degree || !start) {
-    return null;
-  }
-
-  return (
-    <Card>
-      <CardHeader>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-base">
-          <h3
-            className="font-semibold leading-none"
-            id={`education-${school.toLowerCase().replace(/\s+/g, '-')}`}
-          >
-            {school}
-          </h3>
-          <div
-            className="text-sm tabular-nums text-gray-500"
-            aria-label={`Period: ${getYear(start)} to ${
-              end ? ` ${getYear(end)}` : 'Present'
-            }`}
-          >
-            {getYear(start)} - {end ? `${getYear(end)}` : 'Present'}
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent
-        className="mt-2 text-design-resume print:text-[12px]"
-        aria-labelledby={`education-${school
-          .toLowerCase()
-          .replace(/\s+/g, '-')}`}
-      >
-        {degree}
-      </CardContent>
-    </Card>
-  );
-}
-
-/**
  * Main education section component
- * Renders a list of education experiences
+ * Renders a list of education experiences in a two-column layout
  */
 export function Education({
   educations,
@@ -62,7 +12,7 @@ export function Education({
 }) {
   // Filter out invalid education entries
   const validEducations = useMemo(
-    () => educations.filter((edu) => edu.school && edu.degree && edu.start),
+    () => educations?.filter((edu) => edu.school && edu.degree && edu.end) || [],
     [educations],
   );
 
@@ -71,21 +21,43 @@ export function Education({
   }
 
   return (
-    <Section>
-      <h2 className="text-xl font-bold" id="education-section">
+    <section className="mb-12 print:mb-8">
+      <h2 
+        className="text-lg font-bold mb-8 print:mb-4 text-gray-900" 
+        id="education-section"
+      >
         Education
       </h2>
       <div
-        className="space-y-4"
+        className="flex flex-col gap-8"
         role="feed"
         aria-labelledby="education-section"
       >
-        {validEducations.map((item, idx) => (
-          <article key={idx} role="article">
-            <EducationItem education={item} />
-          </article>
+        {validEducations.map((edu, idx) => (
+          <div
+            key={edu.id || idx}
+            className="flex flex-col sm:flex-row gap-4 sm:gap-12 print:mb-6"
+          >
+            {/* Left column: Years */}
+            <div className="sm:w-32 shrink-0 text-gray-500 font-mono text-sm pt-0.5">
+              {edu.start ? `${edu.start} — ${edu.end}` : edu.end}
+            </div>
+
+            {/* Right column: Content */}
+            <div className="flex-1 flex flex-col justify-start items-start">
+              <p className="text-base font-semibold text-gray-900 font-mono">
+                {edu.degree} at {edu.school}
+              </p>
+              
+              {edu.location && (
+                <p className="mt-1 text-sm text-gray-500 font-mono">
+                  {edu.location}
+                </p>
+              )}
+            </div>
+          </div>
         ))}
       </div>
-    </Section>
+    </section>
   );
 }
