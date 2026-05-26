@@ -22,12 +22,13 @@ export async function claimUsernameAndInitProfile(username: string, displayName:
       name: displayName,
       shortAbout: '',
       location: '',
-      contacts: {},
       skills: [],
     },
     summary: '',
     workExperience: [],
     education: [],
+    projects: [],
+    contacts: [],
   };
 
   await storeResume(userId, {
