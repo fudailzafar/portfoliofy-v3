@@ -6,6 +6,7 @@ import { Skills } from './Skills';
 import { Summary } from './Summary';
 import { WorkExperience } from './WorkExperience';
 import { Projects } from './Projects';
+import { Contact } from './Contact';
 
 export const FullResume = ({
   resume,
@@ -33,6 +34,8 @@ export const FullResume = ({
         <Projects projects={resume?.projects} />
 
         <Education educations={resume.education} />
+
+        <Contact contacts={resume.contacts} />
 
         <Skills skills={resume.header.skills} />
       </div>

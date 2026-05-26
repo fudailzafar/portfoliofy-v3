@@ -12,8 +12,11 @@ export function Projects({
   }
 
   return (
-    <Section>
-      <h2 className="text-xl font-bold" id="projects-section">
+    <section className="mb-12 print:mb-8">
+      <h2 
+        className="text-lg font-bold mb-8 print:mb-4 text-gray-900" 
+        id="projects-section"
+      >
         Projects
       </h2>
       <div
@@ -27,7 +30,7 @@ export function Projects({
             className="flex flex-col sm:flex-row gap-4 sm:gap-12 print:mb-6"
           >
             {/* Left column: Year */}
-            <div className="sm:w-24 shrink-0 text-gray-500 font-mono text-sm pt-0.5">
+            <div className="sm:w-32 shrink-0 text-gray-500 font-mono text-sm pt-0.5">
               {project.year}
             </div>
 
@@ -73,6 +76,6 @@ export function Projects({
           </div>
         ))}
       </div>
-    </Section>
+    </section>
   );
 }

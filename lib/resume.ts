@@ -1,13 +1,6 @@
 import { z } from 'zod';
 
-const HeaderContactsSchema = z.object({
-  website: z.string().describe('Personal website or portfolio URL').optional(),
-  email: z.string().describe('Email address').optional(),
-  phone: z.string().describe('Phone number').optional(),
-  twitter: z.string().describe('Twitter/X username').optional(),
-  linkedin: z.string().describe('LinkedIn username').optional(),
-  github: z.string().describe('GitHub username').optional(),
-});
+
 
 const HeaderSection = z.object({
   name: z.string(),
@@ -20,7 +13,10 @@ const HeaderSection = z.object({
     .string()
     .describe("Preferred pronouns (e.g., 'He/Him')")
     .optional(),
-  contacts: HeaderContactsSchema,
+  website: z
+    .string()
+    .describe('Personal website link')
+    .optional(),
   skills: z
     .array(z.string())
     .describe('Skills used within the different jobs the user has had.'),
@@ -77,12 +73,21 @@ const ProjectSection = z.array(
   })
 );
 
+const ContactSection = z.array(
+  z.object({
+    id: z.string().optional().describe('Unique identifier for the contact'),
+    platform: z.string().describe('Platform name (e.g., X, LinkedIn, Email, Custom)'),
+    link: z.string().describe('URL to profile'),
+  })
+);
+
 export const ResumeDataSchema = z.object({
   header: HeaderSection,
   summary: SummarySection,
   workExperience: WorkExperienceSection,
   education: EducationSection,
   projects: ProjectSection.optional().default([]),
+  contacts: ContactSection.optional().default([]),
 });
 
 export type ResumeDataSchemaType = z.infer<typeof ResumeDataSchema>;

@@ -155,9 +155,7 @@ export default async function ProfilePage({
     image: profilePicture,
     jobTitle: resume.resumeData.header.shortAbout,
     description: resume.resumeData.summary,
-    email:
-      resume.resumeData.header.contacts.email &&
-      `mailto:${resume.resumeData.header.contacts.email}`,
+    email: resume.resumeData.contacts?.find((c: any) => c.platform.toLowerCase() === 'email')?.link,
     url: `https://portfoliofy.me/${username}`,
     skills: resume.resumeData.header.skills,
   };

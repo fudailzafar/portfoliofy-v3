@@ -46,52 +46,6 @@ export function Header({
   header: ResumeDataSchemaType['header'];
   picture?: string;
 }) {
-  const prefixUrl = (stringToFix?: string) => {
-    if (!stringToFix) return undefined;
-    const url = stringToFix.trim();
-    return url.startsWith('http') ? url : `https://${url}`;
-  };
-
-  const socialLinks = useMemo(() => {
-    const formatSocialUrl = (
-      url: string | undefined,
-      platform: 'github' | 'twitter' | 'linkedin',
-    ) => {
-      if (!url) return undefined;
-
-      const cleanUrl = url.trim();
-      if (cleanUrl.startsWith('http')) return cleanUrl;
-
-      // Handle twitter.com and x.com variations
-      if (
-        platform === 'twitter' &&
-        (cleanUrl.startsWith('twitter.com') || cleanUrl.startsWith('x.com'))
-      ) {
-        return `https://${cleanUrl}`;
-      }
-
-      const platformUrls = {
-        github: 'github.com',
-        twitter: 'x.com',
-        linkedin: 'linkedin.com/in',
-      } as const;
-
-      return `https://${platformUrls[platform]}/${cleanUrl}`;
-    };
-
-    return {
-      website: prefixUrl(header.contacts.website),
-      github: formatSocialUrl(header.contacts.github, 'github'),
-      twitter: formatSocialUrl(header.contacts.twitter, 'twitter'),
-      linkedin: formatSocialUrl(header.contacts.linkedin, 'linkedin'),
-    };
-  }, [
-    header.contacts.website,
-    header.contacts.github,
-    header.contacts.twitter,
-    header.contacts.linkedin,
-  ]);
-
   return (
     <header className="flex items-center gap-4 md:gap-6 mb-8">
       <Avatar className="size-20 md:size-28 shrink-0" aria-hidden="true">
@@ -124,39 +78,18 @@ export function Header({
             {header.pronouns ? `, (${header.pronouns})` : ''}
           </p>
         )}
-
-        <div
-          className="flex gap-x-2 pt-1 font-mono text-sm print:hidden"
-          role="list"
-          aria-label="Contact links"
-        >
-          {socialLinks.website && (
-            <a 
-              href={socialLinks.website} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              {socialLinks.website.replace(/^https?:\/\//, '')}
-            </a>
-          )}
-        </div>
-
-        <div
-          className="hidden gap-x-2 font-mono text-sm text-design-resume print:flex print:text-[12px]"
-          aria-label="Print contact information"
-        >
-          {socialLinks.website && (
-            <>
-              <a
-                className="underline hover:text-foreground/70"
-                href={socialLinks.website}
-              >
-                {new URL(socialLinks.website).hostname}
-              </a>
-            </>
-          )}
-        </div>
+        
+        {/* Website Link */}
+        {header.website && (
+          <a
+            href={header.website.startsWith('http') ? header.website : `https://${header.website}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-sm font-mono text-gray-500 hover:text-gray-900 transition-colors mt-1"
+          >
+            {header.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+          </a>
+        )}
       </div>
     </header>
   );

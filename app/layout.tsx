@@ -1,5 +1,5 @@
 import type React from 'react';
-import { JetBrains_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
@@ -9,8 +9,23 @@ import PlausibleProvider from 'next-plausible';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
+import { ThemeProvider } from '@/components/theme-provider';
 
-const mono = JetBrains_Mono({ subsets: ['latin'] });
+const graphik = localFont({
+  src: [
+    {
+      path: '../public/fonts/Graphik-Regular.woff',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/Graphik-Medium.woff',
+      weight: '500',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-graphik',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://portfoliofy.me'),
@@ -32,7 +47,7 @@ export default function RootLayout({
     <ClerkProvider>
       <PlausibleProvider domain="portfoliofy.me">
         <ReactQueryClientProvider>
-          <html lang="en">
+          <html lang="en" className={graphik.variable}>
             <head>
               {/* {process.env.NODE_ENV === "development" && (
               <script
@@ -49,13 +64,15 @@ export default function RootLayout({
                 {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${gaId}');`}
               </Script>
             </head>
-            <body className={`${mono.className} min-h-screen flex flex-col`}>
-              <main className="flex-1 flex flex-col">
-                {children}
-                <SpeedInsights />
-                <Analytics />
-              </main>
-              <Toaster richColors position="bottom-center" />
+            <body className="min-h-screen flex flex-col font-sans antialiased">
+              <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+                <main className="flex-1 flex flex-col">
+                  {children}
+                  <SpeedInsights />
+                  <Analytics />
+                </main>
+                <Toaster richColors position="bottom-center" />
+              </ThemeProvider>
             </body>
           </html>
         </ReactQueryClientProvider>

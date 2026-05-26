@@ -10,6 +10,21 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-graphik)', 'sans-serif'],
+        mono: ['var(--font-graphik)', 'sans-serif'],
+      },
+      fontWeight: {
+        thin: '400',
+        extralight: '400',
+        light: '400',
+        normal: '400',
+        medium: '500',
+        semibold: '400',
+        bold: '400',
+        extrabold: '400',
+        black: '400',
+      },
       colors: {
         design: {
           black: '#1f1f1f',
