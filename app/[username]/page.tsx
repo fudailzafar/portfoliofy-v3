@@ -5,6 +5,8 @@ import { Metadata } from 'next';
 import { getUserData } from './utils';
 import { SignInButton, SignUpButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
+import { auth } from '@clerk/nextjs/server';
+import { EditProfileDialog } from '@/components/resume/editing/EditProfileDialog';
 
 export async function generateMetadata({
   params,
@@ -54,6 +56,7 @@ export default async function ProfilePage({
   const { username } = await params;
 
   const { user_id, resume, clerkUser } = await getUserData(username);
+  const { userId } = await auth();
 
   if (!user_id) {
     return (
@@ -107,12 +110,12 @@ export default async function ProfilePage({
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-stretch sm:items-center px-4">
-            <Link href={'/upload'} className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto text-base md:text-lg px-6 md:px-8 py-5 md:py-6">
+            <Link href={'/claim'} className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto text-base md:text-lg px-6 md:px-8 py-5 md:py-6 bg-design-black text-white hover:bg-design-black/95">
                 Claim Handle Now
               </Button>
             </Link>
-            <Link href={'/upload'} className="w-full sm:w-auto">
+            <Link href={'/claim'} className="w-full sm:w-auto">
               <Button
                 size="lg"
                 variant="outline"
@@ -165,6 +168,14 @@ export default async function ProfilePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      {userId === user_id && resume?.resumeData && (
+        <EditProfileDialog 
+          resume={resume.resumeData} 
+          username={username}
+          picture={profilePicture} 
+        />
+      )}
 
       <FullResume resume={resume?.resumeData} profilePicture={profilePicture} />
 
