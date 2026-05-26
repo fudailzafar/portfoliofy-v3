@@ -9,8 +9,11 @@ import { ResumeData } from '@/lib/server/redisActions';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { useUserActions } from '@/hooks/useUserActions';
 import { toast } from 'sonner';
-import { Pencil, FolderCode, Plus, Trash2, GraduationCap, Briefcase, ArrowUpRight } from 'lucide-react';
+import { Pencil, FolderCode, Plus, Trash2, GraduationCap, Briefcase, ArrowUpRight, MessageCircle, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useClerk } from '@clerk/nextjs';
+import { useTheme } from 'next-themes';
+import { useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   AlertDialog,
@@ -41,6 +44,8 @@ export function EditProfileDialog({
 }) {
   const [open, setOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
   
   // Local state for the general tab
   const [uname, setUname] = useState(username);
@@ -48,7 +53,7 @@ export function EditProfileDialog({
   const [shortAbout, setShortAbout] = useState(resume.header.shortAbout || '');
   const [location, setLocation] = useState(resume.header.location || '');
   const [pronouns, setPronouns] = useState(resume.header.pronouns || '');
-  const [website, setWebsite] = useState(resume.header.contacts.website || '');
+  const [website, setWebsite] = useState(resume.header.website || '');
   const [summary, setSummary] = useState(resume.summary || '');
 
   // Local state for projects tab
@@ -69,11 +74,41 @@ export function EditProfileDialog({
   const [currentWork, setCurrentWork] = useState<any>(null);
   const [workToDelete, setWorkToDelete] = useState<string | null>(null);
 
+  // Local state for contact tab
+  const [contacts, setContacts] = useState(resume.contacts || []);
+  const [contactView, setContactView] = useState<'list' | 'form'>('list');
+  const [currentContact, setCurrentContact] = useState<any>(null);
+  const [contactToDelete, setContactToDelete] = useState<string | null>(null);
+
   const [activeTab, setActiveTab] = useState('general');
+  const [showDeleteAccountWarning, setShowDeleteAccountWarning] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   const { saveResumeDataMutation, updateUsernameMutation } = useUserActions();
+  const { signOut } = useClerk();
+  const { theme, setTheme } = useTheme();
+  const router = useRouter();
 
-  const handleSaveGeneral = async () => {
+  const handleDeleteAccount = async () => {
+    setIsDeletingAccount(true);
+    try {
+      const res = await fetch('/api/user', { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete account');
+      
+      toast.success('Account deleted successfully');
+      setOpen(false);
+      await signOut();
+      window.location.href = '/';
+    } catch (error) {
+      toast.error('Failed to delete account');
+      console.error(error);
+    } finally {
+      setIsDeletingAccount(false);
+      setShowDeleteAccountWarning(false);
+    }
+  };
+
+  const handleGlobalSave = async () => {
     setIsSaving(true);
     try {
       // 1. Update username if changed
@@ -95,20 +130,20 @@ export function EditProfileDialog({
           shortAbout,
           location,
           pronouns,
-          contacts: {
-            ...resume.header.contacts,
-            website,
-          },
+          website,
         },
         summary,
-        projects, // ensure projects are preserved
+        projects,
         education,
         workExperience: work,
+        contacts,
       };
 
       await saveResumeDataMutation.mutateAsync(newResumeData);
+      setHasUnsavedChanges(false);
       toast.success('Profile updated successfully');
       setOpen(false);
+      router.refresh();
     } catch (error) {
       toast.error('Failed to update profile');
       console.error(error);
@@ -117,154 +152,112 @@ export function EditProfileDialog({
     }
   };
 
-  const handleSaveProject = async () => {
+  const handleSaveProject = () => {
     if (!currentProject.title || !currentProject.year) return;
     
-    setIsSaving(true);
-    try {
-      const isEdit = !!currentProject.id;
-      const newProject = isEdit ? currentProject : { ...currentProject, id: Date.now().toString() };
+    const isEdit = !!currentProject.id;
+    const newProject = isEdit ? currentProject : { ...currentProject, id: Date.now().toString() };
+    
+    const newProjects = isEdit 
+      ? projects.map((p: any) => p.id === newProject.id ? newProject : p)
+      : [...projects, newProject];
       
-      const newProjects = isEdit 
-        ? projects.map((p: any) => p.id === newProject.id ? newProject : p)
-        : [...projects, newProject];
-        
-      const newResumeData = {
-        ...resume,
-        projects: newProjects
-      };
-      
-      await saveResumeDataMutation.mutateAsync(newResumeData);
-      setProjects(newProjects);
-      toast.success('Project saved');
-      setProjectsView('list');
-      setCurrentProject(null);
-    } catch (error) {
-       toast.error('Failed to save project');
-    } finally {
-       setIsSaving(false);
-    }
+    setProjects(newProjects);
+    setHasUnsavedChanges(true);
+    toast.success('Project saved');
+    setProjectsView('list');
+    setCurrentProject(null);
   };
 
-  const handleSaveWork = async () => {
+  const handleDeleteProject = (id: string) => {
+    const newProjects = projects.filter((p: any) => p.id !== id);
+    setProjects(newProjects);
+    setHasUnsavedChanges(true);
+    toast.success('Project deleted');
+    setProjectsView('list');
+    setCurrentProject(null);
+    setProjectToDelete(null);
+  };
+
+  const handleSaveWork = () => {
     if (!currentWork.company || !currentWork.title || !currentWork.start || !currentWork.end) return;
     
-    setIsSaving(true);
-    try {
-      const isEdit = !!currentWork.id;
-      const newWorkItem = isEdit ? currentWork : { ...currentWork, id: Date.now().toString() };
+    const isEdit = !!currentWork.id;
+    const newWorkItem = isEdit ? currentWork : { ...currentWork, id: Date.now().toString() };
+    
+    const newWork = isEdit 
+      ? work.map((w: any) => w.id === newWorkItem.id ? newWorkItem : w)
+      : [...work, newWorkItem];
       
-      const newWork = isEdit 
-        ? work.map((w: any) => w.id === newWorkItem.id ? newWorkItem : w)
-        : [...work, newWorkItem];
-        
-      const newResumeData = {
-        ...resume,
-        workExperience: newWork
-      };
-      
-      await saveResumeDataMutation.mutateAsync(newResumeData);
-      setWork(newWork);
-      toast.success('Work experience saved');
-      setWorkView('list');
-      setCurrentWork(null);
-    } catch (error) {
-       toast.error('Failed to save work experience');
-    } finally {
-       setIsSaving(false);
-    }
+    setWork(newWork);
+    setHasUnsavedChanges(true);
+    toast.success('Work experience saved');
+    setWorkView('list');
+    setCurrentWork(null);
   };
 
-  const handleDeleteWork = async (id: string) => {
-    setIsSaving(true);
-    try {
-      const newWork = work.filter((w: any) => w.id !== id);
-      const newResumeData = {
-        ...resume,
-        workExperience: newWork
-      };
-      await saveResumeDataMutation.mutateAsync(newResumeData);
-      setWork(newWork);
-      toast.success('Work experience deleted');
-      setWorkView('list');
-      setCurrentWork(null);
-    } catch (error) {
-      toast.error('Failed to delete work experience');
-    } finally {
-      setIsSaving(false);
-      setWorkToDelete(null);
-    }
+  const handleDeleteWork = (id: string) => {
+    const newWork = work.filter((w: any) => w.id !== id);
+    setWork(newWork);
+    setHasUnsavedChanges(true);
+    toast.success('Work experience deleted');
+    setWorkView('list');
+    setCurrentWork(null);
+    setWorkToDelete(null);
   };
 
-  const handleSaveEdu = async () => {
+  const handleSaveContact = () => {
+    if (!currentContact.platform || !currentContact.link) return;
+    
+    const isEdit = !!currentContact.id;
+    const newContactItem = isEdit ? currentContact : { ...currentContact, id: Date.now().toString() };
+    
+    const newContacts = isEdit 
+      ? contacts.map((c: any) => c.id === newContactItem.id ? newContactItem : c)
+      : [...contacts, newContactItem];
+      
+    setContacts(newContacts);
+    setHasUnsavedChanges(true);
+    toast.success('Contact saved');
+    setContactView('list');
+    setCurrentContact(null);
+  };
+
+  const handleDeleteContact = (id: string) => {
+    const newContacts = contacts.filter((c: any) => c.id !== id);
+    setContacts(newContacts);
+    setHasUnsavedChanges(true);
+    toast.success('Contact deleted');
+    setContactView('list');
+    setCurrentContact(null);
+    setContactToDelete(null);
+  };
+
+  const handleSaveEdu = () => {
     if (!currentEdu.school || !currentEdu.degree || !currentEdu.end) return;
     
-    setIsSaving(true);
-    try {
-      const isEdit = !!currentEdu.id;
-      const newEduItem = isEdit ? currentEdu : { ...currentEdu, id: Date.now().toString() };
+    const isEdit = !!currentEdu.id;
+    const newEduItem = isEdit ? currentEdu : { ...currentEdu, id: Date.now().toString() };
+    
+    const newEducation = isEdit 
+      ? education.map((e: any) => e.id === newEduItem.id ? newEduItem : e)
+      : [...education, newEduItem];
       
-      const newEducation = isEdit 
-        ? education.map((e: any) => e.id === newEduItem.id ? newEduItem : e)
-        : [...education, newEduItem];
-        
-      const newResumeData = {
-        ...resume,
-        education: newEducation
-      };
-      
-      await saveResumeDataMutation.mutateAsync(newResumeData);
-      setEducation(newEducation);
-      toast.success('Education saved');
-      setEduView('list');
-      setCurrentEdu(null);
-    } catch (error) {
-       toast.error('Failed to save education');
-    } finally {
-       setIsSaving(false);
-    }
+    setEducation(newEducation);
+    setHasUnsavedChanges(true);
+    toast.success('Education saved');
+    setEduView('list');
+    setCurrentEdu(null);
   };
 
-  const handleDeleteEdu = async (id: string) => {
-    setIsSaving(true);
-    try {
-      const newEducation = education.filter((e: any) => e.id !== id);
-      const newResumeData = {
-        ...resume,
-        education: newEducation
-      };
-      await saveResumeDataMutation.mutateAsync(newResumeData);
-      setEducation(newEducation);
-      toast.success('Education deleted');
-      setEduView('list');
-      setCurrentEdu(null);
-    } catch (error) {
-      toast.error('Failed to delete education');
-    } finally {
-      setIsSaving(false);
-      setEduToDelete(null);
-    }
-  };
-
-  const handleDeleteProject = async (id: string) => {
-    setIsSaving(true);
-    try {
-      const newProjects = projects.filter((p: any) => p.id !== id);
-      const newResumeData = {
-        ...resume,
-        projects: newProjects
-      };
-      await saveResumeDataMutation.mutateAsync(newResumeData);
-      setProjects(newProjects);
-      toast.success('Project deleted');
-      setProjectsView('list');
-      setCurrentProject(null);
-    } catch (error) {
-      toast.error('Failed to delete project');
-    } finally {
-      setIsSaving(false);
-      setProjectToDelete(null);
-    }
+  const handleDeleteEdu = (id: string) => {
+    const newEducation = education.filter((e: any) => e.id !== id);
+    setEducation(newEducation);
+    setHasUnsavedChanges(true);
+    toast.success('Education deleted');
+    setEduView('list');
+    setCurrentEdu(null);
+    setEduToDelete(null);
   };
 
   const SIDEBAR_TABS = [
@@ -275,13 +268,13 @@ export function EditProfileDialog({
     { id: 'projects', label: 'Projects', disabled: false },
     { id: 'features', label: 'Features', disabled: true },
     { id: 'education', label: 'Education', disabled: false },
-    { id: 'contact', label: 'Contact', disabled: true },
+    { id: 'contact', label: 'Contact', disabled: false },
     { id: 'awards', label: 'Awards', disabled: true },
     { id: 'exhibitions', label: 'Exhibitions', disabled: true },
     { id: 'speaking', label: 'Speaking', disabled: true },
     { id: 'writing', label: 'Writing', disabled: true },
     { label: 'Account', isLabel: true },
-    { id: 'settings', label: 'Settings', disabled: true },
+    { id: 'settings', label: 'Settings', disabled: false },
   ];
 
   const currentYear = new Date().getFullYear();
@@ -291,9 +284,24 @@ export function EditProfileDialog({
     'August', 'September', 'October', 'November', 'December'
   ];
 
+    const isFormView = 
+      (activeTab === 'projects' && projectsView === 'form') ||
+      (activeTab === 'work' && workView === 'form') ||
+      (activeTab === 'education' && eduView === 'form') ||
+      (activeTab === 'contact' && contactView === 'form');
+
   return (
     <>
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog 
+      open={open} 
+      onOpenChange={(val) => {
+        if (!val && hasUnsavedChanges) {
+          setShowUnsavedWarning(true);
+          return;
+        }
+        setOpen(val);
+      }}
+    >
       <DialogTrigger asChild>
         <Button 
           variant="default" 
@@ -374,7 +382,7 @@ export function EditProfileDialog({
                         id="uname"
                         value={uname}
                         onChange={(e) => setUname(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-                        className="pl-36"
+                        className="pl-28"
                       />
                     </div>
                   </div>
@@ -388,7 +396,10 @@ export function EditProfileDialog({
                       id="displayName"
                       maxLength={48}
                       value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
+                      onChange={(e) => {
+                        setDisplayName(e.target.value);
+                        setHasUnsavedChanges(true);
+                      }}
                     />
                   </div>
 
@@ -401,7 +412,10 @@ export function EditProfileDialog({
                       id="shortAbout"
                       maxLength={32}
                       value={shortAbout}
-                      onChange={(e) => setShortAbout(e.target.value)}
+                      onChange={(e) => {
+                        setShortAbout(e.target.value);
+                        setHasUnsavedChanges(true);
+                      }}
                     />
                   </div>
 
@@ -414,7 +428,10 @@ export function EditProfileDialog({
                       id="location"
                       maxLength={32}
                       value={location}
-                      onChange={(e) => setLocation(e.target.value)}
+                      onChange={(e) => {
+                        setLocation(e.target.value);
+                        setHasUnsavedChanges(true);
+                      }}
                     />
                   </div>
 
@@ -427,8 +444,10 @@ export function EditProfileDialog({
                       id="pronouns"
                       maxLength={12}
                       value={pronouns}
-                      onChange={(e) => setPronouns(e.target.value)}
-                      placeholder="e.g. He/Him"
+                      onChange={(e) => {
+                        setPronouns(e.target.value);
+                        setHasUnsavedChanges(true);
+                      }}
                     />
                   </div>
 
@@ -439,16 +458,27 @@ export function EditProfileDialog({
                     </div>
                     <Input
                       id="website"
+                      placeholder="https://example.com"
                       maxLength={96}
                       value={website}
-                      onChange={(e) => setWebsite(e.target.value)}
-                      placeholder="your-website.com"
+                      onChange={(e) => {
+                        setWebsite(e.target.value);
+                        setHasUnsavedChanges(true);
+                      }}
                     />
                   </div>
 
+
+
                   <div className="space-y-2 pt-4 border-t border-gray-100">
                     <Label className="text-gray-600 text-xs">About</Label>
-                    <RichTextEditor content={summary} onChange={setSummary} />
+                    <RichTextEditor 
+                      content={summary} 
+                      onChange={(val) => {
+                        setSummary(val);
+                        setHasUnsavedChanges(true);
+                      }} 
+                    />
                   </div>
                 </div>
               </div>
@@ -977,16 +1007,202 @@ export function EditProfileDialog({
                 )}
               </div>
             )}
+            {activeTab === 'contact' && (
+              <div className="max-w-3xl mx-auto h-full flex flex-col">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+                  <h2 className="text-2xl font-bold">Contact</h2>
+                  {contactView === 'list' && (
+                    <Button 
+                      variant="secondary" 
+                      onClick={() => {
+                        setCurrentContact({ platform: '', link: '' });
+                        setContactView('form');
+                      }}
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none h-8 text-xs px-4 rounded-md"
+                    >
+                      Add link
+                    </Button>
+                  )}
+                </div>
+
+                {contactView === 'list' && contacts.length === 0 && (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 opacity-80 mt-12">
+                    <div className="p-8 bg-gray-50 rounded-full">
+                      <MessageCircle className="w-16 h-16 text-gray-400" strokeWidth={1} />
+                    </div>
+                    <Button 
+                      variant="secondary" 
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none rounded-md px-6 py-5 h-auto text-sm"
+                      onClick={() => {
+                        setCurrentContact({ platform: '', link: '' });
+                        setContactView('form');
+                      }}
+                    >
+                      Let others know how to reach you
+                    </Button>
+                  </div>
+                )}
+
+                {contactView === 'list' && contacts.length > 0 && (
+                  <div className="space-y-8">
+                    {contacts.map((c: any) => (
+                      <div 
+                        key={c.id || c.platform}
+                        className="flex flex-col sm:flex-row gap-4 sm:gap-12"
+                      >
+                        <div className="sm:w-32 shrink-0 text-gray-400 font-mono text-sm pt-0.5">
+                          {c.platform}
+                        </div>
+                        
+                        <div className="flex-1 flex flex-col justify-start items-start">
+                          <a 
+                            href={
+                              c.link.startsWith('mailto:') 
+                                ? c.link 
+                                : c.platform.toLowerCase() === 'email' || (c.link.includes('@') && !c.link.includes('://'))
+                                  ? `mailto:${c.link}`
+                                  : c.link.startsWith('http') 
+                                    ? c.link 
+                                    : `https://${c.link}`
+                            } 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="hover:underline inline-block"
+                          >
+                            <span className="text-base font-semibold text-gray-900 font-mono">
+                              {c.link}
+                              <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-gray-900 relative -top-0.5" />
+                            </span>
+                          </a>
+
+                          <div className="flex items-center gap-4 mt-3 text-xs font-medium text-gray-400">
+                            <button 
+                              onClick={() => {
+                                setCurrentContact(c);
+                                setContactView('form');
+                              }}
+                              className="hover:text-gray-900 transition-colors"
+                            >
+                              Edit
+                            </button>
+                            <button 
+                              onClick={() => setContactToDelete(c.id)}
+                              className="hover:text-red-600 transition-colors"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {contactView === 'form' && currentContact && (
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label className="text-gray-600 text-xs">Platform*</Label>
+                        <Select 
+                          value={currentContact.platform || ''} 
+                          onValueChange={(val) => setCurrentContact({ ...currentContact, platform: val })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select platform" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {['Website', 'Email', 'LinkedIn', 'GitHub', 'X', 'Threads', 'Figma', 'Instagram', 'Bluesky', 'Mastodon', 'Other'].map((p) => (
+                              <SelectItem key={p} value={p}>{p}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-gray-600 text-xs">Link*</Label>
+                        <Input
+                          value={currentContact.link || ''}
+                          onChange={(e) => setCurrentContact({ ...currentContact, link: e.target.value })}
+                          placeholder="https://..."
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {activeTab === 'settings' && (
+              <div className="max-w-2xl mx-auto h-full flex flex-col pt-8">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+                  <h2 className="text-2xl font-bold text-gray-900">Settings</h2>
+                </div>
+
+                <div className="space-y-10">
+                  {/* Theme Section */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Appearance</h3>
+                    <div className="grid grid-cols-3 gap-4">
+                      {['light', 'dark', 'system'].map((t) => (
+                        <button
+                          key={t}
+                          onClick={() => setTheme(t)}
+                          className={cn(
+                            "flex flex-col items-center justify-center p-4 border rounded-xl transition-all",
+                            theme === t 
+                              ? "border-gray-900 bg-gray-50" 
+                              : "border-gray-200 hover:border-gray-300 bg-white"
+                          )}
+                        >
+                          <span className="capitalize text-sm font-medium text-gray-900">{t}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="w-full h-px bg-gray-100" />
+
+                  {/* Account Section */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Account</h3>
+                    <div className="flex flex-col gap-4">
+                      <Button
+                        variant="outline"
+                        onClick={async () => {
+                          await signOut();
+                          window.location.href = '/';
+                        }}
+                        className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-50 h-12 rounded-xl border-gray-200"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Log out
+                      </Button>
+
+                      <div className="p-4 border border-red-100 bg-red-50/50 rounded-xl mt-4">
+                        <h4 className="text-red-900 font-semibold text-sm mb-1">Danger Zone</h4>
+                        <p className="text-red-600/80 text-xs mb-4">
+                          Permanently delete your account and all associated data. This action cannot be undone.
+                        </p>
+                        <Button
+                          variant="destructive"
+                          onClick={() => setShowDeleteAccountWarning(true)}
+                          className="w-full bg-red-600 hover:bg-red-700 text-white rounded-lg h-10 shadow-sm"
+                        >
+                          Delete Account
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Bottom Fixed Action Bar */}
-          {activeTab === 'general' && (
+          {!isFormView && (
             <div className="absolute bottom-0 right-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent flex justify-end pointer-events-none">
               <Button 
-                onClick={handleSaveGeneral} 
+                onClick={handleGlobalSave} 
                 disabled={isSaving} 
-                variant="outline"
-                className="bg-white pointer-events-auto h-10 px-6 rounded-full shadow-sm hover:bg-gray-50 border-gray-200"
+                className="bg-[#2A2A2A] hover:bg-[#1A1A1A] text-white pointer-events-auto h-9 px-6 rounded-md shadow-sm border-none font-medium"
               >
                 {isSaving ? 'Saving...' : 'Done'}
               </Button>
@@ -1112,6 +1328,45 @@ export function EditProfileDialog({
               </div>
             </div>
           )}
+          {activeTab === 'contact' && contactView === 'form' && (
+            <div className="absolute bottom-0 right-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent flex justify-between items-center pointer-events-none">
+              <div className="pointer-events-auto">
+                {currentContact?.id && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setContactToDelete(currentContact.id)}
+                    className="text-red-500 hover:text-red-600 hover:bg-red-50 rounded-full"
+                    disabled={isSaving}
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </Button>
+                )}
+              </div>
+              
+              <div className="flex items-center gap-3 pointer-events-auto">
+                <Button 
+                  onClick={() => {
+                    setContactView('list');
+                    setCurrentContact(null);
+                  }}
+                  variant="ghost"
+                  className="rounded-full text-gray-500 hover:text-gray-700"
+                  disabled={isSaving}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleSaveContact} 
+                  disabled={isSaving || !currentContact?.platform || !currentContact?.link} 
+                  variant="default"
+                  className="bg-design-black hover:bg-design-black/90 text-white rounded-full px-6"
+                >
+                  {isSaving ? 'Saving...' : 'Save'}
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
 
       </DialogContent>
@@ -1138,18 +1393,101 @@ export function EditProfileDialog({
       </AlertDialogContent>
     </AlertDialog>
 
+    <AlertDialog open={showDeleteAccountWarning} onOpenChange={setShowDeleteAccountWarning}>
+      <AlertDialogContent className="font-mono max-w-sm rounded-xl p-6">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-xl font-bold text-gray-900">Delete Account</AlertDialogTitle>
+          <AlertDialogDescription className="text-sm text-gray-500 mt-2">
+            Are you absolutely sure? This will permanently delete your account, resume data, and username. This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="mt-8 flex gap-3 sm:justify-end">
+          <AlertDialogCancel disabled={isDeletingAccount} className="rounded-full px-6 border-none bg-transparent hover:bg-gray-100 h-9 text-sm font-medium text-gray-600 m-0">
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction 
+            onClick={handleDeleteAccount}
+            disabled={isDeletingAccount}
+            className="rounded-full px-6 bg-red-600 border border-transparent text-white hover:bg-red-700 h-9 shadow-sm text-sm font-medium m-0"
+          >
+            {isDeletingAccount ? 'Deleting...' : 'Delete Account'}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
+    <AlertDialog open={showUnsavedWarning} onOpenChange={setShowUnsavedWarning}>
+      <AlertDialogContent className="font-mono max-w-sm rounded-xl p-6">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-xl font-bold text-gray-900">Unsaved changes</AlertDialogTitle>
+          <AlertDialogDescription className="text-sm text-gray-500 mt-2">
+            You have unsaved changes, leave anyway?
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="mt-8 flex gap-3 sm:justify-end">
+          <AlertDialogCancel className="rounded-full px-6 border-none bg-transparent hover:bg-gray-100 h-9 text-sm font-medium text-gray-600 m-0">
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction 
+            onClick={() => {
+              setHasUnsavedChanges(false);
+              setShowUnsavedWarning(false);
+              setOpen(false);
+              
+              // Revert to saved state
+              setUname(username);
+              setDisplayName(resume.header.name || '');
+              setShortAbout(resume.header.shortAbout || '');
+              setLocation(resume.header.location || '');
+              setPronouns(resume.header.pronouns || '');
+              setWebsite(resume.header.website || '');
+              setSummary(resume.summary || '');
+              setProjects(resume.projects || []);
+              setEducation(resume.education || []);
+              setWork(resume.workExperience || []);
+              setContacts(resume.contacts || []);
+            }}
+            className="rounded-full px-6 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50 h-9 shadow-sm text-sm font-medium m-0"
+          >
+            Okay
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
     <AlertDialog open={!!eduToDelete} onOpenChange={(open) => !open && setEduToDelete(null)}>
       <AlertDialogContent className="font-mono">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete this education entry.
+            This action cannot be undone. This will permanently delete your education.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isSaving}>Cancel</AlertDialogCancel>
           <AlertDialogAction 
             onClick={() => eduToDelete && handleDeleteEdu(eduToDelete)}
+            disabled={isSaving}
+            className="bg-red-600 hover:bg-red-700 text-white"
+          >
+            {isSaving ? 'Deleting...' : 'Delete'}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
+    <AlertDialog open={!!contactToDelete} onOpenChange={(open) => !open && setContactToDelete(null)}>
+      <AlertDialogContent className="font-mono">
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete your contact.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isSaving}>Cancel</AlertDialogCancel>
+          <AlertDialogAction 
+            onClick={() => contactToDelete && handleDeleteContact(contactToDelete)}
             disabled={isSaving}
             className="bg-red-600 hover:bg-red-700 text-white"
           >
