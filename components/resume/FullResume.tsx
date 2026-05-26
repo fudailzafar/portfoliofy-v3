@@ -5,6 +5,7 @@ import { Header } from './Header';
 import { Skills } from './Skills';
 import { Summary } from './Summary';
 import { WorkExperience } from './WorkExperience';
+import { Projects } from './Projects';
 
 export const FullResume = ({
   resume,
@@ -28,6 +29,8 @@ export const FullResume = ({
         <Summary summary={resume?.summary} />
 
         <WorkExperience work={resume?.workExperience} />
+
+        <Projects projects={resume?.projects} />
 
         <Education educations={resume.education} />
 

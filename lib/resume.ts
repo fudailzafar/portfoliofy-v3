@@ -16,6 +16,10 @@ const HeaderSection = z.object({
     .string()
     .describe("Location with format 'City, Country'")
     .optional(),
+  pronouns: z
+    .string()
+    .describe("Preferred pronouns (e.g., 'He/Him')")
+    .optional(),
   contacts: HeaderContactsSchema,
   skills: z
     .array(z.string())
@@ -26,8 +30,9 @@ const SummarySection = z.string().describe('Summary of your profile');
 
 const WorkExperienceSection = z.array(
   z.object({
+    id: z.string().optional().describe('Unique identifier for the work experience'),
     company: z.string().describe('Company name'),
-    link: z.string().describe('Company website URL'),
+    link: z.string().optional().describe('Company website URL'),
     location: z
       .string()
       .describe(
@@ -35,25 +40,41 @@ const WorkExperienceSection = z.array(
       ),
     contract: z
       .string()
+      .optional()
       .describe('Type of work contract like Full-time, Part-time, Contract'),
     title: z.string().describe('Job title'),
-    start: z.string().describe("Start date in format 'YYYY-MM-DD'"),
+    startMonth: z.string().optional().describe('Start month'),
+    start: z.string().describe("Start year"),
+    endMonth: z.string().optional().describe('End month'),
     end: z
       .string()
       .optional()
       .nullable()
-      .describe("End date in format 'YYYY-MM-DD'"),
+      .describe("End year or 'Now'"),
     description: z.string().describe('Job description'),
   }),
 );
 
 const EducationSection = z.array(
   z.object({
+    id: z.string().optional().describe('Unique identifier for the education entry'),
     school: z.string().describe('School or university name'),
     degree: z.string().describe('Degree or certification obtained'),
     start: z.string().describe('Start year'),
     end: z.string().describe('End year'),
+    location: z.string().optional().describe('Location of the school'),
   }),
+);
+
+const ProjectSection = z.array(
+  z.object({
+    id: z.string().optional().describe('Unique identifier for the project'),
+    title: z.string().describe('Project title'),
+    year: z.string().describe('Year of the project'),
+    company: z.string().optional().describe('Company or client name'),
+    link: z.string().optional().describe('Link to project'),
+    description: z.string().optional().describe('Rich text description of the project'),
+  })
 );
 
 export const ResumeDataSchema = z.object({
@@ -61,6 +82,7 @@ export const ResumeDataSchema = z.object({
   summary: SummarySection,
   workExperience: WorkExperienceSection,
   education: EducationSection,
+  projects: ProjectSection.optional().default([]),
 });
 
 export type ResumeDataSchemaType = z.infer<typeof ResumeDataSchema>;

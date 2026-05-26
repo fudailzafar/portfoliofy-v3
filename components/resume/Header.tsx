@@ -93,78 +93,52 @@ export function Header({
   ]);
 
   return (
-    <header className="flex items-start md:items-center justify-between gap-4 ">
-      <div className="flex-1 space-y-1.5">
-        <h1 className="text-2xl font-bold" id="resume-name">
+    <header className="flex items-center gap-4 md:gap-6 mb-8">
+      <Avatar className="size-20 md:size-28 shrink-0" aria-hidden="true">
+        <AvatarImage src={picture} alt={`${header.name}'s profile picture`} />
+        <AvatarFallback>
+          {header.name
+            .split(' ')
+            .map((n) => n[0])
+            .join('')}
+        </AvatarFallback>
+      </Avatar>
+
+      <div className="flex-1 space-y-1">
+        <h1 className="text-2xl md:text-[28px] font-semibold text-gray-900 font-mono" id="resume-name">
           {header.name}
         </h1>
-        <p
-          className="max-w-md text-pretty font-mono text-sm text-design-resume print:text-[12px]"
-          aria-labelledby="resume-name"
-        >
-          {header.shortAbout}
-        </p>
-
-        <p className="max-w-md items-center text-pretty font-mono text-xs text-foreground">
-          <a
-            className="inline-flex gap-x-1.5 align-baseline leading-none hover:underline text-[#9CA0A8]"
-            href={`https://www.google.com/maps/search/${encodeURIComponent(
-              header.location || '',
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Location: ${header.location}`}
+        
+        {/* Subtitle: {Role} in {Location}, {Pronouns} */}
+        {(header.shortAbout || header.location || header.pronouns) && (
+          <p
+            className="text-pretty font-mono text-sm text-gray-500"
+            aria-labelledby="resume-name"
           >
-            {header.location}
-          </a>
-        </p>
+            {[
+              header.shortAbout,
+              header.location ? `in ${header.location}` : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            {header.pronouns ? `, (${header.pronouns})` : ''}
+          </p>
+        )}
 
         <div
-          className="flex gap-x-1 pt-1 font-mono text-sm text-design-resume print:hidden"
+          className="flex gap-x-2 pt-1 font-mono text-sm print:hidden"
           role="list"
           aria-label="Contact links"
         >
           {socialLinks.website && (
-            <SocialButton
-              href={socialLinks.website}
-              icon={GlobeIcon}
-              label="Personal website"
-            />
-          )}
-          {header.contacts.email && (
-            <SocialButton
-              href={`mailto:${header.contacts.email}`}
-              icon={MailIcon}
-              label="Email"
-            />
-          )}
-          {header.contacts.phone && (
-            <SocialButton
-              href={`tel:${header.contacts.phone}`}
-              icon={PhoneIcon}
-              label="Phone"
-            />
-          )}
-          {socialLinks.github && (
-            <SocialButton
-              href={socialLinks.github}
-              icon={Github}
-              label="GitHub"
-            />
-          )}
-          {socialLinks.twitter && (
-            <SocialButton
-              href={socialLinks.twitter}
-              icon={Twitter}
-              label="Twitter"
-            />
-          )}
-          {socialLinks.linkedin && (
-            <SocialButton
-              href={socialLinks.linkedin}
-              icon={Linkedin}
-              label="LinkedIn"
-            />
+            <a 
+              href={socialLinks.website} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              {socialLinks.website.replace(/^https?:\/\//, '')}
+            </a>
           )}
         </div>
 
@@ -180,40 +154,10 @@ export function Header({
               >
                 {new URL(socialLinks.website).hostname}
               </a>
-              <span aria-hidden="true">/</span>
             </>
-          )}
-          {header.contacts.email && (
-            <>
-              <a
-                className="underline hover:text-foreground/70"
-                href={`mailto:${header.contacts.email}`}
-              >
-                {header.contacts.email}
-              </a>
-              <span aria-hidden="true">/</span>
-            </>
-          )}
-          {header.contacts.phone && (
-            <a
-              className="underline hover:text-foreground/70"
-              href={`tel:${header.contacts.phone}`}
-            >
-              {header.contacts.phone}
-            </a>
           )}
         </div>
       </div>
-
-      <Avatar className="size-20 md:size-28" aria-hidden="true">
-        <AvatarImage src={picture} alt={`${header.name}'s profile picture`} />
-        <AvatarFallback>
-          {header.name
-            .split(' ')
-            .map((n) => n[0])
-            .join('')}
-        </AvatarFallback>
-      </Avatar>
     </header>
   );
 }

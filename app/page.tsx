@@ -50,7 +50,7 @@ export default function Home() {
                 </p>
 
                 <div className="relative flex flex-col items-center font-mono w-full md:w-fit">
-                  <Link href="/upload">
+                  <Link href="/claim">
                     <Button className="relative group flex items-center bg-design-black hover:bg-design-black/95 text-white px-6 py-3 h-auto text-base overflow-hidden">
                       <div className="h-[120px] w-10 bg-gradient-to-r from-white/10 via-white/50 to-white/10 absolute blur-sm -rotate-45 -left-16 group-hover:left-[150%] duration-500 delay-200" />
                       <img
@@ -58,7 +58,7 @@ export default function Home() {
                         alt="Sparkle Icon"
                         className="h-5 w-5 mr-2 relative"
                       />
-                      <span className="relative">Upload Resume</span>
+                      <span className="relative">Claim Handle</span>
                       <BorderBeam colorFrom="#5d5d5d" colorTo="#ffffff" />
                     </Button>
                   </Link>
