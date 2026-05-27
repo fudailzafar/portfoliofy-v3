@@ -1,6 +1,7 @@
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { PRIVATE_ROUTES } from './lib/routes';
+import { upstashRedis } from '@/lib/server/redis';
 
 export default auth(async (req) => {
   const rawHostname = req.headers.get('host') || '';
@@ -15,32 +16,18 @@ export default auth(async (req) => {
   ) {
     // It's a custom domain, rewrite to the user's profile
     try {
-      // Direct REST call to Upstash to avoid Edge compatibility issues
-      const upstashUrl = process.env.UPSTASH_REDIS_REST_URL;
-      const upstashToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+      // 1. Get userId by domain
+      const userId = await upstashRedis.get<string>(`domain:to:user:${hostname}`);
       
-      if (upstashUrl && upstashToken) {
-        // 1. Get userId by domain
-        const domainRes = await fetch(`${upstashUrl}/get/domain:to:user:${hostname}`, {
-          headers: { Authorization: `Bearer ${upstashToken}` },
-        });
-        const domainData = await domainRes.json();
-        const userId = domainData.result;
+      if (userId) {
+        // 2. Get username by userId
+        const username = await upstashRedis.get<string>(`user:id:${userId}`);
         
-        if (userId) {
-          // 2. Get username by userId
-          const userRes = await fetch(`${upstashUrl}/get/user:id:${userId}`, {
-            headers: { Authorization: `Bearer ${upstashToken}` },
-          });
-          const userData = await userRes.json();
-          const username = userData.result;
-          
-          if (username) {
-            // Rewrite the request to `/[username]` internally
-            const clonedUrl = req.nextUrl.clone();
-            clonedUrl.pathname = `/${username}${clonedUrl.pathname === '/' ? '' : clonedUrl.pathname}`;
-            return NextResponse.rewrite(clonedUrl);
-          }
+        if (username) {
+          // Rewrite the request to `/[username]` internally
+          const clonedUrl = req.nextUrl.clone();
+          clonedUrl.pathname = `/${username}${clonedUrl.pathname === '/' ? '' : clonedUrl.pathname}`;
+          return NextResponse.rewrite(clonedUrl);
         }
       }
     } catch (error) {
