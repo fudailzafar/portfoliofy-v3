@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 import { useClerk } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { buildContactUrl, extractUsername } from '@/utils/extractUsername';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -1459,21 +1460,13 @@ export function EditProfileDialog({
                         
                         <div className="flex-1 flex flex-col justify-start items-start">
                           <a 
-                            href={
-                              c.link.startsWith('mailto:') 
-                                ? c.link 
-                                : c.platform.toLowerCase() === 'email' || (c.link.includes('@') && !c.link.includes('://'))
-                                  ? `mailto:${c.link}`
-                                  : c.link.startsWith('http') 
-                                    ? c.link 
-                                    : `https://${c.link}`
-                            } 
+                            href={buildContactUrl(c.link, c.platform)}
                             target="_blank" 
                             rel="noopener noreferrer" 
                             className="hover:underline inline-block"
                           >
                             <span className="text-base font-semibold text-gray-900 font-mono">
-                              {c.link}
+                              {extractUsername(c.link, c.platform)}
                               <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-gray-900 relative -top-0.5" />
                             </span>
                           </a>

@@ -2,6 +2,52 @@
  * Extracts a displayable username from a given URL.
  * Handles common platforms like Twitter/X, GitHub, LinkedIn, Instagram, etc.
  */
+export function buildContactUrl(link: string, platform: string): string {
+  if (!link) return '';
+  
+  const cleanLink = link.trim();
+  
+  if (cleanLink.toLowerCase().startsWith('http://') || cleanLink.toLowerCase().startsWith('https://')) {
+    return cleanLink;
+  }
+  
+  if (cleanLink.toLowerCase().startsWith('mailto:')) {
+    return cleanLink;
+  }
+  
+  if (platform.toLowerCase() === 'email' || (cleanLink.includes('@') && !cleanLink.includes('://') && !platform.toLowerCase().match(/mastodon|bluesky/))) {
+    return `mailto:${cleanLink}`;
+  }
+  
+  if (cleanLink.includes('.') && !cleanLink.includes(' ') && !cleanLink.startsWith('@')) {
+    return `https://${cleanLink}`;
+  }
+
+  const username = cleanLink.replace(/^@/, '');
+
+  switch (platform.toLowerCase()) {
+    case 'twitter':
+    case 'x':
+      return `https://x.com/${username}`;
+    case 'linkedin':
+      return `https://linkedin.com/in/${username}`;
+    case 'github':
+      return `https://github.com/${username}`;
+    case 'instagram':
+      return `https://instagram.com/${username}`;
+    case 'threads':
+      return `https://threads.net/@${username}`;
+    case 'figma':
+      return `https://figma.com/@${username}`;
+    case 'bluesky':
+      return `https://bsky.app/profile/${username}`;
+    case 'mastodon':
+      return `https://mastodon.social/@${username}`;
+    default:
+      return `https://${cleanLink}`;
+  }
+}
+
 export function extractUsername(url: string, platform?: string): string {
   if (!url) return '';
   
