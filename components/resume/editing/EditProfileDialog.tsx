@@ -2379,18 +2379,24 @@ export function EditProfileDialog({
                           
                           <div className="flex items-center gap-2">
                             <div className="relative flex-1 max-w-[320px]">
-                              {domainStatus?.verified && (
+                              {domainStatus?.verified ? (
                                 <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
                                   <div className="bg-[#7cb44d] rounded-full p-[2px]">
                                     <svg className="w-[10px] h-[10px] text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
                                   </div>
                                 </div>
-                              )}
+                              ) : domainStatus ? (
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+                                  <div className="bg-[#ebd955] text-white rounded-full w-[14px] h-[14px] flex items-center justify-center text-[10px] font-bold">
+                                    ?
+                                  </div>
+                                </div>
+                              ) : null}
                               <Input
                                 value={customDomain}
                                 onChange={(e) => setCustomDomain(e.target.value.toLowerCase())}
                                 placeholder="yourname.com"
-                                className={`w-full bg-[#f2f2f2] border-0 focus-visible:ring-0 shadow-none text-[13px] h-9 ${domainStatus?.verified ? 'pl-9 text-gray-700' : ''}`}
+                                className={`w-full bg-[#f2f2f2] border-0 focus-visible:ring-0 shadow-none text-[13px] h-9 ${domainStatus ? 'pl-9 text-gray-700' : ''}`}
                                 disabled={!!domainStatus}
                               />
                             </div>
@@ -2399,9 +2405,14 @@ export function EditProfileDialog({
                                 {isVerifyingDomain ? 'Saving...' : 'Save'}
                               </Button>
                             ) : (
-                              <Button variant="outline" size="sm" className="h-9 border-gray-200 text-gray-500 font-normal text-[13px] hover:text-gray-900 rounded-lg" onClick={handleDomainRemove} disabled={isVerifyingDomain}>
-                                Remove
-                              </Button>
+                              <>
+                                <Button variant="outline" size="sm" className="h-9 border-gray-200 text-gray-400 font-normal text-[13px] rounded-lg" disabled={true}>
+                                  Save
+                                </Button>
+                                <Button variant="outline" size="sm" className="h-9 border-gray-200 text-gray-500 font-normal text-[13px] hover:text-gray-900 rounded-lg" onClick={handleDomainRemove} disabled={isVerifyingDomain}>
+                                  Reset
+                                </Button>
+                              </>
                             )}
                           </div>
                           
@@ -2415,34 +2426,39 @@ export function EditProfileDialog({
                                   </div>
                                 </div>
                               ) : (
-                                <div className="mt-2 p-4 bg-gray-50 border border-gray-100 rounded-lg max-w-lg">
-                                  <div className="flex items-center justify-between mb-4">
-                                    <h5 className="text-sm font-medium text-gray-700">Domain Status</h5>
-                                    <div className="flex items-center gap-2">
-                                      <span className="flex items-center gap-1 text-amber-600 text-xs font-medium">
-                                        <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                        Pending Verification
-                                      </span>
-                                      <Button variant="outline" size="sm" className="h-7 text-xs" onClick={fetchDomain} disabled={isVerifyingDomain}>
-                                        Check Status
-                                      </Button>
+                                <div className="mt-1 relative max-w-[500px]">
+                                  <div className="absolute -top-[6px] left-8 w-3 h-3 bg-[#f0eed9] rotate-45 transform origin-center" />
+                                  <div className="relative bg-[#f0eed9] rounded-xl overflow-hidden px-5 py-4">
+                                    <p className="text-[#645c38] text-[13px] mb-4">Set the following record on your DNS provider to continue.</p>
+                                    
+                                    <div className="grid grid-cols-4 gap-2 text-[13px] font-medium text-[#7d754b] mb-1.5">
+                                      <div>Type</div>
+                                      <div>Name</div>
+                                      <div className="col-span-2">Value</div>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-4 gap-2 text-[13px] text-[#4a4529] items-center">
+                                      <div>{domainStatus.verification?.length > 0 ? domainStatus.verification[0].type : 'A'}</div>
+                                      <div>{domainStatus.verification?.length > 0 ? domainStatus.verification[0].domain : '@'}</div>
+                                      <div className="col-span-2 flex items-center justify-between group">
+                                        <div className="bg-[#e4e0c7] px-1.5 py-0.5 rounded cursor-pointer selection:bg-transparent" onClick={() => {
+                                           navigator.clipboard.writeText(domainStatus.verification?.length > 0 ? domainStatus.verification[0].value : '76.76.21.21');
+                                           toast.success('Copied to clipboard');
+                                        }}>
+                                          {domainStatus.verification?.length > 0 ? domainStatus.verification[0].value : '76.76.21.21'}
+                                        </div>
+                                        <button className="text-[12px] font-medium opacity-60 hover:opacity-100 transition-opacity" onClick={() => {
+                                           navigator.clipboard.writeText(domainStatus.verification?.length > 0 ? domainStatus.verification[0].value : '76.76.21.21');
+                                           toast.success('Copied to clipboard');
+                                        }}>
+                                          Copy
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
                                   
-                                  <div className="space-y-3">
-                                    <p className="text-xs text-gray-500">Please add the following DNS record to your domain registrar to verify ownership:</p>
-                                    <div className="bg-white p-3 border border-gray-200 rounded text-xs font-mono">
-                                      <div className="grid grid-cols-3 gap-2">
-                                        <span className="text-gray-400">Type</span>
-                                        <span className="col-span-2">{domainStatus.verification?.length > 0 ? domainStatus.verification[0].type : 'A / CNAME'}</span>
-                                        
-                                        <span className="text-gray-400">Name</span>
-                                        <span className="col-span-2">{domainStatus.verification?.length > 0 ? domainStatus.verification[0].domain : '@'}</span>
-                                        
-                                        <span className="text-gray-400">Value</span>
-                                        <span className="col-span-2 break-all">{domainStatus.verification?.length > 0 ? domainStatus.verification[0].value : '76.76.21.21'}</span>
-                                      </div>
-                                    </div>
+                                  <div className="mt-3 text-[12px] text-[#a0a0a0] leading-relaxed">
+                                    Please note that changing DNS settings can take several minutes to take effect. If you've already updated your DNS settings <button onClick={fetchDomain} disabled={isVerifyingDomain} className="text-gray-700 hover:text-black font-medium underline decoration-gray-300 underline-offset-2 disabled:opacity-50">click here to manually refresh</button>, or visit this page for help.
                                   </div>
                                 </div>
                               )}
