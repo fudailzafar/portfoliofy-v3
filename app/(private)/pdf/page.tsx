@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/auth';
 import { getResume, storeResume } from '../../../lib/server/redisActions';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
@@ -45,9 +45,8 @@ async function PdfProcessing({ userId }: { userId: string }) {
 }
 
 export default async function Pdf() {
-  const { userId, redirectToSignIn } = await auth();
-
-  if (!userId) return redirectToSignIn();
+  const session = await auth();
+  if (!session?.user?.id) redirect('/');
 
   return (
     <>
@@ -56,7 +55,7 @@ export default async function Pdf() {
           <LoadingFallback message="Reading your resume carefully..." />
         }
       >
-        <PdfProcessing userId={userId} />
+        <PdfProcessing userId={session.user.id} />
       </Suspense>
     </>
   );
