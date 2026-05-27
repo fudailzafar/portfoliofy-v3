@@ -6,37 +6,35 @@ export default function PrivacyPage() {
     <div className="flex flex-col min-h-screen bg-white">
       <TopMenu />
       
-      <main className="flex-1 max-w-2xl mx-auto w-full px-6 py-20 font-mono">
-        <h1 className="text-4xl font-bold text-gray-900 mb-12 tracking-tight">Privacy Policy</h1>
+      <main className="flex-1 max-w-2xl mx-auto w-full px-6 py-20 font-sans">
+        <h1 className="text-4xl font-bold text-gray-900 mb-2 tracking-tight">Privacy Policy</h1>
+        <p className="text-gray-500 mb-12">Effective May 27, 2026</p>
         
-        <div className="space-y-8 text-gray-700 leading-relaxed text-sm md:text-base">
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-gray-900">Data Collection</h2>
-            <p>
-              We collect information you provide directly to us when you create an account, build your profile, or communicate with us. This includes your name, email address, and the professional data you choose to host on your public profile.
-            </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-gray-900">Data Usage</h2>
-            <p>
-              The information we collect is used solely to provide, maintain, and improve our services, and to communicate with you. We do not sell your personal data to third parties.
-            </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-gray-900">Data Storage & Security</h2>
-            <p>
-              We use industry-standard security measures to protect your data. Your profile information is stored securely using cloud-based caching and database solutions (e.g., Upstash Redis).
-            </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-gray-900">Your Rights</h2>
-            <p>
-              You have the right to access, update, or delete your personal information at any time through your account settings. Once an account is deleted, your data is permanently removed from our active systems.
-            </p>
-          </section>
+        <div className="space-y-6 text-gray-700 leading-relaxed text-[15px]">
+          <p>
+            We care about your privacy and only collect information we deem necessary to providing your requested service. Accordingly we have developed this privacy policy in order for you to understand how we collect and use personal information. We have outlined our privacy policy below.
+          </p>
+          <p>
+            We collect basic information from you in order to set up your account. For example in order to sign up for an account you must provide an email address, username, and display name. You may provide us with more information for your public profile, but we don't require that information to create an account.
+          </p>
+          <p>
+            If you have an account with us we collect the information that you provide for your public profile. For example, if you have an account, your username is part of that public profile, along with any other information you put into your public profile, like a photo or an "About me" description. Your public profile information is just that — public — so please keep that in mind when deciding what information you would like to include.
+          </p>
+          <p>
+            Your email will not be shared as part of your public profile, unless you explicitly choose to share it. Your email may be used to send you notifications, however this can be turned off at any time in your account settings.
+          </p>
+          <p>
+            We use session cookies to keep you logged into your account, as well as Google Analytics cookies. By using this service you agree to this website storing these cookies.
+          </p>
+          <p>
+            We do not accept responsibility or liability for any externally linked sites and their respective privacy policies.
+          </p>
+          <p>
+            Our services are not intended for — and we don’t direct them to — anyone under 13. We do not knowingly collect personal information from anyone under 13.
+          </p>
+          <p>
+            By continuing to use our website and services you agree to our policy surrounding privacy and personal information.
+          </p>
         </div>
       </main>
 
