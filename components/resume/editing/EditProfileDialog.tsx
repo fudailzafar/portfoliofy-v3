@@ -426,7 +426,7 @@ export function EditProfileDialog({
 
         {/* Content Area */}
         <div className="flex-1 flex flex-col h-full bg-white relative">
-          <div className="flex-1 overflow-y-auto scrollbar-hide p-8 md:p-12 pb-24">
+          <div className="flex-1 overflow-y-auto scrollbar-hide p-8 md:p-12">
             
             {activeTab === 'general' && (
               <div className="max-w-2xl mx-auto space-y-8">
@@ -1508,13 +1508,15 @@ export function EditProfileDialog({
             )}
           </div>
 
-          {/* Bottom Fixed Action Bar */}
+                    {/* Bottom Fixed Action Bar */}
+          <div className="flex-none p-4 md:px-8 border-t border-gray-100 bg-white">
+
           {!isFormView && (
-            <div className="absolute bottom-0 right-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent flex justify-end pointer-events-none">
+            <div className="flex justify-end">
               <Button 
                 onClick={handleGlobalSave} 
                 disabled={isSaving} 
-                className="bg-[#2A2A2A] hover:bg-[#1A1A1A] text-white pointer-events-auto h-9 px-6 rounded-md shadow-sm border-none font-medium"
+                className="bg-[#2A2A2A] hover:bg-[#1A1A1A] text-white h-9 px-6 rounded-md shadow-sm border-none font-medium"
               >
                 {isSaving ? 'Saving...' : 'Done'}
               </Button>
@@ -1522,7 +1524,7 @@ export function EditProfileDialog({
           )}
 
           {activeTab === 'projects' && projectsView === 'form' && (
-            <div className="absolute bottom-0 right-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent flex justify-between items-center pointer-events-none">
+            <div className="flex justify-between items-center">
               <div className="pointer-events-auto">
                 {currentProject?.id && (
                   <Button
@@ -1537,7 +1539,7 @@ export function EditProfileDialog({
                 )}
               </div>
               
-              <div className="flex items-center gap-3 pointer-events-auto">
+              <div className="flex items-center gap-3">
                 <Button 
                   onClick={() => {
                     setProjectsView('list');
@@ -1562,7 +1564,7 @@ export function EditProfileDialog({
           )}
 
           {activeTab === 'side_projects' && sideProjectsView === 'form' && (
-            <div className="absolute bottom-0 right-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent flex justify-between items-center pointer-events-none">
+            <div className="flex justify-between items-center">
               <div className="pointer-events-auto">
                 {currentSideProject?.id && (
                   <Button
@@ -1577,7 +1579,7 @@ export function EditProfileDialog({
                 )}
               </div>
               
-              <div className="flex items-center gap-3 pointer-events-auto">
+              <div className="flex items-center gap-3">
                 <Button 
                   onClick={() => {
                     setSideProjectsView('list');
@@ -1602,7 +1604,7 @@ export function EditProfileDialog({
           )}
 
           {activeTab === 'work' && workView === 'form' && (
-            <div className="absolute bottom-0 right-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent flex justify-between items-center pointer-events-none">
+            <div className="flex justify-between items-center">
               <div className="pointer-events-auto">
                 {currentWork?.id && (
                   <Button
@@ -1617,7 +1619,7 @@ export function EditProfileDialog({
                 )}
               </div>
               
-              <div className="flex items-center gap-3 pointer-events-auto">
+              <div className="flex items-center gap-3">
                 <Button 
                   onClick={() => {
                     setWorkView('list');
@@ -1642,7 +1644,7 @@ export function EditProfileDialog({
           )}
 
           {activeTab === 'speaking' && speakingView === 'form' && (
-            <div className="absolute bottom-0 right-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent flex justify-between items-center pointer-events-none">
+            <div className="flex justify-between items-center">
               <div className="pointer-events-auto">
                 {currentSpeaking?.id && (
                   <Button
@@ -1657,7 +1659,7 @@ export function EditProfileDialog({
                 )}
               </div>
               
-              <div className="flex items-center gap-3 pointer-events-auto">
+              <div className="flex items-center gap-3">
                 <Button 
                   onClick={() => {
                     setSpeakingView('list');
@@ -1682,7 +1684,7 @@ export function EditProfileDialog({
           )}
 
           {activeTab === 'education' && eduView === 'form' && (
-            <div className="absolute bottom-0 right-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent flex justify-between items-center pointer-events-none">
+            <div className="flex justify-between items-center">
               <div className="pointer-events-auto">
                 {currentEdu?.id && (
                   <Button
@@ -1697,7 +1699,7 @@ export function EditProfileDialog({
                 )}
               </div>
               
-              <div className="flex items-center gap-3 pointer-events-auto">
+              <div className="flex items-center gap-3">
                 <Button 
                   onClick={() => {
                     setEduView('list');
@@ -1721,7 +1723,7 @@ export function EditProfileDialog({
             </div>
           )}
           {activeTab === 'contact' && contactView === 'form' && (
-            <div className="absolute bottom-0 right-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent flex justify-between items-center pointer-events-none">
+            <div className="flex justify-between items-center">
               <div className="pointer-events-auto">
                 {currentContact?.id && (
                   <Button
@@ -1736,7 +1738,7 @@ export function EditProfileDialog({
                 )}
               </div>
               
-              <div className="flex items-center gap-3 pointer-events-auto">
+              <div className="flex items-center gap-3">
                 <Button 
                   onClick={() => {
                     setContactView('list');
@@ -1759,7 +1761,8 @@ export function EditProfileDialog({
               </div>
             </div>
           )}
-        </div>
+
+          </div>        </div>
 
       </DialogContent>
     </Dialog>
