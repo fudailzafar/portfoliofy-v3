@@ -3,7 +3,9 @@ import { NextResponse } from 'next/server';
 import { PRIVATE_ROUTES } from './lib/routes';
 import { upstashRedis } from '@/lib/server/redis';
 
-export default auth(async (req) => {
+import type { NextRequest } from 'next/server';
+
+export default async function middleware(req: NextRequest) {
   const rawHostname = req.headers.get('host') || '';
   const hostname = rawHostname.split(':')[0]; // Strip port for local testing
   
@@ -35,20 +37,25 @@ export default auth(async (req) => {
     }
   }
 
-  // Always allow NextAuth's own API routes — never block /api/auth/*
-  if (req.nextUrl.pathname.startsWith('/api/auth')) {
-    return;
-  }
+  // Run NextAuth middleware for normal requests
+  const authMiddleware = auth((req) => {
+    // Always allow NextAuth's own API routes — never block /api/auth/*
+    if (req.nextUrl.pathname.startsWith('/api/auth')) {
+      return;
+    }
 
-  const isPrivateRoute = PRIVATE_ROUTES.some((route) =>
-    req.nextUrl.pathname.startsWith(`/${route}`)
-  );
+    const isPrivateRoute = PRIVATE_ROUTES.some((route) =>
+      req.nextUrl.pathname.startsWith(`/${route}`)
+    );
 
-  if (isPrivateRoute && !req.auth) {
-    // Redirect unauthenticated users to home — auth dialog triggers there
-    return NextResponse.redirect(new URL('/', req.nextUrl));
-  }
-});
+    if (isPrivateRoute && !req.auth) {
+      // Redirect unauthenticated users to home — auth dialog triggers there
+      return NextResponse.redirect(new URL('/', req.nextUrl));
+    }
+  });
+
+  return (authMiddleware as any)(req, undefined);
+}
 
 export const config = {
   matcher: [
