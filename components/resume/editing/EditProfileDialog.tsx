@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ResumeData } from '@/lib/server/redisActions';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { useUserActions } from '@/hooks/useUserActions';
@@ -416,27 +418,31 @@ export function EditProfileDialog({
         setOpen(val);
       }}
     >
-      <DialogTrigger asChild>
-        <button 
-          aria-label="Edit Profile"
-          style={{ 
-            position: 'fixed', 
-            bottom: '24px', 
-            left: 'calc(72px + var(--sidebar-offset, 0px))',
-            zIndex: 50,
-            transition: 'left 0.4s cubic-bezier(0.32,0.72,0,1)',
-          }}
-          onMouseDown={(e) => {
-            const el = e.currentTarget;
-            el.style.transform = 'scale(0.9)';
-            const reset = () => { el.style.transform = ''; };
-            window.addEventListener('mouseup', reset, { once: true });
-          }}
-          className="size-[48px] rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center outline-none transition-transform"
-        >
-          <Pencil className="h-[18px] w-[18px] text-[#111]" strokeWidth={1.5} />
-        </button>
-      </DialogTrigger>
+      <TooltipProvider delayDuration={0}>
+        <Tooltip>
+          <DialogTrigger asChild>
+            <TooltipTrigger asChild>
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                aria-label="Edit Profile"
+                style={{
+                  position: 'fixed',
+                  bottom: '24px',
+                  left: 'calc(80px + var(--sidebar-offset, 0px))',
+                  zIndex: 50,
+                  transition: 'left 0.4s cubic-bezier(0.32,0.72,0,1)',
+                }}
+                className="size-[48px] rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center outline-none transition-all"
+              >
+                <Pencil className="h-[18px] w-[18px] text-[#111]" strokeWidth={1.5} />
+              </motion.button>
+            </TooltipTrigger>
+          </DialogTrigger>
+          <TooltipContent side="top" sideOffset={12} className="bg-[#111] text-white text-[13px] font-medium rounded-lg px-3 py-1.5 border-none shadow-md flex items-center gap-1.5">
+            <span>Edit profile</span>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       
       <DialogContent className="max-w-5xl h-[85vh] p-0 overflow-hidden font-mono flex flex-col sm:flex-row gap-0 bg-white">
         <DialogTitle className="sr-only">Edit Profile</DialogTitle>
