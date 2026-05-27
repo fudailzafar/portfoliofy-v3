@@ -10,7 +10,7 @@ export default function Home() {
         <div className="w-full max-w-[500px] px-6 pt-24 pb-32 flex flex-col gap-6">
           {/* Hero Section */}
           <div className="flex flex-col mb-8">
-            <h1 className="text-[32px] md:text-[40px] font-normal tracking-tight leading-[1.3] text-gray-900 mb-8">
+            <h1 className="text-[32px] md:text-[24px] font-normal tracking-tight leading-[1.3] text-gray-900 mb-8">
               <strong>Portfoliofy</strong> is a progressive platform used by
               thousands of people to create more mindful professional profiles.
             </h1>
