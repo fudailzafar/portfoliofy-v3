@@ -6,10 +6,12 @@ import { useSession, signOut } from 'next-auth/react';
 import { useState } from 'react';
 import { AuthDialog } from './AuthDialog';
 import { Button } from '@/components/ui/button';
+import { useUserActions } from '@/hooks/useUserActions';
 
 export function GlobalSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const { usernameQuery } = useUserActions();
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
 
@@ -36,27 +38,14 @@ export function GlobalSidebar() {
 
           {session ? (
             <div className="flex flex-col gap-3">
-              {/* User avatar + name */}
-              <div className="flex items-center gap-2">
-                {session.user.image && (
-                  <img
-                    src={session.user.image}
-                    alt={session.user.name ?? 'User'}
-                    className="size-7 rounded-full object-cover"
-                  />
-                )}
-                <span className="text-[13px] text-gray-700 font-medium truncate max-w-[160px]">
-                  {session.user.name}
-                </span>
-              </div>
-              {/* Sign out */}
+              {/* Logout */}
               <button
                 onClick={() => signOut({ callbackUrl: '/' })}
                 className="flex items-center gap-3 w-fit group text-left"
               >
                 <div className="w-1 h-1 rounded-full bg-transparent" />
                 <span className="text-[14px] text-gray-800 font-medium group-hover:underline underline-offset-4">
-                  Sign out
+                  Logout
                 </span>
               </button>
             </div>
