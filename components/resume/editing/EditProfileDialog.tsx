@@ -247,6 +247,10 @@ export function EditProfileDialog({
     resume.sectionOrder || DEFAULT_ORDER,
   );
 
+  const [typography, setTypography] = useState<'sans' | 'serif' | 'mono'>(
+    resume.design?.typography || 'sans'
+  );
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor),
@@ -395,6 +399,9 @@ export function EditProfileDialog({
         workExperience: work,
         contacts,
         sectionOrder,
+        design: {
+          typography,
+        },
       };
 
       await saveResumeDataMutation.mutateAsync(newResumeData);
@@ -2571,6 +2578,55 @@ export function EditProfileDialog({
                               )}
                             </>
                           )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Typography Section */}
+                    <div className="space-y-4 pt-4">
+                      <h4 className="text-gray-900 text-[14px]">Typography</h4>
+                      
+                      <div className="flex flex-col gap-5">
+                        {/* Sans */}
+                        <div 
+                          className="flex items-center gap-4 cursor-pointer group"
+                          onClick={() => { setTypography('sans'); setHasUnsavedChanges(true); }}
+                        >
+                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${typography === 'sans' ? 'border-[2.5px] border-[#3b82f6] bg-white' : 'border border-gray-200 bg-white group-hover:border-gray-300'}`}>
+                            <span className="text-[22px] font-medium font-sans text-gray-900 tracking-tight">Aa</span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[14px] text-gray-900 font-medium">Sans</span>
+                            <span className="text-[14px] text-[#737373]">Graphik, designed by Christian Schwartz in 2009.</span>
+                          </div>
+                        </div>
+
+                        {/* Serif */}
+                        <div 
+                          className="flex items-center gap-4 cursor-pointer group"
+                          onClick={() => { setTypography('serif'); setHasUnsavedChanges(true); }}
+                        >
+                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${typography === 'serif' ? 'border-[2.5px] border-[#3b82f6] bg-white' : 'border border-gray-200 bg-white group-hover:border-gray-300'}`}>
+                            <span className="text-[22px] font-medium font-serif text-gray-900 tracking-tight">Aa</span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[14px] text-gray-900 font-medium">Serif</span>
+                            <span className="text-[14px] text-[#737373]">Signifier, designed by Kris Sowersby in 2020.</span>
+                          </div>
+                        </div>
+
+                        {/* Mono */}
+                        <div 
+                          className="flex items-center gap-4 cursor-pointer group"
+                          onClick={() => { setTypography('mono'); setHasUnsavedChanges(true); }}
+                        >
+                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${typography === 'mono' ? 'border-[2.5px] border-[#3b82f6] bg-white' : 'border border-gray-200 bg-white group-hover:border-gray-300'}`}>
+                            <span className="text-[22px] font-medium font-mono text-gray-900 tracking-tight">Aa</span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[14px] text-gray-900 font-medium">Mono</span>
+                            <span className="text-[14px] text-[#737373]">Diatype Mono, designed by Dinamo in 2020.</span>
+                          </div>
                         </div>
                       </div>
                     </div>
