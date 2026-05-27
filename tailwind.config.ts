@@ -12,7 +12,8 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-graphik)', 'sans-serif'],
-        mono: ['var(--font-graphik)', 'sans-serif'],
+        serif: ['var(--font-signifier)', 'serif'],
+        mono: ['var(--font-diatype-mono)', 'monospace'],
       },
       fontWeight: {
         thin: '400',
