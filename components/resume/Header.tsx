@@ -75,7 +75,7 @@ export function Header({
             ]
               .filter(Boolean)
               .join(' ')}
-            {header.pronouns ? `, (${header.pronouns})` : ''}
+            {header.pronouns ? `, ${header.pronouns}` : ''}
           </p>
         )}
         
