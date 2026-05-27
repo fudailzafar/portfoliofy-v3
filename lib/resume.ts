@@ -110,6 +110,7 @@ export const ResumeDataSchema = z.object({
   sideProjects: SideProjectSection.optional().default([]),
   speaking: SpeakingSection.optional().default([]),
   contacts: ContactSection.optional().default([]),
+  sectionOrder: z.array(z.string()).optional().default(['work', 'side_projects', 'speaking', 'projects', 'skills', 'education', 'contact', 'awards', 'exhibitions', 'writing']),
 });
 
 export type ResumeDataSchemaType = z.infer<typeof ResumeDataSchema>;
