@@ -1,7 +1,7 @@
 import { Section } from '@/components/ui/section';
 import { ResumeDataSchemaType } from '@/lib/resume';
 import { ArrowUpRight } from 'lucide-react';
-import { extractUsername } from '@/utils/extractUsername';
+import { extractUsername, buildContactUrl } from '@/utils/extractUsername';
 
 export function Contact({
   contacts,
@@ -38,15 +38,7 @@ export function Contact({
             {/* Right column: Content */}
             <div className="flex-1 flex flex-col justify-start items-start">
               <a 
-                href={
-                  contact.link.startsWith('mailto:') 
-                    ? contact.link 
-                    : contact.platform.toLowerCase() === 'email' || (contact.link.includes('@') && !contact.link.includes('://'))
-                      ? `mailto:${contact.link}`
-                      : contact.link.startsWith('http') 
-                        ? contact.link 
-                        : `https://${contact.link}`
-                } 
+                href={buildContactUrl(contact.link, contact.platform)}
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="hover:underline inline-block group"
