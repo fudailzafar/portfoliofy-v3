@@ -13,6 +13,9 @@ import { Pencil, FolderCode, Plus, Trash2, GraduationCap, Briefcase, ArrowUpRigh
 import { cn } from '@/lib/utils';
 import { useClerk } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
+import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableSidebarItem } from './SortableSidebarItem';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buildContactUrl, extractUsername } from '@/utils/extractUsername';
 import {
@@ -98,6 +101,41 @@ export function EditProfileDialog({
   const [contactToDelete, setContactToDelete] = useState<string | null>(null);
 
   const [activeTab, setActiveTab] = useState('general');
+
+  const DEFAULT_ORDER = ['work', 'side_projects', 'speaking', 'projects', 'skills', 'education', 'contact', 'awards', 'exhibitions', 'writing'];
+  const [sectionOrder, setSectionOrder] = useState<string[]>(resume.sectionOrder || DEFAULT_ORDER);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor)
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setSectionOrder((items) => {
+        const oldIndex = items.indexOf(active.id as string);
+        const newIndex = items.indexOf(over.id as string);
+        const newOrder = arrayMove(items, oldIndex, newIndex);
+        setHasUnsavedChanges(true);
+        return newOrder;
+      });
+    }
+  };
+
+  const TAB_DEFINITIONS: Record<string, { label: string, disabled: boolean }> = {
+    'work': { label: 'Work Experience', disabled: false },
+    'side_projects': { label: 'Side Projects', disabled: false },
+    'speaking': { label: 'Speaking', disabled: false },
+    'projects': { label: 'Projects', disabled: false },
+    'skills': { label: 'Skills', disabled: false },
+    'education': { label: 'Education', disabled: false },
+    'contact': { label: 'Contact', disabled: false },
+    'awards': { label: 'Awards', disabled: true },
+    'exhibitions': { label: 'Exhibitions', disabled: true },
+    'writing': { label: 'Writing', disabled: true },
+  };
+
   const [showDeleteAccountWarning, setShowDeleteAccountWarning] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
@@ -156,6 +194,7 @@ export function EditProfileDialog({
         education,
         workExperience: work,
         contacts,
+        sectionOrder,
       };
 
       await saveResumeDataMutation.mutateAsync(newResumeData);
@@ -394,40 +433,73 @@ export function EditProfileDialog({
         {/* Sidebar */}
         <div className="w-full sm:w-64 border-r border-gray-100 bg-white flex flex-col h-full overflow-y-auto scrollbar-hide shrink-0 py-6">
           <div className="flex flex-col px-4 gap-1">
-            {SIDEBAR_TABS.map((tab, idx) => {
-              if (tab.isLabel) {
-                return (
-                  <div key={idx} className="text-xs text-gray-400 font-semibold mt-4 mb-2 uppercase tracking-wider px-3">
-                    {tab.label}
-                  </div>
-                );
-              }
+            
+            <div className="text-xs text-gray-400 font-semibold mt-4 mb-2 uppercase tracking-wider px-3">
+              Profile
+            </div>
+            
+            <button
+              onClick={() => setActiveTab('general')}
+              className={cn(
+                "text-left px-3 py-2 rounded-md text-sm transition-colors",
+                activeTab === 'general' 
+                  ? "bg-gray-100 text-gray-900 font-medium" 
+                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+              )}
+            >
+              General
+            </button>
 
-              return (
-                <button
-                  key={tab.id}
-                  disabled={tab.disabled}
-                  onClick={() => {
-                    setActiveTab(tab.id!);
-                    if (tab.id === 'projects') setProjectsView('list');
-                    if (tab.id === 'education') setEduView('list');
-                    if (tab.id === 'work') setWorkView('list');
-                  }}
-                  className={cn(
-                    "text-left px-3 py-2 rounded-md text-sm transition-colors",
-                    activeTab === tab.id 
-                      ? "bg-gray-100 text-gray-900 font-medium" 
-                      : "text-gray-500 hover:bg-gray-50 hover:text-gray-900",
-                    tab.disabled && "opacity-50 cursor-not-allowed hover:bg-transparent hover:text-gray-500"
-                  )}
-                >
-                  <div className="flex justify-between items-center">
-                    <span>{tab.label}</span>
-                    {tab.disabled && <span className="text-gray-300">=</span>}
-                  </div>
-                </button>
-              );
-            })}
+            <DndContext 
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext 
+                items={sectionOrder}
+                strategy={verticalListSortingStrategy}
+              >
+                {sectionOrder.map((id) => {
+                  const def = TAB_DEFINITIONS[id];
+                  if (!def) return null;
+                  return (
+                    <SortableSidebarItem
+                      key={id}
+                      id={id}
+                      label={def.label}
+                      disabled={def.disabled}
+                      isActive={activeTab === id}
+                      onClick={() => {
+                        setActiveTab(id);
+                        if (id === 'projects') setProjectsView('list');
+                        if (id === 'education') setEduView('list');
+                        if (id === 'work') setWorkView('list');
+                        if (id === 'side_projects') setSideProjectsView('list');
+                        if (id === 'speaking') setSpeakingView('list');
+                        if (id === 'contact') setContactView('list');
+                      }}
+                    />
+                  );
+                })}
+              </SortableContext>
+            </DndContext>
+
+            <div className="text-xs text-gray-400 font-semibold mt-4 mb-2 uppercase tracking-wider px-3">
+              Account
+            </div>
+            
+            <button
+              onClick={() => setActiveTab('settings')}
+              className={cn(
+                "text-left px-3 py-2 rounded-md text-sm transition-colors",
+                activeTab === 'settings' 
+                  ? "bg-gray-100 text-gray-900 font-medium" 
+                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+              )}
+            >
+              Settings
+            </button>
+
           </div>
         </div>
 
