@@ -9,13 +9,12 @@ export default async function middleware(req: NextRequest) {
   const rawHostname = req.headers.get('host') || '';
   const hostname = rawHostname.split(':')[0]; // Strip port for local testing
   
-  // Exclude localhost and default Vercel domains
-  if (
-    hostname &&
-    !hostname.includes('localhost') &&
-    !hostname.includes('portfoliofy.me') &&
-    !hostname.includes('.vercel.app')
-  ) {
+  const isMainDomain = hostname === 'portfoliofy.me' || hostname === 'www.portfoliofy.me';
+  const isVercelDomain = hostname.endsWith('.vercel.app');
+  const isLocalhost = hostname.includes('localhost');
+
+  // Exclude localhost, main domain, and default Vercel domains
+  if (hostname && !isLocalhost && !isMainDomain && !isVercelDomain) {
     // It's a custom domain, rewrite to the user's profile
     try {
       // 1. Get userId by domain
