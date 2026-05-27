@@ -10,7 +10,7 @@ export default function Home() {
         <div className="w-full max-w-[500px] px-6 pt-24 pb-32 flex flex-col gap-6">
           {/* Hero Section */}
           <div className="flex flex-col mb-8">
-            <h1 className="text-[32px] md:text-[24px] font-normal tracking-tight leading-[1.3] text-gray-900 mb-8">
+            <h1 className="text-[20px] md:text-[24px] font-normal tracking-tight leading-[1.3] text-gray-900 mb-8">
               <strong>Portfoliofy</strong> is a progressive platform used by
               thousands of people to create more mindful professional profiles.
             </h1>
@@ -192,8 +192,8 @@ export default function Home() {
           </div>
 
           {/* Feature 4: Use it anywhere */}
-          <div className="bg-[#f5f5f5] rounded-[24px] p-8 pb-0 overflow-hidden flex flex-col">
-            <div className="mb-8">
+          <div className="bg-[#f5f5f5] rounded-[24px] p-5 sm:p-8 pb-0 overflow-hidden flex flex-col">
+            <div className="mb-6 sm:mb-8">
               <h3 className="font-bold text-[17px] mb-1.5 text-gray-900">
                 Use it anywhere
               </h3>
@@ -202,9 +202,9 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-white rounded-t-[16px] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-gray-200 border-b-0 p-8 h-[220px]">
-              <div className="flex items-center gap-8 mb-4">
-                <div className="size-[84px] rounded-full p-[3px] bg-gradient-to-tr from-[#feda75] via-[#fa7e1e] to-[#d62976] shrink-0">
+            <div className="bg-white rounded-t-[16px] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-gray-200 border-b-0 p-5 sm:p-8 h-auto sm:h-[220px]">
+              <div className="flex items-center gap-4 sm:gap-8 mb-4">
+                <div className="size-[64px] sm:size-[84px] rounded-full p-[2px] sm:p-[3px] bg-gradient-to-tr from-[#feda75] via-[#fa7e1e] to-[#d62976] shrink-0">
                   <div className="w-full h-full bg-white rounded-full p-0.5">
                     <div className="w-full h-full bg-gray-200 rounded-full overflow-hidden">
                       <img
@@ -215,42 +215,42 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-6 text-center w-full justify-center pr-4">
+                <div className="flex gap-3 sm:gap-6 text-center w-full justify-around sm:justify-center pr-0 sm:pr-4">
                   <div className="flex flex-col items-center">
-                    <div className="font-semibold text-[19px] text-gray-900">
+                    <div className="font-semibold text-[17px] sm:text-[19px] text-gray-900">
                       54
                     </div>
-                    <div className="text-[14px] text-gray-900 tracking-tight">
+                    <div className="text-[13px] sm:text-[14px] text-gray-900 tracking-tight">
                       Posts
                     </div>
                   </div>
                   <div className="flex flex-col items-center">
-                    <div className="font-semibold text-[19px] text-gray-900">
+                    <div className="font-semibold text-[17px] sm:text-[19px] text-gray-900">
                       368
                     </div>
-                    <div className="text-[14px] text-gray-900 tracking-tight">
+                    <div className="text-[13px] sm:text-[14px] text-gray-900 tracking-tight">
                       Followers
                     </div>
                   </div>
-                  <div className="flex flex-col items-center">
-                    <div className="font-semibold text-[19px] text-gray-900">
+                  <div className="hidden sm:flex flex-col items-center">
+                    <div className="font-semibold text-[17px] sm:text-[19px] text-gray-900">
                       115
                     </div>
-                    <div className="text-[14px] text-gray-900 tracking-tight">
+                    <div className="text-[13px] sm:text-[14px] text-gray-900 tracking-tight">
                       Following
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-col leading-snug ml-1">
-                <span className="font-semibold text-[16px] text-gray-900">
+              <div className="flex flex-col leading-snug ml-1 pb-4 sm:pb-0">
+                <span className="font-semibold text-[15px] sm:text-[16px] text-gray-900">
                   Tom Chung
                 </span>
-                <span className="text-[15px] text-gray-500">
+                <span className="text-[14px] sm:text-[15px] text-gray-500">
                   Architectural Designer
                 </span>
-                <span className="text-[15px] text-[#00376b]">
+                <span className="text-[14px] sm:text-[15px] text-[#00376b]">
                   portfoliofy.me/tom
                 </span>
               </div>

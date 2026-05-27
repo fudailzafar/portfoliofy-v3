@@ -9,7 +9,7 @@ export default function FAQPage() {
       <main className="flex-1 max-w-2xl mx-auto w-full px-6 py-20 font-sans">
         <h1 className="text-4xl font-bold text-gray-900 mb-12 tracking-tight">Frequently Asked Questions</h1>
         
-        <div className="space-y-8 text-gray-700 leading-relaxed text-sm md:text-base">
+        <div className="space-y-8 text-gray-700 leading-relaxed text-[15px]">
           <div className="space-y-2">
             <h3 className="font-bold text-gray-900 text-lg">What do you call this platform?</h3>
             <p className="text-gray-600">It's simply referred to as Portfoliofy. For example you could say, "I just created my Portfoliofy account!".</p>
