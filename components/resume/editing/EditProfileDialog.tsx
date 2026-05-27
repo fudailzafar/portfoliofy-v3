@@ -12,7 +12,6 @@ import { toast } from 'sonner';
 import { Pencil, FolderCode, Plus, Trash2, GraduationCap, Briefcase, ArrowUpRight, MessageCircle, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useClerk } from '@clerk/nextjs';
-import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -98,7 +97,6 @@ export function EditProfileDialog({
 
   const { saveResumeDataMutation, updateUsernameMutation } = useUserActions();
   const { signOut } = useClerk();
-  const { theme, setTheme } = useTheme();
   const router = useRouter();
 
   const handleDeleteAccount = async () => {
@@ -1474,29 +1472,6 @@ export function EditProfileDialog({
                 </div>
 
                 <div className="space-y-10">
-                  {/* Theme Section */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-gray-900">Appearance</h3>
-                    <div className="grid grid-cols-3 gap-4">
-                      {['light', 'dark', 'system'].map((t) => (
-                        <button
-                          key={t}
-                          onClick={() => setTheme(t)}
-                          className={cn(
-                            "flex flex-col items-center justify-center p-4 border rounded-xl transition-all",
-                            theme === t 
-                              ? "border-gray-900 bg-gray-50" 
-                              : "border-gray-200 hover:border-gray-300 bg-white"
-                          )}
-                        >
-                          <span className="capitalize text-sm font-medium text-gray-900">{t}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="w-full h-px bg-gray-100" />
-
                   {/* Account Section */}
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-gray-900">Account</h3>
