@@ -29,6 +29,12 @@ export function ClientLayoutWrapper({ children }: { children: React.ReactNode })
     }
   }, [pathname]);
 
+  // Expose sidebar state via CSS variable so other fixed elements (like edit button) can follow
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty('--sidebar-offset', isOpen ? '260px' : '0px');
+  }, [isOpen]);
+
   return (
     <TooltipProvider delayDuration={0}>
       <div className="relative min-h-screen bg-white w-full overflow-x-hidden flex font-sans">
@@ -54,7 +60,7 @@ export function ClientLayoutWrapper({ children }: { children: React.ReactNode })
 
         {/* Floating Menu Toggle Button */}
         <motion.div 
-          className="fixed bottom-6 left-6 z-50"
+          className="fixed bottom-6 left-6 z-50 flex items-center gap-3"
           animate={{ x: isOpen ? 260 : 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
