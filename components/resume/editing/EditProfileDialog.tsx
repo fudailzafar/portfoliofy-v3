@@ -1606,30 +1606,41 @@ export function EditProfileDialog({
 
                 <div className="space-y-10">
                   {/* Account Section */}
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <h3 className="text-lg font-semibold text-gray-900">Account</h3>
+                    
                     <div className="flex flex-col gap-4">
-                      <Button
-                        variant="outline"
-                        onClick={async () => {
-                          await signOut();
-                          window.location.href = '/';
-                        }}
-                        className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-50 h-12 rounded-xl border-gray-200"
-                      >
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Log out
-                      </Button>
+                      {/* Log out Row */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-gray-100 bg-white rounded-xl shadow-sm hover:border-gray-200 transition-colors gap-4">
+                        <div className="space-y-1">
+                          <h4 className="text-gray-900 font-medium text-sm">Log out</h4>
+                          <p className="text-gray-500 text-xs">Sign out of your current session on this device.</p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          onClick={async () => {
+                            await signOut();
+                            window.location.href = '/';
+                          }}
+                          className="w-full sm:w-auto text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg border-gray-200"
+                        >
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Log out
+                        </Button>
+                      </div>
 
-                      <div className="p-4 border border-red-100 bg-red-50/50 rounded-xl mt-4">
-                        <h4 className="text-red-900 font-semibold text-sm mb-1">Danger Zone</h4>
-                        <p className="text-red-600/80 text-xs mb-4">
-                          Permanently delete your account and all associated data. This action cannot be undone.
-                        </p>
+                      {/* Danger Zone Row */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-red-200 bg-red-50/50 rounded-xl shadow-sm gap-4">
+                        <div className="space-y-1">
+                          <h4 className="text-red-900 font-semibold text-sm">Danger Zone</h4>
+                          <p className="text-red-600/80 text-xs">
+                            Permanently delete your account and all associated data. This action cannot be undone.
+                          </p>
+                        </div>
                         <Button
                           variant="destructive"
                           onClick={() => setShowDeleteAccountWarning(true)}
-                          className="w-full bg-red-600 hover:bg-red-700 text-white rounded-lg h-10 shadow-sm"
+                          className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-sm whitespace-nowrap px-6"
                         >
                           Delete Account
                         </Button>
