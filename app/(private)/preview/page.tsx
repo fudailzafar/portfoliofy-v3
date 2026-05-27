@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/auth';
 import PreviewClient from './client';
 import {
   createUsernameLookup,
@@ -6,15 +6,15 @@ import {
   getUsernameById,
   storeResume,
 } from '../../../lib/server/redisActions';
+import { getCachedUserProfile } from '@/lib/server/cachedFunctions';
 import { generateResumeObject } from '@/lib/server/ai/generateResumeObject';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import LoadingFallback from '../../../components/LoadingFallback';
 import { MAX_USERNAME_LENGTH } from '@/lib/config';
-import { currentUser } from '@clerk/nextjs/server';
 
 async function LLMProcessing({ userId }: { userId: string }) {
-  const user = await currentUser();
+  const userProfile = await getCachedUserProfile(userId);
 
   let resume = await getResume(userId);
 
@@ -30,8 +30,7 @@ async function LLMProcessing({ userId }: { userId: string }) {
         "We couldn't extract data from your PDF. Please edit your resume manually.";
       resumeObject = {
         header: {
-          name:
-            user?.fullName || user?.emailAddresses[0]?.emailAddress || 'user',
+          name: userProfile?.name || userProfile?.email || 'user',
           shortAbout: 'This is a short description of your profile',
           location: '',
           contacts: {},
@@ -81,9 +80,8 @@ async function LLMProcessing({ userId }: { userId: string }) {
 }
 
 export default async function Preview() {
-  const { userId, redirectToSignIn } = await auth();
-
-  if (!userId) return redirectToSignIn();
+  const session = await auth();
+  if (!session?.user?.id) redirect('/');
 
   return (
     <>
@@ -92,7 +90,7 @@ export default async function Preview() {
           <LoadingFallback message="Creating your personal website..." />
         }
       >
-        <LLMProcessing userId={userId} />
+        <LLMProcessing userId={session.user.id} />
       </Suspense>
     </>
   );
