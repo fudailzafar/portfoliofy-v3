@@ -9,6 +9,7 @@ import PlausibleProvider from 'next-plausible';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
+import { ClientLayoutWrapper } from '@/components/ClientLayoutWrapper';
 
 const graphik = localFont({
   src: [
@@ -65,7 +66,9 @@ export default function RootLayout({
             </head>
             <body className="min-h-screen flex flex-col font-sans antialiased light">
               <main className="flex-1 flex flex-col">
-                {children}
+                <ClientLayoutWrapper>
+                  {children}
+                </ClientLayoutWrapper>
                 <SpeedInsights />
                 <Analytics />
               </main>
