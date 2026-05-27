@@ -9,7 +9,6 @@ import PlausibleProvider from 'next-plausible';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
-import { ThemeProvider } from '@/components/theme-provider';
 
 const graphik = localFont({
   src: [
@@ -64,15 +63,13 @@ export default function RootLayout({
                 {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${gaId}');`}
               </Script>
             </head>
-            <body className="min-h-screen flex flex-col font-sans antialiased">
-              <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-                <main className="flex-1 flex flex-col">
-                  {children}
-                  <SpeedInsights />
-                  <Analytics />
-                </main>
-                <Toaster richColors position="bottom-center" />
-              </ThemeProvider>
+            <body className="min-h-screen flex flex-col font-sans antialiased light">
+              <main className="flex-1 flex flex-col">
+                {children}
+                <SpeedInsights />
+                <Analytics />
+              </main>
+              <Toaster richColors position="bottom-center" />
             </body>
           </html>
         </ReactQueryClientProvider>
