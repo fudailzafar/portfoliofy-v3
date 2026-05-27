@@ -1,28 +1,26 @@
 import { getResume, getUserIdByUsername } from '@/lib/server/redisActions';
-import { clerkClient } from '@clerk/nextjs/server';
+import { getCachedUserProfile, UserProfile } from '@/lib/server/cachedFunctions';
 import { unstable_cache } from 'next/cache';
 
 export async function getUserData(username: string) {
   const user_id = await getUserIdByUsername(username);
   if (!user_id)
-    return { user_id: undefined, resume: undefined, clerkUser: undefined };
+    return { user_id: undefined, resume: undefined, userProfile: undefined };
 
   const resume = await getResume(user_id);
   if (!resume?.resumeData || resume.status !== 'live') {
-    return { user_id, resume: undefined, clerkUser: undefined };
+    return { user_id, resume: undefined, userProfile: undefined };
   }
 
-  const getCachedUser = unstable_cache(
-    async () => {
-      return await (await clerkClient()).users.getUser(user_id);
-    },
+  const getUserProfileCached = unstable_cache(
+    async () => getCachedUserProfile(user_id),
     [user_id],
     {
       tags: ['users'],
-      revalidate: 60, // 1 minute in seconds
+      revalidate: 60, // 1 minute
     },
   );
-  const clerkUser = await getCachedUser();
+  const userProfile: UserProfile | null = await getUserProfileCached();
 
-  return { user_id, resume, clerkUser };
+  return { user_id, resume, userProfile };
 }

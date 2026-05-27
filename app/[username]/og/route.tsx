@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     const username = request.nextUrl.pathname.split('/')[1];
 
-    const { user_id, resume, clerkUser } = await getUserData(username);
+    const { user_id, resume, userProfile } = await getUserData(username);
 
     const { searchParams } = new URL(request.url);
 
@@ -16,8 +16,8 @@ export async function GET(request: NextRequest) {
     const location = resume?.resumeData?.header?.location;
     const website = `www.portfoliofy.me/${username}`;
 
-    // Use profile image from Clerk user
-    const profileImageUrl = clerkUser?.imageUrl;
+    // Use profile image from Redis user profile
+    const profileImageUrl = userProfile?.image;
 
     return new ImageResponse(
       <div

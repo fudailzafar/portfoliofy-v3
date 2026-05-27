@@ -7,7 +7,7 @@ import { EditResume } from '@/components/resume/editing/EditResume';
 import { useUserActions } from '@/hooks/useUserActions';
 import { ResumeData } from '@/lib/server/redisActions';
 import { getSelfSoUrl } from '@/lib/utils';
-import { useUser } from '@clerk/nextjs';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
@@ -26,7 +26,7 @@ import {
 import { toast } from 'sonner';
 
 export default function PreviewClient({ messageTip }: { messageTip?: string }) {
-  const { user } = useUser();
+  const { data: session } = useSession();
   const {
     resumeQuery,
     toggleStatusMutation,
@@ -246,7 +246,7 @@ export default function PreviewClient({ messageTip }: { messageTip?: string }) {
         ) : (
           <FullResume
             resume={localResumeData}
-            profilePicture={user?.imageUrl}
+            profilePicture={session?.user?.image ?? undefined}
           />
         )}
       </div>

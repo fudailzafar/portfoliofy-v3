@@ -13,12 +13,12 @@ import { useUserActions } from '@/hooks/useUserActions';
 import { toast } from 'sonner';
 import { Pencil, FolderCode, Plus, Trash2, GraduationCap, Briefcase, ArrowUpRight, MessageCircle, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useClerk } from '@clerk/nextjs';
+import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { SortableSidebarItem } from './SortableSidebarItem';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 import { buildContactUrl, extractUsername } from '@/utils/extractUsername';
 import {
   AlertDialog,
@@ -51,7 +51,10 @@ export function EditProfileDialog({
   const [isSaving, setIsSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
-  
+
+  // Avatar state — tracks real-time preview separate from the server-side picture prop
+  const [localPicture, setLocalPicture] = useState<string | undefined>(picture);
+  const [isUploadingPicture, setIsUploadingPicture] = useState(false);
 
   // Local state for skills tab
   const [skills, setSkills] = useState<string[]>(resume.header.skills || []);
@@ -142,7 +145,6 @@ export function EditProfileDialog({
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   const { saveResumeDataMutation, updateUsernameMutation } = useUserActions();
-  const { signOut } = useClerk();
   const router = useRouter();
 
   const handleDeleteAccount = async () => {
@@ -153,7 +155,7 @@ export function EditProfileDialog({
       
       toast.success('Account deleted successfully');
       setOpen(false);
-      await signOut();
+      await signOut({ callbackUrl: '/' });
       window.location.href = '/';
     } catch (error) {
       toast.error('Failed to delete account');
@@ -161,6 +163,54 @@ export function EditProfileDialog({
     } finally {
       setIsDeletingAccount(false);
       setShowDeleteAccountWarning(false);
+    }
+  };
+
+  const handleAvatarUpload = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be under 5MB');
+      return;
+    }
+
+    // Instant local preview
+    const localUrl = URL.createObjectURL(file);
+    setLocalPicture(localUrl);
+    setIsUploadingPicture(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/user/avatar', { method: 'POST', body: formData });
+      if (!res.ok) throw new Error('Upload failed');
+      const { url } = await res.json();
+      setLocalPicture(url);
+      toast.success('Profile picture updated');
+    } catch {
+      // Revert to previous picture on failure
+      setLocalPicture(picture);
+      toast.error('Failed to upload image');
+    } finally {
+      setIsUploadingPicture(false);
+      URL.revokeObjectURL(localUrl);
+    }
+  };
+
+  const handleAvatarRemove = async () => {
+    setIsUploadingPicture(true);
+    setLocalPicture(undefined);
+    try {
+      const res = await fetch('/api/user/avatar', { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to remove');
+      toast.success('Profile picture removed');
+    } catch {
+      setLocalPicture(picture);
+      toast.error('Failed to remove image');
+    } finally {
+      setIsUploadingPicture(false);
     }
   };
 
@@ -526,13 +576,89 @@ export function EditProfileDialog({
             
             {activeTab === 'general' && (
               <div className="max-w-2xl mx-auto space-y-8">
-                {/* Avatar Section placeholder */}
+                {/* Avatar Section */}
                 <div className="flex items-center gap-6">
-                  <Avatar className="size-20 bg-gray-100">
-                    <AvatarImage src={picture} alt="Profile picture" />
-                    <AvatarFallback className="text-gray-400">?</AvatarFallback>
-                  </Avatar>
-                  <Button variant="outline" className="h-9 text-sm">Remove image</Button>
+                  {/* Clickable avatar / upload zone */}
+                  <div className="relative group shrink-0">
+                    <input
+                      id="avatar-upload"
+                      type="file"
+                      accept="image/*"
+                      className="sr-only"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleAvatarUpload(file);
+                        e.target.value = '';
+                      }}
+                    />
+                    <label
+                      htmlFor="avatar-upload"
+                      className="block size-20 rounded-full cursor-pointer overflow-hidden relative"
+                    >
+                      {localPicture ? (
+                        <img
+                          src={localPicture}
+                          alt="Profile picture"
+                          className="size-full object-cover"
+                        />
+                      ) : (
+                        <div className="size-full bg-gray-100 flex items-center justify-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="size-8 text-gray-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={1.5}
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                          </svg>
+                        </div>
+                      )}
+
+                      {/* Hover overlay */}
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+                        {isUploadingPicture ? (
+                          <svg className="animate-spin size-5 text-white" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                          </svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                          </svg>
+                        )}
+                      </div>
+                    </label>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 text-xs"
+                      onClick={() => document.getElementById('avatar-upload')?.click()}
+                      disabled={isUploadingPicture}
+                    >
+                      {isUploadingPicture ? 'Uploading…' : 'Upload photo'}
+                    </Button>
+                    {localPicture && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 text-xs text-gray-500 hover:text-red-600"
+                        onClick={handleAvatarRemove}
+                        disabled={isUploadingPicture}
+                      >
+                        Remove image
+                      </Button>
+                    )}
+                    <p className="text-[11px] text-gray-400 leading-tight">
+                      JPG, PNG or GIF · max 5MB
+                    </p>
+                  </div>
                 </div>
 
                 <div className="space-y-6">
@@ -1636,7 +1762,7 @@ export function EditProfileDialog({
                         <Button
                           variant="outline"
                           onClick={async () => {
-                            await signOut();
+                            await signOut({ callbackUrl: '/' });
                             window.location.href = '/';
                           }}
                           className="w-full sm:w-auto text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md border-gray-200"

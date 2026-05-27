@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { HomeHero } from '@/components/HomeHero';
 import { Footer } from '../components/Footer';
 
 export default function Home() {
@@ -8,21 +7,7 @@ export default function Home() {
       <main className="flex-1 flex flex-col font-sans text-gray-900 items-center">
         <div className="w-full max-w-[500px] px-6 pt-24 pb-32 flex flex-col gap-6">
           {/* Hero Section */}
-          <div className="flex flex-col mb-8">
-            <h1 className="text-[20px] md:text-[24px] font-normal tracking-tight leading-[1.3] text-gray-900 mb-8">
-              <strong>Portfoliofy</strong> is a progressive platform used by
-              thousands of people to create more mindful professional profiles.
-            </h1>
-
-            <div className="flex justify-end">
-              <Link href="/claim">
-                <Button className="bg-[#111] text-white hover:bg-black rounded-md h-12 px-8 text-[16px] font-medium tracking-wide">
-                  Create a profile
-                </Button>
-              </Link>
-            </div>
-          </div>
-
+          <HomeHero />
           {/* Feature 1: Create a beautiful profile */}
           <div className="bg-[#f5f5f5] rounded-[24px] p-5 sm:p-8 pb-0 overflow-hidden flex flex-col relative">
             <style
