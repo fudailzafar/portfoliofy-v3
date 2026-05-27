@@ -36,7 +36,7 @@ export function GlobalSidebar() {
           </SignInButton>
           <div className="pt-3">
             <Link href="/claim">
-              <Button variant="outline" className="w-full bg-white text-black border border-gray-200 hover:bg-gray-50 rounded-[10px] h-9 shadow-sm text-[13px] font-medium">
+              <Button variant="outline" className="w-full bg-white text-black border border-gray-200 hover:bg-gray-50 rounded-md h-9 shadow-sm text-[13px] font-medium">
                 Create a profile
               </Button>
             </Link>
