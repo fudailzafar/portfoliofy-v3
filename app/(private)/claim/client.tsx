@@ -8,12 +8,11 @@ import { Label } from '@/components/ui/label';
 import { claimUsernameAndInitProfile } from './actions';
 import { toast } from 'sonner';
 import { Check, Loader2 } from 'lucide-react';
-import { useClerk } from '@clerk/nextjs';
+import { signOut } from 'next-auth/react';
 import { cn } from '@/lib/utils';
 
 export default function ClaimPageClient({ userId }: { userId: string }) {
   const router = useRouter();
-  const { signOut } = useClerk();
   const [username, setUsername] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -150,8 +149,7 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
             <button
               type="button"
               onClick={async () => {
-                await signOut();
-                window.location.href = '/';
+                await signOut({ callbackUrl: '/' });
               }}
               className="text-xs text-gray-500 hover:text-gray-900 transition-colors"
             >

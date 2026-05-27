@@ -1,11 +1,12 @@
 'use server';
 
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/auth';
 import { createUsernameLookup, storeResume } from '@/lib/server/redisActions';
 import { ResumeDataSchemaType } from '@/lib/resume';
 
 export async function claimUsernameAndInitProfile(username: string, displayName: string) {
-  const { userId, getToken } = await auth();
+  const session = await auth();
+  const userId = session?.user?.id;
   if (!userId) {
     throw new Error('Unauthorized');
   }

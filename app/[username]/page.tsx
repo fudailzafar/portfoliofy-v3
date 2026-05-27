@@ -3,9 +3,8 @@ import Link from 'next/link';
 import { FullResume } from '@/components/resume/FullResume';
 import { Metadata } from 'next';
 import { getUserData } from './utils';
-import { SignInButton, SignUpButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/auth';
 import { EditProfileDialog } from '@/components/resume/editing/EditProfileDialog';
 
 export async function generateMetadata({
@@ -14,7 +13,7 @@ export async function generateMetadata({
   params: Promise<{ username: string }>;
 }): Promise<Metadata> {
   const { username } = await params;
-  const { user_id, resume, clerkUser } = await getUserData(username);
+  const { user_id, resume, userProfile } = await getUserData(username);
 
   if (!user_id) {
     return {
@@ -55,8 +54,9 @@ export default async function ProfilePage({
 }) {
   const { username } = await params;
 
-  const { user_id, resume, clerkUser } = await getUserData(username);
-  const { userId } = await auth();
+  const { user_id, resume, userProfile } = await getUserData(username);
+  const session = await auth();
+  const userId = session?.user?.id;
 
   if (!user_id) {
     return (
@@ -146,7 +146,8 @@ export default async function ProfilePage({
   if (!resume?.resumeData || resume.status !== 'live')
     redirect(`/?idNotFound=${user_id}`);
 
-  const profilePicture = clerkUser?.imageUrl;
+  // Prefer user-uploaded S3 avatar over Google OAuth photo
+  const profilePicture = userProfile?.customImage ?? userProfile?.image ?? undefined;
 
   const jsonLd = {
     '@context': 'https://schema.org',

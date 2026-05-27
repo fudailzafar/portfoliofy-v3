@@ -1,6 +1,5 @@
 import type React from 'react';
 import localFont from 'next/font/local';
-import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryClientProvider } from '@/components/ReactQueryClientProvider';
@@ -10,6 +9,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
 import { ClientLayoutWrapper } from '@/components/ClientLayoutWrapper';
+import { SessionProviderWrapper } from '@/components/SessionProviderWrapper';
 
 const graphik = localFont({
   src: [
@@ -44,17 +44,11 @@ export default function RootLayout({
   const gaId = process.env.NEXT_PUBLIC_GA_ID || 'G-B99MN9ZMBL';
 
   return (
-    <ClerkProvider>
+    <SessionProviderWrapper>
       <PlausibleProvider domain="portfoliofy.me">
         <ReactQueryClientProvider>
           <html lang="en" className={graphik.variable}>
             <head>
-              {/* {process.env.NODE_ENV === "development" && (
-              <script
-                crossOrigin="anonymous"
-                src="//unpkg.com/react-scan/dist/auto.global.js"
-              />
-            )} */}
               {/* rest of your scripts go under */}
               <Script
                 src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
@@ -77,6 +71,6 @@ export default function RootLayout({
           </html>
         </ReactQueryClientProvider>
       </PlausibleProvider>
-    </ClerkProvider>
+    </SessionProviderWrapper>
   );
 }
