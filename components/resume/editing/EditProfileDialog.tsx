@@ -2369,71 +2369,84 @@ export function EditProfileDialog({
                     {/* Personal Domain Section */}
                     <div className="space-y-6">
                       <div className="flex flex-col gap-4">
-                        <div className="flex flex-col p-6 border border-gray-200 bg-white rounded-xl shadow-sm gap-4">
+                        <div className="flex flex-col gap-4">
                           <div className="space-y-1">
-                            <h4 className="text-gray-900 font-semibold text-sm">Personal Domain</h4>
-                            <p className="text-gray-500 text-xs">Connect a custom domain (e.g., yourname.com) to your profile.</p>
+                            <h4 className="text-gray-900 text-[14px]">Custom domain</h4>
+                            <p className="text-[#888888] text-[13px]">
+                              Optionally set a domain other than portfoliofy.me/{username}
+                            </p>
                           </div>
                           
-                          <div className="flex items-center gap-3">
-                            <Input
-                              value={customDomain}
-                              onChange={(e) => setCustomDomain(e.target.value.toLowerCase())}
-                              placeholder="yourname.com"
-                              className="max-w-xs"
-                              disabled={!!domainStatus}
-                            />
+                          <div className="flex items-center gap-2">
+                            <div className="relative flex-1 max-w-[320px]">
+                              {domainStatus?.verified && (
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+                                  <div className="bg-[#7cb44d] rounded-full p-[2px]">
+                                    <svg className="w-[10px] h-[10px] text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                                  </div>
+                                </div>
+                              )}
+                              <Input
+                                value={customDomain}
+                                onChange={(e) => setCustomDomain(e.target.value.toLowerCase())}
+                                placeholder="yourname.com"
+                                className={`w-full bg-[#f2f2f2] border-0 focus-visible:ring-0 shadow-none text-[13px] h-9 ${domainStatus?.verified ? 'pl-9 text-gray-700' : ''}`}
+                                disabled={!!domainStatus}
+                              />
+                            </div>
                             {!domainStatus ? (
-                              <Button onClick={handleDomainSave} disabled={isVerifyingDomain || !customDomain}>
-                                {isVerifyingDomain ? 'Adding...' : 'Add Domain'}
+                              <Button variant="outline" size="sm" className="h-9 border-gray-200 text-gray-500 font-normal text-[13px] hover:text-gray-900 rounded-lg" onClick={handleDomainSave} disabled={isVerifyingDomain || !customDomain}>
+                                {isVerifyingDomain ? 'Saving...' : 'Save'}
                               </Button>
                             ) : (
-                              <Button variant="outline" onClick={handleDomainRemove} disabled={isVerifyingDomain}>
+                              <Button variant="outline" size="sm" className="h-9 border-gray-200 text-gray-500 font-normal text-[13px] hover:text-gray-900 rounded-lg" onClick={handleDomainRemove} disabled={isVerifyingDomain}>
                                 Remove
                               </Button>
                             )}
                           </div>
                           
                           {domainStatus && (
-                            <div className="mt-4 p-4 bg-gray-50 border border-gray-100 rounded-lg">
-                              <div className="flex items-center justify-between mb-4">
-                                <h5 className="text-sm font-medium text-gray-700">Domain Status</h5>
-                                {domainStatus.verified ? (
-                                  <span className="flex items-center gap-1 text-green-600 text-xs font-medium">
-                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                                    Verified
-                                  </span>
-                                ) : (
-                                  <div className="flex items-center gap-2">
-                                    <span className="flex items-center gap-1 text-amber-600 text-xs font-medium">
-                                      <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                      Pending Verification
-                                    </span>
-                                    <Button variant="outline" size="sm" className="h-7 text-xs" onClick={fetchDomain} disabled={isVerifyingDomain}>
-                                      Check Status
-                                    </Button>
+                            <>
+                              {domainStatus.verified ? (
+                                <div className="mt-1 relative max-w-[400px]">
+                                  <div className="absolute -top-[6px] left-8 w-3 h-3 bg-[#e8eedd] rotate-45 transform origin-center" />
+                                  <div className="relative bg-[#e8eedd] text-[#6b8949] text-[13px] px-4 py-2.5 rounded-lg">
+                                    Your site is published at {customDomain}
                                   </div>
-                                )}
-                              </div>
-                              
-                              {!domainStatus.verified && (
-                                <div className="space-y-3">
-                                  <p className="text-xs text-gray-500">Please add the following DNS record to your domain registrar to verify ownership:</p>
-                                  <div className="bg-white p-3 border border-gray-200 rounded text-xs font-mono">
-                                    <div className="grid grid-cols-3 gap-2">
-                                      <span className="text-gray-400">Type</span>
-                                      <span className="col-span-2">{domainStatus.verification?.length > 0 ? domainStatus.verification[0].type : 'A / CNAME'}</span>
-                                      
-                                      <span className="text-gray-400">Name</span>
-                                      <span className="col-span-2">{domainStatus.verification?.length > 0 ? domainStatus.verification[0].domain : '@'}</span>
-                                      
-                                      <span className="text-gray-400">Value</span>
-                                      <span className="col-span-2 break-all">{domainStatus.verification?.length > 0 ? domainStatus.verification[0].value : '76.76.21.21'}</span>
+                                </div>
+                              ) : (
+                                <div className="mt-2 p-4 bg-gray-50 border border-gray-100 rounded-lg max-w-lg">
+                                  <div className="flex items-center justify-between mb-4">
+                                    <h5 className="text-sm font-medium text-gray-700">Domain Status</h5>
+                                    <div className="flex items-center gap-2">
+                                      <span className="flex items-center gap-1 text-amber-600 text-xs font-medium">
+                                        <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                        Pending Verification
+                                      </span>
+                                      <Button variant="outline" size="sm" className="h-7 text-xs" onClick={fetchDomain} disabled={isVerifyingDomain}>
+                                        Check Status
+                                      </Button>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="space-y-3">
+                                    <p className="text-xs text-gray-500">Please add the following DNS record to your domain registrar to verify ownership:</p>
+                                    <div className="bg-white p-3 border border-gray-200 rounded text-xs font-mono">
+                                      <div className="grid grid-cols-3 gap-2">
+                                        <span className="text-gray-400">Type</span>
+                                        <span className="col-span-2">{domainStatus.verification?.length > 0 ? domainStatus.verification[0].type : 'A / CNAME'}</span>
+                                        
+                                        <span className="text-gray-400">Name</span>
+                                        <span className="col-span-2">{domainStatus.verification?.length > 0 ? domainStatus.verification[0].domain : '@'}</span>
+                                        
+                                        <span className="text-gray-400">Value</span>
+                                        <span className="col-span-2 break-all">{domainStatus.verification?.length > 0 ? domainStatus.verification[0].value : '76.76.21.21'}</span>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               )}
-                            </div>
+                            </>
                           )}
                         </div>
                       </div>
