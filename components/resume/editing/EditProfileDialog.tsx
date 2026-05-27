@@ -385,7 +385,7 @@ export function EditProfileDialog({
         <DialogTitle className="sr-only">Edit Profile</DialogTitle>
 
         {/* Sidebar */}
-        <div className="w-full sm:w-64 border-r border-gray-100 bg-white flex flex-col h-full overflow-y-auto shrink-0 py-6">
+        <div className="w-full sm:w-64 border-r border-gray-100 bg-white flex flex-col h-full overflow-y-auto scrollbar-hide shrink-0 py-6">
           <div className="flex flex-col px-4 gap-1">
             {SIDEBAR_TABS.map((tab, idx) => {
               if (tab.isLabel) {
@@ -426,7 +426,7 @@ export function EditProfileDialog({
 
         {/* Content Area */}
         <div className="flex-1 flex flex-col h-full bg-white relative">
-          <div className="flex-1 overflow-y-auto p-8 md:p-12 pb-24">
+          <div className="flex-1 overflow-y-auto scrollbar-hide p-8 md:p-12 pb-24">
             
             {activeTab === 'general' && (
               <div className="max-w-2xl mx-auto space-y-8">
