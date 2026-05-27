@@ -38,15 +38,46 @@ export async function GET() {
       return NextResponse.json({ domain: null });
     }
 
-    // Fetch domain status from Vercel
-    const { ok, data } = await fetchVercelAPI(`/v9/projects/${VERCEL_PROJECT_ID}/domains/${domain}`);
+    // Fetch domain project status from Vercel
+    const { ok: projectOk, data: projectData } = await fetchVercelAPI(`/v9/projects/${VERCEL_PROJECT_ID}/domains/${domain}`);
     
-    if (!ok) {
-      // If Vercel doesn't have it, maybe it was deleted externally
-      return NextResponse.json({ domain, status: 'error', data });
+    if (!projectOk) {
+      return NextResponse.json({ domain, status: 'error', data: projectData });
     }
 
-    return NextResponse.json({ domain, status: 'success', data });
+    // Fetch domain DNS configuration status
+    const { ok: configOk, data: configData } = await fetchVercelAPI(`/v6/domains/${domain}/config`);
+
+    let isVerified = projectData.verified && !configData?.misconfigured;
+    
+    let verificationRecords = [];
+    if (!isVerified) {
+      if (domain.split('.').length > 2 && !domain.startsWith('www.')) {
+        // Subdomain typically uses CNAME
+        verificationRecords.push({
+          type: 'CNAME',
+          domain: domain,
+          value: 'cname.vercel-dns.com'
+        });
+      } else {
+        // Apex typically uses A record
+        verificationRecords.push({
+          type: 'A',
+          domain: '@',
+          value: '76.76.21.21'
+        });
+      }
+    }
+
+    return NextResponse.json({ 
+      domain, 
+      status: 'success', 
+      data: {
+        ...projectData,
+        verified: isVerified,
+        verification: verificationRecords
+      }
+    });
   } catch (error) {
     console.error('Failed to get domain:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
