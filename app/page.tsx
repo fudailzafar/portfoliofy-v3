@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { TopMenu } from '../components/TopMenu';
 import { Footer } from '../components/Footer';
 
 export default function Home() {

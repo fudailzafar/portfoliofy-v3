@@ -1,10 +1,8 @@
-import { TopMenu } from '@/components/TopMenu';
 import { Footer } from '@/components/Footer';
 
 export default function PrivacyPage() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <TopMenu />
       
       <main className="flex-1 max-w-2xl mx-auto w-full px-6 py-20 font-sans">
         <h1 className="text-4xl font-bold text-gray-900 mb-2 tracking-tight">Privacy Policy</h1>
