@@ -16,7 +16,7 @@ export default function Home() {
 
             <div className="flex justify-end">
               <Link href="/claim">
-                <Button className="bg-[#111] text-white hover:bg-black rounded-full h-12 px-8 text-[16px] font-medium tracking-wide">
+                <Button className="bg-[#111] text-white hover:bg-black rounded-md h-12 px-8 text-[16px] font-medium tracking-wide">
                   Create a profile
                 </Button>
               </Link>
