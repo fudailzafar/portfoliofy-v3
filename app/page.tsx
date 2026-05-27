@@ -24,7 +24,7 @@ export default function Home() {
           </div>
 
           {/* Feature 1: Create a beautiful profile */}
-          <div className="bg-[#f5f5f5] rounded-[24px] p-8 pb-0 overflow-hidden flex flex-col relative">
+          <div className="bg-[#f5f5f5] rounded-[24px] p-5 sm:p-8 pb-0 overflow-hidden flex flex-col relative">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -56,8 +56,8 @@ export default function Home() {
                 Side Projects
               </div>
 
-              <div className="bg-white border shadow-xl rounded-[18px] p-4 flex items-center justify-between relative z-10 animate-drag w-full mx-auto max-w-[400px]">
-                <span className="font-medium text-[20px] text-gray-900 tracking-tight">
+              <div className="bg-white border shadow-xl rounded-[18px] p-3 sm:p-4 flex items-center justify-between relative z-10 animate-drag w-full mx-auto max-w-[400px]">
+                <span className="font-medium text-[16px] sm:text-[20px] text-gray-900 tracking-tight truncate pr-2">
                   Work Experience
                 </span>
                 <div className="flex flex-col gap-[3px] opacity-40 relative">
@@ -91,7 +91,7 @@ export default function Home() {
           </div>
 
           {/* Feature 2: Clean Design */}
-          <div className="bg-[#f5f5f5] rounded-[24px] p-8 pb-0 overflow-hidden flex flex-col">
+          <div className="bg-[#f5f5f5] rounded-[24px] p-5 sm:p-8 pb-0 overflow-hidden flex flex-col">
             <div className="mb-8">
               <h3 className="font-bold text-[17px] mb-1.5">Clean & Minimal</h3>
               <p className="text-[15px] text-gray-500 leading-snug">
@@ -100,8 +100,8 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-white rounded-t-[16px] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-gray-200 border-b-0 p-6 h-[180px]">
-              <div className="flex gap-4">
+            <div className="bg-white rounded-t-[16px] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-gray-200 border-b-0 p-4 sm:p-6 h-[180px]">
+              <div className="flex gap-3 sm:gap-4">
                 <div className="w-1/3 space-y-2">
                   <div className="h-2 w-16 bg-gray-300 rounded"></div>
                   <div className="h-2 w-12 bg-gray-200 rounded"></div>
@@ -120,7 +120,7 @@ export default function Home() {
           </div>
 
           {/* Feature 3: Find who you're looking for */}
-          <div className="bg-[#f5f5f5] rounded-[24px] p-8 pb-0 overflow-hidden flex flex-col relative">
+          <div className="bg-[#f5f5f5] rounded-[24px] p-5 sm:p-8 pb-0 overflow-hidden flex flex-col relative">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -144,16 +144,16 @@ export default function Home() {
             </div>
 
             <div className="bg-white rounded-t-[16px] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-gray-200 border-b-0 p-4 h-[180px]">
-              <div className="bg-white border shadow-sm rounded-full px-5 py-3 flex items-center mb-6 max-w-[95%]">
-                <span className="text-gray-900 font-medium text-[18px] tracking-tight flex items-center">
+              <div className="bg-white border shadow-sm rounded-full px-3 sm:px-5 py-2 sm:py-3 flex items-center mb-6 max-w-[95%]">
+                <span className="text-gray-900 font-medium text-[15px] sm:text-[18px] tracking-tight flex items-center">
                   Art director
                   <span className="inline-block w-[2px] h-[1.1em] bg-blue-500 ml-0.5 animate-blink"></span>
                 </span>
               </div>
 
-              <div className="space-y-4 px-2">
-                <div className="flex gap-4 items-center">
-                  <div className="size-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+              <div className="space-y-4 px-1 sm:px-2">
+                <div className="flex gap-3 sm:gap-4 items-center">
+                  <div className="size-10 sm:size-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
                     <img
                       src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lauren"
                       alt="Lauren"
@@ -161,17 +161,17 @@ export default function Home() {
                     />
                   </div>
                   <div className="leading-tight">
-                    <div className="text-[16px] text-gray-400">
+                    <div className="text-[14px] sm:text-[16px] text-gray-400">
                       Lauren Jochum
                     </div>
-                    <div className="text-[15px] text-gray-400">
+                    <div className="text-[13px] sm:text-[15px] text-gray-400">
                       <strong className="text-gray-400">Art director</strong> in
                       Berkeley
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-4 items-center opacity-30">
-                  <div className="size-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                <div className="flex gap-3 sm:gap-4 items-center opacity-30">
+                  <div className="size-10 sm:size-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
                     <img
                       src="https://api.dicebear.com/7.x/avataaars/svg?seed=Skip"
                       alt="Skip"
@@ -179,8 +179,8 @@ export default function Home() {
                     />
                   </div>
                   <div className="leading-tight">
-                    <div className="text-[16px] text-gray-400">Skip Hursh</div>
-                    <div className="text-[15px] text-gray-400">
+                    <div className="text-[14px] sm:text-[16px] text-gray-400">Skip Hursh</div>
+                    <div className="text-[13px] sm:text-[15px] text-gray-400">
                       <strong className="text-gray-400">Art director</strong> in
                       NYC
                     </div>
