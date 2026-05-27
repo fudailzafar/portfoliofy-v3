@@ -10,6 +10,8 @@ import { Speaking } from './Speaking';
 import { Projects } from './Projects';
 import { Contact } from './Contact';
 
+const DEFAULT_ORDER = ['work', 'side_projects', 'speaking', 'projects', 'skills', 'education', 'contact', 'awards', 'exhibitions', 'writing'];
+
 export const FullResume = ({
   resume,
   profilePicture,
@@ -21,6 +23,8 @@ export const FullResume = ({
     return <LoadingFallback message="Loading Resume..." />;
   }
 
+  const order = resume.sectionOrder || DEFAULT_ORDER;
+
   return (
     <section
       className="mx-auto w-full max-w-2xl space-y-8 bg-white print:space-y-4 my-8 px-4"
@@ -31,19 +35,26 @@ export const FullResume = ({
       <div className="flex flex-col gap-6">
         <Summary summary={resume?.summary} />
 
-        <WorkExperience work={resume?.workExperience} />
-
-        <SideProjects sideProjects={resume?.sideProjects} />
-
-        <Speaking speaking={resume?.speaking} />
-
-        <Projects projects={resume?.projects} />
-
-        <Education educations={resume.education} />
-
-        <Contact contacts={resume.contacts} />
-
-        <Skills skills={resume.header.skills} />
+        {order.map((sectionId) => {
+          switch (sectionId) {
+            case 'work':
+              return <WorkExperience key={sectionId} work={resume?.workExperience} />;
+            case 'side_projects':
+              return <SideProjects key={sectionId} sideProjects={resume?.sideProjects} />;
+            case 'speaking':
+              return <Speaking key={sectionId} speaking={resume?.speaking} />;
+            case 'projects':
+              return <Projects key={sectionId} projects={resume?.projects} />;
+            case 'education':
+              return <Education key={sectionId} educations={resume?.education} />;
+            case 'contact':
+              return <Contact key={sectionId} contacts={resume?.contacts} />;
+            case 'skills':
+              return <Skills key={sectionId} skills={resume?.header?.skills} />;
+            default:
+              return null; // For awards, exhibitions, writing which are not implemented yet
+          }
+        })}
       </div>
     </section>
   );
