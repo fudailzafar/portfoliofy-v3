@@ -161,8 +161,10 @@ export default async function ProfilePage({
     skills: resume.resumeData.header.skills,
   };
 
+  const typography = resume.resumeData?.design?.typography || 'sans';
+
   return (
-    <>
+    <div className={`font-${typography} min-h-screen flex flex-col`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -176,7 +178,9 @@ export default async function ProfilePage({
         />
       )}
 
-      <FullResume resume={resume?.resumeData} profilePicture={profilePicture} />
+      <div className="flex-1">
+        <FullResume resume={resume?.resumeData} profilePicture={profilePicture} />
+      </div>
 
       <div className="text-center mt-8 mb-4">
         <Link
@@ -189,6 +193,6 @@ export default async function ProfilePage({
           </span>
         </Link>
       </div>
-    </>
+    </div>
   );
 }

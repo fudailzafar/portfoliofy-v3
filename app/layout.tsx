@@ -27,6 +27,33 @@ const graphik = localFont({
   variable: '--font-graphik',
 });
 
+const signifier = localFont({
+  src: [
+    {
+      path: '../public/fonts/Signifier-Regular.otf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/Signifier-Medium.otf',
+      weight: '500',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-signifier',
+});
+
+const diatypeMono = localFont({
+  src: [
+    {
+      path: '../public/fonts/DiatypeMono-Regular.woff',
+      weight: '400',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-diatype-mono',
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://portfoliofy.me'),
   title: 'Portfoliofy - Mindful professional profiles',
@@ -47,7 +74,7 @@ export default function RootLayout({
     <SessionProviderWrapper>
       <PlausibleProvider domain="portfoliofy.me">
         <ReactQueryClientProvider>
-          <html lang="en" className={graphik.variable}>
+          <html lang="en" className={`${graphik.variable} ${signifier.variable} ${diatypeMono.variable}`}>
             <head>
               {/* rest of your scripts go under */}
               <Script
