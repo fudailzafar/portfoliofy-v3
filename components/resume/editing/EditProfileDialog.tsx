@@ -46,6 +46,11 @@ export function EditProfileDialog({
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
   
+
+  // Local state for skills tab
+  const [skills, setSkills] = useState<string[]>(resume.header.skills || []);
+  const [skillInput, setSkillInput] = useState('');
+
   // Local state for the general tab
   const [uname, setUname] = useState(username);
   const [displayName, setDisplayName] = useState(resume.header.name || '');
@@ -137,6 +142,7 @@ export function EditProfileDialog({
         header: {
           ...resume.header,
           name: displayName,
+          skills,
           shortAbout,
           location,
           pronouns,
@@ -333,7 +339,7 @@ export function EditProfileDialog({
     { id: 'side_projects', label: 'Side Projects', disabled: false },
     { id: 'speaking', label: 'Speaking', disabled: false },
     { id: 'projects', label: 'Projects', disabled: false },
-    { id: 'features', label: 'Features', disabled: true },
+    { id: 'skills', label: 'Skills', disabled: false },
     { id: 'education', label: 'Education', disabled: false },
     { id: 'contact', label: 'Contact', disabled: false },
     { id: 'awards', label: 'Awards', disabled: true },
@@ -1342,7 +1348,69 @@ export function EditProfileDialog({
                 )}
               </div>
             )}
-            {activeTab === 'contact' && (
+            
+            {activeTab === 'skills' && (
+              <div className="max-w-3xl mx-auto h-full flex flex-col">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+                  <h2 className="text-2xl font-bold">Skills</h2>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex gap-3">
+                    <Input
+                      value={skillInput}
+                      onChange={(e) => setSkillInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          if (skillInput.trim() && !skills.includes(skillInput.trim())) {
+                            setSkills([...skills, skillInput.trim()]);
+                            setSkillInput('');
+                          }
+                        }
+                      }}
+                      placeholder="e.g. Software Development"
+                      className="flex-1"
+                    />
+                    <Button 
+                      onClick={() => {
+                        if (skillInput.trim() && !skills.includes(skillInput.trim())) {
+                          setSkills([...skills, skillInput.trim()]);
+                          setSkillInput('');
+                        }
+                      }}
+                      variant="secondary"
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none px-6"
+                    >
+                      Add
+                    </Button>
+                  </div>
+
+                  {skills.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pt-4">
+                      {skills.map((skill, index) => (
+                        <div 
+                          key={index} 
+                          className="flex items-center bg-gray-100/80 text-gray-900 text-sm font-mono px-3 py-1.5 rounded-full"
+                        >
+                          <span className="mr-2">{skill}</span>
+                          <button
+                            onClick={() => setSkills(skills.filter((_, i) => i !== index))}
+                            className="text-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center rounded-full focus:outline-none"
+                            aria-label={`Remove ${skill}`}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                            </svg>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+{activeTab === 'contact' && (
               <div className="max-w-3xl mx-auto h-full flex flex-col">
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
                   <h2 className="text-2xl font-bold">Contact</h2>
