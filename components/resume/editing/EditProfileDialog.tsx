@@ -2422,7 +2422,7 @@ export function EditProfileDialog({
                                 <div className="mt-1 relative max-w-[400px]">
                                   <div className="absolute -top-[6px] left-8 w-3 h-3 bg-[#e8eedd] rotate-45 transform origin-center" />
                                   <div className="relative bg-[#e8eedd] text-[#6b8949] text-[13px] px-4 py-2.5 rounded-lg">
-                                    Your site is published at {customDomain}
+                                    Your site is published at <a href={`https://${customDomain}`} target="_blank" rel="noopener noreferrer" className="hover:underline font-medium decoration-[#6b8949] underline-offset-2">{customDomain}</a>
                                   </div>
                                 </div>
                               ) : (
