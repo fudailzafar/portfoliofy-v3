@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { AuthDialog } from './AuthDialog';
 import { Button } from '@/components/ui/button';
 import { useUserActions } from '@/hooks/useUserActions';
+import { toast } from 'sonner';
 
 export function GlobalSidebar() {
   const pathname = usePathname();
@@ -30,33 +31,57 @@ export function GlobalSidebar() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 mt-auto pb-4">
-          <Link href="/" className="flex items-center gap-3 w-fit group">
-            <div className={`w-1 h-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-black' : 'bg-transparent'}`} />
-            <span className="text-[14px] text-gray-800 font-medium group-hover:underline underline-offset-4">About</span>
-          </Link>
-
+        <div className="flex flex-col mt-auto pb-4">
           {session ? (
-            <div className="flex flex-col gap-3">
-              {/* Logout */}
-              <button
-                onClick={() => signOut({ callbackUrl: '/' })}
-                className="flex items-center gap-3 w-fit group text-left"
-              >
-                <div className="w-1 h-1 rounded-full bg-transparent" />
-                <span className="text-[14px] text-gray-800 font-medium group-hover:underline underline-offset-4">
-                  Logout
-                </span>
-              </button>
+            <div className="flex flex-col gap-4 pl-1">
+              {/* User Info & Logout */}
+              <div className="pl-4 mb-3">
+                <div className="text-[14px] text-gray-800">{session.user.name}</div>
+                <div className="text-[13px] text-gray-400 mt-1">
+                  Not you? <button onClick={() => signOut({ callbackUrl: '/' })} className="hover:underline text-[#b3b3b3]">Logout</button>
+                </div>
+              </div>
+              
+              {/* Profile */}
+              {usernameQuery.data?.username && (
+                <Link href={`/${usernameQuery.data.username}`} className="flex items-center gap-3 w-fit group">
+                  <div className={`w-1 h-1 rounded-full ${pathname === `/${usernameQuery.data.username}` ? 'bg-black' : 'bg-transparent'}`} />
+                  <span className="text-[14px] text-gray-800 group-hover:underline underline-offset-4">Profile</span>
+                </Link>
+              )}
+              {/* About */}
+              <Link href="/" className="flex items-center gap-3 w-fit group">
+                <div className={`w-1 h-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-black' : 'bg-transparent'}`} />
+                <span className="text-[14px] text-gray-800 group-hover:underline underline-offset-4">About</span>
+              </Link>
+              
+              {/* Username copy to clipboard */}
+              {usernameQuery.data?.username && (
+                <div className="pt-6 mt-2">
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText(`portfoliofy.me/${usernameQuery.data.username}`);
+                      toast.success('Copied to clipboard');
+                    }}
+                    className="text-[14px] text-gray-400 hover:text-gray-600 transition-colors pl-4"
+                  >
+                    portfoliofy.me/{usernameQuery.data.username}
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
-            <>
+            <div className="flex flex-col gap-3">
+              <Link href="/" className="flex items-center gap-3 w-fit group">
+                <div className={`w-1 h-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-black' : 'bg-transparent'}`} />
+                <span className="text-[14px] text-gray-800 group-hover:underline underline-offset-4">About</span>
+              </Link>
               <button
                 onClick={() => openAuth('login')}
                 className="flex items-center gap-3 w-fit group text-left"
               >
                 <div className="w-1 h-1 rounded-full bg-transparent" />
-                <span className="text-[14px] text-gray-800 font-medium group-hover:underline underline-offset-4">Login</span>
+                <span className="text-[14px] text-gray-800 group-hover:underline underline-offset-4">Login</span>
               </button>
               <div className="pt-3">
                 <Button
@@ -67,7 +92,7 @@ export function GlobalSidebar() {
                   Create a profile
                 </Button>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
