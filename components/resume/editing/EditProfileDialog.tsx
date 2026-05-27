@@ -417,14 +417,25 @@ export function EditProfileDialog({
       }}
     >
       <DialogTrigger asChild>
-        <Button 
-          variant="default" 
-          size="icon"
-          className="fixed bottom-6 left-6 z-50 h-14 w-14 rounded-full shadow-xl bg-design-black hover:bg-design-black/90 text-white"
+        <button 
           aria-label="Edit Profile"
+          style={{ 
+            position: 'fixed', 
+            bottom: '24px', 
+            left: 'calc(72px + var(--sidebar-offset, 0px))',
+            zIndex: 50,
+            transition: 'left 0.4s cubic-bezier(0.32,0.72,0,1)',
+          }}
+          onMouseDown={(e) => {
+            const el = e.currentTarget;
+            el.style.transform = 'scale(0.9)';
+            const reset = () => { el.style.transform = ''; };
+            window.addEventListener('mouseup', reset, { once: true });
+          }}
+          className="size-[48px] rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center outline-none transition-transform"
         >
-          <Pencil className="h-6 w-6" />
-        </Button>
+          <Pencil className="h-[18px] w-[18px] text-[#111]" strokeWidth={1.5} />
+        </button>
       </DialogTrigger>
       
       <DialogContent className="max-w-5xl h-[85vh] p-0 overflow-hidden font-mono flex flex-col sm:flex-row gap-0 bg-white">
