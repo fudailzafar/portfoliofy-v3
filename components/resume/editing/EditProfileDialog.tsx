@@ -1639,7 +1639,7 @@ export function EditProfileDialog({
                             await signOut();
                             window.location.href = '/';
                           }}
-                          className="w-full sm:w-auto text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg border-gray-200"
+                          className="w-full sm:w-auto text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md border-gray-200"
                         >
                           <LogOut className="w-4 h-4 mr-2" />
                           Log out
@@ -1657,7 +1657,7 @@ export function EditProfileDialog({
                         <Button
                           variant="destructive"
                           onClick={() => setShowDeleteAccountWarning(true)}
-                          className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-sm whitespace-nowrap px-6"
+                          className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white rounded-md shadow-sm whitespace-nowrap px-6"
                         >
                           Delete Account
                         </Button>
@@ -1716,7 +1716,7 @@ export function EditProfileDialog({
                   onClick={handleSaveProject} 
                   disabled={isSaving || !currentProject?.title || !currentProject?.year} 
                   variant="default"
-                  className="bg-design-black hover:bg-design-black/90 text-white rounded-full px-6"
+                  className="bg-design-black hover:bg-design-black/90 text-white rounded-md px-6"
                 >
                   {isSaving ? 'Saving...' : 'Save'}
                 </Button>
@@ -1756,7 +1756,7 @@ export function EditProfileDialog({
                   onClick={handleSaveSideProject} 
                   disabled={isSaving || !currentSideProject?.title || !currentSideProject?.year} 
                   variant="default"
-                  className="bg-design-black hover:bg-design-black/90 text-white rounded-full px-6"
+                  className="bg-design-black hover:bg-design-black/90 text-white rounded-md px-6"
                 >
                   {isSaving ? 'Saving...' : 'Save'}
                 </Button>
@@ -1796,7 +1796,7 @@ export function EditProfileDialog({
                   onClick={handleSaveWork} 
                   disabled={isSaving || !currentWork?.company || !currentWork?.title || !currentWork?.start || !currentWork?.end} 
                   variant="default"
-                  className="bg-design-black hover:bg-design-black/90 text-white rounded-full px-6"
+                  className="bg-design-black hover:bg-design-black/90 text-white rounded-md px-6"
                 >
                   {isSaving ? 'Saving...' : 'Save'}
                 </Button>
@@ -1836,7 +1836,7 @@ export function EditProfileDialog({
                   onClick={handleSaveSpeaking} 
                   disabled={isSaving || !currentSpeaking?.title || !currentSpeaking?.year} 
                   variant="default"
-                  className="bg-design-black hover:bg-design-black/90 text-white rounded-full px-6"
+                  className="bg-design-black hover:bg-design-black/90 text-white rounded-md px-6"
                 >
                   {isSaving ? 'Saving...' : 'Save'}
                 </Button>
@@ -1876,7 +1876,7 @@ export function EditProfileDialog({
                   onClick={handleSaveEdu} 
                   disabled={isSaving || !currentEdu?.school || !currentEdu?.degree || !currentEdu?.end} 
                   variant="default"
-                  className="bg-design-black hover:bg-design-black/90 text-white rounded-full px-6"
+                  className="bg-design-black hover:bg-design-black/90 text-white rounded-md px-6"
                 >
                   {isSaving ? 'Saving...' : 'Save'}
                 </Button>
@@ -1915,7 +1915,7 @@ export function EditProfileDialog({
                   onClick={handleSaveContact} 
                   disabled={isSaving || !currentContact?.platform || !currentContact?.link} 
                   variant="default"
-                  className="bg-design-black hover:bg-design-black/90 text-white rounded-full px-6"
+                  className="bg-design-black hover:bg-design-black/90 text-white rounded-md px-6"
                 >
                   {isSaving ? 'Saving...' : 'Save'}
                 </Button>
