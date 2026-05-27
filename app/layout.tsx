@@ -29,8 +29,8 @@ const graphik = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://portfoliofy.me'),
-  title: 'Portfoliofy - Resume to Website',
-  description: 'LinkedIn to Website in one click! Powered by Gemini and AWS',
+  title: 'Portfoliofy - Mindful professional profiles',
+  description: 'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
   openGraph: {
     images: '/og.png',
   },

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -95,6 +95,25 @@ export function EditProfileDialog({
 
   // Local state for the general tab
   const [uname, setUname] = useState(username);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const isInitialUsername = uname === username;
+
+  useEffect(() => {
+    if (!isInitialUsername && uname) {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = setTimeout(() => {
+        checkUsernameMutation.mutateAsync(uname);
+      }, 500);
+    }
+  }, [uname, isInitialUsername]);
+
+  const { saveResumeDataMutation, updateUsernameMutation, checkUsernameMutation } = useUserActions();
+
+  const isValidUname =
+    /^[a-zA-Z0-9-]+$/.test(uname) &&
+    uname.length > 0 &&
+    ((isInitialUsername || checkUsernameMutation.data?.available) ?? false);
   const [displayName, setDisplayName] = useState(resume.header.name || '');
   const [shortAbout, setShortAbout] = useState(resume.header.shortAbout || '');
   const [location, setLocation] = useState(resume.header.location || '');
@@ -143,6 +162,70 @@ export function EditProfileDialog({
   const [contactToDelete, setContactToDelete] = useState<string | null>(null);
 
   const [activeTab, setActiveTab] = useState('general');
+
+  // Custom Domain state
+  const [customDomain, setCustomDomain] = useState('');
+  const [domainStatus, setDomainStatus] = useState<any>(null);
+  const [isVerifyingDomain, setIsVerifyingDomain] = useState(false);
+
+  const fetchDomain = async () => {
+    setIsVerifyingDomain(true);
+    try {
+      const res = await fetch('/api/domain');
+      const data = await res.json();
+      if (data.domain) {
+        setCustomDomain(data.domain);
+        setDomainStatus(data.status === 'success' ? data.data : null);
+      } else {
+        setCustomDomain('');
+        setDomainStatus(null);
+      }
+    } catch (e) {}
+    setIsVerifyingDomain(false);
+  };
+
+  useEffect(() => {
+    if (activeTab === 'settings' && open) {
+      fetchDomain();
+    }
+  }, [activeTab, open]);
+
+  const handleDomainSave = async () => {
+    if (!customDomain) return;
+    setIsVerifyingDomain(true);
+    try {
+      const res = await fetch('/api/domain', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ domain: customDomain }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success('Domain added successfully');
+        fetchDomain();
+      }
+    } catch (e) {
+      toast.error('Failed to add domain');
+    }
+    setIsVerifyingDomain(false);
+  };
+
+  const handleDomainRemove = async () => {
+    setIsVerifyingDomain(true);
+    try {
+      const res = await fetch('/api/domain', { method: 'DELETE' });
+      if (res.ok) {
+        toast.success('Domain removed');
+        setCustomDomain('');
+        setDomainStatus(null);
+      }
+    } catch (e) {
+      toast.error('Failed to remove domain');
+    }
+    setIsVerifyingDomain(false);
+  };
 
   const DEFAULT_ORDER = [
     'work',
@@ -196,7 +279,6 @@ export function EditProfileDialog({
     useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
-  const { saveResumeDataMutation, updateUsernameMutation } = useUserActions();
   const { uploadToS3 } = useS3Upload();
   const router = useRouter();
 
@@ -252,7 +334,6 @@ export function EditProfileDialog({
       setLocalPicture(url);
       URL.revokeObjectURL(blobUrl);
       toast.success('Profile picture updated');
-      router.refresh();
     } catch {
       setLocalPicture(picture);
       URL.revokeObjectURL(blobUrl);
@@ -269,7 +350,6 @@ export function EditProfileDialog({
       const res = await fetch('/api/user/avatar', { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to remove');
       toast.success('Profile picture removed');
-      router.refresh();
     } catch {
       setLocalPicture(picture);
       toast.error('Failed to remove image');
@@ -574,9 +654,8 @@ export function EditProfileDialog({
                   style={{
                     position: 'fixed',
                     bottom: '24px',
-                    left: 'calc(80px + var(--sidebar-offset, 0px))',
+                    left: '80px',
                     zIndex: 50,
-                    transition: 'left 0.4s cubic-bezier(0.32,0.72,0,1)',
                   }}
                   className="size-[48px] rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center outline-none transition-all"
                 >
@@ -818,8 +897,8 @@ export function EditProfileDialog({
                       <Label htmlFor="uname" className="text-gray-600 text-xs">
                         Username*
                       </Label>
-                      <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 select-none text-sm">
+                      <div className="relative flex items-center bg-white border border-gray-200 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-black">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 select-none text-sm z-10">
                           portfoliofy.me/
                         </span>
                         <Input
@@ -832,8 +911,31 @@ export function EditProfileDialog({
                                 .replace(/[^a-z0-9-]/g, ''),
                             )
                           }
-                          className="pl-28"
+                          className="pl-[112px] border-none focus-visible:ring-0 shadow-none bg-transparent rounded-none h-10"
                         />
+                        <div className="pr-3 flex items-center">
+                          {isInitialUsername ? null : checkUsernameMutation.isPending ? (
+                            <div className="w-4 h-4 rounded-full border-2 border-gray-300 border-t-black animate-spin" />
+                          ) : isValidUname ? (
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20 6L9 17L4 12"
+                                stroke="#009505"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          ) : (
+                            <svg className="w-4 h-4 text-[#950000]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                          )}
+                        </div>
                       </div>
                     </div>
 
@@ -2264,36 +2366,82 @@ export function EditProfileDialog({
                   </div>
 
                   <div className="space-y-10">
+                    {/* Personal Domain Section */}
+                    <div className="space-y-6">
+                      <div className="flex flex-col gap-4">
+                        <div className="flex flex-col p-6 border border-gray-200 bg-white rounded-xl shadow-sm gap-4">
+                          <div className="space-y-1">
+                            <h4 className="text-gray-900 font-semibold text-sm">Personal Domain</h4>
+                            <p className="text-gray-500 text-xs">Connect a custom domain (e.g., yourname.com) to your profile.</p>
+                          </div>
+                          
+                          <div className="flex items-center gap-3">
+                            <Input
+                              value={customDomain}
+                              onChange={(e) => setCustomDomain(e.target.value.toLowerCase())}
+                              placeholder="yourname.com"
+                              className="max-w-xs"
+                              disabled={!!domainStatus}
+                            />
+                            {!domainStatus ? (
+                              <Button onClick={handleDomainSave} disabled={isVerifyingDomain || !customDomain}>
+                                {isVerifyingDomain ? 'Adding...' : 'Add Domain'}
+                              </Button>
+                            ) : (
+                              <Button variant="outline" onClick={handleDomainRemove} disabled={isVerifyingDomain}>
+                                Remove
+                              </Button>
+                            )}
+                          </div>
+                          
+                          {domainStatus && (
+                            <div className="mt-4 p-4 bg-gray-50 border border-gray-100 rounded-lg">
+                              <div className="flex items-center justify-between mb-4">
+                                <h5 className="text-sm font-medium text-gray-700">Domain Status</h5>
+                                {domainStatus.verified ? (
+                                  <span className="flex items-center gap-1 text-green-600 text-xs font-medium">
+                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
+                                    Verified
+                                  </span>
+                                ) : (
+                                  <div className="flex items-center gap-2">
+                                    <span className="flex items-center gap-1 text-amber-600 text-xs font-medium">
+                                      <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                      Pending Verification
+                                    </span>
+                                    <Button variant="outline" size="sm" className="h-7 text-xs" onClick={fetchDomain} disabled={isVerifyingDomain}>
+                                      Check Status
+                                    </Button>
+                                  </div>
+                                )}
+                              </div>
+                              
+                              {!domainStatus.verified && (
+                                <div className="space-y-3">
+                                  <p className="text-xs text-gray-500">Please add the following DNS record to your domain registrar to verify ownership:</p>
+                                  <div className="bg-white p-3 border border-gray-200 rounded text-xs font-mono">
+                                    <div className="grid grid-cols-3 gap-2">
+                                      <span className="text-gray-400">Type</span>
+                                      <span className="col-span-2">{domainStatus.verification?.length > 0 ? domainStatus.verification[0].type : 'A / CNAME'}</span>
+                                      
+                                      <span className="text-gray-400">Name</span>
+                                      <span className="col-span-2">{domainStatus.verification?.length > 0 ? domainStatus.verification[0].domain : '@'}</span>
+                                      
+                                      <span className="text-gray-400">Value</span>
+                                      <span className="col-span-2 break-all">{domainStatus.verification?.length > 0 ? domainStatus.verification[0].value : '76.76.21.21'}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Account Section */}
                     <div className="space-y-6">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Account
-                      </h3>
-
                       <div className="flex flex-col gap-4">
-                        {/* Log out Row */}
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-gray-100 bg-white rounded-xl shadow-sm hover:border-gray-200 transition-colors gap-4">
-                          <div className="space-y-1">
-                            <h4 className="text-gray-900 font-medium text-sm">
-                              Log out
-                            </h4>
-                            <p className="text-gray-500 text-xs">
-                              Sign out of your current session on this device.
-                            </p>
-                          </div>
-                          <Button
-                            variant="outline"
-                            onClick={async () => {
-                              await signOut({ callbackUrl: '/' });
-                              window.location.href = '/';
-                            }}
-                            className="w-full sm:w-auto text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md border-gray-200"
-                          >
-                            <LogOut className="w-4 h-4 mr-2" />
-                            Log out
-                          </Button>
-                        </div>
-
                         {/* Danger Zone Row */}
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-red-200 bg-red-50/50 rounded-xl shadow-sm gap-4">
                           <div className="space-y-1">
@@ -2325,7 +2473,7 @@ export function EditProfileDialog({
                 <div className="flex justify-end">
                   <Button
                     onClick={handleGlobalSave}
-                    disabled={isSaving}
+                    disabled={isSaving || !isValidUname || checkUsernameMutation.isPending}
                     className="bg-[#2A2A2A] hover:bg-[#1A1A1A] text-white h-9 px-6 rounded-md shadow-sm border-none font-medium"
                   >
                     {isSaving ? 'Saving...' : 'Done'}
