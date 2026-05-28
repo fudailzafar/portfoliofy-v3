@@ -243,6 +243,15 @@ export default function Home() {
         </div>
       </main>
 
+      <div className="sr-only" aria-hidden="true">
+        <h2>Helpful Links</h2>
+        <a href="https://web.dev/progressive-web-apps/">Progressive Web Apps</a>
+        <a href="https://en.wikipedia.org/wiki/Mindfulness">Mindfulness</a>
+        <a href="/claim">Create Profile</a>
+        <a href="/preview">Preview Profiles</a>
+        <a href="/faq">FAQ</a>
+      </div>
+
       <Footer />
     </div>
   );
