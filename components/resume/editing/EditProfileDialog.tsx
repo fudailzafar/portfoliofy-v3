@@ -687,7 +687,7 @@ export function EditProfileDialog({
           </Tooltip>
         </TooltipProvider>
 
-        <DialogContent className="max-w-5xl h-[85vh] p-0 overflow-hidden font-mono flex flex-col sm:flex-row gap-0 bg-white">
+        <DialogContent className="max-w-5xl h-[85vh] p-0 overflow-hidden flex flex-col sm:flex-row gap-0 bg-white">
           <DialogTitle className="sr-only">Edit Profile</DialogTitle>
 
           {/* Sidebar */}
@@ -2953,7 +2953,7 @@ export function EditProfileDialog({
         open={!!projectToDelete}
         onOpenChange={(open) => !open && setProjectToDelete(null)}
       >
-        <AlertDialogContent className="font-mono">
+        <AlertDialogContent className="">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -2980,7 +2980,7 @@ export function EditProfileDialog({
         open={showDeleteAccountWarning}
         onOpenChange={setShowDeleteAccountWarning}
       >
-        <AlertDialogContent className="font-mono max-w-sm rounded-xl p-6">
+        <AlertDialogContent className=" max-w-sm rounded-xl p-6">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-xl font-bold text-gray-900">
               Delete Account
@@ -3012,7 +3012,7 @@ export function EditProfileDialog({
         open={showUnsavedWarning}
         onOpenChange={setShowUnsavedWarning}
       >
-        <AlertDialogContent className="font-mono max-w-sm rounded-xl p-6">
+        <AlertDialogContent className=" max-w-sm rounded-xl p-6">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-xl font-bold text-gray-900">
               Unsaved changes
@@ -3084,7 +3084,7 @@ export function EditProfileDialog({
         open={!!eduToDelete}
         onOpenChange={(open) => !open && setEduToDelete(null)}
       >
-        <AlertDialogContent className="font-mono">
+        <AlertDialogContent className="">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -3109,7 +3109,7 @@ export function EditProfileDialog({
         open={!!contactToDelete}
         onOpenChange={(open) => !open && setContactToDelete(null)}
       >
-        <AlertDialogContent className="font-mono">
+        <AlertDialogContent className="">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -3136,7 +3136,7 @@ export function EditProfileDialog({
         open={!!workToDelete}
         onOpenChange={(open) => !open && setWorkToDelete(null)}
       >
-        <AlertDialogContent className="font-mono">
+        <AlertDialogContent className="">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
