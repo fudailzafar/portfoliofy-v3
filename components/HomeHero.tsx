@@ -23,7 +23,7 @@ export function HomeHero() {
     <>
       <div className="flex flex-col mb-8">
         <h1 className="text-[20px] md:text-[24px] font-normal tracking-tight leading-[1.3] text-gray-900 mb-8">
-          <strong>Portfoliofy</strong> is a progressive platform used by
+          <strong translate="no">Portfoliofy</strong> is a progressive platform used by
           thousands of people to create more mindful professional profiles.
         </h1>
 

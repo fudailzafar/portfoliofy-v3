@@ -7,7 +7,7 @@ export function TopMenu() {
     <>
       <header className="w-full py-4 md:px-0 px-6 flex justify-between items-center max-w-4xl mx-auto h-[67px]">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="Portfoliofy Logo" className="h-[30px] w-auto" />
+          <img src="/logo.png" alt="Portfoliofy Logo" width={100} height={30} className="h-[30px] w-auto" translate="no" />
         </Link>
 
         <div>
@@ -26,7 +26,7 @@ export function TopMenu() {
                   variant="outline"
                   className=" flex flex-row gap-1.5 py-2 px-4 border-gray-300 text-design-gray text-sm font-medium"
                 >
-                  <img
+                  <img width={300} height={300}
                     src="/github.svg"
                     alt="Github Logo"
                     className="size-[14px]"

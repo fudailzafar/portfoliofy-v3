@@ -3,7 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryClientProvider } from '@/components/ReactQueryClientProvider';
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 import PlausibleProvider from 'next-plausible';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
@@ -61,6 +61,11 @@ export const metadata: Metadata = {
   openGraph: {
     images: '/og.png',
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#ffffff',
+  colorScheme: 'light dark',
 };
 
 export default function RootLayout({
