@@ -60,12 +60,12 @@ export function GlobalSidebar() {
                 <div className="pt-6 mt-2">
                   <button 
                     onClick={() => {
-                      navigator.clipboard.writeText(`portfoliofy.me/${usernameQuery.data.username}`);
+                      navigator.clipboard.writeText(`portfoliofy-v3.vercel.app/${usernameQuery.data.username}`);
                       toast.success('Copied to clipboard');
                     }}
                     className="text-[14px] text-gray-400 hover:text-gray-600 transition-colors pl-4"
                   >
-                    portfoliofy.me/{usernameQuery.data.username}
+                    portfoliofy-v3.vercel.app/{usernameQuery.data.username}
                   </button>
                 </div>
               )}
