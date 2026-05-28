@@ -672,7 +672,7 @@ export function EditProfileDialog({
                     left: '80px',
                     zIndex: 50,
                   }}
-                  className="size-[48px] rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center outline-none transition-all"
+                  className="size-[48px] rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center outline-none transition-colors"
                 >
                   <Pencil
                     className="h-[18px] w-[18px] text-[#111]"
@@ -691,7 +691,7 @@ export function EditProfileDialog({
           </Tooltip>
         </TooltipProvider>
 
-        <DialogContent className="max-w-5xl h-[85vh] p-0 overflow-hidden flex flex-col sm:flex-row gap-0 bg-white">
+        <DialogContent className="max-w-5xl h-[85vh] p-0 overflow-hidden flex flex-col sm:flex-row gap-0 bg-white overscroll-contain">
           <DialogTitle className="sr-only">Edit Profile</DialogTitle>
 
           {/* Sidebar */}
@@ -823,7 +823,7 @@ export function EditProfileDialog({
                             </svg>
                           </div>
                         )}
-                        <img
+                        <img width={300} height={300}
                           src={localPicture}
                           alt="Profile picture"
                           className="size-full object-cover"
