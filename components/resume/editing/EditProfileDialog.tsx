@@ -2396,6 +2396,14 @@ export function EditProfileDialog({
                     <h2 className="text-2xl font-bold text-gray-900">
                       Personal Domain
                     </h2>
+                    <a
+                      href={domainStatus?.verified && customDomain ? `https://${customDomain}` : `https://portfoliofy.me/${username}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center rounded-md text-[13px] font-medium border border-gray-200 bg-white hover:bg-gray-50 text-gray-900 h-8 px-4 transition-colors shadow-sm"
+                    >
+                      Visit site
+                    </a>
                   </div>
 
                   <div className="space-y-10">
@@ -2593,21 +2601,15 @@ export function EditProfileDialog({
                       </div>
                     </div>
 
-                  </div>
-                </div>
-              )}
-              {activeTab === 'settings' && (
-                <div className="max-w-2xl mx-auto h-full flex flex-col pt-8">
-                  <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
-                    <h2 className="text-2xl font-bold text-gray-900">
-                      Settings
-                    </h2>
-                  </div>
 
-                  <div className="space-y-10">
                     {/* Typography Section */}
-                    <div className="space-y-4 pt-4">
-                      <h4 className="text-gray-900 text-[14px]">Typography</h4>
+                    <div className="space-y-4 pt-8 mt-4 border-t border-gray-100">
+                      <div>
+                        <h4 className="text-gray-900 text-[14px]">Typography</h4>
+                        <p className="text-[#888888] text-[13px] mt-1">
+                          Change the typography shown on {domainStatus?.verified && customDomain ? customDomain : `portfoliofy.me/${username}`}
+                        </p>
+                      </div>
                       
                       <div className="flex flex-col gap-5">
                         {/* Sans */}
@@ -2654,6 +2656,18 @@ export function EditProfileDialog({
                       </div>
                     </div>
 
+                  </div>
+                </div>
+              )}
+              {activeTab === 'settings' && (
+                <div className="max-w-2xl mx-auto h-full flex flex-col pt-8">
+                  <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      Settings
+                    </h2>
+                  </div>
+
+                  <div className="space-y-10">
                     {/* Account Section */}
                     <div className="space-y-6">
                       <div className="flex flex-col gap-4">
@@ -3044,8 +3058,8 @@ export function EditProfileDialog({
               You have unsaved changes, leave anyway?
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="mt-8 flex gap-3 sm:justify-end">
-            <AlertDialogCancel className="rounded-full px-6 border-none bg-transparent hover:bg-gray-100 h-9 text-sm font-medium text-gray-600 m-0">
+          <AlertDialogFooter className="mt-8 flex gap-1 sm:justify-end">
+            <AlertDialogCancel className="rounded-md px-6 border-none bg-transparent hover:bg-gray-100 h-9 text-sm font-medium text-gray-600 m-0">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
@@ -3069,7 +3083,7 @@ export function EditProfileDialog({
                 setWork(resume.workExperience || []);
                 setContacts(resume.contacts || []);
               }}
-              className="rounded-full px-6 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50 h-9 shadow-sm text-sm font-medium m-0"
+              className="rounded-md px-6 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50 h-9 shadow-sm text-sm font-medium m-0"
             >
               Okay
             </AlertDialogAction>
