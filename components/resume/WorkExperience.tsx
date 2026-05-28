@@ -69,7 +69,7 @@ export function WorkExperience({
 
               {item.description && item.description !== '<p></p>' && (
                 <div 
-                  className="mt-4 text-base text-gray-600  prose prose-sm max-w-none leading-relaxed"
+                  className="mt-4 text-base text-theme-secondary prose prose-sm max-w-none leading-relaxed prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary"
                   dangerouslySetInnerHTML={{ __html: item.description }}
                 />
               )}

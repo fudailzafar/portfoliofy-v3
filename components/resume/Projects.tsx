@@ -68,7 +68,7 @@ export function Projects({
               
               {project.description && project.description !== '<p></p>' && (
                 <div 
-                  className="mt-2 text-sm text-gray-600  prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1"
+                  className="mt-2 text-sm text-theme-secondary prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary"
                   dangerouslySetInnerHTML={{ __html: project.description }}
                 />
               )}

@@ -66,7 +66,7 @@ export function Speaking({
               </div>
               
               {engagement.location && (
-                <div className="mt-2 text-sm text-gray-600 ">
+                <div className="mt-2 text-sm text-theme-secondary ">
                   {engagement.location}
                 </div>
               )}
