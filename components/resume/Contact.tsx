@@ -41,11 +41,11 @@ export function Contact({
                 href={buildContactUrl(contact.link, contact.platform)}
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="hover:underline inline-block group"
+                className="hover:underline inline-block group text-theme-primary"
               >
-                <span className="text-base font-semibold text-theme-primary ">
+                <span className="text-base font-semibold">
                   {extractUsername(contact.link, contact.platform)}
-                  <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-theme-primary relative -top-0.5" />
+                  <ArrowUpRight className="inline-block ml-1 w-4 h-4 relative -top-0.5" />
                 </span>
               </a>
             </div>
