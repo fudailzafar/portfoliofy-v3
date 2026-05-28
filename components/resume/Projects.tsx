@@ -42,16 +42,16 @@ export function Projects({
                     href={project.link.startsWith('http') ? project.link : `https://${project.link}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="hover:underline"
+                    className="hover:underline text-theme-primary"
                   >
-                    <span className="text-base font-semibold text-theme-primary ">
+                    <span className="text-base font-semibold">
                       {project.title}
                       {project.company && (
-                        <span className="font-normal text-theme-primary">
+                        <span className="font-normal">
                           {' '}at {project.company}
                         </span>
                       )}
-                      <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-theme-primary relative -top-0.5" />
+                      <ArrowUpRight className="inline-block ml-1 w-4 h-4 relative -top-0.5" />
                     </span>
                   </a>
                 ) : (

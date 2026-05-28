@@ -47,11 +47,11 @@ export function WorkExperience({
                     href={item.link.startsWith('http') ? item.link : `https://${item.link}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="hover:underline"
+                    className="hover:underline text-theme-primary"
                   >
-                    <span className="text-base font-semibold text-theme-primary ">
+                    <span className="text-base font-semibold">
                       {item.title} at {item.company}
-                      <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-theme-primary relative -top-0.5" />
+                      <ArrowUpRight className="inline-block ml-1 w-4 h-4 relative -top-0.5" />
                     </span>
                   </a>
                 ) : (
