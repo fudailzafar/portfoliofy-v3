@@ -38,9 +38,9 @@ export function SideProjects({
                     href={project.link.startsWith('http') ? project.link : `https://${project.link}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="hover:underline"
+                    className="hover:underline text-theme-primary"
                   >
-                    <span className="text-base font-semibold text-theme-primary ">
+                    <span className="text-base font-semibold">
                       {project.title}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,7 @@ export function SideProjects({
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="inline-block ml-1 w-4 h-4 text-theme-primary relative -top-0.5"
+                        className="inline-block ml-1 w-4 h-4 relative -top-0.5"
                       >
                         <path d="M7 17L17 7M7 7h10v10" />
                       </svg>
