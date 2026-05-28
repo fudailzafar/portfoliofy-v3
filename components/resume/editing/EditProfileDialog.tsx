@@ -702,8 +702,8 @@ export function EditProfileDialog({
                 className={cn(
                   'text-left px-3 py-2 rounded-md text-sm transition-colors',
                   activeTab === 'general'
-                    ? 'bg-gray-100 text-gray-900 font-medium'
-                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900',
+                    ? 'bg-gray-100 text-gray-900'
+                    : 'text-gray-500 hover:bg-gray-50',
                 )}
               >
                 General
@@ -753,8 +753,8 @@ export function EditProfileDialog({
                 className={cn(
                   'text-left px-3 py-2 rounded-md text-sm transition-colors',
                   activeTab === 'settings'
-                    ? 'bg-gray-100 text-gray-900 font-medium'
-                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900',
+                    ? 'bg-gray-100 text-gray-900'
+                    : 'text-gray-500 hover:bg-gray-50',
                 )}
               >
                 Settings

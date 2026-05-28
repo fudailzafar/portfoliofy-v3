@@ -34,8 +34,8 @@ export function SortableSidebarItem({ id, label, disabled, isActive, onClick }: 
       className={cn(
         "flex justify-between items-center px-3 py-2 rounded-md text-sm transition-colors cursor-grab active:cursor-grabbing",
         isActive 
-          ? "bg-gray-100 text-gray-900 font-medium" 
-          : "text-gray-500 hover:bg-gray-50 hover:text-gray-900",
+          ? "bg-gray-100 text-gray-900" 
+          : "text-gray-500 hover:bg-gray-50",
         disabled && "opacity-50 hover:bg-transparent hover:text-gray-500",
         isDragging && "opacity-50 bg-gray-200"
       )}
