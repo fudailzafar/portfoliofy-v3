@@ -14,7 +14,7 @@ export function Projects({
   return (
     <section className="mb-12 print:mb-8">
       <h2 
-        className="text-lg font-bold mb-8 print:mb-4 text-gray-900" 
+        className="text-lg font-bold mb-8 print:mb-4 text-theme-primary" 
         id="projects-section"
       >
         Projects
@@ -30,7 +30,7 @@ export function Projects({
             className="flex flex-col sm:flex-row gap-4 sm:gap-12 print:mb-6"
           >
             {/* Left column: Year */}
-            <div className="sm:w-32 shrink-0 text-gray-500  text-sm pt-0.5">
+            <div className="sm:w-32 shrink-0 text-theme-secondary  text-sm pt-0.5">
               {project.year}
             </div>
 
@@ -44,21 +44,21 @@ export function Projects({
                     rel="noopener noreferrer" 
                     className="hover:underline"
                   >
-                    <span className="text-base font-semibold text-gray-900 ">
+                    <span className="text-base font-semibold text-theme-primary ">
                       {project.title}
                       {project.company && (
-                        <span className="font-normal text-gray-900">
+                        <span className="font-normal text-theme-primary">
                           {' '}at {project.company}
                         </span>
                       )}
-                      <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-gray-900 relative -top-0.5" />
+                      <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-theme-primary relative -top-0.5" />
                     </span>
                   </a>
                 ) : (
-                  <p className="text-base font-semibold text-gray-900 ">
+                  <p className="text-base font-semibold text-theme-primary ">
                     {project.title}
                     {project.company && (
-                      <span className="font-normal text-gray-900">
+                      <span className="font-normal text-theme-primary">
                         {' '}at {project.company}
                       </span>
                     )}

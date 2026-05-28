@@ -27,6 +27,13 @@ const config: Config = {
         black: '400',
       },
       colors: {
+        theme: {
+          bg: 'var(--theme-bg)',
+          primary: 'var(--theme-primary)',
+          secondary: 'var(--theme-secondary)',
+          border: 'var(--theme-border)',
+          accent: 'var(--theme-accent)',
+        },
         design: {
           black: '#1f1f1f',
           white: '#ffffff',

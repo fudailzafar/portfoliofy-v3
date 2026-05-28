@@ -30,10 +30,10 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${resume.resumeData.header.name} | Portfoliofy`,
+    title: `${resume.resumeData.header.name}`,
     description: resume.resumeData.summary,
     openGraph: {
-      title: `${resume.resumeData.header.name} | Portfoliofy`,
+      title: `${resume.resumeData.header.name}`,
       description: resume.resumeData.summary,
       images: [
         {
@@ -162,7 +162,9 @@ export default async function ProfilePage({
   };
 
   const typography = resume.resumeData?.design?.typography || 'sans';
+  const theme = resume.resumeData?.design?.theme || 'default';
   const fontClass = typography === 'serif' ? 'font-serif' : typography === 'mono' ? 'font-mono' : 'font-sans';
+  const themeClass = `theme-${theme}`;
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
@@ -179,7 +181,7 @@ export default async function ProfilePage({
         />
       )}
 
-      <div className={`flex-1 flex flex-col ${fontClass}`}>
+      <div className={`flex-1 flex flex-col bg-theme-bg ${fontClass} ${themeClass}`}>
         <div className="flex-1">
           <FullResume resume={resume?.resumeData} profilePicture={profilePicture} />
         </div>
@@ -187,10 +189,10 @@ export default async function ProfilePage({
         <div className="text-center mt-8 mb-4">
           <Link
             href={`/?ref=${username}`}
-            className="text-design-gray font-mono text-sm"
+            className="text-theme-secondary font-mono text-sm"
           >
             Made by{' '}
-            <span className="text-design-black underline underline-offset-2">
+            <span className="text-theme-primary underline underline-offset-2 hover:text-theme-accent transition-colors">
               Portfoliofy
             </span>
           </Link>
