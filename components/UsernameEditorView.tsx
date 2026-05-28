@@ -165,7 +165,7 @@ export default function UsernameEditorView({
   initialUsername,
   isOpen,
   onClose,
-  prefix = 'portfoliofy.me/',
+  prefix = 'portfoliofy-v3.vercel.app/',
 }: {
   initialUsername: string;
   isOpen: boolean;

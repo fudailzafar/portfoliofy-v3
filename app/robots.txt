@@ -2,4 +2,4 @@ User-Agent: *
 Allow: /
 Disallow: /preview/
 Disallow: /upload/
-Sitemap: https://portfoliofy.me/sitemap.xml
+Sitemap: https://portfoliofy-v3.vercel.app/sitemap.xml

@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const name = resume?.resumeData?.header?.name;
     const role = resume?.resumeData?.header?.shortAbout;
     const location = resume?.resumeData?.header?.location;
-    const website = `www.portfoliofy.me/${username}`;
+    const website = `www.portfoliofy-v3.vercel.app/${username}`;
 
     // Use profile image from Redis user profile
     const profileImageUrl = userProfile?.image;
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <img
-              src="https://portfoliofy.me/logo.png"
+              src="https://portfoliofy-v3.vercel.app/logo.png"
               alt="Portfoliofy Logo"
               style={{
                 width: '203px',

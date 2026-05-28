@@ -925,7 +925,7 @@ export function EditProfileDialog({
                       </Label>
                       <div className="relative flex items-center bg-white border border-gray-200 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-black">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 select-none text-sm z-10">
-                          portfoliofy.me/
+                          portfoliofy-v3.vercel.app/
                         </span>
                         <Input
                           id="uname"
@@ -2470,7 +2470,7 @@ export function EditProfileDialog({
                       href={
                         domainStatus?.verified && customDomain
                           ? `https://${customDomain}`
-                          : `https://portfoliofy.me/${username}`
+                          : `https://portfoliofy-v3.vercel.app/${username}`
                       }
                       target="_blank"
                       rel="noopener noreferrer"
@@ -2492,12 +2492,12 @@ export function EditProfileDialog({
                             <p className="text-[#888888] text-[13px]">
                               Optionally set a domain other than{' '}
                               <a
-                                href={`https://portfoliofy.me/${username}`}
+                                href={`https://portfoliofy-v3.vercel.app/${username}`}
                                 className="text-gray-900 hover:underline underline-offset-2"
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
-                                portfoliofy.me/{username}
+                                portfoliofy-v3.vercel.app/{username}
                               </a>
                             </p>
                           </div>
@@ -2686,7 +2686,7 @@ export function EditProfileDialog({
                           <span className="text-gray-900">
                             {domainStatus?.verified && customDomain
                               ? customDomain
-                              : `portfoliofy.me/${username}`}
+                              : `portfoliofy-v3.vercel.app/${username}`}
                           </span>
                         </p>
                       </div>
@@ -2775,7 +2775,7 @@ export function EditProfileDialog({
                       <div>
                         <h4 className="text-gray-900 text-[14px]">Theme</h4>
                         <p className="text-[#888888] text-[13px] mt-1">
-                          Change the theme shown on {domainStatus?.verified && customDomain ? customDomain : `portfoliofy.me/${username}`}
+                          Change the theme shown on {domainStatus?.verified && customDomain ? customDomain : `portfoliofy-v3.vercel.app/${username}`}
                         </p>
                       </div>
                       

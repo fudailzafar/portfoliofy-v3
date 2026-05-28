@@ -11,7 +11,7 @@ export type PublishStatuses = 'draft' | 'live';
 
 export default function PreviewActionbar({
   initialUsername = '',
-  prefix = 'portfoliofy.me/',
+  prefix = 'portfoliofy-v3.vercel.app/',
   status,
   onStatusChange,
   isChangingStatus,
