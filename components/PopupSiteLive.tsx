@@ -21,7 +21,7 @@ export const PopupSiteLive = ({
       <div className="relative bg-white rounded-lg shadow-lg">
         <div className="p-6 flex flex-col items-center justify-center h-full gap-5">
           {/* Site live icon */}
-          <img
+          <img width={300} height={300}
             src="/site-live.svg"
             alt="Site Live Icon"
             className="h-[41px] w-[52px]"
