@@ -95,7 +95,7 @@ export const EditResume = ({
               Short About
             </Label>
             <textarea
-              className="w-full p-2 border rounded-md font-mono text-sm"
+              className="w-full p-2 border rounded-md  text-sm"
               value={resume?.header?.shortAbout || ''}
               onChange={(e) => {
                 onChangeResume({
@@ -121,7 +121,7 @@ export const EditResume = ({
         <div className="space-y-2">
           <h2 className="text-xl font-bold">About</h2>
           <textarea
-            className="w-full p-2 border rounded-md font-mono text-sm"
+            className="w-full p-2 border rounded-md  text-sm"
             value={resume?.summary}
             onChange={(e) => {
               onChangeResume({
