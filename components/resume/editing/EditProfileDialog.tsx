@@ -250,6 +250,9 @@ export function EditProfileDialog({
   const [typography, setTypography] = useState<'sans' | 'serif' | 'mono'>(
     resume.design?.typography || 'sans',
   );
+  const [theme, setTheme] = useState<'default' | 'brutalist' | 'swiss' | 'klein' | 'red' | 'green' | 'blue'>(
+    resume.design?.theme || 'default'
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -2255,7 +2258,7 @@ export function EditProfileDialog({
                       <Button
                         variant="secondary"
                         onClick={() => {
-                          setCurrentContact({ platform: '', link: '' });
+                          setCurrentContact({ platform: '', link: '', type: 'Custom', username: '' });
                           setContactView('form');
                         }}
                         className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none h-8 text-xs px-4 rounded-md"
@@ -2277,7 +2280,7 @@ export function EditProfileDialog({
                         variant="secondary"
                         className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none rounded-md px-6 py-5 h-auto text-sm"
                         onClick={() => {
-                          setCurrentContact({ platform: '', link: '' });
+                          setCurrentContact({ platform: '', link: '', type: 'Custom', username: '' });
                           setContactView('form');
                         }}
                       >
@@ -2313,7 +2316,11 @@ export function EditProfileDialog({
                             <div className="flex items-center gap-4 mt-3 text-xs font-medium text-gray-400">
                               <button
                                 onClick={() => {
-                                  setCurrentContact(c);
+                                  setCurrentContact({
+                                    ...c,
+                                    type: ['Website', 'Email', 'LinkedIn', 'GitHub', 'X', 'Threads', 'Figma', 'Instagram', 'Bluesky', 'Mastodon'].includes(c.platform) ? c.platform : 'Custom',
+                                    username: extractUsername(c.link, c.platform)
+                                  });
                                   setContactView('form');
                                 }}
                                 className="hover:text-gray-900 transition-colors"
@@ -2336,56 +2343,118 @@ export function EditProfileDialog({
                   {contactView === 'form' && currentContact && (
                     <div className="space-y-6">
                       <div className="grid grid-cols-2 gap-6">
+                        {/* Type */}
                         <div className="space-y-2">
-                          <Label className="text-gray-600 text-xs">
-                            Platform*
-                          </Label>
+                          <Label className="text-gray-500 text-[13px]">Type*</Label>
                           <Select
-                            value={currentContact.platform || ''}
-                            onValueChange={(val) =>
+                            value={currentContact.type || 'Custom'}
+                            onValueChange={(val) => {
+                              const isCustom = val === 'Custom';
                               setCurrentContact({
                                 ...currentContact,
-                                platform: val,
-                              })
-                            }
+                                type: val,
+                                platform: isCustom ? currentContact.platform : val,
+                                link: !isCustom ? buildContactUrl(currentContact.username || '', val) : currentContact.link,
+                              });
+                            }}
                           >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select platform" />
+                            <SelectTrigger className="bg-[#f4f4f4] border-0 h-10 shadow-none text-[14px]">
+                              <SelectValue placeholder="Select type" />
                             </SelectTrigger>
                             <SelectContent>
-                              {[
-                                'Website',
-                                'Email',
-                                'LinkedIn',
-                                'GitHub',
-                                'X',
-                                'Threads',
-                                'Figma',
-                                'Instagram',
-                                'Bluesky',
-                                'Mastodon',
-                                'Other',
-                              ].map((p) => (
-                                <SelectItem key={p} value={p}>
-                                  {p}
-                                </SelectItem>
+                              {['Custom', 'Website', 'Email', 'LinkedIn', 'GitHub', 'X', 'Threads', 'Figma', 'Instagram', 'Bluesky', 'Mastodon'].map((p) => (
+                                <SelectItem key={p} value={p}>{p}</SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
                         </div>
-                        <div className="space-y-2">
-                          <Label className="text-gray-600 text-xs">Link*</Label>
-                          <Input
-                            value={currentContact.link || ''}
-                            onChange={(e) =>
-                              setCurrentContact({
-                                ...currentContact,
-                                link: e.target.value,
-                              })
-                            }
-                            placeholder="https://..."
-                          />
-                        </div>
+
+                        {currentContact.type === 'Custom' ? (
+                          <>
+                            {/* Name of platform */}
+                            <div className="space-y-2">
+                              <Label className="text-gray-500 text-[13px]">Name of platform*</Label>
+                              <Input
+                                value={currentContact.platform || ''}
+                                onChange={(e) => setCurrentContact({ ...currentContact, platform: e.target.value })}
+                                disabled={currentContact.type !== 'Custom'}
+                                className="bg-[#f4f4f4] border-0 h-10 shadow-none text-[14px] disabled:opacity-50"
+                              />
+                            </div>
+
+                            {/* Username */}
+                            <div className="space-y-2">
+                              <Label className="text-gray-500 text-[13px]">Username*</Label>
+                              <Input
+                                value={currentContact.username || ''}
+                                onChange={(e) => {
+                                  const newUsername = e.target.value;
+                                  setCurrentContact({ 
+                                    ...currentContact, 
+                                    username: newUsername,
+                                    link: buildContactUrl(newUsername, currentContact.platform || '')
+                                  });
+                                }}
+                                className="bg-[#f4f4f4] border-0 h-10 shadow-none text-[14px]"
+                              />
+                            </div>
+
+                            {/* URL */}
+                            <div className="space-y-2">
+                              <Label className="text-gray-500 text-[13px]">URL*</Label>
+                              <Input
+                                value={currentContact.link || ''}
+                                onChange={(e) => {
+                                  const newUrl = e.target.value;
+                                  setCurrentContact({
+                                    ...currentContact,
+                                    link: newUrl,
+                                    username: extractUsername(newUrl, currentContact.platform)
+                                  });
+                                }}
+                                className="bg-[#f4f4f4] border-0 h-10 shadow-none text-[14px]"
+                              />
+                            </div>
+                          </>
+                        ) : (
+                          <div className="space-y-2">
+                            <Label className="text-gray-500 text-[13px]">Link*</Label>
+                            <Input
+                              value={currentContact.link || ''}
+                              onChange={(e) => {
+                                const newUrl = e.target.value;
+                                setCurrentContact({
+                                  ...currentContact,
+                                  link: newUrl,
+                                  username: extractUsername(newUrl, currentContact.platform)
+                                });
+                              }}
+                              placeholder="https://example.com"
+                              className="bg-[#f4f4f4] border-0 h-10 shadow-none text-[14px]"
+                            />
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex justify-end items-center gap-3 mt-8">
+                        <Button
+                          variant="ghost"
+                          onClick={() => {
+                            setContactView('list');
+                            setCurrentContact(null);
+                          }}
+                          className="text-gray-900 font-medium hover:bg-gray-100 rounded-lg h-10 px-4"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={handleSaveContact}
+                          disabled={isSaving || !currentContact.platform || !currentContact.link}
+                          className="border-gray-200 text-gray-900 font-medium shadow-sm hover:bg-gray-50 rounded-lg h-10 px-5"
+                        >
+                          {isSaving ? 'Saving...' : 'Save'}
+                        </Button>
                       </div>
                     </div>
                   )}
@@ -3086,49 +3155,7 @@ export function EditProfileDialog({
                   </div>
                 </div>
               )}
-              {activeTab === 'contact' && contactView === 'form' && (
-                <div className="flex justify-between items-center">
-                  <div className="pointer-events-auto">
-                    {currentContact?.id && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setContactToDelete(currentContact.id)}
-                        className="text-red-500 hover:text-red-600 hover:bg-red-50 rounded-full"
-                        disabled={isSaving}
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </Button>
-                    )}
-                  </div>
 
-                  <div className="flex items-center gap-3">
-                    <Button
-                      onClick={() => {
-                        setContactView('list');
-                        setCurrentContact(null);
-                      }}
-                      variant="ghost"
-                      className="rounded-full text-gray-500 hover:text-gray-700"
-                      disabled={isSaving}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleSaveContact}
-                      disabled={
-                        isSaving ||
-                        !currentContact?.platform ||
-                        !currentContact?.link
-                      }
-                      variant="default"
-                      className="bg-design-black hover:bg-design-black/90 text-white rounded-md px-6"
-                    >
-                      {isSaving ? 'Saving...' : 'Save'}
-                    </Button>
-                  </div>
-                </div>
-              )}
             </div>{' '}
           </div>
         </DialogContent>
