@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Footer } from '@/components/Footer';
 
 export default function FAQPage() {
@@ -15,7 +16,7 @@ export default function FAQPage() {
 
           <div className="space-y-2">
             <h3 className="font-bold text-gray-900 text-lg">Who's behind Portfoliofy?</h3>
-            <p className="text-gray-600">Just me, Fudail.</p>
+            <p className="text-gray-600">Just me, <Link href="/fudail" className="text-gray-900 hover:underline">Fudail</Link>.</p>
           </div>
 
           <div className="space-y-2">
@@ -31,7 +32,7 @@ export default function FAQPage() {
 
           <div className="space-y-2">
             <h3 className="font-bold text-gray-900 text-lg">Where can I get updates on Portfoliofy?</h3>
-            <p className="text-gray-600">Follow @FudailZafar on Twitter and on LinkedIn for updates.</p>
+            <p className="text-gray-600">Follow @fudailzafar on Twitter and on LinkedIn for updates.</p>
           </div>
 
           <div className="space-y-2">
