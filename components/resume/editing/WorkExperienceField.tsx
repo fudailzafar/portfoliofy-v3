@@ -141,7 +141,7 @@ export const WorkExperienceField: React.FC<WorkExperienceFieldProps> = ({
           </Label>
           <textarea
             id={`work-description-${index}`}
-            className="w-full p-2 border rounded-md font-mono text-sm"
+            className="w-full p-2 border rounded-md  text-sm"
             value={work.description}
             onChange={(e) => {
               onUpdate(index, {

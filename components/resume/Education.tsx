@@ -39,18 +39,18 @@ export function Education({
             className="flex flex-col sm:flex-row gap-4 sm:gap-12 print:mb-6"
           >
             {/* Left column: Years */}
-            <div className="sm:w-32 shrink-0 text-gray-500 font-mono text-sm pt-0.5">
+            <div className="sm:w-32 shrink-0 text-gray-500  text-sm pt-0.5">
               {edu.start ? `${edu.start} — ${edu.end}` : edu.end}
             </div>
 
             {/* Right column: Content */}
             <div className="flex-1 flex flex-col justify-start items-start">
-              <p className="text-base font-semibold text-gray-900 font-mono">
+              <p className="text-base font-semibold text-gray-900 ">
                 {edu.degree} at {edu.school}
               </p>
               
               {edu.location && (
-                <p className="mt-1 text-sm text-gray-500 font-mono">
+                <p className="mt-1 text-sm text-gray-500 ">
                   {edu.location}
                 </p>
               )}

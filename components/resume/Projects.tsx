@@ -30,7 +30,7 @@ export function Projects({
             className="flex flex-col sm:flex-row gap-4 sm:gap-12 print:mb-6"
           >
             {/* Left column: Year */}
-            <div className="sm:w-32 shrink-0 text-gray-500 font-mono text-sm pt-0.5">
+            <div className="sm:w-32 shrink-0 text-gray-500  text-sm pt-0.5">
               {project.year}
             </div>
 
@@ -44,7 +44,7 @@ export function Projects({
                     rel="noopener noreferrer" 
                     className="hover:underline"
                   >
-                    <span className="text-base font-semibold text-gray-900 font-mono">
+                    <span className="text-base font-semibold text-gray-900 ">
                       {project.title}
                       {project.company && (
                         <span className="font-normal text-gray-900">
@@ -55,7 +55,7 @@ export function Projects({
                     </span>
                   </a>
                 ) : (
-                  <p className="text-base font-semibold text-gray-900 font-mono">
+                  <p className="text-base font-semibold text-gray-900 ">
                     {project.title}
                     {project.company && (
                       <span className="font-normal text-gray-900">
@@ -68,7 +68,7 @@ export function Projects({
               
               {project.description && project.description !== '<p></p>' && (
                 <div 
-                  className="mt-2 text-sm text-gray-600 font-mono prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1"
+                  className="mt-2 text-sm text-gray-600  prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1"
                   dangerouslySetInnerHTML={{ __html: project.description }}
                 />
               )}

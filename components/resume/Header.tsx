@@ -59,14 +59,14 @@ export function Header({
       </Avatar>
 
       <div className="flex-1 space-y-1">
-        <h1 className="text-2xl md:text-[28px] font-semibold text-gray-900 font-mono" id="resume-name">
+        <h1 className="text-2xl md:text-[28px] font-semibold text-gray-900 " id="resume-name">
           {header.name}
         </h1>
         
         {/* Subtitle: {Role} in {Location}, {Pronouns} */}
         {(header.shortAbout || header.location || header.pronouns) && (
           <p
-            className="text-pretty font-mono text-sm text-gray-500"
+            className="text-pretty  text-sm text-gray-500"
             aria-labelledby="resume-name"
           >
             {[
@@ -85,7 +85,7 @@ export function Header({
             href={header.website.startsWith('http') ? header.website : `https://${header.website}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-sm font-mono text-gray-500 hover:text-gray-900 transition-colors mt-1"
+            className="block text-sm  text-gray-500 hover:text-gray-900 transition-colors mt-1"
           >
             {header.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
           </a>
