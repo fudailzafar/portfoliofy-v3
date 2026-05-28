@@ -58,8 +58,22 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://portfoliofy.me'),
   title: 'Portfoliofy - Mindful professional profiles',
   description: 'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
-    images: '/og.png',
+    title: 'Portfoliofy - Mindful professional profiles',
+    description: 'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
+    url: '/',
+    siteName: 'Portfoliofy',
+    images: [
+      {
+        url: '/og.png',
+        width: 1200,
+        height: 630,
+      }
+    ],
+    type: 'website',
   },
 };
 
@@ -81,6 +95,47 @@ export default function RootLayout({
         <ReactQueryClientProvider>
           <html lang="en" className={`${graphik.variable} ${signifier.variable} ${diatypeMono.variable}`}>
             <head>
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "Organization",
+                    "url": "https://portfoliofy.me",
+                    "logo": "https://portfoliofy.me/logo.png",
+                    "name": "Portfoliofy",
+                    "description": "Portfoliofy is a progressive platform for mindful professional profiles.",
+                    "dateModified": new Date().toISOString()
+                  })
+                }}
+              />
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "FAQPage",
+                    "mainEntity": [
+                      {
+                        "@type": "Question",
+                        "name": "What is Portfoliofy?",
+                        "acceptedAnswer": {
+                          "@type": "Answer",
+                          "text": "Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles."
+                        }
+                      },
+                      {
+                        "@type": "Question",
+                        "name": "How do I create a profile?",
+                        "acceptedAnswer": {
+                          "@type": "Answer",
+                          "text": "You can create a profile by signing up and using our intuitive editor to craft your mindful professional profile in minutes."
+                        }
+                      }
+                    ]
+                  })
+                }}
+              />
               {/* rest of your scripts go under */}
               <Script
                 src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
