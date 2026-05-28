@@ -20,7 +20,7 @@ export function Skills({ skills, className }: SkillsProps) {
         Skills
       </h2>
       <div
-        className="text-base font-semibold text-gray-900 font-mono leading-relaxed"
+        className="text-base font-semibold text-gray-900  leading-relaxed"
         aria-label="List of skills"
         aria-labelledby="skills-section"
       >

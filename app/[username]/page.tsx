@@ -162,9 +162,10 @@ export default async function ProfilePage({
   };
 
   const typography = resume.resumeData?.design?.typography || 'sans';
+  const fontClass = typography === 'serif' ? 'font-serif' : typography === 'mono' ? 'font-mono' : 'font-sans';
 
   return (
-    <div className={`font-${typography} min-h-screen flex flex-col`}>
+    <div className="min-h-screen flex flex-col font-sans">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -178,20 +179,22 @@ export default async function ProfilePage({
         />
       )}
 
-      <div className="flex-1">
-        <FullResume resume={resume?.resumeData} profilePicture={profilePicture} />
-      </div>
+      <div className={`flex-1 flex flex-col ${fontClass}`}>
+        <div className="flex-1">
+          <FullResume resume={resume?.resumeData} profilePicture={profilePicture} />
+        </div>
 
-      <div className="text-center mt-8 mb-4">
-        <Link
-          href={`/?ref=${username}`}
-          className="text-design-gray font-mono text-sm"
-        >
-          Made by{' '}
-          <span className="text-design-black underline underline-offset-2">
-            Portfoliofy
-          </span>
-        </Link>
+        <div className="text-center mt-8 mb-4">
+          <Link
+            href={`/?ref=${username}`}
+            className="text-design-gray font-mono text-sm"
+          >
+            Made by{' '}
+            <span className="text-design-black underline underline-offset-2">
+              Portfoliofy
+            </span>
+          </Link>
+        </div>
       </div>
     </div>
   );
