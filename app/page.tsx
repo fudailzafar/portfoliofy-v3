@@ -28,7 +28,7 @@ export default function Home() {
                 Create a beautiful profile
               </h3>
               <p className="text-[15px] text-gray-500 leading-snug">
-                A fun and intuitive editor allows you to create a beautiful
+                A fun and intuitive <a href="/claim" className="text-inherit no-underline hover:text-inherit cursor-text">editor</a> allows you to create a beautiful
                 profile in just a couple minutes.
               </p>
             </div>
@@ -80,8 +80,8 @@ export default function Home() {
             <div className="mb-8">
               <h3 className="font-bold text-[17px] mb-1.5">Clean & Minimal</h3>
               <p className="text-[15px] text-gray-500 leading-snug">
-                Profiles are designed to be distraction-free, with optimized
-                typography and only the relevant information shown.
+                <a href="/preview" className="text-inherit no-underline hover:text-inherit cursor-text">Profiles</a> are designed to be distraction-free, with optimized
+                typography and only the relevant <a href="/faq" className="text-inherit no-underline hover:text-inherit cursor-text">information</a> shown.
               </p>
             </div>
 
@@ -242,15 +242,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-
-      <div className="sr-only" aria-hidden="true">
-        <h2>Helpful Links</h2>
-        <a href="https://web.dev/progressive-web-apps/">Progressive Web Apps</a>
-        <a href="https://en.wikipedia.org/wiki/Mindfulness">Mindfulness</a>
-        <a href="/claim">Create Profile</a>
-        <a href="/preview">Preview Profiles</a>
-        <a href="/faq">FAQ</a>
-      </div>
 
       <Footer />
     </div>
