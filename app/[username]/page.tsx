@@ -37,7 +37,7 @@ export async function generateMetadata({
       description: resume.resumeData.summary,
       images: [
         {
-          url: `https://portfoliofy.me/${username}/og`,
+          url: `https://portfoliofy-v3.vercel.app/${username}/og`,
           width: 1200,
           height: 630,
           alt: 'Portfoliofy Profile',
@@ -71,7 +71,7 @@ export default async function ProfilePage({
             </div>
 
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold break-all">
-              <span className="text-gray-500">portfoliofy.me/</span>
+              <span className="text-gray-500">portfoliofy-v3.vercel.app/</span>
               <span className="text-gray-900">{username}</span>
             </h1>
 
@@ -103,7 +103,7 @@ export default async function ProfilePage({
               <div className="text-2xl md:text-3xl mb-2">🔗</div>
               <h3 className="font-semibold mb-1 text-sm md:text-base">Your Domain</h3>
               <p className="text-xs md:text-sm text-gray-600 break-all">
-                portfoliofy.me/{username}
+                portfoliofy-v3.vercel.app/{username}
               </p>
             </div>
           </div>
@@ -157,7 +157,7 @@ export default async function ProfilePage({
     jobTitle: resume.resumeData.header.shortAbout,
     description: resume.resumeData.summary,
     email: resume.resumeData.contacts?.find((c: any) => c.platform.toLowerCase() === 'email')?.link,
-    url: `https://portfoliofy.me/${username}`,
+    url: `https://portfoliofy-v3.vercel.app/${username}`,
     skills: resume.resumeData.header.skills,
   };
 

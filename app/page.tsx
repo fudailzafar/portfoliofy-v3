@@ -235,7 +235,7 @@ export default function Home() {
                   Architectural Designer
                 </span>
                 <span className="text-[14px] sm:text-[15px] text-[#00376b]">
-                  portfoliofy.me/tom
+                  portfoliofy-v3.vercel.app/tom
                 </span>
               </div>
             </div>
