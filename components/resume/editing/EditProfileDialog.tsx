@@ -189,7 +189,7 @@ export function EditProfileDialog({
   };
 
   useEffect(() => {
-    if (activeTab === 'settings' && open) {
+    if (activeTab === 'personal_domain' && open) {
       fetchDomain();
     }
   }, [activeTab, open]);
@@ -748,6 +748,17 @@ export function EditProfileDialog({
                 Account
               </div>
 
+              <button
+                onClick={() => setActiveTab('personal_domain')}
+                className={cn(
+                  'text-left px-3 py-2 rounded-md text-sm transition-colors',
+                  activeTab === 'personal_domain'
+                    ? 'bg-gray-100 text-gray-900'
+                    : 'text-gray-500 hover:bg-gray-50',
+                )}
+              >
+                Personal Domain
+              </button>
               <button
                 onClick={() => setActiveTab('settings')}
                 className={cn(
@@ -2379,11 +2390,11 @@ export function EditProfileDialog({
                   )}
                 </div>
               )}
-              {activeTab === 'settings' && (
+                            {activeTab === 'personal_domain' && (
                 <div className="max-w-2xl mx-auto h-full flex flex-col pt-8">
                   <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
                     <h2 className="text-2xl font-bold text-gray-900">
-                      Settings
+                      Personal Domain
                     </h2>
                   </div>
 
@@ -2582,6 +2593,18 @@ export function EditProfileDialog({
                       </div>
                     </div>
 
+                  </div>
+                </div>
+              )}
+              {activeTab === 'settings' && (
+                <div className="max-w-2xl mx-auto h-full flex flex-col pt-8">
+                  <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      Settings
+                    </h2>
+                  </div>
+
+                  <div className="space-y-10">
                     {/* Typography Section */}
                     <div className="space-y-4 pt-4">
                       <h4 className="text-gray-900 text-[14px]">Typography</h4>
