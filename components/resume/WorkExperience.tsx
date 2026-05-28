@@ -19,7 +19,7 @@ export function WorkExperience({
   return (
     <section className="mb-12 print:mb-8">
       <h2 
-        className="text-lg font-bold mb-8 print:mb-4 text-gray-900" 
+        className="text-lg font-bold mb-8 print:mb-4 text-theme-primary" 
         id="work-experience"
       >
         Work Experience
@@ -35,7 +35,7 @@ export function WorkExperience({
             className="flex flex-col sm:flex-row gap-4 sm:gap-12 print:mb-6"
           >
             {/* Left column: Years */}
-            <div className="sm:w-32 shrink-0 text-gray-500  text-sm pt-0.5">
+            <div className="sm:w-32 shrink-0 text-theme-secondary  text-sm pt-0.5">
               {item.start} — {item.end || 'Now'}
             </div>
 
@@ -49,20 +49,20 @@ export function WorkExperience({
                     rel="noopener noreferrer" 
                     className="hover:underline"
                   >
-                    <span className="text-base font-semibold text-gray-900 ">
+                    <span className="text-base font-semibold text-theme-primary ">
                       {item.title} at {item.company}
-                      <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-gray-900 relative -top-0.5" />
+                      <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-theme-primary relative -top-0.5" />
                     </span>
                   </a>
                 ) : (
-                  <p className="text-base font-semibold text-gray-900 ">
+                  <p className="text-base font-semibold text-theme-primary ">
                     {item.title} at {item.company}
                   </p>
                 )}
               </div>
               
               {item.location && (
-                <p className="mt-1 text-sm text-gray-500 ">
+                <p className="mt-1 text-sm text-theme-secondary ">
                   {item.location}
                 </p>
               )}

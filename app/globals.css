@@ -100,3 +100,61 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+
+/* Dynamic Themes for Portfolio */
+.theme-default {
+  --theme-bg: #ffffff;
+  --theme-primary: #111827;     /* text-gray-900 */
+  --theme-secondary: #6b7280;   /* text-gray-500 */
+  --theme-border: #f3f4f6;      /* border-gray-100 */
+  --theme-accent: #3b82f6;      /* blue */
+}
+
+.theme-brutalist {
+  --theme-bg: #b6b6b6;
+  --theme-primary: #000000;
+  --theme-secondary: #555555;
+  --theme-border: #999999;
+  --theme-accent: #000000;
+}
+
+.theme-swiss {
+  --theme-bg: #e3583d;
+  --theme-primary: #ffffff;
+  --theme-secondary: #ffccc0;
+  --theme-border: #f0816c;
+  --theme-accent: #ffffff;
+}
+
+.theme-klein {
+  --theme-bg: #1538a7;
+  --theme-primary: #ffffff;
+  --theme-secondary: #9db1f2;
+  --theme-border: #3b5bc2;
+  --theme-accent: #ffffff;
+}
+
+.theme-red {
+  --theme-bg: #fcf4f0;
+  --theme-primary: #ea5b4d;
+  --theme-secondary: #f3a69e;
+  --theme-border: #fcdbd8;
+  --theme-accent: #ea5b4d;
+}
+
+.theme-green {
+  --theme-bg: #eff8eb;
+  --theme-primary: #4fa847;
+  --theme-secondary: #a5d89f;
+  --theme-border: #c8eac4;
+  --theme-accent: #4fa847;
+}
+
+.theme-blue {
+  --theme-bg: #eaf3fa;
+  --theme-primary: #267efb;
+  --theme-secondary: #a0c8fd;
+  --theme-border: #cde2f9;
+  --theme-accent: #267efb;
+}

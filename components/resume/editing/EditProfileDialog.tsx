@@ -401,6 +401,7 @@ export function EditProfileDialog({
         sectionOrder,
         design: {
           typography,
+          theme,
         },
       };
 
@@ -2694,6 +2695,111 @@ export function EditProfileDialog({
                             <span className="text-[14px] text-[#737373]">
                               Diatype Mono, designed by Dinamo in 2020.
                             </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    {/* Theme Section */}
+                    <div className="space-y-4 pt-8 mt-4 border-t border-gray-100">
+                      <div>
+                        <h4 className="text-gray-900 text-[14px]">Theme</h4>
+                        <p className="text-[#888888] text-[13px] mt-1">
+                          Change the theme shown on {domainStatus?.verified && customDomain ? customDomain : `portfoliofy.me/${username}`}
+                        </p>
+                      </div>
+                      
+                      <div className="flex flex-col gap-5 pt-2">
+                        {/* Default */}
+                        <div 
+                          className="flex items-center gap-4 cursor-pointer group"
+                          onClick={() => { setTheme('default'); setHasUnsavedChanges(true); }}
+                        >
+                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'default' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#ffffff', borderColor: theme === 'default' ? '#3b82f6' : '#e5e7eb' }}>
+                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#111827' }}>Aa</span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[14px] text-gray-900 font-medium">Default</span>
+                            <span className="text-[14px] text-[#737373]">Classic grayscale.</span>
+                          </div>
+                        </div>
+                        {/* Brutalist */}
+                        <div 
+                          className="flex items-center gap-4 cursor-pointer group"
+                          onClick={() => { setTheme('brutalist'); setHasUnsavedChanges(true); }}
+                        >
+                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'brutalist' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#b6b6b6', borderColor: theme === 'brutalist' ? '#3b82f6' : 'transparent' }}>
+                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#000000' }}>Aa</span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[14px] text-gray-900 font-medium">Brutalist</span>
+                            <span className="text-[14px] text-[#737373]">Raw internet materials.</span>
+                          </div>
+                        </div>
+                        {/* Swiss */}
+                        <div 
+                          className="flex items-center gap-4 cursor-pointer group"
+                          onClick={() => { setTheme('swiss'); setHasUnsavedChanges(true); }}
+                        >
+                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'swiss' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#e3583d', borderColor: theme === 'swiss' ? '#3b82f6' : 'transparent' }}>
+                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#ffffff' }}>Aa</span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[14px] text-gray-900 font-medium">Swiss</span>
+                            <span className="text-[14px] text-[#737373]">International typographic style.</span>
+                          </div>
+                        </div>
+                        {/* Klein */}
+                        <div 
+                          className="flex items-center gap-4 cursor-pointer group"
+                          onClick={() => { setTheme('klein'); setHasUnsavedChanges(true); }}
+                        >
+                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'klein' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#1538a7', borderColor: theme === 'klein' ? '#3b82f6' : 'transparent' }}>
+                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#ffffff' }}>Aa</span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[14px] text-gray-900 font-medium">Klein</span>
+                            <span className="text-[14px] text-[#737373]">International Klein Blue.</span>
+                          </div>
+                        </div>
+                        {/* Red */}
+                        <div 
+                          className="flex items-center gap-4 cursor-pointer group"
+                          onClick={() => { setTheme('red'); setHasUnsavedChanges(true); }}
+                        >
+                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'red' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#fcf4f0', borderColor: theme === 'red' ? '#3b82f6' : 'transparent' }}>
+                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#ea5b4d' }}>Aa</span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[14px] text-gray-900 font-medium">Red</span>
+                            <span className="text-[14px] text-[#737373]">Radiates energy.</span>
+                          </div>
+                        </div>
+                        {/* Green */}
+                        <div 
+                          className="flex items-center gap-4 cursor-pointer group"
+                          onClick={() => { setTheme('green'); setHasUnsavedChanges(true); }}
+                        >
+                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'green' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#eff8eb', borderColor: theme === 'green' ? '#3b82f6' : 'transparent' }}>
+                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#4fa847' }}>Aa</span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[14px] text-gray-900 font-medium">Green</span>
+                            <span className="text-[14px] text-[#737373]">Lush and leafy.</span>
+                          </div>
+                        </div>
+                        {/* Blue */}
+                        <div 
+                          className="flex items-center gap-4 cursor-pointer group"
+                          onClick={() => { setTheme('blue'); setHasUnsavedChanges(true); }}
+                        >
+                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'blue' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#eaf3fa', borderColor: theme === 'blue' ? '#3b82f6' : 'transparent' }}>
+                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#267efb' }}>Aa</span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[14px] text-gray-900 font-medium">Blue</span>
+                            <span className="text-[14px] text-[#737373]">Da ba dee da ba di.</span>
                           </div>
                         </div>
                       </div>
