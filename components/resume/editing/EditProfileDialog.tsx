@@ -248,7 +248,7 @@ export function EditProfileDialog({
   );
 
   const [typography, setTypography] = useState<'sans' | 'serif' | 'mono'>(
-    resume.design?.typography || 'sans'
+    resume.design?.typography || 'sans',
   );
 
   const sensors = useSensors(
@@ -2390,14 +2390,18 @@ export function EditProfileDialog({
                   )}
                 </div>
               )}
-                            {activeTab === 'personal_domain' && (
+              {activeTab === 'personal_domain' && (
                 <div className="max-w-2xl mx-auto h-full flex flex-col pt-8">
                   <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
                     <h2 className="text-2xl font-bold text-gray-900">
                       Personal Domain
                     </h2>
                     <a
-                      href={domainStatus?.verified && customDomain ? `https://${customDomain}` : `https://portfoliofy.me/${username}`}
+                      href={
+                        domainStatus?.verified && customDomain
+                          ? `https://${customDomain}`
+                          : `https://portfoliofy.me/${username}`
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center rounded-md text-[13px] font-medium border border-gray-200 bg-white hover:bg-gray-50 text-gray-900 h-8 px-4 transition-colors shadow-sm"
@@ -2601,61 +2605,99 @@ export function EditProfileDialog({
                       </div>
                     </div>
 
-
                     {/* Typography Section */}
                     <div className="space-y-4 pt-8 mt-4 border-t border-gray-100">
                       <div>
-                        <h4 className="text-gray-900 text-[14px]">Typography</h4>
+                        <h4 className="text-gray-900 text-[14px]">
+                          Typography
+                        </h4>
                         <p className="text-[#888888] text-[13px] mt-1">
-                          Change the typography shown on {domainStatus?.verified && customDomain ? customDomain : `portfoliofy.me/${username}`}
+                          Change the typography shown on{' '}
+                          <span className="text-gray-900">
+                            {domainStatus?.verified && customDomain
+                              ? customDomain
+                              : `portfoliofy.me/${username}`}
+                          </span>
                         </p>
                       </div>
-                      
+
                       <div className="flex flex-col gap-5">
                         {/* Sans */}
-                        <div 
+                        <div
                           className="flex items-center gap-4 cursor-pointer group"
-                          onClick={() => { setTypography('sans'); setHasUnsavedChanges(true); }}
+                          onClick={() => {
+                            setTypography('sans');
+                            setHasUnsavedChanges(true);
+                          }}
                         >
-                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${typography === 'sans' ? 'border-[2.5px] border-[#3b82f6] bg-white' : 'border border-gray-200 bg-white group-hover:border-gray-300'}`}>
-                            <span className="text-[22px] font-medium font-sans text-gray-900 tracking-tight">Aa</span>
+                          <div
+                            className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${typography === 'sans' ? 'border-[2.5px] border-[#3b82f6] bg-white' : 'border border-gray-200 bg-white group-hover:border-gray-300'}`}
+                          >
+                            <span className="text-[22px] font-medium font-sans text-gray-900 tracking-tight">
+                              Aa
+                            </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-[14px] text-gray-900 font-medium">Sans</span>
-                            <span className="text-[14px] text-[#737373]">Graphik, designed by Christian Schwartz in 2009.</span>
+                            <span className="text-[14px] text-gray-900 font-medium">
+                              Sans
+                            </span>
+                            <span className="text-[14px] text-[#737373]">
+                              Graphik, designed by Christian Schwartz in 2009.
+                            </span>
                           </div>
                         </div>
 
                         {/* Serif */}
-                        <div 
+                        <div
                           className="flex items-center gap-4 cursor-pointer group"
-                          onClick={() => { setTypography('serif'); setHasUnsavedChanges(true); }}
+                          onClick={() => {
+                            setTypography('serif');
+                            setHasUnsavedChanges(true);
+                          }}
                         >
-                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${typography === 'serif' ? 'border-[2.5px] border-[#3b82f6] bg-white' : 'border border-gray-200 bg-white group-hover:border-gray-300'}`}>
-                            <span className="text-[22px] font-medium font-serif text-gray-900 tracking-tight">Aa</span>
+                          <div
+                            className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${typography === 'serif' ? 'border-[2.5px] border-[#3b82f6] bg-white' : 'border border-gray-200 bg-white group-hover:border-gray-300'}`}
+                          >
+                            <span className="text-[22px] font-medium font-serif text-gray-900 tracking-tight">
+                              Aa
+                            </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-[14px] text-gray-900 font-medium">Serif</span>
-                            <span className="text-[14px] text-[#737373]">Signifier, designed by Kris Sowersby in 2020.</span>
+                            <span className="text-[14px] text-gray-900 font-medium">
+                              Serif
+                            </span>
+                            <span className="text-[14px] text-[#737373]">
+                              Signifier, designed by Kris Sowersby in 2020.
+                            </span>
                           </div>
                         </div>
 
                         {/* Mono */}
-                        <div 
+                        <div
                           className="flex items-center gap-4 cursor-pointer group"
-                          onClick={() => { setTypography('mono'); setHasUnsavedChanges(true); }}
+                          onClick={() => {
+                            setTypography('mono');
+                            setHasUnsavedChanges(true);
+                          }}
                         >
-                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${typography === 'mono' ? 'border-[2.5px] border-[#3b82f6] bg-white' : 'border border-gray-200 bg-white group-hover:border-gray-300'}`}>
-                            <span className="text-[22px] font-medium font-mono text-gray-900 tracking-tight">Aa</span>
+                          <div
+                            className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${typography === 'mono' ? 'border-[2.5px] border-[#3b82f6] bg-white' : 'border border-gray-200 bg-white group-hover:border-gray-300'}`}
+                          >
+                            <span className="text-[22px] font-medium font-mono text-gray-900 tracking-tight">
+                              Aa
+                            </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-[14px] text-gray-900 font-medium">Mono</span>
-                            <span className="text-[14px] text-[#737373]">Diatype Mono, designed by Dinamo in 2020.</span>
+                            <span className="text-[14px] text-gray-900 font-medium">
+                              Mono
+                            </span>
+                            <span className="text-[14px] text-[#737373]">
+                              Diatype Mono, designed by Dinamo in 2020.
+                            </span>
                           </div>
                         </div>
                       </div>
                     </div>
-
                   </div>
                 </div>
               )}
