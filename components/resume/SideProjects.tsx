@@ -10,7 +10,7 @@ export function SideProjects({
   return (
     <section className="mb-12 print:mb-8">
       <h2 
-        className="text-lg font-bold mb-8 print:mb-4 text-gray-900" 
+        className="text-lg font-bold mb-8 print:mb-4 text-theme-primary" 
         id="side-projects-section"
       >
         Side Projects
@@ -26,7 +26,7 @@ export function SideProjects({
             className="flex flex-col sm:flex-row gap-4 sm:gap-12 print:mb-6"
           >
             {/* Left column: Year */}
-            <div className="sm:w-32 shrink-0 text-gray-500  text-sm pt-0.5">
+            <div className="sm:w-32 shrink-0 text-theme-secondary  text-sm pt-0.5">
               {project.year}
             </div>
 
@@ -40,7 +40,7 @@ export function SideProjects({
                     rel="noopener noreferrer" 
                     className="hover:underline"
                   >
-                    <span className="text-base font-semibold text-gray-900 ">
+                    <span className="text-base font-semibold text-theme-primary ">
                       {project.title}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -52,14 +52,14 @@ export function SideProjects({
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="inline-block ml-1 w-4 h-4 text-gray-900 relative -top-0.5"
+                        className="inline-block ml-1 w-4 h-4 text-theme-primary relative -top-0.5"
                       >
                         <path d="M7 17L17 7M7 7h10v10" />
                       </svg>
                     </span>
                   </a>
                 ) : (
-                  <p className="text-base font-semibold text-gray-900 ">
+                  <p className="text-base font-semibold text-theme-primary ">
                     {project.title}
                   </p>
                 )}

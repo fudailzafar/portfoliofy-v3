@@ -16,18 +16,18 @@ export function Skills({ skills, className }: SkillsProps) {
 
   return (
     <section className={cn("mb-12 print:mb-8", className)}>
-      <h2 className="text-lg font-bold mb-8 print:mb-4 text-gray-900" id="skills-section">
+      <h2 className="text-lg font-bold mb-8 print:mb-4 text-theme-primary" id="skills-section">
         Skills
       </h2>
       <div
-        className="text-base font-semibold text-gray-900  leading-relaxed"
+        className="text-base font-semibold text-theme-primary  leading-relaxed"
         aria-label="List of skills"
         aria-labelledby="skills-section"
       >
         {skills.map((skill, index) => (
           <span key={skill}>
             {skill}
-            {index < skills.length - 1 && <span className="mx-2 text-gray-400">•</span>}
+            {index < skills.length - 1 && <span className="mx-2 text-theme-secondary">•</span>}
           </span>
         ))}
       </div>

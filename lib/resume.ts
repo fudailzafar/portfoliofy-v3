@@ -113,7 +113,8 @@ export const ResumeDataSchema = z.object({
   sectionOrder: z.array(z.string()).optional().default(['work', 'side_projects', 'speaking', 'projects', 'skills', 'education', 'contact', 'awards', 'exhibitions', 'writing']),
   design: z.object({
     typography: z.enum(['sans', 'serif', 'mono']).optional().default('sans'),
-  }).optional().default({ typography: 'sans' }),
+    theme: z.enum(['default', 'brutalist', 'swiss', 'klein', 'red', 'green', 'blue']).optional().default('default'),
+  }).optional().default({ typography: 'sans', theme: 'default' }),
 });
 
 export type ResumeDataSchemaType = z.infer<typeof ResumeDataSchema>;
