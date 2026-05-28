@@ -23,8 +23,8 @@ export function HomeHero() {
     <>
       <div className="flex flex-col mb-8">
         <h1 className="text-[20px] md:text-[24px] font-normal tracking-tight leading-[1.3] text-gray-900 mb-8">
-          <strong translate="no">Portfoliofy</strong> is a progressive platform used by
-          thousands of people to create more mindful professional profiles.
+          <strong translate="no">Portfoliofy</strong> is a <a href="https://web.dev/progressive-web-apps/" className="text-inherit no-underline hover:text-inherit cursor-text">progressive platform</a> used by
+          thousands of people to create more <a href="https://en.wikipedia.org/wiki/Mindfulness" className="text-inherit no-underline hover:text-inherit cursor-text">mindful</a> professional profiles.
         </h1>
 
         <div className="flex justify-end">
