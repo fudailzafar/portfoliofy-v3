@@ -37,7 +37,7 @@ export default function PreviewActionbar({
       <div className="w-full rounded-lg bg-[#fcfcfc] border-[0.5px] border-neutral-300 flex items-center justify-between py-3 px-5  sm:px-4 sm:py-2.5  flex-col sm:flex-row gap-4">
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
           <div className="flex items-center gap-1 mr-1">
-            <img
+            <img width={300} height={300}
               src="/link-icon.png"
               className={cn(
                 'w-4 h-4 text-design-black ',

@@ -91,6 +91,16 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* UI/UX Rules: Accessibility & Interaction */
+  a, button, input, select, textarea, [role="button"] {
+    touch-action: manipulation;
+  }
+
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
 }
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
@@ -99,4 +109,22 @@ body {
   input {
     font-size: 16px;
   }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  scroll-margin-top: 4rem;
+}
+
+table, th, td, .tabular-nums, input[type='number'] {
+  font-variant-numeric: tabular-nums;
 }
