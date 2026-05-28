@@ -9,6 +9,6 @@ export function getSelfSoUrl(username: string) {
   const domain =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000'
-      : 'https://portfoliofy.me';
+      : 'https://portfoliofy-v3.vercel.app';
   return `${domain}/${username}`;
 }
