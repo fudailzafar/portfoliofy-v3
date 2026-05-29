@@ -59,14 +59,14 @@ export function Header({
       </Avatar>
 
       <div className="flex-1 space-y-1">
-        <h1 className="text-2xl md:text-[28px] font-semibold text-theme-primary " id="resume-name">
+        <h1 className="text-base md:text-xl font-semibold text-theme-primary " id="resume-name">
           {header.name}
         </h1>
         
         {/* Subtitle: {Role} in {Location}, {Pronouns} */}
         {(header.shortAbout || header.location || header.pronouns) && (
           <p
-            className="text-pretty  text-sm text-theme-secondary"
+            className="text-pretty text-sm text-theme-secondary"
             aria-labelledby="resume-name"
           >
             {[
