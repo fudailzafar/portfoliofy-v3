@@ -80,7 +80,7 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-4 py-12 gap-6 min-h-[70vh]">
-      <div className="w-full max-w-md bg-white p-8 rounded-xl border border-gray-200 shadow-sm font-mono">
+      <div className="w-full max-w-md bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
         <h1 className="text-2xl font-bold text-left mb-2">Welcome to Portfoliofy👋🏻</h1>
         <p className="text-sm text-gray-500 text-left mb-8">
           We just need a few details to finish creating your account. You can always change this later.

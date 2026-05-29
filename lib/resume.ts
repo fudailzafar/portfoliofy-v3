@@ -1,6 +1,28 @@
 import { z } from 'zod';
 
-
+export const sortByDateDesc = <T extends { startYear?: string; start?: string; year?: string; endYear?: string; end?: string | null }>(items?: T[]): T[] => {
+  if (!items) return [];
+  return [...items].sort((a, b) => {
+    const getEndYear = (item: any) => {
+      const y = item.endYear || item.end;
+      if (y === 'Now' || y === 'Present' || y === 'Current' || !y) return 9999;
+      return parseInt(y) || 0;
+    };
+    const getStartYear = (item: any) => {
+      const y = item.startYear || item.start || item.year;
+      if (y === 'Now' || y === 'Present' || y === 'Current') return 9999;
+      return parseInt(y) || 0;
+    };
+    
+    // Sort by end year first if it exists
+    const aEnd = getEndYear(a);
+    const bEnd = getEndYear(b);
+    if (aEnd !== bEnd) return bEnd - aEnd;
+    
+    // Fallback to start year
+    return getStartYear(b) - getStartYear(a);
+  });
+};
 
 const HeaderSection = z.object({
   name: z.string(),
