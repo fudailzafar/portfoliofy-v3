@@ -23,7 +23,7 @@ export function Education({
   return (
     <section className="mb-12 print:mb-8">
       <h2 
-        className="text-lg font-bold mb-8 print:mb-4 text-theme-primary" 
+        className="text-sm font-bold mb-8 print:mb-4 text-theme-primary" 
         id="education-section"
       >
         Education
@@ -45,7 +45,7 @@ export function Education({
 
             {/* Right column: Content */}
             <div className="flex-1 flex flex-col justify-start items-start">
-              <p className="text-base font-semibold text-theme-primary ">
+              <p className="text-sm font-semibold text-theme-primary ">
                 {edu.degree} at {edu.school}
               </p>
               
