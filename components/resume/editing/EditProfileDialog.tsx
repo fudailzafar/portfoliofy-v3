@@ -937,7 +937,7 @@ export function EditProfileDialog({
                                 .replace(/[^a-z0-9-]/g, ''),
                             )
                           }
-                          className="pl-[112px] border-none focus-visible:ring-0 shadow-none bg-transparent rounded-none h-10"
+                          className="pl-[180px] border-none focus-visible:ring-0 shadow-none bg-transparent rounded-none h-10"
                         />
                         <div className="pr-3 flex items-center">
                           {isInitialUsername ? null : checkUsernameMutation.isPending ? (
@@ -1164,12 +1164,12 @@ export function EditProfileDialog({
                           key={project.id}
                           className="flex flex-col sm:flex-row gap-4 sm:gap-12"
                         >
-                          <div className="sm:w-16 shrink-0 text-gray-400 font-mono text-sm pt-0.5">
+                          <div className="sm:w-16 shrink-0 text-gray-400 text-sm pt-0.5">
                             {project.year}
                           </div>
 
                           <div className="flex-1 flex flex-col justify-start items-start">
-                            <p className="text-base font-semibold text-gray-900 font-mono">
+                            <p className="text-base font-semibold text-gray-900">
                               {project.title}
                               {project.company && (
                                 <span className="font-normal text-gray-900">
@@ -1182,7 +1182,7 @@ export function EditProfileDialog({
                             {project.description &&
                               project.description !== '<p></p>' && (
                                 <div
-                                  className="mt-1 text-sm text-gray-500 font-mono line-clamp-2"
+                                  className="mt-1 text-sm text-gray-500 line-clamp-2"
                                   dangerouslySetInnerHTML={{
                                     __html: project.description,
                                   }}
@@ -1719,16 +1719,16 @@ export function EditProfileDialog({
                           key={edu.id || edu.school}
                           className="flex flex-col sm:flex-row gap-4 sm:gap-12"
                         >
-                          <div className="sm:w-32 shrink-0 text-gray-400 font-mono text-sm pt-0.5">
+                          <div className="sm:w-32 shrink-0 text-gray-400 text-sm pt-0.5">
                             {edu.start ? `${edu.start} — ${edu.end}` : edu.end}
                           </div>
 
                           <div className="flex-1 flex flex-col justify-start items-start">
-                            <p className="text-base font-semibold text-gray-900 font-mono">
+                            <p className="text-base font-semibold text-gray-900">
                               {edu.degree} at {edu.school}
                             </p>
                             {edu.location && (
-                              <p className="text-sm text-gray-500 font-mono mt-1">
+                              <p className="text-sm text-gray-500 mt-1">
                                 {edu.location}
                               </p>
                             )}
@@ -1929,7 +1929,7 @@ export function EditProfileDialog({
                           key={w.id || w.company}
                           className="flex flex-col sm:flex-row gap-4 sm:gap-12"
                         >
-                          <div className="sm:w-32 shrink-0 text-gray-400 font-mono text-sm pt-0.5">
+                          <div className="sm:w-32 shrink-0 text-gray-400 text-sm pt-0.5">
                             {w.start} — {w.end}
                           </div>
 
@@ -1945,25 +1945,25 @@ export function EditProfileDialog({
                                 rel="noopener noreferrer"
                                 className="hover:underline inline-block"
                               >
-                                <span className="text-base font-semibold text-gray-900 font-mono">
+                                <span className="text-base font-semibold text-gray-900">
                                   {w.title} at {w.company}
                                   <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-gray-900 relative -top-0.5" />
                                 </span>
                               </a>
                             ) : (
-                              <p className="text-base font-semibold text-gray-900 font-mono">
+                              <p className="text-base font-semibold text-gray-900">
                                 {w.title} at {w.company}
                               </p>
                             )}
                             {w.location && (
-                              <p className="text-sm text-gray-500 font-mono mt-1">
+                              <p className="text-sm text-gray-500 mt-1">
                                 {w.location}
                               </p>
                             )}
 
                             {w.description && w.description !== '<p></p>' && (
                               <div
-                                className="mt-1 text-sm text-gray-500 font-mono prose prose-sm max-w-none"
+                                className="mt-1 text-sm text-gray-500 prose prose-sm max-w-none"
                                 dangerouslySetInnerHTML={{
                                   __html: w.description,
                                 }}
@@ -2218,7 +2218,7 @@ export function EditProfileDialog({
                         {skills.map((skill, index) => (
                           <div
                             key={index}
-                            className="flex items-center bg-gray-100/80 text-gray-900 text-sm font-mono px-3 py-1.5 rounded-full"
+                            className="flex items-center bg-gray-100/80 text-gray-900 text-sm px-3 py-1.5 rounded-full"
                           >
                             <span className="mr-2">{skill}</span>
                             <button
@@ -2296,7 +2296,7 @@ export function EditProfileDialog({
                           key={c.id || c.platform}
                           className="flex flex-col sm:flex-row gap-4 sm:gap-12"
                         >
-                          <div className="sm:w-32 shrink-0 text-gray-400 font-mono text-sm pt-0.5">
+                          <div className="sm:w-32 shrink-0 text-gray-400 text-sm pt-0.5">
                             {c.platform}
                           </div>
 
@@ -2307,7 +2307,7 @@ export function EditProfileDialog({
                               rel="noopener noreferrer"
                               className="hover:underline inline-block"
                             >
-                              <span className="text-base font-semibold text-gray-900 font-mono">
+                              <span className="text-base font-semibold text-gray-900">
                                 {extractUsername(c.link, c.platform)}
                                 <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-gray-900 relative -top-0.5" />
                               </span>
@@ -2753,7 +2753,7 @@ export function EditProfileDialog({
                           <div
                             className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${typography === 'mono' ? 'border-[2.5px] border-[#3b82f6] bg-white' : 'border border-gray-200 bg-white group-hover:border-gray-300'}`}
                           >
-                            <span className="text-[22px] font-medium font-mono text-gray-900 tracking-tight">
+                            <span className="text-[22px] font-medium text-gray-900 tracking-tight">
                               Aa
                             </span>
                           </div>
