@@ -31,6 +31,7 @@ import {
   Briefcase,
   ArrowUpRight,
   MessageCircle,
+  Mic,
   LogOut,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -147,6 +148,15 @@ export function EditProfileDialog({
   const [currentSpeaking, setCurrentSpeaking] = useState<any>(null);
   const [speakingToDelete, setSpeakingToDelete] = useState<string | null>(null);
 
+  // Local state for volunteering tab
+  const [volunteering, setVolunteering] = useState(resume.volunteering || []);
+  const [volunteeringView, setVolunteeringView] = useState<'list' | 'form'>(
+    'list',
+  );
+  const [currentVolunteering, setCurrentVolunteering] = useState<any>(null);
+  const [volunteeringToDelete, setVolunteeringToDelete] = useState<
+    string | null
+  >(null);
 
   // Local state for features tab
   const [features, setFeatures] = useState(resume.features || []);
@@ -247,19 +257,25 @@ export function EditProfileDialog({
     'education',
     'contact',
     'awards',
-    'exhibitions',
+    'volunteering',
     'features',
   ];
   const [sectionOrder, setSectionOrder] = useState<string[]>(
-    (resume.sectionOrder || DEFAULT_ORDER).map(id => id === 'writing' ? 'features' : id)
+    (resume.sectionOrder || DEFAULT_ORDER).map((id) =>
+      id === 'writing'
+        ? 'features'
+        : id === 'exhibitions'
+          ? 'volunteering'
+          : id,
+    ),
   );
 
   const [typography, setTypography] = useState<'sans' | 'serif' | 'mono'>(
     resume.design?.typography || 'sans',
   );
-  const [theme, setTheme] = useState<'default' | 'brutalist' | 'swiss' | 'klein' | 'red' | 'green' | 'blue'>(
-    resume.design?.theme || 'default'
-  );
+  const [theme, setTheme] = useState<
+    'default' | 'brutalist' | 'swiss' | 'klein' | 'red' | 'green' | 'blue'
+  >(resume.design?.theme || 'default');
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -289,7 +305,7 @@ export function EditProfileDialog({
       education: { label: 'Education', disabled: false },
       contact: { label: 'Contact', disabled: false },
       awards: { label: 'Awards', disabled: true },
-      exhibitions: { label: 'Exhibitions', disabled: true },
+      volunteering: { label: 'Volunteering', disabled: false },
       features: { label: 'Features', disabled: false },
     };
 
@@ -405,7 +421,8 @@ export function EditProfileDialog({
         projects,
         sideProjects,
         speaking,
-          features,
+        features,
+        volunteering,
         education,
         workExperience: work,
         contacts,
@@ -582,6 +599,37 @@ export function EditProfileDialog({
     setContactToDelete(null);
   };
 
+  const handleSaveVolunteering = () => {
+    if (
+      !currentVolunteering?.role ||
+      !currentVolunteering?.organization ||
+      !currentVolunteering?.startYear ||
+      !currentVolunteering?.endYear
+    ) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    setVolunteering((prev: any[]) => {
+      if (currentVolunteering.id) {
+        return prev.map((v) =>
+          v.id === currentVolunteering.id ? currentVolunteering : v,
+        );
+      }
+      return [
+        ...prev,
+        { ...currentVolunteering, id: Math.random().toString(36).substr(2, 9) },
+      ];
+    });
+    setVolunteeringView('list');
+    setCurrentVolunteering(null);
+  };
+
+  const handleDeleteVolunteering = (id: string) => {
+    setVolunteering((prev: any[]) => prev.filter((v) => v.id !== id));
+    setVolunteeringToDelete(null);
+  };
+
   const handleSaveFeature = () => {
     if (!currentFeature.title || !currentFeature.year) return;
 
@@ -651,7 +699,7 @@ export function EditProfileDialog({
     { id: 'education', label: 'Education', disabled: false },
     { id: 'contact', label: 'Contact', disabled: false },
     { id: 'awards', label: 'Awards', disabled: true },
-    { id: 'exhibitions', label: 'Exhibitions', disabled: true },
+    { id: 'volunteering', label: 'Exhibitions', disabled: true },
     { id: 'features', label: 'Features', disabled: false },
     { label: 'Account', isLabel: true },
     { id: 'settings', label: 'Settings', disabled: false },
@@ -680,7 +728,8 @@ export function EditProfileDialog({
     (activeTab === 'projects' && projectsView === 'form') ||
     (activeTab === 'side_projects' && sideProjectsView === 'form') ||
     (activeTab === 'speaking' && speakingView === 'form') ||
-      (activeTab === 'features' && featuresView === 'form') ||
+    (activeTab === 'features' && featuresView === 'form') ||
+    (activeTab === 'volunteering' && volunteeringView === 'form') ||
     (activeTab === 'work' && workView === 'form') ||
     (activeTab === 'education' && eduView === 'form') ||
     (activeTab === 'contact' && contactView === 'form');
@@ -779,6 +828,8 @@ export function EditProfileDialog({
                             setSideProjectsView('list');
                           if (id === 'speaking') setSpeakingView('list');
                           if (id === 'features') setFeaturesView('list');
+                          if (id === 'volunteering')
+                            setVolunteeringView('list');
                           if (id === 'contact') setContactView('list');
                         }}
                       />
@@ -862,7 +913,9 @@ export function EditProfileDialog({
                             </svg>
                           </div>
                         )}
-                        <img width={300} height={300}
+                        <img
+                          width={300}
+                          height={300}
                           src={localPicture}
                           alt="Profile picture"
                           className="size-full object-cover"
@@ -1552,7 +1605,7 @@ export function EditProfileDialog({
                   {speakingView === 'list' && speaking.length === 0 && (
                     <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 opacity-80 mt-12">
                       <div className="p-8 bg-gray-50 rounded-full">
-                        <FolderCode
+                        <Mic
                           className="w-16 h-16 text-gray-400"
                           strokeWidth={1}
                         />
@@ -1700,6 +1753,222 @@ export function EditProfileDialog({
                 </div>
               )}
 
+              {activeTab === 'volunteering' && (
+                <div className="max-w-3xl mx-auto h-full flex flex-col">
+                  <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+                    <h2 className="text-2xl font-bold">Volunteering</h2>
+                    {volunteeringView === 'list' && (
+                      <Button
+                        variant="secondary"
+                        onClick={() => {
+                          setCurrentVolunteering({
+                            role: '',
+                            organization: '',
+                            startYear: '',
+                            endYear: '',
+                            location: '',
+                            link: '',
+                          });
+                          setVolunteeringView('form');
+                        }}
+                        className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none h-8 text-xs px-4 rounded-md"
+                      >
+                        Add volunteering
+                      </Button>
+                    )}
+                  </div>
+                  {volunteeringView === 'list' && volunteering.length === 0 && (
+                    <div className="text-center py-12">
+                      <p className="text-gray-500 mb-4">
+                        No volunteering entries added yet.
+                      </p>
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          setCurrentVolunteering({
+                            role: '',
+                            organization: '',
+                            startYear: '',
+                            endYear: '',
+                            location: '',
+                            link: '',
+                          });
+                          setVolunteeringView('form');
+                        }}
+                      >
+                        Add volunteering
+                      </Button>
+                    </div>
+                  )}
+
+                  {volunteeringView === 'list' && volunteering.length > 0 && (
+                    <div className="space-y-8">
+                      {volunteering.map((v: any) => (
+                        <div
+                          key={v.id}
+                          className="flex flex-col sm:flex-row gap-4 sm:gap-12"
+                        >
+                          <div className="sm:w-24 shrink-0 text-gray-400 text-sm pt-0.5">
+                            {v.startYear} — {v.endYear}
+                          </div>
+
+                          <div className="flex-1 flex flex-col justify-start items-start">
+                            <p className="text-base font-semibold text-gray-900">
+                              {v.role} at {v.organization}
+                            </p>
+                            {v.location && (
+                              <p className="text-sm text-gray-500 mt-0.5">
+                                {v.location}
+                              </p>
+                            )}
+
+                            <div className="flex items-center gap-4 mt-3 text-xs font-medium text-gray-400">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setCurrentVolunteering(v);
+                                  setVolunteeringView('form');
+                                }}
+                                className="hover:text-gray-900 transition-colors"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setVolunteeringToDelete(v.id)}
+                                className="hover:text-red-600 transition-colors"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {volunteeringView === 'form' && currentVolunteering && (
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>Role *</Label>
+                          <Input
+                            required
+                            value={currentVolunteering.role}
+                            onChange={(e) =>
+                              setCurrentVolunteering({
+                                ...currentVolunteering,
+                                role: e.target.value,
+                              })
+                            }
+                            placeholder="e.g. Contributor"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Organization *</Label>
+                          <Input
+                            required
+                            value={currentVolunteering.organization}
+                            onChange={(e) =>
+                              setCurrentVolunteering({
+                                ...currentVolunteering,
+                                organization: e.target.value,
+                              })
+                            }
+                            placeholder="e.g. The Internet Archive"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>Start Year *</Label>
+                          <Select
+                            value={currentVolunteering.startYear}
+                            onValueChange={(val) =>
+                              setCurrentVolunteering({
+                                ...currentVolunteering,
+                                startYear: val,
+                              })
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select year" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Array.from(
+                                { length: 50 },
+                                (_, i) => new Date().getFullYear() - i,
+                              ).map((year) => (
+                                <SelectItem key={year} value={year.toString()}>
+                                  {year}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>End Year *</Label>
+                          <Select
+                            value={currentVolunteering.endYear}
+                            onValueChange={(val) =>
+                              setCurrentVolunteering({
+                                ...currentVolunteering,
+                                endYear: val,
+                              })
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select year" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Now">Now</SelectItem>
+                              <SelectItem value="Ongoing">Ongoing</SelectItem>
+                              {Array.from(
+                                { length: 50 },
+                                (_, i) => new Date().getFullYear() - i,
+                              ).map((year) => (
+                                <SelectItem key={year} value={year.toString()}>
+                                  {year}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>Location</Label>
+                          <Input
+                            value={currentVolunteering.location}
+                            onChange={(e) =>
+                              setCurrentVolunteering({
+                                ...currentVolunteering,
+                                location: e.target.value,
+                              })
+                            }
+                            placeholder="e.g. San Francisco, CA"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Link to Volunteering</Label>
+                          <Input
+                            value={currentVolunteering.link || ''}
+                            onChange={(e) =>
+                              setCurrentVolunteering({
+                                ...currentVolunteering,
+                                link: e.target.value,
+                              })
+                            }
+                            placeholder="https://..."
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {activeTab === 'features' && (
                 <div className="max-w-3xl mx-auto h-full flex flex-col">
@@ -1728,7 +1997,10 @@ export function EditProfileDialog({
                   {featuresView === 'list' && features.length === 0 && (
                     <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 opacity-80 mt-12">
                       <div className="p-8 bg-gray-50 rounded-full">
-                        <FolderCode className="w-16 h-16 text-gray-400" strokeWidth={1} />
+                        <FolderCode
+                          className="w-16 h-16 text-gray-400"
+                          strokeWidth={1}
+                        />
                       </div>
                       <Button
                         variant="secondary"
@@ -1752,7 +2024,10 @@ export function EditProfileDialog({
                   {featuresView === 'list' && features.length > 0 && (
                     <div className="space-y-8">
                       {features.map((feature: any) => (
-                        <div key={feature.id} className="flex flex-col sm:flex-row gap-4 sm:gap-12">
+                        <div
+                          key={feature.id}
+                          className="flex flex-col sm:flex-row gap-4 sm:gap-12"
+                        >
                           <div className="sm:w-16 shrink-0 text-gray-400 text-sm pt-0.5">
                             {feature.year}
                           </div>
@@ -1760,15 +2035,20 @@ export function EditProfileDialog({
                           <div className="flex-1 flex flex-col justify-start items-start">
                             <p className="text-base font-semibold text-gray-900">
                               {feature.title}
-                              {feature.location ? ` on ${feature.location}` : ''}
+                              {feature.location
+                                ? ` on ${feature.location}`
+                                : ''}
                             </p>
 
-                            {feature.description && feature.description !== '<p></p>' && (
-                              <div
-                                className="mt-1 text-sm text-gray-500 prose prose-sm max-w-none leading-relaxed prose-p:my-1 prose-ul:my-1 prose-p:text-gray-500 prose-ul:text-gray-500 prose-li:text-gray-500 prose-strong:text-gray-900"
-                                dangerouslySetInnerHTML={{ __html: feature.description }}
-                              />
-                            )}
+                            {feature.description &&
+                              feature.description !== '<p></p>' && (
+                                <div
+                                  className="mt-1 text-sm text-gray-500 prose prose-sm max-w-none leading-relaxed prose-p:my-1 prose-ul:my-1 prose-p:text-gray-500 prose-ul:text-gray-500 prose-li:text-gray-500 prose-strong:text-gray-900"
+                                  dangerouslySetInnerHTML={{
+                                    __html: feature.description,
+                                  }}
+                                />
+                              )}
 
                             <div className="flex items-center gap-4 mt-3 text-xs font-medium text-gray-400">
                               <button
@@ -1797,10 +2077,17 @@ export function EditProfileDialog({
                     <div className="space-y-6">
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <Label className="text-gray-600 text-xs">Title*</Label>
+                          <Label className="text-gray-600 text-xs">
+                            Title*
+                          </Label>
                           <Input
                             value={currentFeature.title}
-                            onChange={(e) => setCurrentFeature({ ...currentFeature, title: e.target.value })}
+                            onChange={(e) =>
+                              setCurrentFeature({
+                                ...currentFeature,
+                                title: e.target.value,
+                              })
+                            }
                             placeholder="Pattern on Hypebeast"
                           />
                         </div>
@@ -1808,14 +2095,21 @@ export function EditProfileDialog({
                           <Label className="text-gray-600 text-xs">Year*</Label>
                           <Select
                             value={currentFeature.year}
-                            onValueChange={(val) => setCurrentFeature({ ...currentFeature, year: val })}
+                            onValueChange={(val) =>
+                              setCurrentFeature({
+                                ...currentFeature,
+                                year: val,
+                              })
+                            }
                           >
                             <SelectTrigger>
                               <SelectValue placeholder="Year" />
                             </SelectTrigger>
                             <SelectContent>
                               {['Ongoing', ...years].map((y) => (
-                                <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                                <SelectItem key={y} value={y.toString()}>
+                                  {y}
+                                </SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
@@ -1824,35 +2118,55 @@ export function EditProfileDialog({
 
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <Label className="text-gray-600 text-xs">Link to feature</Label>
+                          <Label className="text-gray-600 text-xs">
+                            Link to feature
+                          </Label>
                           <Input
                             value={currentFeature.link || ''}
-                            onChange={(e) => setCurrentFeature({ ...currentFeature, link: e.target.value })}
+                            onChange={(e) =>
+                              setCurrentFeature({
+                                ...currentFeature,
+                                link: e.target.value,
+                              })
+                            }
                             placeholder="https://hypebeast.com/pattern"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label className="text-gray-600 text-xs">Location</Label>
+                          <Label className="text-gray-600 text-xs">
+                            Location
+                          </Label>
                           <Input
                             value={currentFeature.location || ''}
-                            onChange={(e) => setCurrentFeature({ ...currentFeature, location: e.target.value })}
+                            onChange={(e) =>
+                              setCurrentFeature({
+                                ...currentFeature,
+                                location: e.target.value,
+                              })
+                            }
                             placeholder="New York, NY"
                           />
                         </div>
                       </div>
 
                       <div className="space-y-2 pt-2">
-                        <Label className="text-gray-600 text-xs">Description</Label>
+                        <Label className="text-gray-600 text-xs">
+                          Description
+                        </Label>
                         <RichTextEditor
                           content={currentFeature.description || ''}
-                          onChange={(val) => setCurrentFeature({ ...currentFeature, description: val })}
+                          onChange={(val) =>
+                            setCurrentFeature({
+                              ...currentFeature,
+                              description: val,
+                            })
+                          }
                         />
                       </div>
                     </div>
                   )}
                 </div>
               )}
-
 
               {activeTab === 'education' && (
                 <div className="max-w-3xl mx-auto h-full flex flex-col">
@@ -2451,7 +2765,12 @@ export function EditProfileDialog({
                       <Button
                         variant="secondary"
                         onClick={() => {
-                          setCurrentContact({ platform: '', link: '', type: 'Custom', username: '' });
+                          setCurrentContact({
+                            platform: '',
+                            link: '',
+                            type: 'Custom',
+                            username: '',
+                          });
                           setContactView('form');
                         }}
                         className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none h-8 text-xs px-4 rounded-md"
@@ -2473,7 +2792,12 @@ export function EditProfileDialog({
                         variant="secondary"
                         className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none rounded-md px-6 py-5 h-auto text-sm"
                         onClick={() => {
-                          setCurrentContact({ platform: '', link: '', type: 'Custom', username: '' });
+                          setCurrentContact({
+                            platform: '',
+                            link: '',
+                            type: 'Custom',
+                            username: '',
+                          });
                           setContactView('form');
                         }}
                       >
@@ -2511,8 +2835,24 @@ export function EditProfileDialog({
                                 onClick={() => {
                                   setCurrentContact({
                                     ...c,
-                                    type: ['Website', 'Email', 'LinkedIn', 'GitHub', 'X', 'Threads', 'Figma', 'Instagram', 'Bluesky', 'Mastodon'].includes(c.platform) ? c.platform : 'Custom',
-                                    username: extractUsername(c.link, c.platform)
+                                    type: [
+                                      'Website',
+                                      'Email',
+                                      'LinkedIn',
+                                      'GitHub',
+                                      'X',
+                                      'Threads',
+                                      'Figma',
+                                      'Instagram',
+                                      'Bluesky',
+                                      'Mastodon',
+                                    ].includes(c.platform)
+                                      ? c.platform
+                                      : 'Custom',
+                                    username: extractUsername(
+                                      c.link,
+                                      c.platform,
+                                    ),
                                   });
                                   setContactView('form');
                                 }}
@@ -2538,7 +2878,9 @@ export function EditProfileDialog({
                       <div className="grid grid-cols-2 gap-6">
                         {/* Type */}
                         <div className="space-y-2">
-                          <Label className="text-gray-500 text-[13px]">Type*</Label>
+                          <Label className="text-gray-500 text-[13px]">
+                            Type*
+                          </Label>
                           <Select
                             value={currentContact.type || 'Custom'}
                             onValueChange={(val) => {
@@ -2546,8 +2888,15 @@ export function EditProfileDialog({
                               setCurrentContact({
                                 ...currentContact,
                                 type: val,
-                                platform: isCustom ? currentContact.platform : val,
-                                link: !isCustom ? buildContactUrl(currentContact.username || '', val) : currentContact.link,
+                                platform: isCustom
+                                  ? currentContact.platform
+                                  : val,
+                                link: !isCustom
+                                  ? buildContactUrl(
+                                      currentContact.username || '',
+                                      val,
+                                    )
+                                  : currentContact.link,
                               });
                             }}
                           >
@@ -2555,8 +2904,22 @@ export function EditProfileDialog({
                               <SelectValue placeholder="Select type" />
                             </SelectTrigger>
                             <SelectContent>
-                              {['Custom', 'Website', 'Email', 'LinkedIn', 'GitHub', 'X', 'Threads', 'Figma', 'Instagram', 'Bluesky', 'Mastodon'].map((p) => (
-                                <SelectItem key={p} value={p}>{p}</SelectItem>
+                              {[
+                                'Custom',
+                                'Website',
+                                'Email',
+                                'LinkedIn',
+                                'GitHub',
+                                'X',
+                                'Threads',
+                                'Figma',
+                                'Instagram',
+                                'Bluesky',
+                                'Mastodon',
+                              ].map((p) => (
+                                <SelectItem key={p} value={p}>
+                                  {p}
+                                </SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
@@ -2566,10 +2929,17 @@ export function EditProfileDialog({
                           <>
                             {/* Name of platform */}
                             <div className="space-y-2">
-                              <Label className="text-gray-500 text-[13px]">Name of platform*</Label>
+                              <Label className="text-gray-500 text-[13px]">
+                                Name of platform*
+                              </Label>
                               <Input
                                 value={currentContact.platform || ''}
-                                onChange={(e) => setCurrentContact({ ...currentContact, platform: e.target.value })}
+                                onChange={(e) =>
+                                  setCurrentContact({
+                                    ...currentContact,
+                                    platform: e.target.value,
+                                  })
+                                }
                                 disabled={currentContact.type !== 'Custom'}
                                 className="bg-[#f4f4f4] border-0 h-10 shadow-none text-[14px] disabled:opacity-50"
                               />
@@ -2577,15 +2947,20 @@ export function EditProfileDialog({
 
                             {/* Username */}
                             <div className="space-y-2">
-                              <Label className="text-gray-500 text-[13px]">Username*</Label>
+                              <Label className="text-gray-500 text-[13px]">
+                                Username*
+                              </Label>
                               <Input
                                 value={currentContact.username || ''}
                                 onChange={(e) => {
                                   const newUsername = e.target.value;
-                                  setCurrentContact({ 
-                                    ...currentContact, 
+                                  setCurrentContact({
+                                    ...currentContact,
                                     username: newUsername,
-                                    link: buildContactUrl(newUsername, currentContact.platform || '')
+                                    link: buildContactUrl(
+                                      newUsername,
+                                      currentContact.platform || '',
+                                    ),
                                   });
                                 }}
                                 className="bg-[#f4f4f4] border-0 h-10 shadow-none text-[14px]"
@@ -2594,7 +2969,9 @@ export function EditProfileDialog({
 
                             {/* URL */}
                             <div className="space-y-2">
-                              <Label className="text-gray-500 text-[13px]">URL*</Label>
+                              <Label className="text-gray-500 text-[13px]">
+                                URL*
+                              </Label>
                               <Input
                                 value={currentContact.link || ''}
                                 onChange={(e) => {
@@ -2602,7 +2979,10 @@ export function EditProfileDialog({
                                   setCurrentContact({
                                     ...currentContact,
                                     link: newUrl,
-                                    username: extractUsername(newUrl, currentContact.platform)
+                                    username: extractUsername(
+                                      newUrl,
+                                      currentContact.platform,
+                                    ),
                                   });
                                 }}
                                 className="bg-[#f4f4f4] border-0 h-10 shadow-none text-[14px]"
@@ -2611,7 +2991,9 @@ export function EditProfileDialog({
                           </>
                         ) : (
                           <div className="space-y-2">
-                            <Label className="text-gray-500 text-[13px]">Link*</Label>
+                            <Label className="text-gray-500 text-[13px]">
+                              Link*
+                            </Label>
                             <Input
                               value={currentContact.link || ''}
                               onChange={(e) => {
@@ -2619,7 +3001,10 @@ export function EditProfileDialog({
                                 setCurrentContact({
                                   ...currentContact,
                                   link: newUrl,
-                                  username: extractUsername(newUrl, currentContact.platform)
+                                  username: extractUsername(
+                                    newUrl,
+                                    currentContact.platform,
+                                  ),
                                 });
                               }}
                               placeholder="https://example.com"
@@ -2643,7 +3028,11 @@ export function EditProfileDialog({
                         <Button
                           variant="outline"
                           onClick={handleSaveContact}
-                          disabled={isSaving || !currentContact.platform || !currentContact.link}
+                          disabled={
+                            isSaving ||
+                            !currentContact.platform ||
+                            !currentContact.link
+                          }
                           className="border-gray-200 text-gray-900 font-medium shadow-sm hover:bg-gray-50 rounded-lg h-10 px-5"
                         >
                           {isSaving ? 'Saving...' : 'Save'}
@@ -2962,106 +3351,243 @@ export function EditProfileDialog({
                       </div>
                     </div>
 
-
                     {/* Theme Section */}
                     <div className="space-y-4 pt-8 mt-4 border-t border-gray-100">
                       <div>
                         <h4 className="text-gray-900 text-[14px]">Theme</h4>
                         <p className="text-[#888888] text-[13px] mt-1">
-                          Change the theme shown on {domainStatus?.verified && customDomain ? customDomain : `portfoliofy-v3.vercel.app/${username}`}
+                          Change the theme shown on{' '}
+                          {domainStatus?.verified && customDomain
+                            ? customDomain
+                            : `portfoliofy-v3.vercel.app/${username}`}
                         </p>
                       </div>
-                      
+
                       <div className="flex flex-col gap-5 pt-2">
                         {/* Default */}
-                        <div 
+                        <div
                           className="flex items-center gap-4 cursor-pointer group"
-                          onClick={() => { setTheme('default'); setHasUnsavedChanges(true); }}
+                          onClick={() => {
+                            setTheme('default');
+                            setHasUnsavedChanges(true);
+                          }}
                         >
-                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'default' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#ffffff', borderColor: theme === 'default' ? '#3b82f6' : '#e5e7eb' }}>
-                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#111827' }}>Aa</span>
+                          <div
+                            className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'default' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`}
+                            style={{
+                              backgroundColor: '#ffffff',
+                              borderColor:
+                                theme === 'default' ? '#3b82f6' : '#e5e7eb',
+                            }}
+                          >
+                            <span
+                              className="text-[22px] font-medium tracking-tight"
+                              style={{ color: '#111827' }}
+                            >
+                              Aa
+                            </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-[14px] text-gray-900 font-medium">Default</span>
-                            <span className="text-[14px] text-[#737373]">Classic grayscale.</span>
+                            <span className="text-[14px] text-gray-900 font-medium">
+                              Default
+                            </span>
+                            <span className="text-[14px] text-[#737373]">
+                              Classic grayscale.
+                            </span>
                           </div>
                         </div>
                         {/* Brutalist */}
-                        <div 
+                        <div
                           className="flex items-center gap-4 cursor-pointer group"
-                          onClick={() => { setTheme('brutalist'); setHasUnsavedChanges(true); }}
+                          onClick={() => {
+                            setTheme('brutalist');
+                            setHasUnsavedChanges(true);
+                          }}
                         >
-                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'brutalist' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#b6b6b6', borderColor: theme === 'brutalist' ? '#3b82f6' : 'transparent' }}>
-                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#000000' }}>Aa</span>
+                          <div
+                            className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'brutalist' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`}
+                            style={{
+                              backgroundColor: '#b6b6b6',
+                              borderColor:
+                                theme === 'brutalist'
+                                  ? '#3b82f6'
+                                  : 'transparent',
+                            }}
+                          >
+                            <span
+                              className="text-[22px] font-medium tracking-tight"
+                              style={{ color: '#000000' }}
+                            >
+                              Aa
+                            </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-[14px] text-gray-900 font-medium">Brutalist</span>
-                            <span className="text-[14px] text-[#737373]">Raw internet materials.</span>
+                            <span className="text-[14px] text-gray-900 font-medium">
+                              Brutalist
+                            </span>
+                            <span className="text-[14px] text-[#737373]">
+                              Raw internet materials.
+                            </span>
                           </div>
                         </div>
                         {/* Swiss */}
-                        <div 
+                        <div
                           className="flex items-center gap-4 cursor-pointer group"
-                          onClick={() => { setTheme('swiss'); setHasUnsavedChanges(true); }}
+                          onClick={() => {
+                            setTheme('swiss');
+                            setHasUnsavedChanges(true);
+                          }}
                         >
-                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'swiss' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#e3583d', borderColor: theme === 'swiss' ? '#3b82f6' : 'transparent' }}>
-                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#ffffff' }}>Aa</span>
+                          <div
+                            className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'swiss' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`}
+                            style={{
+                              backgroundColor: '#e3583d',
+                              borderColor:
+                                theme === 'swiss' ? '#3b82f6' : 'transparent',
+                            }}
+                          >
+                            <span
+                              className="text-[22px] font-medium tracking-tight"
+                              style={{ color: '#ffffff' }}
+                            >
+                              Aa
+                            </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-[14px] text-gray-900 font-medium">Swiss</span>
-                            <span className="text-[14px] text-[#737373]">International typographic style.</span>
+                            <span className="text-[14px] text-gray-900 font-medium">
+                              Swiss
+                            </span>
+                            <span className="text-[14px] text-[#737373]">
+                              International typographic style.
+                            </span>
                           </div>
                         </div>
                         {/* Klein */}
-                        <div 
+                        <div
                           className="flex items-center gap-4 cursor-pointer group"
-                          onClick={() => { setTheme('klein'); setHasUnsavedChanges(true); }}
+                          onClick={() => {
+                            setTheme('klein');
+                            setHasUnsavedChanges(true);
+                          }}
                         >
-                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'klein' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#1538a7', borderColor: theme === 'klein' ? '#3b82f6' : 'transparent' }}>
-                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#ffffff' }}>Aa</span>
+                          <div
+                            className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'klein' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`}
+                            style={{
+                              backgroundColor: '#1538a7',
+                              borderColor:
+                                theme === 'klein' ? '#3b82f6' : 'transparent',
+                            }}
+                          >
+                            <span
+                              className="text-[22px] font-medium tracking-tight"
+                              style={{ color: '#ffffff' }}
+                            >
+                              Aa
+                            </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-[14px] text-gray-900 font-medium">Klein</span>
-                            <span className="text-[14px] text-[#737373]">International Klein Blue.</span>
+                            <span className="text-[14px] text-gray-900 font-medium">
+                              Klein
+                            </span>
+                            <span className="text-[14px] text-[#737373]">
+                              International Klein Blue.
+                            </span>
                           </div>
                         </div>
                         {/* Red */}
-                        <div 
+                        <div
                           className="flex items-center gap-4 cursor-pointer group"
-                          onClick={() => { setTheme('red'); setHasUnsavedChanges(true); }}
+                          onClick={() => {
+                            setTheme('red');
+                            setHasUnsavedChanges(true);
+                          }}
                         >
-                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'red' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#fcf4f0', borderColor: theme === 'red' ? '#3b82f6' : 'transparent' }}>
-                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#ea5b4d' }}>Aa</span>
+                          <div
+                            className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'red' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`}
+                            style={{
+                              backgroundColor: '#fcf4f0',
+                              borderColor:
+                                theme === 'red' ? '#3b82f6' : 'transparent',
+                            }}
+                          >
+                            <span
+                              className="text-[22px] font-medium tracking-tight"
+                              style={{ color: '#ea5b4d' }}
+                            >
+                              Aa
+                            </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-[14px] text-gray-900 font-medium">Red</span>
-                            <span className="text-[14px] text-[#737373]">Radiates energy.</span>
+                            <span className="text-[14px] text-gray-900 font-medium">
+                              Red
+                            </span>
+                            <span className="text-[14px] text-[#737373]">
+                              Radiates energy.
+                            </span>
                           </div>
                         </div>
                         {/* Green */}
-                        <div 
+                        <div
                           className="flex items-center gap-4 cursor-pointer group"
-                          onClick={() => { setTheme('green'); setHasUnsavedChanges(true); }}
+                          onClick={() => {
+                            setTheme('green');
+                            setHasUnsavedChanges(true);
+                          }}
                         >
-                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'green' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#eff8eb', borderColor: theme === 'green' ? '#3b82f6' : 'transparent' }}>
-                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#4fa847' }}>Aa</span>
+                          <div
+                            className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'green' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`}
+                            style={{
+                              backgroundColor: '#eff8eb',
+                              borderColor:
+                                theme === 'green' ? '#3b82f6' : 'transparent',
+                            }}
+                          >
+                            <span
+                              className="text-[22px] font-medium tracking-tight"
+                              style={{ color: '#4fa847' }}
+                            >
+                              Aa
+                            </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-[14px] text-gray-900 font-medium">Green</span>
-                            <span className="text-[14px] text-[#737373]">Lush and leafy.</span>
+                            <span className="text-[14px] text-gray-900 font-medium">
+                              Green
+                            </span>
+                            <span className="text-[14px] text-[#737373]">
+                              Lush and leafy.
+                            </span>
                           </div>
                         </div>
                         {/* Blue */}
-                        <div 
+                        <div
                           className="flex items-center gap-4 cursor-pointer group"
-                          onClick={() => { setTheme('blue'); setHasUnsavedChanges(true); }}
+                          onClick={() => {
+                            setTheme('blue');
+                            setHasUnsavedChanges(true);
+                          }}
                         >
-                          <div className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'blue' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`} style={{ backgroundColor: '#eaf3fa', borderColor: theme === 'blue' ? '#3b82f6' : 'transparent' }}>
-                            <span className="text-[22px] font-medium tracking-tight" style={{ color: '#267efb' }}>Aa</span>
+                          <div
+                            className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${theme === 'blue' ? 'border-[2.5px] border-[#3b82f6]' : 'border'} group-hover:border-gray-300`}
+                            style={{
+                              backgroundColor: '#eaf3fa',
+                              borderColor:
+                                theme === 'blue' ? '#3b82f6' : 'transparent',
+                            }}
+                          >
+                            <span
+                              className="text-[22px] font-medium tracking-tight"
+                              style={{ color: '#267efb' }}
+                            >
+                              Aa
+                            </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-[14px] text-gray-900 font-medium">Blue</span>
-                            <span className="text-[14px] text-[#737373]">Da ba dee da ba di.</span>
+                            <span className="text-[14px] text-gray-900 font-medium">
+                              Blue
+                            </span>
+                            <span className="text-[14px] text-[#737373]">
+                              Da ba dee da ba di.
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -3304,33 +3830,88 @@ export function EditProfileDialog({
                 </div>
               )}
 
+
+              {activeTab === 'volunteering' && volunteeringView === 'form' && (
+                <div className="flex justify-between items-center">
+                  <div className="pointer-events-auto">
+                    {currentVolunteering?.id && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setVolunteeringToDelete(currentVolunteering.id)}
+                        className="text-red-500 hover:text-red-600 hover:bg-red-50 rounded-full"
+                        disabled={isSaving}
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </Button>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Button
+                      onClick={() => {
+                        setVolunteeringView('list');
+                        setCurrentVolunteering(null);
+                      }}
+                      variant="ghost"
+                      className="rounded-full text-gray-500 hover:text-gray-700"
+                      disabled={isSaving}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleSaveVolunteering}
+                      disabled={
+                        isSaving ||
+                        !currentVolunteering?.role ||
+                        !currentVolunteering?.organization ||
+                        !currentVolunteering?.startYear ||
+                        !currentVolunteering?.endYear
+                      }
+                      variant="default"
+                      className="bg-design-black hover:bg-design-black/90 text-white rounded-md px-6"
+                    >
+                      {isSaving ? 'Saving...' : 'Save'}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               {activeTab === 'features' && featuresView === 'form' && (
                 <div className="flex justify-between items-center">
                   <div className="pointer-events-auto">
                     {currentFeature?.id && (
                       <Button
                         variant="ghost"
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        size="icon"
                         onClick={() => setFeatureToDelete(currentFeature.id)}
+                        className="text-red-500 hover:text-red-600 hover:bg-red-50 rounded-full"
+                        disabled={isSaving}
                       >
-                        Delete
+                        <Trash2 className="w-5 h-5" />
                       </Button>
                     )}
                   </div>
                   <div className="flex items-center gap-3 pointer-events-auto">
                     <Button
-                      variant="secondary"
                       onClick={() => {
                         setFeaturesView('list');
                         setCurrentFeature(null);
                       }}
+                      variant="ghost"
+                      className="rounded-full text-gray-500 hover:text-gray-700"
+                      disabled={isSaving}
                     >
                       Cancel
                     </Button>
                     <Button
-                      className="bg-black text-white hover:bg-gray-800"
                       onClick={handleSaveFeature}
-                      disabled={!currentFeature?.title || !currentFeature?.year || isSaving}
+                      disabled={
+                        !currentFeature?.title ||
+                        !currentFeature?.year ||
+                        isSaving
+                      }
+                      variant="default"
+                      className="bg-design-black hover:bg-design-black/90 text-white rounded-md px-6"
                     >
                       {isSaving ? 'Saving...' : 'Save'}
                     </Button>
@@ -3382,7 +3963,6 @@ export function EditProfileDialog({
                   </div>
                 </div>
               )}
-
             </div>{' '}
           </div>
         </DialogContent>
@@ -3396,8 +3976,8 @@ export function EditProfileDialog({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              project.
+              This will permanently delete your
+              project. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -3482,6 +4062,7 @@ export function EditProfileDialog({
                 setSideProjects(resume.sideProjects || []);
                 setSpeaking(resume.speaking || []);
                 setFeatures(resume.features || []);
+                setVolunteering(resume.volunteering || []);
                 setEducation(resume.education || []);
                 setWork(resume.workExperience || []);
                 setContacts(resume.contacts || []);
@@ -3496,26 +4077,95 @@ export function EditProfileDialog({
 
       <AlertDialog
         open={!!speakingToDelete}
-        onOpenChange={(open) => { !open && setSpeakingToDelete(null); !open && setFeatureToDelete(null); }}
+        onOpenChange={(open) => !open && setSpeakingToDelete(null)}
       >
         <AlertDialogContent className="max-w-sm rounded-xl p-6">
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Speaking Engagement</AlertDialogTitle>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this speaking engagement? This
-              action cannot be undone.
+              Are you sure you want to delete this speaking engagement? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isSaving}>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-red-600 hover:bg-red-700"
-              onClick={() => {
-                if (speakingToDelete) handleDeleteSpeaking(speakingToDelete);
-                if (featureToDelete) handleDeleteFeature(featureToDelete);
-              }}
+              className="bg-red-600 hover:bg-red-700 text-white"
+              disabled={isSaving}
+              onClick={() => speakingToDelete && handleDeleteSpeaking(speakingToDelete)}
             >
-              Delete
+              {isSaving ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={!!featureToDelete}
+        onOpenChange={(open) => !open && setFeatureToDelete(null)}
+      >
+        <AlertDialogContent className="max-w-sm rounded-xl p-6">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this feature? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSaving}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              disabled={isSaving}
+              onClick={() => featureToDelete && handleDeleteFeature(featureToDelete)}
+            >
+              {isSaving ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={!!sideProjectToDelete}
+        onOpenChange={(open) => !open && setSideProjectToDelete(null)}
+      >
+        <AlertDialogContent className="max-w-sm rounded-xl p-6">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this side project? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSaving}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              disabled={isSaving}
+              onClick={() => sideProjectToDelete && handleDeleteSideProject(sideProjectToDelete)}
+            >
+              {isSaving ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={!!volunteeringToDelete}
+        onOpenChange={(open) => !open && setVolunteeringToDelete(null)}
+      >
+        <AlertDialogContent className="max-w-sm rounded-xl p-6">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this volunteering entry? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSaving}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              disabled={isSaving}
+              onClick={() => volunteeringToDelete && handleDeleteVolunteering(volunteeringToDelete)}
+            >
+              {isSaving ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -3529,8 +4179,7 @@ export function EditProfileDialog({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              education.
+              This will permanently delete your education. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -3554,8 +4203,7 @@ export function EditProfileDialog({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              contact.
+              This will permanently delete your contact. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -3581,8 +4229,7 @@ export function EditProfileDialog({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete this
-              work experience.
+              This will permanently delete this work experience. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

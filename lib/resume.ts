@@ -112,6 +112,18 @@ const FeaturesSection = z.array(
   })
 );
 
+const VolunteeringSection = z.array(
+  z.object({
+    id: z.string().optional().describe('Unique identifier for the volunteering engagement'),
+    role: z.string().describe('Role or title'),
+    organization: z.string().describe('Organization or place'),
+    startYear: z.string().describe('Start year'),
+    endYear: z.string().describe('End year'),
+    location: z.string().optional().describe('Location'),
+    link: z.string().optional().describe('Link to organization or role'),
+  })
+);
+
 export const ResumeDataSchema = z.object({
   header: HeaderSection,
   summary: SummarySection,
@@ -121,8 +133,9 @@ export const ResumeDataSchema = z.object({
   sideProjects: SideProjectSection.optional().default([]),
   speaking: SpeakingSection.optional().default([]),
   features: FeaturesSection.optional().default([]),
+  volunteering: VolunteeringSection.optional().default([]),
   contacts: ContactSection.optional().default([]),
-  sectionOrder: z.array(z.string()).optional().default(['work', 'side_projects', 'speaking', 'features', 'projects', 'skills', 'education', 'contact', 'awards', 'exhibitions']),
+  sectionOrder: z.array(z.string()).optional().default(['work', 'side_projects', 'speaking', 'features', 'volunteering', 'projects', 'skills', 'education', 'contact', 'awards']),
   design: z.object({
     typography: z.enum(['sans', 'serif', 'mono']).optional().default('sans'),
     theme: z.enum(['default', 'brutalist', 'swiss', 'klein', 'red', 'green', 'blue']).optional().default('default'),
