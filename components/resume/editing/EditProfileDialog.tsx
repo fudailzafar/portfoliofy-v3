@@ -26,15 +26,18 @@ import {
   Pencil,
   FolderCode,
   Plus,
+  Wrench,
   Trash2,
-  GraduationCap,
-  Briefcase,
   ArrowUpRight,
   MessageCircle,
   Mic,
   LogOut,
+  Video,
+  Briefcase,
+  GraduationCap,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { sortByDateDesc } from '@/lib/resume';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import {
@@ -437,7 +440,12 @@ export function EditProfileDialog({
       setHasUnsavedChanges(false);
       toast.success('Profile updated successfully');
       setOpen(false);
-      router.refresh();
+      
+      if (uname !== username) {
+        router.push(`/${uname}`);
+      } else {
+        router.refresh();
+      }
     } catch (error) {
       toast.error('Failed to update profile');
       console.error(error);
@@ -1251,7 +1259,7 @@ export function EditProfileDialog({
 
                   {projectsView === 'list' && projects.length > 0 && (
                     <div className="space-y-8">
-                      {projects.map((project: any) => (
+                      {sortByDateDesc(projects).map((project: any) => (
                         <div
                           key={project.id}
                           className="flex flex-col sm:flex-row gap-4 sm:gap-12"
@@ -1450,7 +1458,7 @@ export function EditProfileDialog({
 
                   {sideProjectsView === 'list' && sideProjects.length > 0 && (
                     <div className="space-y-8">
-                      {sideProjects.map((project: any) => (
+                      {sortByDateDesc(sideProjects).map((project: any) => (
                         <div
                           key={project.id}
                           className="flex flex-col sm:flex-row gap-4 sm:gap-12"
@@ -1630,7 +1638,7 @@ export function EditProfileDialog({
 
                   {speakingView === 'list' && speaking.length > 0 && (
                     <div className="space-y-8">
-                      {speaking.map((engagement: any) => (
+                      {sortByDateDesc(speaking).map((engagement: any) => (
                         <div
                           key={engagement.id}
                           className="flex flex-col sm:flex-row gap-4 sm:gap-12"
@@ -1803,7 +1811,7 @@ export function EditProfileDialog({
 
                   {volunteeringView === 'list' && volunteering.length > 0 && (
                     <div className="space-y-8">
-                      {volunteering.map((v: any) => (
+                      {sortByDateDesc(volunteering).map((v: any) => (
                         <div
                           key={v.id}
                           className="flex flex-col sm:flex-row gap-4 sm:gap-12"
@@ -2023,7 +2031,7 @@ export function EditProfileDialog({
 
                   {featuresView === 'list' && features.length > 0 && (
                     <div className="space-y-8">
-                      {features.map((feature: any) => (
+                      {sortByDateDesc(features).map((feature: any) => (
                         <div
                           key={feature.id}
                           className="flex flex-col sm:flex-row gap-4 sm:gap-12"
@@ -2221,7 +2229,7 @@ export function EditProfileDialog({
 
                   {eduView === 'list' && education.length > 0 && (
                     <div className="space-y-8">
-                      {education.map((edu: any) => (
+                      {sortByDateDesc(education).map((edu: any) => (
                         <div
                           key={edu.id || edu.school}
                           className="flex flex-col sm:flex-row gap-4 sm:gap-12"
@@ -2431,7 +2439,7 @@ export function EditProfileDialog({
 
                   {workView === 'list' && work.length > 0 && (
                     <div className="space-y-8">
-                      {work.map((w: any) => (
+                      {sortByDateDesc(work).map((w: any) => (
                         <div
                           key={w.id || w.company}
                           className="flex flex-col sm:flex-row gap-4 sm:gap-12"

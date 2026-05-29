@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUserActions } from '@/hooks/useUserActions';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { MAX_USERNAME_LENGTH } from '@/lib/config';
 import {
@@ -34,6 +35,7 @@ function UsernameEditorContent({
   const [newUsername, setNewUsername] = useState<string>(initialUsername);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { updateUsernameMutation, checkUsernameMutation } = useUserActions();
+  const router = useRouter();
 
   const isInitialUsername = newUsername === initialUsername;
 
@@ -72,6 +74,7 @@ function UsernameEditorContent({
     try {
       await updateUsernameMutation.mutateAsync(newUsername);
       toast.success('Username updated successfully');
+      router.push(`/${newUsername}`);
       onClose();
     } catch (error) {
       toast.error('Failed to update username');
