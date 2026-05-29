@@ -147,6 +147,13 @@ export function EditProfileDialog({
   const [currentSpeaking, setCurrentSpeaking] = useState<any>(null);
   const [speakingToDelete, setSpeakingToDelete] = useState<string | null>(null);
 
+
+  // Local state for features tab
+  const [features, setFeatures] = useState(resume.features || []);
+  const [featuresView, setFeaturesView] = useState<'list' | 'form'>('list');
+  const [currentFeature, setCurrentFeature] = useState<any>(null);
+  const [featureToDelete, setFeatureToDelete] = useState<string | null>(null);
+
   // Local state for education tab
   const [education, setEducation] = useState(resume.education || []);
   const [eduView, setEduView] = useState<'list' | 'form'>('list');
@@ -241,10 +248,10 @@ export function EditProfileDialog({
     'contact',
     'awards',
     'exhibitions',
-    'writing',
+    'features',
   ];
   const [sectionOrder, setSectionOrder] = useState<string[]>(
-    resume.sectionOrder || DEFAULT_ORDER,
+    (resume.sectionOrder || DEFAULT_ORDER).map(id => id === 'writing' ? 'features' : id)
   );
 
   const [typography, setTypography] = useState<'sans' | 'serif' | 'mono'>(
@@ -283,7 +290,7 @@ export function EditProfileDialog({
       contact: { label: 'Contact', disabled: false },
       awards: { label: 'Awards', disabled: true },
       exhibitions: { label: 'Exhibitions', disabled: true },
-      writing: { label: 'Writing', disabled: true },
+      features: { label: 'Features', disabled: false },
     };
 
   const [showDeleteAccountWarning, setShowDeleteAccountWarning] =
@@ -398,6 +405,7 @@ export function EditProfileDialog({
         projects,
         sideProjects,
         speaking,
+          features,
         education,
         workExperience: work,
         contacts,
@@ -574,6 +582,35 @@ export function EditProfileDialog({
     setContactToDelete(null);
   };
 
+  const handleSaveFeature = () => {
+    if (!currentFeature.title || !currentFeature.year) return;
+
+    const isEdit = !!currentFeature.id;
+    const newFeature = isEdit
+      ? currentFeature
+      : { ...currentFeature, id: Date.now().toString() };
+
+    const newFeatures = isEdit
+      ? features.map((p: any) => (p.id === newFeature.id ? newFeature : p))
+      : [...features, newFeature];
+
+    setFeatures(newFeatures);
+    setHasUnsavedChanges(true);
+    toast.success('Feature saved');
+    setFeaturesView('list');
+    setCurrentFeature(null);
+  };
+
+  const handleDeleteFeature = (id: string) => {
+    const newFeatures = features.filter((p: any) => p.id !== id);
+    setFeatures(newFeatures);
+    setHasUnsavedChanges(true);
+    toast.success('Feature deleted');
+    setFeaturesView('list');
+    setCurrentFeature(null);
+    setFeatureToDelete(null);
+  };
+
   const handleSaveEdu = () => {
     if (!currentEdu.school || !currentEdu.degree || !currentEdu.end) return;
 
@@ -615,7 +652,7 @@ export function EditProfileDialog({
     { id: 'contact', label: 'Contact', disabled: false },
     { id: 'awards', label: 'Awards', disabled: true },
     { id: 'exhibitions', label: 'Exhibitions', disabled: true },
-    { id: 'writing', label: 'Writing', disabled: true },
+    { id: 'features', label: 'Features', disabled: false },
     { label: 'Account', isLabel: true },
     { id: 'settings', label: 'Settings', disabled: false },
   ];
@@ -643,6 +680,7 @@ export function EditProfileDialog({
     (activeTab === 'projects' && projectsView === 'form') ||
     (activeTab === 'side_projects' && sideProjectsView === 'form') ||
     (activeTab === 'speaking' && speakingView === 'form') ||
+      (activeTab === 'features' && featuresView === 'form') ||
     (activeTab === 'work' && workView === 'form') ||
     (activeTab === 'education' && eduView === 'form') ||
     (activeTab === 'contact' && contactView === 'form');
@@ -740,6 +778,7 @@ export function EditProfileDialog({
                           if (id === 'side_projects')
                             setSideProjectsView('list');
                           if (id === 'speaking') setSpeakingView('list');
+                          if (id === 'features') setFeaturesView('list');
                           if (id === 'contact') setContactView('list');
                         }}
                       />
@@ -1245,8 +1284,8 @@ export function EditProfileDialog({
                               <SelectValue placeholder="Year" />
                             </SelectTrigger>
                             <SelectContent>
-                              {years.map((y) => (
-                                <SelectItem key={y} value={y}>
+                              {['Ongoing', ...years].map((y) => (
+                                <SelectItem key={y} value={y.toString()}>
                                   {y}
                                 </SelectItem>
                               ))}
@@ -1440,8 +1479,8 @@ export function EditProfileDialog({
                               <SelectValue placeholder="Year" />
                             </SelectTrigger>
                             <SelectContent>
-                              {years.map((y) => (
-                                <SelectItem key={y} value={y}>
+                              {['Ongoing', ...years].map((y) => (
+                                <SelectItem key={y} value={y.toString()}>
                                   {y}
                                 </SelectItem>
                               ))}
@@ -1660,6 +1699,160 @@ export function EditProfileDialog({
                   )}
                 </div>
               )}
+
+
+              {activeTab === 'features' && (
+                <div className="max-w-3xl mx-auto h-full flex flex-col">
+                  <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+                    <h2 className="text-2xl font-bold">Features</h2>
+                    {featuresView === 'list' && (
+                      <Button
+                        variant="secondary"
+                        onClick={() => {
+                          setCurrentFeature({
+                            title: '',
+                            year: currentYear.toString(),
+                            link: '',
+                            location: '',
+                            description: '',
+                          });
+                          setFeaturesView('form');
+                        }}
+                        className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none h-8 text-xs px-4 rounded-md"
+                      >
+                        Add feature
+                      </Button>
+                    )}
+                  </div>
+
+                  {featuresView === 'list' && features.length === 0 && (
+                    <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 opacity-80 mt-12">
+                      <div className="p-8 bg-gray-50 rounded-full">
+                        <FolderCode className="w-16 h-16 text-gray-400" strokeWidth={1} />
+                      </div>
+                      <Button
+                        variant="secondary"
+                        className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none rounded-md px-6 py-5 h-auto text-sm"
+                        onClick={() => {
+                          setCurrentFeature({
+                            title: '',
+                            year: currentYear.toString(),
+                            link: '',
+                            location: '',
+                            description: '',
+                          });
+                          setFeaturesView('form');
+                        }}
+                      >
+                        Add a feature
+                      </Button>
+                    </div>
+                  )}
+
+                  {featuresView === 'list' && features.length > 0 && (
+                    <div className="space-y-8">
+                      {features.map((feature: any) => (
+                        <div key={feature.id} className="flex flex-col sm:flex-row gap-4 sm:gap-12">
+                          <div className="sm:w-16 shrink-0 text-gray-400 text-sm pt-0.5">
+                            {feature.year}
+                          </div>
+
+                          <div className="flex-1 flex flex-col justify-start items-start">
+                            <p className="text-base font-semibold text-gray-900">
+                              {feature.title}
+                              {feature.location ? ` on ${feature.location}` : ''}
+                            </p>
+
+                            {feature.description && feature.description !== '<p></p>' && (
+                              <div
+                                className="mt-1 text-sm text-gray-500 line-clamp-2"
+                                dangerouslySetInnerHTML={{ __html: feature.description }}
+                              />
+                            )}
+
+                            <div className="flex items-center gap-4 mt-3 text-xs font-medium text-gray-400">
+                              <button
+                                onClick={() => {
+                                  setCurrentFeature(feature);
+                                  setFeaturesView('form');
+                                }}
+                                className="hover:text-gray-900 transition-colors"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => setFeatureToDelete(feature.id)}
+                                className="hover:text-red-600 transition-colors"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {featuresView === 'form' && currentFeature && (
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label className="text-gray-600 text-xs">Title*</Label>
+                          <Input
+                            value={currentFeature.title}
+                            onChange={(e) => setCurrentFeature({ ...currentFeature, title: e.target.value })}
+                            placeholder="Pattern on Hypebeast"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-gray-600 text-xs">Year*</Label>
+                          <Select
+                            value={currentFeature.year}
+                            onValueChange={(val) => setCurrentFeature({ ...currentFeature, year: val })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Year" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {['Ongoing', ...years].map((y) => (
+                                <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label className="text-gray-600 text-xs">Link to feature</Label>
+                          <Input
+                            value={currentFeature.link || ''}
+                            onChange={(e) => setCurrentFeature({ ...currentFeature, link: e.target.value })}
+                            placeholder="https://hypebeast.com/pattern"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-gray-600 text-xs">Location</Label>
+                          <Input
+                            value={currentFeature.location || ''}
+                            onChange={(e) => setCurrentFeature({ ...currentFeature, location: e.target.value })}
+                            placeholder="New York, NY"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 pt-2">
+                        <Label className="text-gray-600 text-xs">Description</Label>
+                        <RichTextEditor
+                          content={currentFeature.description || ''}
+                          onChange={(val) => setCurrentFeature({ ...currentFeature, description: val })}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
 
               {activeTab === 'education' && (
                 <div className="max-w-3xl mx-auto h-full flex flex-col">
@@ -3111,6 +3304,40 @@ export function EditProfileDialog({
                 </div>
               )}
 
+              {activeTab === 'features' && featuresView === 'form' && (
+                <div className="flex justify-between items-center">
+                  <div className="pointer-events-auto">
+                    {currentFeature?.id && (
+                      <Button
+                        variant="ghost"
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        onClick={() => setFeatureToDelete(currentFeature.id)}
+                      >
+                        Delete
+                      </Button>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3 pointer-events-auto">
+                    <Button
+                      variant="secondary"
+                      onClick={() => {
+                        setFeaturesView('list');
+                        setCurrentFeature(null);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      className="bg-black text-white hover:bg-gray-800"
+                      onClick={handleSaveFeature}
+                      disabled={!currentFeature?.title || !currentFeature?.year || isSaving}
+                    >
+                      {isSaving ? 'Saving...' : 'Save'}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               {activeTab === 'education' && eduView === 'form' && (
                 <div className="flex justify-between items-center">
                   <div className="pointer-events-auto">
@@ -3254,6 +3481,7 @@ export function EditProfileDialog({
                 setProjects(resume.projects || []);
                 setSideProjects(resume.sideProjects || []);
                 setSpeaking(resume.speaking || []);
+                setFeatures(resume.features || []);
                 setEducation(resume.education || []);
                 setWork(resume.workExperience || []);
                 setContacts(resume.contacts || []);
@@ -3268,7 +3496,7 @@ export function EditProfileDialog({
 
       <AlertDialog
         open={!!speakingToDelete}
-        onOpenChange={(open) => !open && setSpeakingToDelete(null)}
+        onOpenChange={(open) => { !open && setSpeakingToDelete(null); !open && setFeatureToDelete(null); }}
       >
         <AlertDialogContent className="max-w-sm rounded-xl p-6">
           <AlertDialogHeader>
@@ -3282,9 +3510,10 @@ export function EditProfileDialog({
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               className="bg-red-600 hover:bg-red-700"
-              onClick={() =>
-                speakingToDelete && handleDeleteSpeaking(speakingToDelete)
-              }
+              onClick={() => {
+                if (speakingToDelete) handleDeleteSpeaking(speakingToDelete);
+                if (featureToDelete) handleDeleteFeature(featureToDelete);
+              }}
             >
               Delete
             </AlertDialogAction>

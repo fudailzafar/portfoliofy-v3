@@ -101,6 +101,17 @@ const SpeakingSection = z.array(
   })
 );
 
+const FeaturesSection = z.array(
+  z.object({
+    id: z.string().optional().describe('Unique identifier for the feature'),
+    title: z.string().describe('Feature title'),
+    year: z.string().describe('Year of the feature'),
+    link: z.string().optional().describe('Link to feature'),
+    location: z.string().optional().describe('Location or place of the feature'),
+    description: z.string().optional().describe('Rich text description of the feature'),
+  })
+);
+
 export const ResumeDataSchema = z.object({
   header: HeaderSection,
   summary: SummarySection,
@@ -109,8 +120,9 @@ export const ResumeDataSchema = z.object({
   projects: ProjectSection.optional().default([]),
   sideProjects: SideProjectSection.optional().default([]),
   speaking: SpeakingSection.optional().default([]),
+  features: FeaturesSection.optional().default([]),
   contacts: ContactSection.optional().default([]),
-  sectionOrder: z.array(z.string()).optional().default(['work', 'side_projects', 'speaking', 'projects', 'skills', 'education', 'contact', 'awards', 'exhibitions', 'writing']),
+  sectionOrder: z.array(z.string()).optional().default(['work', 'side_projects', 'speaking', 'features', 'projects', 'skills', 'education', 'contact', 'awards', 'exhibitions']),
   design: z.object({
     typography: z.enum(['sans', 'serif', 'mono']).optional().default('sans'),
     theme: z.enum(['default', 'brutalist', 'swiss', 'klein', 'red', 'green', 'blue']).optional().default('default'),
