@@ -1,5 +1,6 @@
 import LoadingFallback from '../LoadingFallback';
 import { ResumeData } from '../../lib/server/redisActions';
+import { sortByDateDesc } from '../../lib/resume';
 import { Education } from './Education';
 import { Header } from './Header';
 import { Skills } from './Skills';
@@ -40,19 +41,19 @@ export const FullResume = ({
         {order.map((sectionId) => {
           switch (sectionId) {
             case 'work':
-              return <WorkExperience key={sectionId} work={resume?.workExperience} />;
+              return <WorkExperience key={sectionId} work={sortByDateDesc(resume?.workExperience)} />;
             case 'side_projects':
-              return <SideProjects key={sectionId} sideProjects={resume?.sideProjects} />;
+              return <SideProjects key={sectionId} sideProjects={sortByDateDesc(resume?.sideProjects)} />;
             case 'speaking':
-              return <Speaking key={sectionId} speaking={resume?.speaking} />;
+              return <Speaking key={sectionId} speaking={sortByDateDesc(resume?.speaking)} />;
             case 'features':
-              return <Features key={sectionId} features={resume?.features} />;
+              return <Features key={sectionId} features={sortByDateDesc(resume?.features)} />;
             case 'volunteering':
-              return <Volunteering key={sectionId} volunteering={resume?.volunteering} />;
+              return <Volunteering key={sectionId} volunteering={sortByDateDesc(resume?.volunteering)} />;
             case 'projects':
-              return <Projects key={sectionId} projects={resume?.projects} />;
+              return <Projects key={sectionId} projects={sortByDateDesc(resume?.projects)} />;
             case 'education':
-              return <Education key={sectionId} educations={resume?.education} />;
+              return <Education key={sectionId} educations={sortByDateDesc(resume?.education)} />;
             case 'contact':
               return <Contact key={sectionId} contacts={resume?.contacts} />;
             case 'skills':

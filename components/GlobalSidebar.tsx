@@ -27,7 +27,7 @@ export function GlobalSidebar() {
         <div className="flex-1 mt-2">
           <div className="bg-[#f2f2f2] rounded-[10px] px-3 py-2 flex items-center justify-between cursor-pointer hover:bg-gray-200/80 transition-colors">
             <span className="text-[13px] text-gray-500 font-medium">Explore</span>
-            <span className="text-[12px] text-gray-400 font-mono tracking-tighter">⌘⇧E</span>
+            <span className="text-[12px] text-gray-400 tracking-tighter">⌘⇧E</span>
           </div>
         </div>
 
