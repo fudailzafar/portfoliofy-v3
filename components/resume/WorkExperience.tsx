@@ -19,7 +19,7 @@ export function WorkExperience({
   return (
     <section className="mb-12 print:mb-8">
       <h2 
-        className="text-lg font-bold mb-8 print:mb-4 text-theme-primary" 
+        className="text-sm font-bold mb-8 print:mb-4 text-theme-primary" 
         id="work-experience"
       >
         Work Experience
@@ -49,13 +49,13 @@ export function WorkExperience({
                     rel="noopener noreferrer" 
                     className="hover:underline text-theme-primary"
                   >
-                    <span className="text-base font-semibold">
+                    <span className="text-sm font-semibold">
                       {item.title} at {item.company}
                       <ArrowUpRight className="inline-block ml-1 w-4 h-4 relative -top-0.5" />
                     </span>
                   </a>
                 ) : (
-                  <p className="text-base font-semibold text-theme-primary ">
+                  <p className="text-sm font-semibold text-theme-primary ">
                     {item.title} at {item.company}
                   </p>
                 )}
@@ -69,7 +69,7 @@ export function WorkExperience({
 
               {item.description && item.description !== '<p></p>' && (
                 <div 
-                  className="mt-4 text-base text-theme-secondary prose prose-sm max-w-none leading-relaxed prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary"
+                  className="mt-4 text-sm text-theme-secondary prose prose-sm max-w-none leading-relaxed prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary"
                   dangerouslySetInnerHTML={{ __html: item.description }}
                 />
               )}

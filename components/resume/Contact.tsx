@@ -15,7 +15,7 @@ export function Contact({
   return (
     <section className="mb-12 print:mb-8">
       <h2 
-        className="text-lg font-bold mb-8 print:mb-4 text-theme-primary" 
+        className="text-sm font-bold mb-8 print:mb-4 text-theme-primary" 
         id="contact-section"
       >
         Contact
@@ -43,7 +43,7 @@ export function Contact({
                 rel="noopener noreferrer" 
                 className="hover:underline inline-block group text-theme-primary"
               >
-                <span className="text-base font-semibold">
+                <span className="text-sm font-semibold">
                   {extractUsername(contact.link, contact.platform)}
                   <ArrowUpRight className="inline-block ml-1 w-4 h-4 relative -top-0.5" />
                 </span>

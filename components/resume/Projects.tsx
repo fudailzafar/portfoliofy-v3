@@ -14,7 +14,7 @@ export function Projects({
   return (
     <section className="mb-12 print:mb-8">
       <h2 
-        className="text-lg font-bold mb-8 print:mb-4 text-theme-primary" 
+        className="text-sm font-bold mb-8 print:mb-4 text-theme-primary" 
         id="projects-section"
       >
         Projects
@@ -44,7 +44,7 @@ export function Projects({
                     rel="noopener noreferrer" 
                     className="hover:underline text-theme-primary"
                   >
-                    <span className="text-base font-semibold">
+                    <span className="text-sm font-semibold">
                       {project.title}
                       {project.company && (
                         <span className="font-normal">
@@ -55,7 +55,7 @@ export function Projects({
                     </span>
                   </a>
                 ) : (
-                  <p className="text-base font-semibold text-theme-primary ">
+                  <p className="text-sm font-semibold text-theme-primary ">
                     {project.title}
                     {project.company && (
                       <span className="font-normal text-theme-primary">

@@ -10,7 +10,7 @@ export function Speaking({
   return (
     <section className="mb-12 print:mb-8">
       <h2 
-        className="text-lg font-bold mb-8 print:mb-4 text-theme-primary" 
+        className="text-sm font-bold mb-8 print:mb-4 text-theme-primary" 
         id="speaking-section"
       >
         Speaking
@@ -40,7 +40,7 @@ export function Speaking({
                     rel="noopener noreferrer" 
                     className="hover:underline text-theme-primary"
                   >
-                    <span className="text-base font-semibold">
+                    <span className="text-sm font-semibold">
                       {engagement.title}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +59,7 @@ export function Speaking({
                     </span>
                   </a>
                 ) : (
-                  <p className="text-base font-semibold text-theme-primary ">
+                  <p className="text-sm font-semibold text-theme-primary ">
                     {engagement.title}
                   </p>
                 )}
