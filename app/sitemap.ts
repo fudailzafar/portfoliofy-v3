@@ -6,7 +6,7 @@ const SITE_URL = 'https://portfoliofy-v3.vercel.app';
 const USERNAME_KEY_PREFIX = 'user:name:';
 const USERNAME_KEY_PATTERN = `${USERNAME_KEY_PREFIX}*`;
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 async function getLiveProfileEntries(): Promise<MetadataRoute.Sitemap> {
   try {
