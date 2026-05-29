@@ -146,8 +146,7 @@ export default async function ProfilePage({
   if (!resume?.resumeData || resume.status !== 'live')
     redirect(`/?idNotFound=${user_id}`);
 
-  // Prefer user-uploaded S3 avatar over Google OAuth photo
-  const profilePicture = userProfile?.customImage ?? userProfile?.image ?? undefined;
+  const profilePicture = userProfile?.avatarUrl ?? undefined;
 
   const jsonLd = {
     '@context': 'https://schema.org',

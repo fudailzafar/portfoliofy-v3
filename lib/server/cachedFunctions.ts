@@ -1,4 +1,4 @@
-import { getResume } from '@/lib/server/redisActions';
+import { getResume, getUserIdByUsername } from '@/lib/server/redisActions';
 import { upstashRedis } from '@/lib/server/redis';
 import { unstable_cache } from 'next/cache';
 
@@ -7,12 +7,17 @@ export interface UserProfile {
   email: string | null;
   image: string | null;       // Google OAuth photo (fallback)
   customImage?: string | null; // User-uploaded S3 photo (takes priority)
+  avatarUrl?: string | null;
 }
 
 export const getCachedUserProfile = async (userId: string): Promise<UserProfile | null> => {
   return unstable_cache(
     async () => {
-      return await upstashRedis.get<UserProfile>(`user:profile:${userId}`);
+      const profile = await upstashRedis.get<UserProfile>(`user:profile:${userId}`);
+      if (profile) {
+        profile.avatarUrl = profile.customImage ?? profile.image ?? undefined;
+      }
+      return profile;
     },
     [userId],
     {
@@ -32,5 +37,18 @@ export const getCachedResume = async (userId: string) => {
       tags: ['resumes'],
       revalidate: 86400, // 1 day
     },
-  );
+  )();
+};
+
+export const getCachedUserIdByUsername = async (username: string): Promise<string | null> => {
+  return unstable_cache(
+    async () => {
+      return await getUserIdByUsername(username);
+    },
+    [username],
+    {
+      tags: ['usernames'],
+      revalidate: 86400, // 1 day
+    },
+  )();
 };
