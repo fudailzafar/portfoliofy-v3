@@ -1,6 +1,7 @@
 import { getUsernameById, updateUsername } from '@/lib/server/redisActions';
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 
 export type GetResponse = { username?: string | null } | { error: string };
 export type PostResponse = { success: true } | { error: string };
@@ -37,6 +38,8 @@ export async function POST(request: Request): Promise<NextResponse<PostResponse>
     if (!success) {
       return NextResponse.json({ error: 'Username already taken' }, { status: 400 });
     }
+
+    revalidateTag('usernames');
 
     return NextResponse.json({ success: true });
   } catch (error) {
