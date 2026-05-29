@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 export function GlobalSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const { usernameQuery } = useUserActions();
+  const { usernameQuery, resumeQuery } = useUserActions();
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
 
@@ -20,6 +20,9 @@ export function GlobalSidebar() {
     setAuthMode(mode);
     setAuthDialogOpen(true);
   };
+
+  const displayName =
+    resumeQuery.data?.resume?.resumeData?.header?.name || session?.user?.name;
 
   return (
     <>
@@ -36,7 +39,7 @@ export function GlobalSidebar() {
             <div className="flex flex-col gap-4 pl-1">
               {/* User Info & Logout */}
               <div className="pl-4 mb-3">
-                <div className="text-[14px] text-gray-800">{session.user.name}</div>
+                <div className="text-[14px] text-gray-800">{displayName}</div>
                 <div className="text-[13px] text-gray-400 mt-1">
                   Not you? <button onClick={() => signOut({ callbackUrl: '/' })} className="hover:underline text-[#b3b3b3]">Logout</button>
                 </div>
