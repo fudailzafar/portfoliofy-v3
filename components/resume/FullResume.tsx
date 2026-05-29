@@ -9,8 +9,9 @@ import { SideProjects } from './SideProjects';
 import { Speaking } from './Speaking';
 import { Projects } from './Projects';
 import { Contact } from './Contact';
+import { Features } from './Features';
 
-const DEFAULT_ORDER = ['work', 'side_projects', 'speaking', 'projects', 'skills', 'education', 'contact', 'awards', 'exhibitions', 'writing'];
+const DEFAULT_ORDER = ['work', 'side_projects', 'speaking', 'features', 'projects', 'skills', 'education', 'contact', 'awards', 'exhibitions'];
 
 export const FullResume = ({
   resume,
@@ -23,7 +24,7 @@ export const FullResume = ({
     return <LoadingFallback message="Loading Resume..." />;
   }
 
-  const order = resume.sectionOrder || DEFAULT_ORDER;
+  const order = (resume.sectionOrder || DEFAULT_ORDER).map(id => id === 'writing' ? 'features' : id);
 
   return (
     <section
@@ -43,6 +44,8 @@ export const FullResume = ({
               return <SideProjects key={sectionId} sideProjects={resume?.sideProjects} />;
             case 'speaking':
               return <Speaking key={sectionId} speaking={resume?.speaking} />;
+            case 'features':
+              return <Features key={sectionId} features={resume?.features} />;
             case 'projects':
               return <Projects key={sectionId} projects={resume?.projects} />;
             case 'education':
@@ -52,7 +55,7 @@ export const FullResume = ({
             case 'skills':
               return <Skills key={sectionId} skills={resume?.header?.skills} />;
             default:
-              return null; // For awards, exhibitions, writing which are not implemented yet
+              return null; // For awards, exhibitions which are not implemented yet
           }
         })}
       </div>
