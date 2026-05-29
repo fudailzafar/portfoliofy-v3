@@ -2,6 +2,7 @@ import { getResume, Resume, storeResume } from '@/lib/server/redisActions';
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { revalidateTag } from 'next/cache';
 
 export type GetResumeResponse = { resume?: Resume } | { error: string };
 export type PostResumeResponse =
@@ -30,6 +31,7 @@ export async function POST(request: Request): Promise<NextResponse<PostResumeRes
     }
     const body = await request.json();
     await storeResume(session.user.id, body);
+    revalidateTag('resumes');
     return NextResponse.json({ success: true });
   } catch (error) {
     if (error instanceof z.ZodError) {
