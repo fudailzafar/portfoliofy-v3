@@ -25,7 +25,7 @@ export function Skills({ skills, className }: SkillsProps) {
         aria-labelledby="skills-section"
       >
         {skills.map((skill, index) => (
-          <span key={skill}>
+          <span key={skill} className="inline-block">
             {skill}
             {index < skills.length - 1 && <span className="mx-2 text-theme-secondary">•</span>}
           </span>
