@@ -29,7 +29,7 @@ export const FullResume = ({
 
   return (
     <section
-      className="mx-auto w-full max-w-2xl space-y-8 bg-theme-bg print:space-y-4 my-8 px-4"
+      className="mx-auto w-full max-w-xl space-y-8 bg-theme-bg print:space-y-4 my-8 px-4"
       aria-label="Resume Content"
     >
       <Header header={resume?.header} picture={profilePicture} />
