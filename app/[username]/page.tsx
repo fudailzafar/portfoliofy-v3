@@ -189,7 +189,7 @@ export default async function ProfilePage({
         <div className="text-center mt-8 mb-4">
           <Link
             href={`/?ref=${username}`}
-            className="text-theme-secondary font-mono text-sm"
+            className="text-theme-secondary text-sm"
           >
             Made by{' '}
             <span className="text-theme-primary underline underline-offset-2 hover:text-theme-accent transition-colors">

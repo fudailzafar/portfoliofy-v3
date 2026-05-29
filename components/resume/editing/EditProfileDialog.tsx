@@ -1765,7 +1765,7 @@ export function EditProfileDialog({
 
                             {feature.description && feature.description !== '<p></p>' && (
                               <div
-                                className="mt-1 text-sm text-gray-500 line-clamp-2"
+                                className="mt-1 text-sm text-gray-500 prose prose-sm max-w-none leading-relaxed prose-p:my-1 prose-ul:my-1 prose-p:text-gray-500 prose-ul:text-gray-500 prose-li:text-gray-500 prose-strong:text-gray-900"
                                 dangerouslySetInnerHTML={{ __html: feature.description }}
                               />
                             )}
