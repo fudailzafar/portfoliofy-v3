@@ -81,7 +81,7 @@ export function ClientLayoutWrapper({ children }: { children: React.ReactNode })
             </TooltipTrigger>
             <TooltipContent side="top" sideOffset={12} className="bg-[#111] text-white text-[13px] font-medium rounded-lg px-3 py-1.5 border-none shadow-md flex items-center gap-1.5">
               <span>Menu</span>
-              <span className="opacity-60 text-[11px] font-mono tracking-tighter">⌘E</span>
+              <span className="opacity-60 text-[11px] tracking-tighter">⌘E</span>
             </TooltipContent>
           </Tooltip>
         </motion.div>
