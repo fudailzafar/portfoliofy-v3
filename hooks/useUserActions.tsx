@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Resume, ResumeData } from '@/lib/server/redisActions';
 import { useS3Upload } from 'next-s3-upload';
-import { PublishStatuses } from '@/components/PreviewActionbar';
+type PublishStatuses = 'live' | 'draft';
 import { ResumeDataSchema } from '@/lib/resume';
 
 // Fetch resume data
@@ -201,7 +201,6 @@ export function useUserActions() {
   return {
     resumeQuery,
     uploadResumeMutation,
-    toggleStatusMutation,
     usernameQuery,
     updateUsernameMutation,
     checkUsernameMutation,

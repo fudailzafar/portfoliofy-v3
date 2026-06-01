@@ -1,15 +1,6 @@
-import {
-  GlobeIcon,
-  MailIcon,
-  PhoneIcon,
-  Github,
-  Twitter,
-  Linkedin,
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ResumeDataSchemaType } from '@/lib/resume';
-import { useMemo } from 'react';
 
 interface SocialButtonProps {
   href: string;
