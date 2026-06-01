@@ -28,12 +28,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       // Persist Google profile to Redis on every sign-in (keeps it fresh)
+      // IMPORTANT: we MERGE into the existing key so that a user-uploaded
+      // customImage is never wiped when they sign back in.
       if (account?.provider === 'google' && account.providerAccountId) {
         try {
+          const existing = await upstashRedis.get<Record<string, any>>(
+            `user:profile:${account.providerAccountId}`,
+          );
           await upstashRedis.set(`user:profile:${account.providerAccountId}`, {
+            ...existing,              // preserve customImage and any other fields
             name: user.name ?? null,
             email: user.email ?? null,
-            image: user.image ?? null,
+            image: user.image ?? null, // Google OAuth photo (fallback)
           });
         } catch (err) {
           console.error('Failed to store user profile in Redis:', err);

@@ -1,4 +1,3 @@
-import { Section } from '@/components/ui/section';
 import { ResumeDataSchemaType } from '@/lib/resume';
 import { ArrowUpRight } from 'lucide-react';
 import { extractUsername, buildContactUrl } from '@/utils/extractUsername';
