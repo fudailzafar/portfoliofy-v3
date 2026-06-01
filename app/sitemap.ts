@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { getResume, getUserIdByUsername } from '@/lib/server/redisActions';
 import { upstashRedis } from '@/lib/server/redis';
 
-const SITE_URL = 'https://portfoliofy-v3.vercel.app';
+const SITE_URL = 'https://portfoliofy.me';
 const USERNAME_KEY_PREFIX = 'user:name:';
 const USERNAME_KEY_PATTERN = `${USERNAME_KEY_PREFIX}*`;
 
