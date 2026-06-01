@@ -193,7 +193,7 @@ export function GeneralTab({
           </Label>
           <div className="relative flex items-center bg-white border border-gray-200 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-black">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 select-none text-sm z-10">
-              portfoliofy-v3.vercel.app/
+              portfoliofy.me/
             </span>
             <Input
               id="uname"
