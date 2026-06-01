@@ -25,6 +25,8 @@ export function RichTextEditor({
         code: false,
         codeBlock: false,
         blockquote: false,
+        // Disabled because we register @tiptap/extension-link separately below
+        link: false,
       }),
       Link.configure({
         openOnClick: false,
