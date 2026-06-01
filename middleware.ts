@@ -9,7 +9,7 @@ export default async function middleware(req: NextRequest) {
   const rawHostname = req.headers.get('host') || '';
   const hostname = rawHostname.split(':')[0]; // Strip port for local testing
   
-  const isMainDomain = hostname === 'portfoliofy-v3.vercel.app' || hostname === 'www.portfoliofy-v3.vercel.app';
+  const isMainDomain = hostname === 'portfoliofy.me' || hostname === 'www.portfoliofy.me';
   const isVercelDomain = hostname.endsWith('.vercel.app');
   const isLocalhost = hostname.includes('localhost');
 

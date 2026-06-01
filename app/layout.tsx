@@ -55,7 +55,7 @@ const diatypeMono = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://portfoliofy-v3.vercel.app'),
+  metadataBase: new URL('https://portfoliofy.me'),
   title: 'Portfoliofy - Mindful professional profiles',
   description: 'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
   alternates: {
@@ -94,7 +94,7 @@ export default function RootLayout({
 
   return (
     <SessionProviderWrapper>
-      <PlausibleProvider domain="portfoliofy-v3.vercel.app">
+      <PlausibleProvider domain="portfoliofy.me">
         <ReactQueryClientProvider>
           <html lang="en" className={`${graphik.variable} ${signifier.variable} ${diatypeMono.variable}`}>
             <head>
@@ -104,8 +104,8 @@ export default function RootLayout({
                   __html: JSON.stringify({
                     "@context": "https://schema.org",
                     "@type": "Organization",
-                    "url": "https://portfoliofy-v3.vercel.app",
-                    "logo": "https://portfoliofy-v3.vercel.app/logo.png",
+                    "url": "https://portfoliofy.me",
+                    "logo": "https://portfoliofy.me/logo.png",
                     "name": "Portfoliofy",
                     "description": "Portfoliofy is a progressive platform for mindful professional profiles.",
                     "dateModified": new Date().toISOString()
