@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const website = `www.portfoliofy-v3.vercel.app/${username}`;
 
     // Use profile image from Redis user profile
-    const profileImageUrl = userProfile?.image;
+    const profileImageUrl = userProfile?.customImage;
 
     return new ImageResponse(
       <div
