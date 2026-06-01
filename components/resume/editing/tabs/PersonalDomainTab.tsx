@@ -76,7 +76,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
   const siteLabel =
     domainStatus?.verified && customDomain
       ? customDomain
-      : `portfoliofy-v3.vercel.app/${username}`;
+      : `portfoliofy.me/${username}`;
 
   const copyValue = (value: string) => {
     navigator.clipboard.writeText(value);
@@ -96,7 +96,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
           href={
             domainStatus?.verified && customDomain
               ? `https://${customDomain}`
-              : `https://portfoliofy-v3.vercel.app/${username}`
+              : `https://portfoliofy.me/${username}`
           }
           target="_blank"
           rel="noopener noreferrer"
@@ -115,12 +115,12 @@ export function PersonalDomainTab({ username }: { username: string }) {
               <p className="text-[#888888] text-[13px]">
                 Optionally set a domain other than{' '}
                 <a
-                  href={`https://portfoliofy-v3.vercel.app/${username}`}
+                  href={`https://portfoliofy.me/${username}`}
                   className="text-gray-900 hover:underline underline-offset-2"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  portfoliofy-v3.vercel.app/{username}
+                  portfoliofy.me/{username}
                 </a>
               </p>
             </div>
