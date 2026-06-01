@@ -176,7 +176,7 @@ export function GeneralTab({
                 onClick={() => document.getElementById('avatar-upload')?.click()}
                 disabled={isUploadingPicture}
               >
-                {isUploadingPicture ? 'Uploading…' : 'Upload image'}
+                {isUploadingPicture ? 'Removing…' : 'Upload image'}
               </Button>
               <p className="text-[11px] text-gray-400 leading-tight">
                 JPG, PNG or GIF · max 5MB
