@@ -66,7 +66,7 @@ export function GlobalSidebar() {
                       navigator.clipboard.writeText(`portfoliofy-v3.vercel.app/${usernameQuery.data.username}`);
                       toast.success('Copied to clipboard');
                     }}
-                    className="text-[14px] text-gray-400 hover:text-gray-600 transition-colors pl-4"
+                    className="text-[14px] text-left text-gray-400 hover:text-gray-600 transition-colors pl-4"
                   >
                     portfoliofy-v3.vercel.app/{usernameQuery.data.username}
                   </button>
