@@ -19,7 +19,9 @@ export async function DELETE() {
     const userId = session.user.id;
 
     // Get username to delete the reverse mapping
-    const username = await upstashRedis.get<string>(`${REDIS_KEYS.USER_ID_PREFIX}${userId}`);
+    const username = await upstashRedis.get<string>(
+      `${REDIS_KEYS.USER_ID_PREFIX}${userId}`,
+    );
 
     // Delete all user Redis keys
     const transaction = upstashRedis.multi();
@@ -34,6 +36,9 @@ export async function DELETE() {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Failed to delete user:', error);
-    return NextResponse.json({ error: 'Failed to delete account' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to delete account' },
+      { status: 500 },
+    );
   }
 }

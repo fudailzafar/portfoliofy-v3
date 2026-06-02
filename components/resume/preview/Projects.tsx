@@ -12,8 +12,8 @@ export function Projects({
 
   return (
     <section className="mb-12 print:mb-8">
-      <h2 
-        className="text-sm font-bold mb-8 print:mb-4 text-theme-primary" 
+      <h2
+        className="mb-8 text-sm font-bold text-theme-primary print:mb-4"
         id="projects-section"
       >
         Projects
@@ -26,48 +26,54 @@ export function Projects({
         {projects.map((project) => (
           <div
             key={project.id || project.title}
-            className="flex flex-col sm:flex-row gap-4 sm:gap-12 print:mb-6"
+            className="flex flex-col gap-4 sm:flex-row sm:gap-12 print:mb-6"
           >
             {/* Left column: Year */}
-            <div className="sm:w-32 shrink-0 text-theme-secondary  text-sm pt-0.5">
+            <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-32">
               {project.year}
             </div>
 
             {/* Right column: Content */}
-            <div className="flex-1 flex flex-col justify-start items-start">
-              <div className="flex items-center gap-1 group">
+            <div className="flex flex-1 flex-col items-start justify-start">
+              <div className="group flex items-center gap-1">
                 {project.link ? (
-                  <a 
-                    href={project.link.startsWith('http') ? project.link : `https://${project.link}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="hover:underline text-theme-primary"
+                  <a
+                    href={
+                      project.link.startsWith('http')
+                        ? project.link
+                        : `https://${project.link}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-theme-primary hover:underline"
                   >
                     <span className="text-sm font-semibold">
                       {project.title}
                       {project.company && (
                         <span className="font-normal">
-                          {' '}at {project.company}
+                          {' '}
+                          at {project.company}
                         </span>
                       )}
-                      <ArrowUpRight className="inline-block ml-1 w-4 h-4 relative -top-0.5" />
+                      <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
                     </span>
                   </a>
                 ) : (
-                  <p className="text-sm font-semibold text-theme-primary ">
+                  <p className="text-sm font-semibold text-theme-primary">
                     {project.title}
                     {project.company && (
                       <span className="font-normal text-theme-primary">
-                        {' '}at {project.company}
+                        {' '}
+                        at {project.company}
                       </span>
                     )}
                   </p>
                 )}
               </div>
-              
+
               {project.description && project.description !== '<p></p>' && (
-                <div 
-                  className="mt-2 text-sm text-theme-secondary prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary"
+                <div
+                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-2 max-w-none text-sm text-theme-secondary"
                   dangerouslySetInnerHTML={{ __html: project.description }}
                 />
               )}

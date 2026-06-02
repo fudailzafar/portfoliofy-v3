@@ -1,0 +1,11 @@
+export { Contact } from './Contact';
+export { Education } from './Education';
+export { Features } from './Features';
+export { Header } from './Header';
+export { Projects } from './Projects';
+export { SideProjects } from './SideProjects';
+export { Skills } from './Skills';
+export { Speaking } from './Speaking';
+export { Summary } from './Summary';
+export { Volunteering } from './Volunteering';
+export { WorkExperience } from './WorkExperience';

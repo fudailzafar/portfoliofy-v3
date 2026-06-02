@@ -16,8 +16,10 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
   const [username, setUsername] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const [status, setStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle');
+
+  const [status, setStatus] = useState<
+    'idle' | 'checking' | 'available' | 'taken'
+  >('idle');
 
   useEffect(() => {
     if (!username.trim()) {
@@ -28,11 +30,14 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
     const checkAvailability = async () => {
       setStatus('checking');
       try {
-        const res = await fetch(`/api/check-username?username=${encodeURIComponent(username)}`, {
-          method: 'POST',
-        });
+        const res = await fetch(
+          `/api/check-username?username=${encodeURIComponent(username)}`,
+          {
+            method: 'POST',
+          },
+        );
         const data = await res.json();
-        
+
         if (data.available) {
           setStatus('available');
         } else {
@@ -53,11 +58,13 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
       toast.error('Please fill in both fields.');
       return;
     }
-    
+
     // basic username format check
     const cleanUsername = username.toLowerCase().replace(/[^a-z0-9-]/g, '');
     if (cleanUsername !== username) {
-      toast.error('Username can only contain lowercase letters, numbers, and hyphens.');
+      toast.error(
+        'Username can only contain lowercase letters, numbers, and hyphens.',
+      );
       return;
     }
 
@@ -69,7 +76,7 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
         setIsSubmitting(false);
         return;
       }
-      
+
       toast.success('Handle claimed successfully!');
       window.location.href = `/${cleanUsername}`;
     } catch (err) {
@@ -79,29 +86,39 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center flex-1 px-4 py-12 gap-6 min-h-[70vh]">
-      <div className="w-full max-w-md bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-        <h1 className="text-2xl font-bold text-left mb-2">Welcome to Portfoliofy👋🏻</h1>
-        <p className="text-sm text-gray-500 text-left mb-8">
-          We just need a few details to finish creating your account. You can always change this later.
+    <div className="flex min-h-[70vh] flex-1 flex-col items-center justify-center gap-6 px-4 py-12">
+      <div className="w-full max-w-md rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+        <h1 className="mb-2 text-left text-2xl font-bold">
+          Welcome to Portfoliofy👋🏻
+        </h1>
+        <p className="mb-8 text-left text-sm text-gray-500">
+          We just need a few details to finish creating your account. You can
+          always change this later.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <Label htmlFor="username">Username</Label>
               {status === 'taken' && (
-                <span className="text-xs text-red-500 font-medium">Username is taken</span>
+                <span className="text-xs font-medium text-red-500">
+                  Username is taken
+                </span>
               )}
             </div>
             <div className="relative">
               <Input
                 id="username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
+                onChange={(e) =>
+                  setUsername(
+                    e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''),
+                  )
+                }
                 className={cn(
-                  "pr-10",
-                  status === 'taken' && "border-red-500 focus-visible:ring-red-500"
+                  'pr-10',
+                  status === 'taken' &&
+                    'border-red-500 focus-visible:ring-red-500',
                 )}
                 placeholder="your unique @username"
                 maxLength={30}
@@ -109,19 +126,19 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
               />
               {status === 'checking' && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+                  <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
                 </div>
               )}
               {status === 'available' && (
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 bg-green-500 rounded-full p-0.5 flex items-center justify-center">
-                  <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-green-500 p-0.5">
+                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
                 </div>
               )}
             </div>
           </div>
 
           <div className="space-y-2">
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <Label htmlFor="displayName">Display Name</Label>
               <span className="text-xs text-gray-400">
                 {displayName.length} of 48
@@ -138,27 +155,33 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
                 className="pr-10"
               />
               {displayName.length > 0 && (
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 bg-green-500 rounded-full p-0.5 flex items-center justify-center">
-                  <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-green-500 p-0.5">
+                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
                 </div>
               )}
             </div>
           </div>
 
-          <div className="flex justify-between items-center pt-2">
+          <div className="flex items-center justify-between pt-2">
             <button
               type="button"
               onClick={async () => {
                 await signOut({ callbackUrl: '/' });
               }}
-              className="text-xs text-gray-500 hover:text-gray-900 transition-colors"
+              className="text-xs text-gray-500 transition-colors hover:text-gray-900"
             >
               Log in with a different email
             </button>
             <Button
               type="submit"
-              className="bg-design-black hover:bg-design-black/95 text-white"
-              disabled={isSubmitting || !username || !displayName || status === 'taken' || status === 'checking'}
+              className="bg-design-black text-white hover:bg-design-black/95"
+              disabled={
+                isSubmitting ||
+                !username ||
+                !displayName ||
+                status === 'taken' ||
+                status === 'checking'
+              }
             >
               {isSubmitting ? 'Claiming...' : 'Continue'}
             </Button>

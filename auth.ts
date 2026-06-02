@@ -36,7 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             `user:profile:${account.providerAccountId}`,
           );
           await upstashRedis.set(`user:profile:${account.providerAccountId}`, {
-            ...existing,              // preserve customImage and any other fields
+            ...existing, // preserve customImage and any other fields
             name: user.name ?? null,
             email: user.email ?? null,
             image: user.image ?? null, // Google OAuth photo (fallback)

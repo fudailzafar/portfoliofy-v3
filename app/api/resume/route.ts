@@ -19,11 +19,16 @@ export async function GET(): Promise<NextResponse<GetResumeResponse>> {
     return NextResponse.json({ resume });
   } catch (error) {
     console.error('Error retrieving resume:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }
 
-export async function POST(request: Request): Promise<NextResponse<PostResumeResponse>> {
+export async function POST(
+  request: Request,
+): Promise<NextResponse<PostResumeResponse>> {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -41,6 +46,9 @@ export async function POST(request: Request): Promise<NextResponse<PostResumeRes
       );
     }
     console.error('Error storing resume:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }

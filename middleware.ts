@@ -8,8 +8,9 @@ import type { NextRequest } from 'next/server';
 export default async function middleware(req: NextRequest) {
   const rawHostname = req.headers.get('host') || '';
   const hostname = rawHostname.split(':')[0]; // Strip port for local testing
-  
-  const isMainDomain = hostname === 'portfoliofy.me' || hostname === 'www.portfoliofy.me';
+
+  const isMainDomain =
+    hostname === 'portfoliofy.me' || hostname === 'www.portfoliofy.me';
   const isVercelDomain = hostname.endsWith('.vercel.app');
   const isLocalhost = hostname.includes('localhost');
 
@@ -18,12 +19,14 @@ export default async function middleware(req: NextRequest) {
     // It's a custom domain, rewrite to the user's profile
     try {
       // 1. Get userId by domain
-      const userId = await upstashRedis.get<string>(`domain:to:user:${hostname}`);
-      
+      const userId = await upstashRedis.get<string>(
+        `domain:to:user:${hostname}`,
+      );
+
       if (userId) {
         // 2. Get username by userId
         const username = await upstashRedis.get<string>(`user:id:${userId}`);
-        
+
         if (username) {
           // Rewrite the request to `/[username]` internally
           const clonedUrl = req.nextUrl.clone();
@@ -44,7 +47,7 @@ export default async function middleware(req: NextRequest) {
     }
 
     const isPrivateRoute = PRIVATE_ROUTES.some((route) =>
-      req.nextUrl.pathname.startsWith(`/${route}`)
+      req.nextUrl.pathname.startsWith(`/${route}`),
     );
 
     if (isPrivateRoute && !req.auth) {

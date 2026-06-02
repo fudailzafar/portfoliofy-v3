@@ -57,13 +57,15 @@ const diatypeMono = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL('https://portfoliofy.me'),
   title: 'Portfoliofy - Mindful professional profiles',
-  description: 'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
+  description:
+    'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: 'Portfoliofy - Mindful professional profiles',
-    description: 'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
+    description:
+      'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
     url: '/',
     siteName: 'Portfoliofy',
     images: [
@@ -71,7 +73,7 @@ export const metadata: Metadata = {
         url: '/og.png',
         width: 1200,
         height: 630,
-      }
+      },
     ],
     type: 'website',
   },
@@ -96,47 +98,51 @@ export default function RootLayout({
     <SessionProviderWrapper>
       <PlausibleProvider domain="portfoliofy.me">
         <ReactQueryClientProvider>
-          <html lang="en" className={`${graphik.variable} ${signifier.variable} ${diatypeMono.variable}`}>
+          <html
+            lang="en"
+            className={`${graphik.variable} ${signifier.variable} ${diatypeMono.variable}`}
+          >
             <head>
               <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                   __html: JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@type": "Organization",
-                    "url": "https://portfoliofy.me",
-                    "logo": "https://portfoliofy.me/logo.png",
-                    "name": "Portfoliofy",
-                    "description": "Portfoliofy is a progressive platform for mindful professional profiles.",
-                    "dateModified": new Date().toISOString()
-                  })
+                    '@context': 'https://schema.org',
+                    '@type': 'Organization',
+                    url: 'https://portfoliofy.me',
+                    logo: 'https://portfoliofy.me/logo.png',
+                    name: 'Portfoliofy',
+                    description:
+                      'Portfoliofy is a progressive platform for mindful professional profiles.',
+                    dateModified: new Date().toISOString(),
+                  }),
                 }}
               />
               <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                   __html: JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@type": "FAQPage",
-                    "mainEntity": [
+                    '@context': 'https://schema.org',
+                    '@type': 'FAQPage',
+                    mainEntity: [
                       {
-                        "@type": "Question",
-                        "name": "What is Portfoliofy?",
-                        "acceptedAnswer": {
-                          "@type": "Answer",
-                          "text": "Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles."
-                        }
+                        '@type': 'Question',
+                        name: 'What is Portfoliofy?',
+                        acceptedAnswer: {
+                          '@type': 'Answer',
+                          text: 'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
+                        },
                       },
                       {
-                        "@type": "Question",
-                        "name": "How do I create a profile?",
-                        "acceptedAnswer": {
-                          "@type": "Answer",
-                          "text": "You can create a profile by signing up and using our intuitive editor to craft your mindful professional profile in minutes."
-                        }
-                      }
-                    ]
-                  })
+                        '@type': 'Question',
+                        name: 'How do I create a profile?',
+                        acceptedAnswer: {
+                          '@type': 'Answer',
+                          text: 'You can create a profile by signing up and using our intuitive editor to craft your mindful professional profile in minutes.',
+                        },
+                      },
+                    ],
+                  }),
                 }}
               />
               {/* rest of your scripts go under */}
@@ -148,15 +154,13 @@ export default function RootLayout({
                 {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${gaId}');`}
               </Script>
             </head>
-            <body className="min-h-screen flex flex-col font-sans antialiased light">
-              <main className="flex-1 flex flex-col">
-                <ClientLayoutWrapper>
-                  {children}
-                </ClientLayoutWrapper>
+            <body className="light flex min-h-screen flex-col font-sans antialiased">
+              <main className="flex flex-1 flex-col">
+                <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
                 <SpeedInsights />
                 <Analytics />
               </main>
-              <Toaster richColors position="bottom-center" />
+              <Toaster richColors position="top-right" />
             </body>
           </html>
         </ReactQueryClientProvider>
