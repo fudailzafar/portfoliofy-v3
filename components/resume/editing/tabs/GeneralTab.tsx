@@ -205,7 +205,7 @@ export function GeneralTab({
                     .replace(/[^a-z0-9-]/g, ''),
                 )
               }
-              className="pl-[180px] border-none focus-visible:ring-0 shadow-none bg-transparent rounded-none h-10"
+              className="pl-[110px] border-none focus-visible:ring-0 shadow-none bg-transparent rounded-none h-10"
             />
             <div className="pr-3 flex items-center">
               {isInitialUsername ? null : checkUsernameMutation.isPending ? (

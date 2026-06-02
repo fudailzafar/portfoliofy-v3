@@ -4,8 +4,9 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
-import { FolderCode } from 'lucide-react';
+import { FolderCode, Upload, Download } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { sortByDateDesc } from '@/lib/resume';
 
 export function SideProjectsTab({ 
@@ -42,6 +43,17 @@ export function SideProjectsTab({
     updateResume({ sideProjects: newItems });
     setSideProjectsView('list');
     setCurrentSideProject(null);
+  };
+
+  const handleMoveUp = (currentItem: any, prevItem: any) => {
+    const newItems = [...sideProjects];
+    const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
+    const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
+    
+    if (idx1 !== -1 && idx2 !== -1) {
+      [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
+      updateResume({ sideProjects: newItems });
+    }
   };
 
   const currentYear = new Date().getFullYear();
@@ -98,7 +110,12 @@ export function SideProjectsTab({
 
       {sideProjectsView === 'list' && sideProjects.length > 0 && (
         <div className="space-y-8">
-          {sortByDateDesc(sideProjects).map((project: any) => (
+          {sortByDateDesc(sideProjects).map((project: any, index: number, sortedArray: any[]) => {
+            const prevItem = index > 0 ? sortedArray[index - 1] : null;
+            const canMoveUp = prevItem && parseInt(project.year || '0') === parseInt(prevItem.year || '0');
+            const nextItem = index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
+            const canMoveDown = nextItem && parseInt(project.year || '0') === parseInt(nextItem.year || '0');
+            return (
             <div
               key={project.id}
               className="flex flex-col sm:flex-row gap-4 sm:gap-12"
@@ -140,10 +157,44 @@ export function SideProjectsTab({
                   >
                     Delete
                   </button>
+                  {canMoveUp && (
+                    <TooltipProvider delayDuration={0}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={() => handleMoveUp(project, prevItem)}
+                            className="hover:text-gray-900 transition-colors"
+                          >
+                            <Upload className="w-[15px] h-[15px]" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="bg-[#111] text-white text-xs px-2.5 py-1.5 rounded-md border-none font-medium mb-1">
+                          Move up
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                  {canMoveDown && (
+                    <TooltipProvider delayDuration={0}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={() => handleMoveUp(project, nextItem)}
+                            className="hover:text-gray-900 transition-colors"
+                          >
+                            <Download className="w-[15px] h-[15px]" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="bg-[#111] text-white text-xs px-2.5 py-1.5 rounded-md border-none font-medium mb-1">
+                          Move down
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
                 </div>
               </div>
             </div>
-          ))}
+          )})}
         </div>
       )}
 
