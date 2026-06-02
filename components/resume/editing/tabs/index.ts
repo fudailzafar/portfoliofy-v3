@@ -9,3 +9,4 @@ export { SkillsTab }        from './SkillsTab';
 export { SpeakingTab }      from './SpeakingTab';
 export { VolunteeringTab }  from './VolunteeringTab';
 export { WorkExperienceTab }from './WorkExperienceTab';
+export * from './PrintTab';

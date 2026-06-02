@@ -64,7 +64,7 @@ export function WorkExperienceTab({
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="max-w-3xl mx-auto h-full flex flex-col">
+    <div className="max-w-3xl mx-auto flex flex-col pb-24">
       <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
         <h2 className="text-2xl font-bold">Work Experience</h2>
         {workView === 'list' && (

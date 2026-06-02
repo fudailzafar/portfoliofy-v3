@@ -26,6 +26,9 @@ interface ResumeStore {
   triggerSave: () => void;
   isSaveDisabled: boolean;
   setIsSaveDisabled: (disabled: boolean) => void;
+
+  printHiddenSections: string[];
+  togglePrintSection: (sectionId: string) => void;
 }
 
 export const useResumeStore = create<ResumeStore>((set) => ({
@@ -45,6 +48,13 @@ export const useResumeStore = create<ResumeStore>((set) => ({
   triggerSave: () => set((state) => ({ saveTrigger: state.saveTrigger + 1 })),
   isSaveDisabled: false,
   setIsSaveDisabled: (disabled) => set({ isSaveDisabled: disabled }),
+
+  printHiddenSections: [],
+  togglePrintSection: (sectionId) => set((state) => ({
+    printHiddenSections: state.printHiddenSections.includes(sectionId)
+      ? state.printHiddenSections.filter(id => id !== sectionId)
+      : [...state.printHiddenSections, sectionId]
+  })),
   
   updateResume: (data) => set((state) => {
     if (!state.resume) return state;
