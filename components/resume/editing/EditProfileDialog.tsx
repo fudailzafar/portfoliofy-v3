@@ -28,6 +28,7 @@ import {
   FeaturesTab,
   ContactsTab,
   PersonalDomainTab,
+  PrintTab,
 } from './tabs';
 import { SortableSidebarItem } from './SortableSidebarItem';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
@@ -92,6 +93,7 @@ const TAB_DEFINITIONS: Record<string, { label: string; disabled: boolean }> = {
   awards:       { label: 'Awards',          disabled: true  },
   volunteering: { label: 'Volunteering',    disabled: false },
   features:     { label: 'Features',        disabled: false },
+  print:        { label: 'Print',           disabled: false },
 };
 
 type DeleteTarget =
@@ -491,6 +493,17 @@ export function EditProfileDialog({
                 Personal Domain
               </button>
               <button
+                onClick={() => { setActiveTab('print'); setShowMobileMenu(false); }}
+                className={cn(
+                  'text-left px-3 py-2 rounded-md text-sm transition-colors',
+                  activeTab === 'print'
+                    ? 'bg-gray-100 text-gray-900'
+                    : 'text-gray-500 hover:bg-gray-50',
+                )}
+              >
+                Print
+              </button>
+              <button
                 onClick={() => { setActiveTab('settings'); setShowMobileMenu(false); }}
                 className={cn(
                   'text-left px-3 py-2 rounded-md text-sm transition-colors',
@@ -539,6 +552,8 @@ export function EditProfileDialog({
               {activeTab === 'speaking'     && <SpeakingTab       years={years} setProjectToDelete={setDeleteSpeaking} />}
               {activeTab === 'features'     && <FeaturesTab       years={years} setProjectToDelete={setDeleteFeature} />}
               {activeTab === 'contact'      && <ContactsTab               setProjectToDelete={setDeleteContact} />}
+
+              {activeTab === 'print' && <PrintTab />}
 
               {activeTab === 'personal_domain' && <PersonalDomainTab username={username} />}
 

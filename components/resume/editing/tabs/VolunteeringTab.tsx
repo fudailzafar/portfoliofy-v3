@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Upload, Download } from 'lucide-react';
+import { Upload, Download, HeartHandshake } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { sortByDateDesc } from '@/lib/resume';
 
@@ -82,12 +82,16 @@ export function VolunteeringTab({
       </div>
 
       {volunteeringView === 'list' && volunteering.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500 mb-4">
-            No volunteering entries added yet.
-          </p>
+        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 opacity-80 mt-12">
+          <div className="p-8 bg-gray-50 rounded-full">
+            <HeartHandshake
+              className="w-16 h-16 text-gray-400"
+              strokeWidth={1}
+            />
+          </div>
           <Button
-            type="button"
+            variant="secondary"
+            className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none rounded-md px-6 py-5 h-auto text-sm"
             onClick={() => {
               setCurrentVolunteering({
                 role: '',
