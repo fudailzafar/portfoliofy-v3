@@ -184,7 +184,8 @@ export function EditProfileDialog({
   // Years list — stable; only computed once
   const years = useMemo(() => {
     const current = new Date().getFullYear();
-    return Array.from({ length: 30 }, (_, i) => current - i);
+    // Start from current year and go down to 1980
+    return Array.from({ length: current - 1980 + 1 }, (_, i) => current - i);
   }, []);
 
   const { uploadToS3 } = useS3Upload();
