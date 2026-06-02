@@ -1,7 +1,7 @@
 'use server';
 
 import { auth } from '@/auth';
-import { createUsernameLookup, storeResume } from '@/lib/server/redisActions';
+import { createUsernameLookup, storeResume } from '@/lib/server/dbActions';
 import { ResumeDataSchemaType } from '@/lib/resume';
 
 export async function claimUsernameAndInitProfile(

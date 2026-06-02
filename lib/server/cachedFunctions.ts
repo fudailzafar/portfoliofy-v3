@@ -1,5 +1,5 @@
-import { getResume, getUserIdByUsername } from '@/lib/server/redisActions';
-import { upstashRedis } from '@/lib/server/redis';
+import { getResume, getUserIdByUsername } from '@/lib/server/dbActions';
+import sql from '@/lib/server/db';
 import { unstable_cache } from 'next/cache';
 
 export interface UserProfile {
@@ -15,13 +15,23 @@ export const getCachedUserProfile = async (
 ): Promise<UserProfile | null> => {
   return unstable_cache(
     async () => {
-      const profile = await upstashRedis.get<UserProfile>(
-        `user:profile:${userId}`,
-      );
-      if (profile) {
+      try {
+        const [row] = await sql`SELECT name, email, image, custom_image FROM users WHERE id = ${userId}`;
+        if (!row) return null;
+        
+        const profile: UserProfile = {
+          name: row.name,
+          email: row.email,
+          image: row.image,
+          customImage: row.customImage,
+        };
+        
         profile.avatarUrl = profile.customImage ?? profile.image ?? undefined;
+        return profile;
+      } catch (error) {
+        console.error('Failed to get cached profile:', error);
+        return null;
       }
-      return profile;
     },
     [userId],
     {

@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import { getUsernameById } from '@/lib/server/redisActions';
+import { getUsernameById } from '@/lib/server/dbActions';
 import { redirect } from 'next/navigation';
 
 /**

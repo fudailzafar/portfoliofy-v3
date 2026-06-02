@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
-import { upstashRedis } from '@/lib/server/redis';
+import sql from '@/lib/server/db';
 
 declare module 'next-auth' {
   interface Session {
@@ -27,29 +27,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
-      // Persist Google profile to Redis on every sign-in (keeps it fresh)
-      // IMPORTANT: we MERGE into the existing key so that a user-uploaded
-      // customImage is never wiped when they sign back in.
+      // Persist Google profile to Postgres on every sign-in
       if (account?.provider === 'google' && account.providerAccountId) {
         try {
-          const existing = await upstashRedis.get<Record<string, any>>(
-            `user:profile:${account.providerAccountId}`,
-          );
-          await upstashRedis.set(`user:profile:${account.providerAccountId}`, {
-            ...existing, // preserve customImage and any other fields
-            name: user.name ?? null,
-            email: user.email ?? null,
-            image: user.image ?? null, // Google OAuth photo (fallback)
-          });
+          // If user exists, update their Google info without touching custom_image
+          // If they don't exist yet, we don't insert here because `claim` inserts them.
+          // Wait, actually, if they don't exist, they can't be updated.
+          // But what if they change their name/image on Google?
+          await sql`
+            UPDATE users 
+            SET name = COALESCE(${user.name ?? null}, name),
+                email = COALESCE(${user.email ?? null}, email),
+                image = COALESCE(${user.image ?? null}, image)
+            WHERE id = ${account.providerAccountId}
+          `;
         } catch (err) {
-          console.error('Failed to store user profile in Redis:', err);
-          // Don't block sign-in if Redis write fails
+          console.error('Failed to store user profile in Postgres:', err);
         }
       }
       return true;
     },
     async jwt({ token, account }) {
-      // On first sign-in, embed Google's stable `sub` as our userId
       if (account?.provider === 'google') {
         token.userId = account.providerAccountId;
       }
@@ -62,7 +60,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // After Google sign-in, route through our post-login handler
       if (url === baseUrl || url === `${baseUrl}/`) {
         return `${baseUrl}/auth/post-login`;
       }
@@ -70,6 +67,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
   pages: {
-    signIn: '/', // Keep users on the home page; auth is triggered via dialog
+    signIn: '/',
   },
 });

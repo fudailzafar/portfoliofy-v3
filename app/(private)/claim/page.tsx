@@ -1,7 +1,7 @@
 import ClaimPageClient from './client';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
-import { getUsernameById } from '@/lib/server/redisActions';
+import { getUsernameById } from '@/lib/server/dbActions';
 
 export default async function ClaimPage() {
   const session = await auth();

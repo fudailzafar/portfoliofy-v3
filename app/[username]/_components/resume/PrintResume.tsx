@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResumeData } from '@/lib/server/redisActions';
+import { ResumeData } from '@/lib/server/dbActions';
 import { sortByDateDesc } from '@/lib/resume';
 import { cn } from '@/lib/utils';
 

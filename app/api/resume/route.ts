@@ -1,4 +1,4 @@
-import { getResume, Resume, storeResume } from '@/lib/server/redisActions';
+import { getResume, Resume, storeResume } from '@/lib/server/dbActions';
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
