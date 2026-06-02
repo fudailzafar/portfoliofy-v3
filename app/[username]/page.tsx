@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { FullResume } from '@/components/resume/FullResume';
+import { PrintResumeWrapper } from '@/components/resume/PrintResumeWrapper';
 import { Metadata } from 'next';
 import { getUserData } from './utils';
 import { Button } from '@/components/ui/button';
@@ -171,32 +172,37 @@ export default async function ProfilePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {/* Standard UI visible only on screen */}
+      <div className="print:hidden flex-1 flex flex-col">
+        {userId === user_id && resume?.resumeData && (
+          <EditProfileDialog 
+            resume={resume.resumeData} 
+            username={username}
+            picture={profilePicture} 
+          />
+        )}
 
-      {userId === user_id && resume?.resumeData && (
-        <EditProfileDialog 
-          resume={resume.resumeData} 
-          username={username}
-          picture={profilePicture} 
-        />
-      )}
+        <div className={`flex-1 flex flex-col bg-theme-bg ${fontClass} ${themeClass}`}>
+          <div className="flex-1">
+            <FullResume resume={resume?.resumeData} profilePicture={profilePicture} />
+          </div>
 
-      <div className={`flex-1 flex flex-col bg-theme-bg ${fontClass} ${themeClass}`}>
-        <div className="flex-1">
-          <FullResume resume={resume?.resumeData} profilePicture={profilePicture} />
-        </div>
-
-        <div className="text-center mt-8 mb-4">
-          <Link
-            href={`/?ref=${username}`}
-            className="text-theme-secondary text-sm"
-          >
-            Made by{' '}
-            <span className="text-theme-primary underline underline-offset-2 hover:text-theme-accent transition-colors">
-              Portfoliofy
-            </span>
-          </Link>
+          <div className="text-center mt-8 mb-4">
+            <Link
+              href={`/?ref=${username}`}
+              className="text-theme-secondary text-sm"
+            >
+              Made by{' '}
+              <span className="text-theme-primary underline underline-offset-2 hover:text-theme-accent transition-colors">
+                Portfoliofy
+              </span>
+            </Link>
+          </div>
         </div>
       </div>
+
+      {/* Print-only layout */}
+      <PrintResumeWrapper resume={resume?.resumeData} />
     </div>
   );
 }
