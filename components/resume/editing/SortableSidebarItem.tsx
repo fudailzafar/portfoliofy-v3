@@ -11,7 +11,13 @@ interface SortableSidebarItemProps {
   onClick: () => void;
 }
 
-export function SortableSidebarItem({ id, label, disabled, isActive, onClick }: SortableSidebarItemProps) {
+export function SortableSidebarItem({
+  id,
+  label,
+  disabled,
+  isActive,
+  onClick,
+}: SortableSidebarItemProps) {
   const {
     attributes,
     listeners,
@@ -32,26 +38,33 @@ export function SortableSidebarItem({ id, label, disabled, isActive, onClick }: 
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex justify-between items-center px-3 py-2 rounded-md text-sm transition-colors cursor-grab active:cursor-grabbing",
-        isActive 
-          ? "bg-gray-100 text-gray-900" 
-          : "text-gray-500 hover:bg-gray-50",
-        disabled && "opacity-50 hover:bg-transparent hover:text-gray-500",
-        isDragging && "opacity-50 bg-gray-200"
+        'flex cursor-pointer items-center justify-between rounded-md px-3 py-2 text-sm transition-colors',
+        isActive
+          ? 'bg-gray-100 text-gray-900'
+          : 'text-gray-500 hover:bg-gray-50',
+        disabled && 'opacity-50 hover:bg-transparent hover:text-gray-500',
+        isDragging && 'bg-gray-200 opacity-50',
       )}
-      {...attributes}
-      {...listeners}
-      onClick={(e) => {
-        // Only trigger click if it's not disabled and we aren't dragging
-        // The click is handled, but dnd-kit pointer sensor might interfere. 
-        // We ensure onClick fires correctly using pointer down/up checks if needed, but standard onClick works fine usually.
+      onClick={() => {
         if (!disabled) {
           onClick();
         }
       }}
     >
       <span>{label}</span>
-      <span className={cn("text-gray-300 font-bold", isDragging ? "cursor-grabbing" : "cursor-grab")}>=</span>
+      <div
+        className={cn(
+          'flex items-center justify-center px-2 py-1 font-bold text-gray-300',
+          isDragging ? 'cursor-grabbing' : 'cursor-grab',
+        )}
+        {...attributes}
+        {...listeners}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        =
+      </div>
     </div>
   );
 }

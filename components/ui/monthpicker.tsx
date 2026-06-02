@@ -75,9 +75,9 @@ function MonthPicker({
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & MonthCalProps) {
   return (
-    <div className={cn('min-w-[200px] w-[280px] p-3', className)} {...props}>
-      <div className="flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0">
-        <div className="space-y-4 w-full">
+    <div className={cn('w-[280px] min-w-[200px] p-3', className)} {...props}>
+      <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+        <div className="w-full space-y-4">
           <MonthCal
             onMonthSelect={onMonthSelect}
             callbacks={callbacks}
@@ -122,11 +122,11 @@ function MonthCal({
 
   return (
     <>
-      <div className="flex justify-center pt-1 relative items-center">
+      <div className="relative flex items-center justify-center pt-1">
         <div className="text-sm font-medium">
           {callbacks?.yearLabel ? callbacks?.yearLabel(menuYear) : menuYear}
         </div>
-        <div className="space-x-1 flex items-center">
+        <div className="flex items-center space-x-1">
           <button
             onClick={() => {
               setMenuYear(menuYear - 1);
@@ -134,10 +134,10 @@ function MonthCal({
             }}
             className={cn(
               buttonVariants({ variant: variant?.chevrons ?? 'outline' }),
-              'inline-flex items-center justify-center h-7 w-7 p-0 absolute left-1',
+              'absolute left-1 inline-flex h-7 w-7 items-center justify-center p-0',
             )}
           >
-            <ChevronLeft className="opacity-50 h-4 w-4" />
+            <ChevronLeft className="h-4 w-4 opacity-50" />
           </button>
           <button
             onClick={() => {
@@ -146,10 +146,10 @@ function MonthCal({
             }}
             className={cn(
               buttonVariants({ variant: variant?.chevrons ?? 'outline' }),
-              'inline-flex items-center justify-center h-7 w-7 p-0 absolute right-1',
+              'absolute right-1 inline-flex h-7 w-7 items-center justify-center p-0',
             )}
           >
-            <ChevronRight className="opacity-50 h-4 w-4" />
+            <ChevronRight className="h-4 w-4 opacity-50" />
           </button>
         </div>
       </div>
@@ -157,12 +157,12 @@ function MonthCal({
         <tbody>
           {MONTHS.map((monthRow, a) => {
             return (
-              <tr key={'row-' + a} className="flex w-full mt-2">
+              <tr key={'row-' + a} className="mt-2 flex w-full">
                 {monthRow.map((m) => {
                   return (
                     <td
                       key={m.number}
-                      className="h-10 w-1/4 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20"
+                      className="relative h-10 w-1/4 p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected].day-range-end)]:rounded-r-md"
                     >
                       <button
                         onClick={() => {

@@ -5,12 +5,14 @@ Use MUST/SHOULD/NEVER to guide decisions.
 ## Interactions
 
 ### Keyboard
+
 - MUST: Full keyboard support per [WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/patterns/)
 - MUST: Visible focus rings (`:focus-visible`; group with `:focus-within`)
 - MUST: Manage focus (trap, move, return) per APG patterns
 - NEVER: `outline: none` without visible focus replacement
 
 ### Targets & Input
+
 - MUST: Hit target ≥24px (mobile ≥44px); if visual <24px, expand hit area
 - MUST: Mobile `<input>` font-size ≥16px to prevent iOS zoom
 - NEVER: Disable browser zoom (`user-scalable=no`, `maximum-scale=1`)
@@ -18,6 +20,7 @@ Use MUST/SHOULD/NEVER to guide decisions.
 - SHOULD: Set `-webkit-tap-highlight-color` to match design
 
 ### Forms
+
 - MUST: Hydration-safe inputs (no lost focus/value)
 - NEVER: Block paste in `<input>`/`<textarea>`
 - MUST: Loading buttons show spinner and keep original label
@@ -35,18 +38,21 @@ Use MUST/SHOULD/NEVER to guide decisions.
 - MUST: No dead zones on checkboxes/radios; label+control share one hit target
 
 ### State & Navigation
+
 - MUST: URL reflects state (deep-link filters/tabs/pagination/expanded panels)
 - MUST: Back/Forward restores scroll position
 - MUST: Links use `<a>`/`<Link>` for navigation (support Cmd/Ctrl/middle-click)
 - NEVER: Use `<div onClick>` for navigation
 
 ### Feedback
+
 - SHOULD: Optimistic UI; reconcile on response; on failure rollback or offer Undo
 - MUST: Confirm destructive actions or provide Undo window
 - MUST: Use polite `aria-live` for toasts/inline validation
 - SHOULD: Ellipsis (`…`) for options opening follow-ups ("Rename…") and loading states ("Loading…")
 
 ### Touch & Drag
+
 - MUST: Generous targets, clear affordances; avoid finicky interactions
 - MUST: Delay first tooltip; subsequent peers instant
 - MUST: `overscroll-behavior: contain` in modals/drawers
@@ -54,9 +60,11 @@ Use MUST/SHOULD/NEVER to guide decisions.
 - MUST: If it looks clickable, it must be clickable
 
 ### Autofocus
+
 - SHOULD: Autofocus on desktop with single primary input; rarely on mobile
 
 ## Animation
+
 - MUST: Honor `prefers-reduced-motion` (provide reduced variant or disable)
 - SHOULD: Prefer CSS > Web Animations API > JS libraries
 - MUST: Animate compositor-friendly props (`transform`, `opacity`) only
@@ -69,6 +77,7 @@ Use MUST/SHOULD/NEVER to guide decisions.
 - MUST: SVG transforms on `<g>` wrapper with `transform-box: fill-box`
 
 ## Layout
+
 - SHOULD: Optical alignment; adjust ±1px when perception beats geometry
 - MUST: Deliberate alignment to grid/baseline/edges—no accidental placement
 - SHOULD: Balance icon/text lockups (weight/size/spacing/color)
@@ -78,6 +87,7 @@ Use MUST/SHOULD/NEVER to guide decisions.
 - SHOULD: Flex/grid over JS measurement for layout
 
 ## Content & Accessibility
+
 - SHOULD: Inline help first; tooltips last resort
 - MUST: Skeletons mirror final content to avoid layout shift
 - MUST: `<title>` matches current context
@@ -98,11 +108,13 @@ Use MUST/SHOULD/NEVER to guide decisions.
 - MUST: Non-breaking spaces: `10&nbsp;MB`, `⌘&nbsp;K`, brand names
 
 ## Content Handling
+
 - MUST: Text containers handle long content (`truncate`, `line-clamp-*`, `break-words`)
 - MUST: Flex children need `min-w-0` to allow truncation
 - MUST: Handle empty states—no broken UI for empty strings/arrays
 
 ## Performance
+
 - SHOULD: Test iOS Low Power Mode and macOS Safari
 - MUST: Measure reliably (disable extensions that skew runtime)
 - MUST: Track and minimize re-renders (React DevTools/React Scan)
@@ -117,15 +129,18 @@ Use MUST/SHOULD/NEVER to guide decisions.
 - SHOULD: Critical fonts: `<link rel="preload" as="font">` with `font-display: swap`
 
 ## Dark Mode & Theming
+
 - MUST: `color-scheme: dark` on `<html>` for dark themes
 - SHOULD: `<meta name="theme-color">` matches page background
 - MUST: Native `<select>`: explicit `background-color` and `color` (Windows fix)
 
 ## Hydration
+
 - MUST: Inputs with `value` need `onChange` (or use `defaultValue`)
 - SHOULD: Guard date/time rendering against hydration mismatch
 
 ## Design
+
 - SHOULD: Layered shadows (ambient + direct)
 - SHOULD: Crisp edges via semi-transparent borders + shadows
 - SHOULD: Nested radii: child ≤ parent; concentric

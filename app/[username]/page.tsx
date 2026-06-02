@@ -61,58 +61,67 @@ export default async function ProfilePage({
 
   if (!user_id) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 py-8 md:py-12 bg-gradient-to-b from-white to-gray-50">
-        <div className="max-w-4xl w-full text-center space-y-6 md:space-y-8">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-white to-gray-50 px-4 py-8 md:py-12">
+        <div className="w-full max-w-4xl space-y-6 text-center md:space-y-8">
           {/* Header */}
           <div className="space-y-3 md:space-y-4">
             <div className="inline-block">
-              <div className="bg-green-100 text-green-800 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium">
+              <div className="rounded-lg bg-green-100 px-3 py-1.5 text-xs font-medium text-green-800 md:px-4 md:py-2 md:text-sm">
                 Available
               </div>
             </div>
 
-            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold break-all">
+            <h1 className="break-all text-xl font-bold sm:text-2xl md:text-3xl lg:text-4xl">
               <span className="text-gray-500">portfoliofy.me/</span>
               <span className="text-gray-900">{username}</span>
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4">
+            <p className="px-4 text-base text-gray-600 sm:text-lg md:text-xl">
               This username is available! Claim it now and create your
               professional portfolio.
             </p>
           </div>
 
           {/* Features */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 py-4 md:py-8">
-            <div className="bg-white p-4 md:p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-2xl md:text-3xl mb-2">⚡</div>
-              <h3 className="font-semibold mb-1 text-sm md:text-base">Quick Setup</h3>
-              <p className="text-xs md:text-sm text-gray-600">
+          <div className="grid grid-cols-1 gap-3 py-4 sm:grid-cols-2 md:grid-cols-3 md:gap-4 md:py-8">
+            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md md:p-6">
+              <div className="mb-2 text-2xl md:text-3xl">⚡</div>
+              <h3 className="mb-1 text-sm font-semibold md:text-base">
+                Quick Setup
+              </h3>
+              <p className="text-xs text-gray-600 md:text-sm">
                 Upload your resume and go live in minutes
               </p>
             </div>
 
-            <div className="bg-white p-4 md:p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-2xl md:text-3xl mb-2">🎨</div>
-              <h3 className="font-semibold mb-1 text-sm md:text-base">Beautiful Design</h3>
-              <p className="text-xs md:text-sm text-gray-600">
+            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md md:p-6">
+              <div className="mb-2 text-2xl md:text-3xl">🎨</div>
+              <h3 className="mb-1 text-sm font-semibold md:text-base">
+                Beautiful Design
+              </h3>
+              <p className="text-xs text-gray-600 md:text-sm">
                 Professional portfolio that stands out
               </p>
             </div>
 
-            <div className="bg-white p-4 md:p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow sm:col-span-2 md:col-span-1">
-              <div className="text-2xl md:text-3xl mb-2">🔗</div>
-              <h3 className="font-semibold mb-1 text-sm md:text-base">Your Domain</h3>
-              <p className="text-xs md:text-sm text-gray-600 break-all">
+            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:col-span-2 md:col-span-1 md:p-6">
+              <div className="mb-2 text-2xl md:text-3xl">🔗</div>
+              <h3 className="mb-1 text-sm font-semibold md:text-base">
+                Your Domain
+              </h3>
+              <p className="break-all text-xs text-gray-600 md:text-sm">
                 portfoliofy.me/{username}
               </p>
             </div>
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-stretch sm:items-center px-4">
+          <div className="flex flex-col items-stretch justify-center gap-3 px-4 sm:flex-row sm:items-center md:gap-4">
             <Link href={'/claim'} className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto text-base md:text-lg px-6 md:px-8 py-5 md:py-6 bg-design-black text-white hover:bg-design-black/95">
+              <Button
+                size="lg"
+                className="w-full bg-design-black px-6 py-5 text-base text-white hover:bg-design-black/95 sm:w-auto md:px-8 md:py-6 md:text-lg"
+              >
                 Claim Handle Now
               </Button>
             </Link>
@@ -120,14 +129,14 @@ export default async function ProfilePage({
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto text-base md:text-lg px-6 md:px-8 py-5 md:py-6"
+                className="w-full px-6 py-5 text-base sm:w-auto md:px-8 md:py-6 md:text-lg"
               >
                 Sign in
               </Button>
             </Link>
           </div>
 
-          <p className="text-xs md:text-sm text-gray-500 px-4">
+          <p className="px-4 text-xs text-gray-500 md:text-sm">
             Already have an account? Sign in to set this as your username.
           </p>
 
@@ -135,7 +144,7 @@ export default async function ProfilePage({
           <div className="pt-4 md:pt-8">
             <Link
               href="/"
-              className="text-gray-600 hover:text-gray-900 text-xs md:text-sm underline"
+              className="text-xs text-gray-600 underline hover:text-gray-900 md:text-sm"
             >
               ← Back to home
             </Link>
@@ -156,44 +165,56 @@ export default async function ProfilePage({
     image: profilePicture,
     jobTitle: resume.resumeData.header.shortAbout,
     description: resume.resumeData.summary,
-    email: resume.resumeData.contacts?.find((c: any) => c.platform.toLowerCase() === 'email')?.link,
+    email: resume.resumeData.contacts?.find(
+      (c: any) => c.platform.toLowerCase() === 'email',
+    )?.link,
     url: `https://portfoliofy.me/${username}`,
     skills: resume.resumeData.header.skills,
   };
 
   const typography = resume.resumeData?.design?.typography || 'sans';
   const theme = resume.resumeData?.design?.theme || 'default';
-  const fontClass = typography === 'serif' ? 'font-serif' : typography === 'mono' ? 'font-mono' : 'font-sans';
+  const fontClass =
+    typography === 'serif'
+      ? 'font-serif'
+      : typography === 'mono'
+        ? 'font-mono'
+        : 'font-sans';
   const themeClass = `theme-${theme}`;
 
   return (
-    <div className="min-h-screen flex flex-col font-sans">
+    <div className="flex min-h-screen flex-col font-sans">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* Standard UI visible only on screen */}
-      <div className="print:hidden flex-1 flex flex-col">
+      <div className="flex flex-1 flex-col print:hidden">
         {userId === user_id && resume?.resumeData && (
-          <EditProfileDialog 
-            resume={resume.resumeData} 
+          <EditProfileDialog
+            resume={resume.resumeData}
             username={username}
-            picture={profilePicture} 
+            picture={profilePicture}
           />
         )}
 
-        <div className={`flex-1 flex flex-col bg-theme-bg ${fontClass} ${themeClass}`}>
+        <div
+          className={`flex flex-1 flex-col bg-theme-bg ${fontClass} ${themeClass}`}
+        >
           <div className="flex-1">
-            <FullResume resume={resume?.resumeData} profilePicture={profilePicture} />
+            <FullResume
+              resume={resume?.resumeData}
+              profilePicture={profilePicture}
+            />
           </div>
 
-          <div className="text-center mt-8 mb-4">
+          <div className="mb-4 mt-8 text-center">
             <Link
               href={`/?ref=${username}`}
-              className="text-theme-secondary text-sm"
+              className="text-sm text-theme-secondary"
             >
               Made by{' '}
-              <span className="text-theme-primary underline underline-offset-2 hover:text-theme-accent transition-colors">
+              <span className="text-theme-primary underline underline-offset-2 transition-colors hover:text-theme-accent">
                 Portfoliofy
               </span>
             </Link>

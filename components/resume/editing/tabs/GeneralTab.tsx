@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { useUserActions } from '@/hooks/useUserActions';
 
-export function GeneralTab({ 
+export function GeneralTab({
   initialUsername,
   localPicture,
   isUploadingPicture,
@@ -19,11 +19,14 @@ export function GeneralTab({
   initialUsername: string;
   localPicture?: string;
   isUploadingPicture: boolean;
-  handlePictureUpload: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+  handlePictureUpload: (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => Promise<void>;
   removePicture: () => Promise<void>;
   onAvatarUpload?: () => void;
 }) {
-  const { resume, uname, setUname, updateHeader, updateResume } = useResumeStore();
+  const { resume, uname, setUname, updateHeader, updateResume } =
+    useResumeStore();
   const { checkUsernameMutation } = useUserActions();
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -48,7 +51,7 @@ export function GeneralTab({
   const { header, summary } = resume;
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
+    <div className="mx-auto max-w-2xl space-y-8">
       {/* Avatar Section */}
       <div className="flex items-center gap-6">
         {/* Hidden file input — always present */}
@@ -65,11 +68,11 @@ export function GeneralTab({
 
         {localPicture ? (
           /* ── Has image: static avatar (not clickable) ── */
-          <div className="size-20 rounded-full overflow-hidden shrink-0 relative">
+          <div className="relative size-20 shrink-0 overflow-hidden rounded-full">
             {isUploadingPicture && (
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-full z-10">
+              <div className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-black/40">
                 <svg
-                  className="animate-spin size-5 text-white"
+                  className="size-5 animate-spin text-white"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
@@ -101,11 +104,11 @@ export function GeneralTab({
           /* ── No image: clickable camera placeholder ── */
           <label
             htmlFor="avatar-upload"
-            className="size-20 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer shrink-0 relative group overflow-hidden"
+            className="group relative flex size-20 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-gray-100"
           >
             {isUploadingPicture ? (
               <svg
-                className="animate-spin size-6 text-gray-400"
+                className="size-6 animate-spin text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
               >
@@ -127,7 +130,7 @@ export function GeneralTab({
               <>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="size-8 text-gray-400 group-hover:text-gray-500 transition-colors"
+                  className="size-8 text-gray-400 transition-colors group-hover:text-gray-500"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -145,7 +148,7 @@ export function GeneralTab({
                   />
                 </svg>
                 {/* Subtle ring on hover */}
-                <div className="absolute inset-0 rounded-full ring-2 ring-inset ring-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 rounded-full opacity-0 ring-2 ring-inset ring-gray-300 transition-opacity group-hover:opacity-100" />
               </>
             )}
           </label>
@@ -159,7 +162,7 @@ export function GeneralTab({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 text-xs text-gray-600 hover:text-red-600 hover:border-red-200 transition-colors"
+                className="h-8 text-xs text-gray-600 transition-colors hover:border-red-200 hover:text-red-600"
                 onClick={removePicture}
                 disabled={isUploadingPicture}
               >
@@ -173,12 +176,14 @@ export function GeneralTab({
                 variant="outline"
                 size="sm"
                 className="h-8 text-xs"
-                onClick={() => document.getElementById('avatar-upload')?.click()}
+                onClick={() =>
+                  document.getElementById('avatar-upload')?.click()
+                }
                 disabled={isUploadingPicture}
               >
                 {isUploadingPicture ? 'Removing…' : 'Upload image'}
               </Button>
-              <p className="text-[11px] text-gray-400 leading-tight">
+              <p className="text-[11px] leading-tight text-gray-400">
                 JPG, PNG or GIF · max 5MB
               </p>
             </>
@@ -188,11 +193,11 @@ export function GeneralTab({
 
       <div className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="uname" className="text-gray-600 text-xs">
+          <Label htmlFor="uname" className="text-xs text-gray-600">
             Username*
           </Label>
-          <div className="relative flex items-center bg-white border border-gray-200 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-black">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 select-none text-sm z-10">
+          <div className="relative flex items-center overflow-hidden rounded-md border border-gray-200 bg-white focus-within:ring-1 focus-within:ring-black">
+            <span className="absolute left-3 top-1/2 z-10 -translate-y-1/2 select-none text-sm text-gray-400">
               portfoliofy.me/
             </span>
             <Input
@@ -200,16 +205,14 @@ export function GeneralTab({
               value={uname}
               onChange={(e) =>
                 setUname(
-                  e.target.value
-                    .toLowerCase()
-                    .replace(/[^a-z0-9-]/g, ''),
+                  e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''),
                 )
               }
-              className="pl-[110px] border-none focus-visible:ring-0 shadow-none bg-transparent rounded-none h-10"
+              className="h-10 rounded-none border-none bg-transparent pl-[110px] shadow-none focus-visible:ring-0"
             />
-            <div className="pr-3 flex items-center">
+            <div className="flex items-center pr-3">
               {isInitialUsername ? null : checkUsernameMutation.isPending ? (
-                <div className="w-4 h-4 rounded-full border-2 border-gray-300 border-t-black animate-spin" />
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-black" />
               ) : isValidUname ? (
                 <svg
                   width="20"
@@ -228,7 +231,7 @@ export function GeneralTab({
                 </svg>
               ) : (
                 <svg
-                  className="w-4 h-4 text-[#950000]"
+                  className="h-4 w-4 text-[#950000]"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -246,7 +249,7 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="displayName" className="text-gray-600 text-xs">
+            <Label htmlFor="displayName" className="text-xs text-gray-600">
               Display name*
             </Label>
             <span className="text-xs text-gray-400">
@@ -263,7 +266,7 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="shortAbout" className="text-gray-600 text-xs">
+            <Label htmlFor="shortAbout" className="text-xs text-gray-600">
               What do you do?
             </Label>
             <span className="text-xs text-gray-400">
@@ -280,7 +283,7 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="location" className="text-gray-600 text-xs">
+            <Label htmlFor="location" className="text-xs text-gray-600">
               Location
             </Label>
             <span className="text-xs text-gray-400">
@@ -297,7 +300,7 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="pronouns" className="text-gray-600 text-xs">
+            <Label htmlFor="pronouns" className="text-xs text-gray-600">
               Pronouns
             </Label>
             <span className="text-xs text-gray-400">
@@ -314,7 +317,7 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="website" className="text-gray-600 text-xs">
+            <Label htmlFor="website" className="text-xs text-gray-600">
               Website
             </Label>
             <span className="text-xs text-gray-400">
@@ -330,8 +333,8 @@ export function GeneralTab({
           />
         </div>
 
-        <div className="space-y-2 pt-4 border-t border-gray-100">
-          <Label className="text-gray-600 text-xs">About</Label>
+        <div className="space-y-2 border-t border-gray-100 pt-4">
+          <Label className="text-xs text-gray-600">About</Label>
           <RichTextEditor
             content={summary || ''}
             onChange={(val) => updateResume({ summary: val })}
