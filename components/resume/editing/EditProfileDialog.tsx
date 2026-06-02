@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -16,54 +15,17 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useResumeStore } from '@/store/useResumeStore';
-import {
-  GeneralTab,
-  SkillsTab,
-  ProjectsTab,
-  SideProjectsTab,
-  WorkExperienceTab,
-  EducationTab,
-  VolunteeringTab,
-  SpeakingTab,
-  FeaturesTab,
-  ContactsTab,
-  PersonalDomainTab,
-  PrintTab,
-} from './tabs';
-import { SortableSidebarItem } from './SortableSidebarItem';
-import { DeleteConfirmDialog } from './DeleteConfirmDialog';
+import { Pencil } from 'lucide-react';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { DragEndEvent, arrayMove } from '@dnd-kit/sortable';
 import { ResumeData } from '@/lib/server/redisActions';
 import { useUserActions } from '@/hooks/useUserActions';
 import { useS3Upload } from 'next-s3-upload';
 import { toast } from 'sonner';
-import { Pencil } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+import { ProfileSidebar } from './ProfileSidebar';
+import { ProfileContent } from './ProfileContent';
+import { DeleteConfirmDialog, UnsavedChangesDialog } from './dialogs';
 
 // ---------------------------------------------------------------------------
 // Constants — hoisted outside the component so they are never reallocated
@@ -83,38 +45,45 @@ const DEFAULT_SECTION_ORDER = [
 ];
 
 const TAB_DEFINITIONS: Record<string, { label: string; disabled: boolean }> = {
-  work:         { label: 'Work Experience', disabled: false },
-  side_projects:{ label: 'Side Projects',   disabled: false },
-  speaking:     { label: 'Speaking',        disabled: false },
-  projects:     { label: 'Projects',        disabled: false },
-  skills:       { label: 'Skills',          disabled: false },
-  education:    { label: 'Education',       disabled: false },
-  contact:      { label: 'Contact',         disabled: false },
-  awards:       { label: 'Awards',          disabled: true  },
-  volunteering: { label: 'Volunteering',    disabled: false },
-  features:     { label: 'Features',        disabled: false },
-  print:        { label: 'Print',           disabled: false },
+  work: { label: 'Work Experience', disabled: false },
+  side_projects: { label: 'Side Projects', disabled: false },
+  speaking: { label: 'Speaking', disabled: false },
+  projects: { label: 'Projects', disabled: false },
+  skills: { label: 'Skills', disabled: false },
+  education: { label: 'Education', disabled: false },
+  contact: { label: 'Contact', disabled: false },
+  awards: { label: 'Awards', disabled: true },
+  volunteering: { label: 'Volunteering', disabled: false },
+  features: { label: 'Features', disabled: false },
+  print: { label: 'Print', disabled: false },
 };
 
 type DeleteTarget =
-  | { type: 'project';     id: string }
+  | { type: 'project'; id: string }
   | { type: 'sideProject'; id: string }
-  | { type: 'speaking';    id: string }
-  | { type: 'volunteering';id: string }
-  | { type: 'feature';     id: string }
-  | { type: 'education';   id: string }
-  | { type: 'work';        id: string }
-  | { type: 'contact';     id: string };
+  | { type: 'speaking'; id: string }
+  | { type: 'volunteering'; id: string }
+  | { type: 'feature'; id: string }
+  | { type: 'education'; id: string }
+  | { type: 'work'; id: string }
+  | { type: 'contact'; id: string };
 
 const DELETE_DESCRIPTIONS: Record<DeleteTarget['type'], string> = {
-  project:      'This will permanently delete this project. This action cannot be undone.',
-  sideProject:  'This will permanently delete this side project. This action cannot be undone.',
-  speaking:     'This will permanently delete this speaking engagement. This action cannot be undone.',
-  work:         'This will permanently delete this work experience. This action cannot be undone.',
-  contact:      'This will permanently delete this contact. This action cannot be undone.',
-  volunteering: 'This will permanently delete this volunteering entry. This action cannot be undone.',
-  feature:      'This will permanently delete this feature. This action cannot be undone.',
-  education:    'This will permanently delete this education entry. This action cannot be undone.',
+  project:
+    'This will permanently delete this project. This action cannot be undone.',
+  sideProject:
+    'This will permanently delete this side project. This action cannot be undone.',
+  speaking:
+    'This will permanently delete this speaking engagement. This action cannot be undone.',
+  work: 'This will permanently delete this work experience. This action cannot be undone.',
+  contact:
+    'This will permanently delete this contact. This action cannot be undone.',
+  volunteering:
+    'This will permanently delete this volunteering entry. This action cannot be undone.',
+  feature:
+    'This will permanently delete this feature. This action cannot be undone.',
+  education:
+    'This will permanently delete this education entry. This action cannot be undone.',
 };
 
 // ---------------------------------------------------------------------------
@@ -149,14 +118,18 @@ export function EditProfileDialog({
   const [localPicture, setLocalPicture] = useState<string | undefined>(picture);
   const [isUploadingPicture, setIsUploadingPicture] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<DeleteTarget | null>(null);
-  const [showDeleteAccountWarning, setShowDeleteAccountWarning] = useState(false);
+  const [showDeleteAccountWarning, setShowDeleteAccountWarning] =
+    useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isInitialUsername = uname === username;
 
-  const { saveResumeDataMutation, updateUsernameMutation, checkUsernameMutation } =
-    useUserActions();
+  const {
+    saveResumeDataMutation,
+    updateUsernameMutation,
+    checkUsernameMutation,
+  } = useUserActions();
 
   const isValidUname =
     /^[a-zA-Z0-9-]+$/.test(uname) &&
@@ -179,7 +152,11 @@ export function EditProfileDialog({
   // Section order — normalise legacy ids on first load only
   const [sectionOrder, setSectionOrder] = useState<string[]>(() =>
     (resume.sectionOrder || DEFAULT_SECTION_ORDER).map((id) =>
-      id === 'writing' ? 'features' : id === 'exhibitions' ? 'volunteering' : id,
+      id === 'writing'
+        ? 'features'
+        : id === 'exhibitions'
+          ? 'volunteering'
+          : id,
     ),
   );
 
@@ -197,57 +174,100 @@ export function EditProfileDialog({
   // Stable delete setters — prevent inline arrow re-creation on every render
   // ---------------------------------------------------------------------------
   const makeDeleteSetter = useCallback(
-    (type: DeleteTarget['type']) =>
-      (id: string) =>
-        setPendingDelete({ type, id }),
+    (type: DeleteTarget['type']) => (id: string) =>
+      setPendingDelete({ type, id }),
     [],
   );
 
-  const setDeleteProject     = useMemo(() => makeDeleteSetter('project'),     [makeDeleteSetter]);
-  const setDeleteSideProject = useMemo(() => makeDeleteSetter('sideProject'), [makeDeleteSetter]);
-  const setDeleteSpeaking    = useMemo(() => makeDeleteSetter('speaking'),    [makeDeleteSetter]);
-  const setDeleteWork        = useMemo(() => makeDeleteSetter('work'),        [makeDeleteSetter]);
-  const setDeleteEducation   = useMemo(() => makeDeleteSetter('education'),   [makeDeleteSetter]);
-  const setDeleteVolunteering= useMemo(() => makeDeleteSetter('volunteering'),[makeDeleteSetter]);
-  const setDeleteFeature     = useMemo(() => makeDeleteSetter('feature'),     [makeDeleteSetter]);
-  const setDeleteContact     = useMemo(() => makeDeleteSetter('contact'),     [makeDeleteSetter]);
+  const setDeleteProject = useMemo(
+    () => makeDeleteSetter('project'),
+    [makeDeleteSetter],
+  );
+  const setDeleteSideProject = useMemo(
+    () => makeDeleteSetter('sideProject'),
+    [makeDeleteSetter],
+  );
+  const setDeleteSpeaking = useMemo(
+    () => makeDeleteSetter('speaking'),
+    [makeDeleteSetter],
+  );
+  const setDeleteWork = useMemo(
+    () => makeDeleteSetter('work'),
+    [makeDeleteSetter],
+  );
+  const setDeleteEducation = useMemo(
+    () => makeDeleteSetter('education'),
+    [makeDeleteSetter],
+  );
+  const setDeleteVolunteering = useMemo(
+    () => makeDeleteSetter('volunteering'),
+    [makeDeleteSetter],
+  );
+  const setDeleteFeature = useMemo(
+    () => makeDeleteSetter('feature'),
+    [makeDeleteSetter],
+  );
+  const setDeleteContact = useMemo(
+    () => makeDeleteSetter('contact'),
+    [makeDeleteSetter],
+  );
 
   // ---------------------------------------------------------------------------
   // Delete handlers — stable; reads store at call-time so no stale closure
   // ---------------------------------------------------------------------------
-  const DELETE_HANDLERS = useMemo<Record<DeleteTarget['type'], (id: string) => void>>(
+  const DELETE_HANDLERS = useMemo<
+    Record<DeleteTarget['type'], (id: string) => void>
+  >(
     () => ({
       project: (id) => {
         const s = useResumeStore.getState();
-        s.updateResume({ projects: s.resume?.projects?.filter((p: any) => p.id !== id) });
+        s.updateResume({
+          projects: s.resume?.projects?.filter((p: any) => p.id !== id),
+        });
       },
       sideProject: (id) => {
         const s = useResumeStore.getState();
-        s.updateResume({ sideProjects: s.resume?.sideProjects?.filter((p: any) => p.id !== id) });
+        s.updateResume({
+          sideProjects: s.resume?.sideProjects?.filter((p: any) => p.id !== id),
+        });
       },
       speaking: (id) => {
         const s = useResumeStore.getState();
-        s.updateResume({ speaking: s.resume?.speaking?.filter((p: any) => p.id !== id) });
+        s.updateResume({
+          speaking: s.resume?.speaking?.filter((p: any) => p.id !== id),
+        });
       },
       work: (id) => {
         const s = useResumeStore.getState();
-        s.updateResume({ workExperience: s.resume?.workExperience?.filter((p: any) => p.id !== id) });
+        s.updateResume({
+          workExperience: s.resume?.workExperience?.filter(
+            (p: any) => p.id !== id,
+          ),
+        });
       },
       contact: (id) => {
         const s = useResumeStore.getState();
-        s.updateResume({ contacts: s.resume?.contacts?.filter((p: any) => p.id !== id) });
+        s.updateResume({
+          contacts: s.resume?.contacts?.filter((p: any) => p.id !== id),
+        });
       },
       volunteering: (id) => {
         const s = useResumeStore.getState();
-        s.updateResume({ volunteering: s.resume?.volunteering?.filter((p: any) => p.id !== id) });
+        s.updateResume({
+          volunteering: s.resume?.volunteering?.filter((p: any) => p.id !== id),
+        });
       },
       feature: (id) => {
         const s = useResumeStore.getState();
-        s.updateResume({ features: s.resume?.features?.filter((p: any) => p.id !== id) });
+        s.updateResume({
+          features: s.resume?.features?.filter((p: any) => p.id !== id),
+        });
       },
       education: (id) => {
         const s = useResumeStore.getState();
-        s.updateResume({ education: s.resume?.education?.filter((p: any) => p.id !== id) });
+        s.updateResume({
+          education: s.resume?.education?.filter((p: any) => p.id !== id),
+        });
       },
     }),
     [],
@@ -256,39 +276,42 @@ export function EditProfileDialog({
   // ---------------------------------------------------------------------------
   // Avatar
   // ---------------------------------------------------------------------------
-  const handleAvatarUpload = useCallback(async (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      toast.error('Please select an image file');
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Image must be under 5MB');
-      return;
-    }
-    const blobUrl = URL.createObjectURL(file);
-    setLocalPicture(blobUrl);
-    setIsUploadingPicture(true);
-    try {
-      const { url } = await uploadToS3(file, {
-        endpoint: { request: { url: '/api/s3-upload' } },
-      });
-      const res = await fetch('/api/user/avatar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url }),
-      });
-      if (!res.ok) throw new Error('Failed to save avatar');
-      setLocalPicture(url);
-      URL.revokeObjectURL(blobUrl);
-      toast.success('Profile picture updated');
-    } catch {
-      setLocalPicture(picture);
-      URL.revokeObjectURL(blobUrl);
-      toast.error('Failed to upload image');
-    } finally {
-      setIsUploadingPicture(false);
-    }
-  }, [uploadToS3, picture]);
+  const handleAvatarUpload = useCallback(
+    async (file: File) => {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please select an image file');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image must be under 5MB');
+        return;
+      }
+      const blobUrl = URL.createObjectURL(file);
+      setLocalPicture(blobUrl);
+      setIsUploadingPicture(true);
+      try {
+        const { url } = await uploadToS3(file, {
+          endpoint: { request: { url: '/api/s3-upload' } },
+        });
+        const res = await fetch('/api/user/avatar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url }),
+        });
+        if (!res.ok) throw new Error('Failed to save avatar');
+        setLocalPicture(url);
+        URL.revokeObjectURL(blobUrl);
+        toast.success('Profile picture updated');
+      } catch {
+        setLocalPicture(picture);
+        URL.revokeObjectURL(blobUrl);
+        toast.error('Failed to upload image');
+      } finally {
+        setIsUploadingPicture(false);
+      }
+    },
+    [uploadToS3, picture],
+  );
 
   const handleAvatarRemove = useCallback(async () => {
     setIsUploadingPicture(true);
@@ -367,28 +390,30 @@ export function EditProfileDialog({
     } finally {
       setIsSaving(false);
     }
-  }, [uname, username, updateUsernameMutation, saveResumeDataMutation, setHasUnsavedChanges, router]);
+  }, [
+    uname,
+    username,
+    updateUsernameMutation,
+    saveResumeDataMutation,
+    setHasUnsavedChanges,
+    router,
+  ]);
 
-  // ---------------------------------------------------------------------------
-  // DnD
-  // ---------------------------------------------------------------------------
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor),
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (over && active.id !== over.id) {
+        const oldIndex = sectionOrder.indexOf(active.id as string);
+        const newIndex = sectionOrder.indexOf(over.id as string);
+        const newOrder = arrayMove(sectionOrder, oldIndex, newIndex);
+
+        setSectionOrder(newOrder);
+        useResumeStore.getState().updateResume({ sectionOrder: newOrder });
+        setHasUnsavedChanges(true);
+      }
+    },
+    [sectionOrder, setHasUnsavedChanges],
   );
-
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      const oldIndex = sectionOrder.indexOf(active.id as string);
-      const newIndex = sectionOrder.indexOf(over.id as string);
-      const newOrder = arrayMove(sectionOrder, oldIndex, newIndex);
-      
-      setSectionOrder(newOrder);
-      useResumeStore.getState().updateResume({ sectionOrder: newOrder });
-      setHasUnsavedChanges(true);
-    }
-  }, [sectionOrder, setHasUnsavedChanges]);
 
   // ---------------------------------------------------------------------------
   // Render
@@ -412,205 +437,88 @@ export function EditProfileDialog({
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   aria-label="Edit Profile"
-                  style={{ position: 'fixed', bottom: '24px', left: '80px', zIndex: 50 }}
-                  className="size-[48px] rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center outline-none transition-colors"
+                  style={{
+                    position: 'fixed',
+                    bottom: '24px',
+                    left: '80px',
+                    zIndex: 50,
+                  }}
+                  className="flex size-[48px] items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm outline-none transition-colors"
                 >
-                  <Pencil className="h-[18px] w-[18px] text-[#111]" strokeWidth={1.5} />
+                  <Pencil
+                    className="h-[18px] w-[18px] text-[#111]"
+                    strokeWidth={1.5}
+                  />
                 </motion.button>
               </TooltipTrigger>
             </DialogTrigger>
             <TooltipContent
               side="top"
               sideOffset={12}
-              className="bg-[#111] text-white text-[13px] font-medium rounded-lg px-3 py-1.5 border-none shadow-md flex items-center gap-1.5"
+              className="flex items-center gap-1.5 rounded-lg border-none bg-[#111] px-3 py-1.5 text-[13px] font-medium text-white shadow-md"
             >
               <span>Edit profile</span>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
-        <DialogContent className="max-w-5xl h-[85vh] p-0 overflow-hidden flex flex-col sm:flex-row gap-0 bg-white overscroll-contain">
+        <DialogContent className="flex h-[85vh] max-w-5xl flex-col gap-0 overflow-hidden overscroll-contain bg-white p-0 sm:flex-row">
           <DialogTitle className="sr-only">Edit Profile</DialogTitle>
 
           {/* Sidebar */}
-          <div className={cn(
-            "w-full sm:w-64 border-r border-gray-100 bg-white flex-col h-full overflow-y-auto scrollbar-hide shrink-0 py-6",
-            showMobileMenu ? "flex" : "hidden sm:flex"
-          )}>
-            <div className="flex flex-col px-4 gap-1">
-              <div className="text-xs text-gray-400 font-semibold mt-4 mb-2 uppercase tracking-wider px-3">
-                Profile
-              </div>
-
-              <button
-                onClick={() => { setActiveTab('general'); setShowMobileMenu(false); }}
-                className={cn(
-                  'text-left px-3 py-2 rounded-md text-sm transition-colors',
-                  activeTab === 'general'
-                    ? 'bg-gray-100 text-gray-900'
-                    : 'text-gray-500 hover:bg-gray-50',
-                )}
-              >
-                General
-              </button>
-
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-              >
-                <SortableContext items={sectionOrder} strategy={verticalListSortingStrategy}>
-                  {sectionOrder.map((id) => {
-                    const def = TAB_DEFINITIONS[id];
-                    if (!def) return null;
-                    return (
-                      <SortableSidebarItem
-                        key={id}
-                        id={id}
-                        label={def.label}
-                        disabled={def.disabled}
-                        isActive={activeTab === id}
-                        onClick={() => { setActiveTab(id); setShowMobileMenu(false); }}
-                      />
-                    );
-                  })}
-                </SortableContext>
-              </DndContext>
-
-              <div className="text-xs text-gray-400 font-semibold mt-4 mb-2 uppercase tracking-wider px-3">
-                Account
-              </div>
-
-              <button
-                onClick={() => { setActiveTab('personal_domain'); setShowMobileMenu(false); }}
-                className={cn(
-                  'text-left px-3 py-2 rounded-md text-sm transition-colors',
-                  activeTab === 'personal_domain'
-                    ? 'bg-gray-100 text-gray-900'
-                    : 'text-gray-500 hover:bg-gray-50',
-                )}
-              >
-                Personal Domain
-              </button>
-              <button
-                onClick={() => { setActiveTab('print'); setShowMobileMenu(false); }}
-                className={cn(
-                  'text-left px-3 py-2 rounded-md text-sm transition-colors',
-                  activeTab === 'print'
-                    ? 'bg-gray-100 text-gray-900'
-                    : 'text-gray-500 hover:bg-gray-50',
-                )}
-              >
-                Print
-              </button>
-              <button
-                onClick={() => { setActiveTab('settings'); setShowMobileMenu(false); }}
-                className={cn(
-                  'text-left px-3 py-2 rounded-md text-sm transition-colors',
-                  activeTab === 'settings'
-                    ? 'bg-gray-100 text-gray-900'
-                    : 'text-gray-500 hover:bg-gray-50',
-                )}
-              >
-                Settings
-              </button>
-            </div>
-          </div>
+          <ProfileSidebar
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            setShowMobileMenu={setShowMobileMenu}
+            showMobileMenu={showMobileMenu}
+            sectionOrder={sectionOrder}
+            setSectionOrder={setSectionOrder}
+            tabDefinitions={TAB_DEFINITIONS}
+            onDragEnd={handleDragEnd}
+          />
 
           {/* Content Area */}
-          <div className={cn(
-            "flex-1 flex-col h-full bg-white relative",
-            !showMobileMenu ? "flex" : "hidden sm:flex"
-          )}>
-            <div className="flex-1 overflow-y-auto scrollbar-hide p-4 sm:p-8 md:p-12">
-              <div className="sm:hidden mb-6 flex items-center">
-                <button
-                  onClick={() => setShowMobileMenu(true)}
-                  className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
-                >
-                  <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-                  </svg>
-                  Back to Menu
-                </button>
-              </div>
-              {activeTab === 'general' && (
-                <GeneralTab
-                  initialUsername={username}
-                  localPicture={localPicture}
-                  isUploadingPicture={isUploadingPicture}
-                  handlePictureUpload={handlePictureUpload}
-                  removePicture={handleAvatarRemove}
-                />
-              )}
-              {activeTab === 'skills'       && <SkillsTab />}
-              {activeTab === 'projects'     && <ProjectsTab       years={years} setProjectToDelete={setDeleteProject} />}
-              {activeTab === 'side_projects'&& <SideProjectsTab   years={years} setProjectToDelete={setDeleteSideProject} />}
-              {activeTab === 'work'         && <WorkExperienceTab years={years} setProjectToDelete={setDeleteWork} />}
-              {activeTab === 'education'    && <EducationTab      years={years} setProjectToDelete={setDeleteEducation} />}
-              {activeTab === 'volunteering' && <VolunteeringTab   years={years} setProjectToDelete={setDeleteVolunteering} />}
-              {activeTab === 'speaking'     && <SpeakingTab       years={years} setProjectToDelete={setDeleteSpeaking} />}
-              {activeTab === 'features'     && <FeaturesTab       years={years} setProjectToDelete={setDeleteFeature} />}
-              {activeTab === 'contact'      && <ContactsTab               setProjectToDelete={setDeleteContact} />}
-
-              {activeTab === 'print' && <PrintTab />}
-
-              {activeTab === 'personal_domain' && <PersonalDomainTab username={username} />}
-
-              {activeTab === 'settings' && (
-                <div className="max-w-2xl mx-auto h-full flex flex-col pt-8">
-                  <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
-                    <h2 className="text-2xl font-bold text-gray-900">Settings</h2>
-                  </div>
-                  <div className="space-y-10">
-                    <div className="space-y-6">
-                      <div className="flex flex-col gap-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-red-200 bg-red-50/50 rounded-xl shadow-sm gap-4">
-                          <div className="space-y-1">
-                            <h4 className="text-red-900 font-semibold text-sm">Danger Zone</h4>
-                            <p className="text-red-600/80 text-xs">
-                              Permanently delete your account and all associated data. This action
-                              cannot be undone.
-                            </p>
-                          </div>
-                          <Button
-                            variant="destructive"
-                            onClick={() => setShowDeleteAccountWarning(true)}
-                            className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white rounded-md shadow-sm whitespace-nowrap px-6"
-                          >
-                            Delete Account
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Bottom action bar */}
-            {!isEditingTab && (
-              <div className="flex-none p-4 md:px-8 border-t border-gray-100 bg-white">
-                <div className="flex justify-end">
-                  <Button
-                    onClick={handleGlobalSave}
-                    disabled={isSaving || !isValidUname || checkUsernameMutation.isPending}
-                    className="bg-[#2A2A2A] hover:bg-[#1A1A1A] text-white h-9 px-6 rounded-md shadow-sm border-none font-medium"
-                  >
-                    {isSaving ? 'Saving…' : 'Done'}
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
+          <ProfileContent
+            activeTab={activeTab}
+            showMobileMenu={showMobileMenu}
+            setShowMobileMenu={setShowMobileMenu}
+            username={username}
+            localPicture={localPicture}
+            isUploadingPicture={isUploadingPicture}
+            isEditingTab={isEditingTab}
+            isSaving={isSaving}
+            isValidUname={isValidUname}
+            checkUsernameMutationIsPending={checkUsernameMutation.isPending}
+            years={years}
+            setProjectToDelete={(type) => (id) => {
+              const handlers: Record<string, (id: string) => void> = {
+                project: setDeleteProject,
+                sideProject: setDeleteSideProject,
+                speaking: setDeleteSpeaking,
+                work: setDeleteWork,
+                education: setDeleteEducation,
+                volunteering: setDeleteVolunteering,
+                feature: setDeleteFeature,
+                contact: setDeleteContact,
+              };
+              return handlers[type]?.(id);
+            }}
+            handlePictureUpload={handlePictureUpload}
+            removePicture={handleAvatarRemove}
+            onSave={handleGlobalSave}
+            onDeleteAccount={handleDeleteAccount}
+            setShowDeleteAccountWarning={setShowDeleteAccountWarning}
+          />
         </DialogContent>
       </Dialog>
 
-      {/* Delete item confirmation */}
+      {/* Dialogs */}
       <DeleteConfirmDialog
         open={!!pendingDelete}
         onOpenChange={(open) => !open && setPendingDelete(null)}
-        description={pendingDelete ? DELETE_DESCRIPTIONS[pendingDelete.type] : ''}
+        description={
+          pendingDelete ? DELETE_DESCRIPTIONS[pendingDelete.type] : ''
+        }
         onConfirm={() => {
           if (pendingDelete) {
             DELETE_HANDLERS[pendingDelete.type](pendingDelete.id);
@@ -620,7 +528,6 @@ export function EditProfileDialog({
         isLoading={isSaving}
       />
 
-      {/* Delete account confirmation */}
       <DeleteConfirmDialog
         open={showDeleteAccountWarning}
         onOpenChange={setShowDeleteAccountWarning}
@@ -631,35 +538,16 @@ export function EditProfileDialog({
         loadingLabel="Deleting…"
       />
 
-      {/* Unsaved changes warning */}
-      <AlertDialog open={showUnsavedWarning} onOpenChange={setShowUnsavedWarning}>
-        <AlertDialogContent className="max-w-sm rounded-xl p-6">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-bold text-gray-900">
-              Unsaved changes
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-sm text-gray-500 mt-2">
-              You have unsaved changes, leave anyway?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="mt-6 flex gap-2 sm:justify-end">
-            <AlertDialogCancel className="rounded-md px-5 border border-gray-200 bg-white hover:bg-gray-50 h-9 text-sm font-medium text-gray-700 m-0">
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                setHasUnsavedChanges(false);
-                setShowUnsavedWarning(false);
-                setOpen(false);
-                initResume(resume, username);
-              }}
-              className="rounded-md px-5 bg-gray-900 hover:bg-black text-white h-9 text-sm font-medium border-none m-0"
-            >
-              Leave anyway
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <UnsavedChangesDialog
+        open={showUnsavedWarning}
+        onOpenChange={setShowUnsavedWarning}
+        onLeaveAnyway={() => {
+          setHasUnsavedChanges(false);
+          setShowUnsavedWarning(false);
+          setOpen(false);
+          initResume(resume, username);
+        }}
+      />
     </>
   );
 }

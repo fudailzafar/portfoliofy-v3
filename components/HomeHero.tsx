@@ -21,16 +21,29 @@ export function HomeHero() {
 
   return (
     <>
-      <div className="flex flex-col mb-8">
-        <h1 className="text-[20px] md:text-[24px] font-normal tracking-tight leading-[1.3] text-gray-900 mb-8">
-          <strong translate="no">Portfoliofy</strong> is a <a href="https://web.dev/progressive-web-apps/" className="text-inherit no-underline hover:text-inherit cursor-text">progressive platform</a> used by
-          thousands of people to create more <a href="https://en.wikipedia.org/wiki/Mindfulness" className="text-inherit no-underline hover:text-inherit cursor-text">mindful</a> professional profiles.
+      <div className="mb-8 flex flex-col">
+        <h1 className="mb-8 text-[20px] font-normal leading-[1.3] tracking-tight text-gray-900 md:text-[24px]">
+          <strong translate="no">Portfoliofy</strong> is a{' '}
+          <a
+            href="https://web.dev/progressive-web-apps/"
+            className="cursor-text text-inherit no-underline hover:text-inherit"
+          >
+            progressive platform
+          </a>{' '}
+          used by thousands of people to create more{' '}
+          <a
+            href="https://en.wikipedia.org/wiki/Mindfulness"
+            className="cursor-text text-inherit no-underline hover:text-inherit"
+          >
+            mindful
+          </a>{' '}
+          professional profiles.
         </h1>
 
         <div className="flex justify-end">
           <Button
             onClick={handleCreateProfile}
-            className="bg-[#111] text-white hover:bg-black rounded-md h-12 px-8 text-[16px] font-medium tracking-wide"
+            className="h-12 rounded-md bg-[#111] px-8 text-[16px] font-medium tracking-wide text-white hover:bg-black"
           >
             Create a profile
           </Button>

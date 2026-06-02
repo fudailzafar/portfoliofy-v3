@@ -2,3 +2,7 @@
 // NOTE: Server components must import EditProfileDialog directly from its file
 // to preserve the 'use client' boundary. This barrel is for client-to-client imports only.
 export { EditProfileDialog } from './EditProfileDialog';
+export { ProfileSidebar } from './ProfileSidebar';
+export { ProfileContent } from './ProfileContent';
+export { SidebarButton } from './SidebarButton';
+export { SortableSidebarItem } from './SortableSidebarItem';

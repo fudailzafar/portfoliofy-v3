@@ -5,15 +5,19 @@ import { unstable_cache } from 'next/cache';
 export interface UserProfile {
   name: string | null;
   email: string | null;
-  image: string | null;       // Google OAuth photo (fallback)
+  image: string | null; // Google OAuth photo (fallback)
   customImage?: string | null; // User-uploaded S3 photo (takes priority)
   avatarUrl?: string | null;
 }
 
-export const getCachedUserProfile = async (userId: string): Promise<UserProfile | null> => {
+export const getCachedUserProfile = async (
+  userId: string,
+): Promise<UserProfile | null> => {
   return unstable_cache(
     async () => {
-      const profile = await upstashRedis.get<UserProfile>(`user:profile:${userId}`);
+      const profile = await upstashRedis.get<UserProfile>(
+        `user:profile:${userId}`,
+      );
       if (profile) {
         profile.avatarUrl = profile.customImage ?? profile.image ?? undefined;
       }
@@ -40,7 +44,9 @@ export const getCachedResume = async (userId: string) => {
   )();
 };
 
-export const getCachedUserIdByUsername = async (username: string): Promise<string | null> => {
+export const getCachedUserIdByUsername = async (
+  username: string,
+): Promise<string | null> => {
   return unstable_cache(
     async () => {
       return await getUserIdByUsername(username);

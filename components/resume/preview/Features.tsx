@@ -9,8 +9,8 @@ export function Features({
 
   return (
     <section className="mb-12 print:mb-8">
-      <h2 
-        className="text-sm font-bold mb-8 print:mb-4 text-theme-primary" 
+      <h2
+        className="mb-8 text-sm font-bold text-theme-primary print:mb-4"
         id="features-section"
       >
         Features
@@ -23,22 +23,26 @@ export function Features({
         {features.map((feature) => (
           <div
             key={feature.id || feature.title}
-            className="flex flex-col sm:flex-row gap-4 sm:gap-12 print:mb-6"
+            className="flex flex-col gap-4 sm:flex-row sm:gap-12 print:mb-6"
           >
             {/* Left column: Year */}
-            <div className="sm:w-32 shrink-0 text-theme-secondary text-sm pt-0.5">
+            <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-32">
               {feature.year}
             </div>
 
             {/* Right column: Content */}
-            <div className="flex-1 flex flex-col justify-start items-start">
-              <div className="flex items-center gap-1 group">
+            <div className="flex flex-1 flex-col items-start justify-start">
+              <div className="group flex items-center gap-1">
                 {feature.link ? (
-                  <a 
-                    href={feature.link.startsWith('http') ? feature.link : `https://${feature.link}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="hover:underline text-theme-primary"
+                  <a
+                    href={
+                      feature.link.startsWith('http')
+                        ? feature.link
+                        : `https://${feature.link}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-theme-primary hover:underline"
                   >
                     <span className="text-sm font-semibold">
                       {feature.title}
@@ -53,7 +57,7 @@ export function Features({
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="inline-block ml-1 w-4 h-4 relative -top-0.5"
+                        className="relative -top-0.5 ml-1 inline-block h-4 w-4"
                       >
                         <path d="M7 17L17 7M7 7h10v10" />
                       </svg>
@@ -66,10 +70,10 @@ export function Features({
                   </p>
                 )}
               </div>
-              
+
               {feature.description && feature.description !== '<p></p>' && (
                 <div
-                  className="mt-2 text-sm text-theme-secondary prose prose-sm max-w-none leading-relaxed prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary"
+                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-2 max-w-none text-sm leading-relaxed text-theme-secondary"
                   dangerouslySetInnerHTML={{ __html: feature.description }}
                 />
               )}

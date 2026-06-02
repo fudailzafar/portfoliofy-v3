@@ -17,7 +17,7 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-sm p-8 gap-0 font-sans">
+      <DialogContent className="gap-0 p-8 font-sans sm:max-w-sm">
         <DialogTitle className="sr-only">
           {mode === 'login'
             ? 'Login to your account﻿ 👋'
@@ -35,12 +35,12 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
             >
               {/* Header */}
               <div className="flex flex-col gap-1.5">
-                <h2 className="text-lg font-medium text-gray-900 tracking-tight">
+                <h2 className="text-lg font-medium tracking-tight text-gray-900">
                   {mode === 'login'
                     ? 'Login to your account﻿ 👋'
                     : 'Create a new profile ✨'}
                 </h2>
-                <p className="text-[14px] text-gray-500 leading-snug">
+                <p className="text-[14px] leading-snug text-gray-500">
                   By continuing you agree to our terms of service and privacy
                   policy.
                 </p>
@@ -50,7 +50,7 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={handleGoogleSignIn}
-                className="w-full flex items-center justify-center gap-3 h-11 px-4 bg-white border border-gray-200 rounded-md text-sm font-medium text-gray-800 hover:bg-gray-50 transition-colors shadow-sm outline-none"
+                className="flex h-11 w-full items-center justify-center gap-3 rounded-md border border-gray-200 bg-white px-4 text-sm font-medium text-gray-800 shadow-sm outline-none transition-colors hover:bg-gray-50"
               >
                 {/* Google SVG Icon */}
                 <svg

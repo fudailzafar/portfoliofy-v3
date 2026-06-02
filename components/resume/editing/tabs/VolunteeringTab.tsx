@@ -3,20 +3,33 @@ import { useResumeStore } from '@/store/useResumeStore';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Upload, Download, HeartHandshake } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { sortByDateDesc } from '@/lib/resume';
 
-export function VolunteeringTab({ 
-  years, 
-  setProjectToDelete 
-}: { 
-  years: number[], 
-  setProjectToDelete: (id: string) => void 
+export function VolunteeringTab({
+  years,
+  setProjectToDelete,
+}: {
+  years: number[];
+  setProjectToDelete: (id: string) => void;
 }) {
   const { resume, updateResume, setIsEditingTab } = useResumeStore();
-  const [volunteeringView, setVolunteeringView] = useState<'list' | 'form'>('list');
+  const [volunteeringView, setVolunteeringView] = useState<'list' | 'form'>(
+    'list',
+  );
 
   useEffect(() => {
     setIsEditingTab(volunteeringView === 'form');
@@ -28,15 +41,18 @@ export function VolunteeringTab({
   const volunteering = resume.volunteering || [];
 
   const handleSave = () => {
-    if (!currentVolunteering?.role || !currentVolunteering?.organization) return;
-    
+    if (!currentVolunteering?.role || !currentVolunteering?.organization)
+      return;
+
     const isEdit = !!currentVolunteering.id;
     const newItem = isEdit
       ? currentVolunteering
       : { ...currentVolunteering, id: Date.now().toString() };
 
     const newItems = isEdit
-      ? volunteering.map((p: any) => (p.id === currentVolunteering.id ? newItem : p))
+      ? volunteering.map((p: any) =>
+          p.id === currentVolunteering.id ? newItem : p,
+        )
       : [...volunteering, newItem];
 
     updateResume({ volunteering: newItems });
@@ -48,7 +64,7 @@ export function VolunteeringTab({
     const newItems = [...volunteering];
     const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
     const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
-    
+
     if (idx1 !== -1 && idx2 !== -1) {
       [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
       updateResume({ volunteering: newItems });
@@ -56,8 +72,8 @@ export function VolunteeringTab({
   };
 
   return (
-    <div className="max-w-3xl mx-auto h-full flex flex-col">
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+    <div className="mx-auto flex h-full max-w-3xl flex-col">
+      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
         <h2 className="text-2xl font-bold">Volunteering</h2>
         {volunteeringView === 'list' && (
           <Button
@@ -73,25 +89,24 @@ export function VolunteeringTab({
               });
               setVolunteeringView('form');
             }}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none h-8 text-xs px-4 rounded-md"
+            className="h-8 rounded-md border-none bg-gray-100 px-4 text-xs text-gray-900 hover:bg-gray-200"
           >
             Add volunteering
           </Button>
         )}
-
       </div>
 
       {volunteeringView === 'list' && volunteering.length === 0 && (
-        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 opacity-80 mt-12">
-          <div className="p-8 bg-gray-50 rounded-full">
+        <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
+          <div className="rounded-full bg-gray-50 p-8">
             <HeartHandshake
-              className="w-16 h-16 text-gray-400"
+              className="h-16 w-16 text-gray-400"
               strokeWidth={1}
             />
           </div>
           <Button
             variant="secondary"
-            className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none rounded-md px-6 py-5 h-auto text-sm"
+            className="h-auto rounded-md border-none bg-gray-100 px-6 py-5 text-sm text-gray-900 hover:bg-gray-200"
             onClick={() => {
               setCurrentVolunteering({
                 role: '',
@@ -111,87 +126,103 @@ export function VolunteeringTab({
 
       {volunteeringView === 'list' && volunteering.length > 0 && (
         <div className="space-y-8">
-          {sortByDateDesc(volunteering).map((v: any, index: number, sortedArray: any[]) => {
-            const prevItem = index > 0 ? sortedArray[index - 1] : null;
-            const canMoveUp = prevItem && parseInt(v.startYear || '0') === parseInt(prevItem.startYear || '0');
-            const nextItem = index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
-            const canMoveDown = nextItem && parseInt(v.startYear || '0') === parseInt(nextItem.startYear || '0');
-            
-            return (
-            <div
-              key={v.id}
-              className="flex flex-col sm:flex-row gap-4 sm:gap-12"
-            >
-              <div className="sm:w-24 shrink-0 text-gray-400 text-sm pt-0.5">
-                {v.startYear} — {v.endYear}
-              </div>
+          {sortByDateDesc(volunteering).map(
+            (v: any, index: number, sortedArray: any[]) => {
+              const prevItem = index > 0 ? sortedArray[index - 1] : null;
+              const canMoveUp =
+                prevItem &&
+                parseInt(v.startYear || '0') ===
+                  parseInt(prevItem.startYear || '0');
+              const nextItem =
+                index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
+              const canMoveDown =
+                nextItem &&
+                parseInt(v.startYear || '0') ===
+                  parseInt(nextItem.startYear || '0');
 
-              <div className="flex-1 flex flex-col justify-start items-start">
-                <p className="text-base font-semibold text-gray-900">
-                  {v.role} at {v.organization}
-                </p>
-                {v.location && (
-                  <p className="text-sm text-gray-500 mt-0.5">
-                    {v.location}
-                  </p>
-                )}
+              return (
+                <div
+                  key={v.id}
+                  className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+                >
+                  <div className="shrink-0 pt-0.5 text-sm text-gray-400 sm:w-24">
+                    {v.startYear} — {v.endYear}
+                  </div>
 
-                <div className="flex items-center gap-4 mt-3 text-xs font-medium text-gray-400">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCurrentVolunteering(v);
-                      setVolunteeringView('form');
-                    }}
-                    className="hover:text-gray-900 transition-colors"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setProjectToDelete(v.id)}
-                    className="hover:text-red-600 transition-colors"
-                  >
-                    Delete
-                  </button>
-                  {canMoveUp && (
-                    <TooltipProvider delayDuration={0}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            onClick={() => handleMoveUp(v, prevItem)}
-                            className="hover:text-gray-900 transition-colors"
-                          >
-                            <Upload className="w-[15px] h-[15px]" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="bg-[#111] text-white text-xs px-2.5 py-1.5 rounded-md border-none font-medium mb-1">
-                          Move up
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
-                  {canMoveDown && (
-                    <TooltipProvider delayDuration={0}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            onClick={() => handleMoveUp(v, nextItem)}
-                            className="hover:text-gray-900 transition-colors"
-                          >
-                            <Download className="w-[15px] h-[15px]" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="bg-[#111] text-white text-xs px-2.5 py-1.5 rounded-md border-none font-medium mb-1">
-                          Move down
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
+                  <div className="flex flex-1 flex-col items-start justify-start">
+                    <p className="text-base font-semibold text-gray-900">
+                      {v.role} at {v.organization}
+                    </p>
+                    {v.location && (
+                      <p className="mt-0.5 text-sm text-gray-500">
+                        {v.location}
+                      </p>
+                    )}
+
+                    <div className="mt-3 flex items-center gap-4 text-xs font-medium text-gray-400">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCurrentVolunteering(v);
+                          setVolunteeringView('form');
+                        }}
+                        className="transition-colors hover:text-gray-900"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setProjectToDelete(v.id)}
+                        className="transition-colors hover:text-red-600"
+                      >
+                        Delete
+                      </button>
+                      {canMoveUp && (
+                        <TooltipProvider delayDuration={0}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                onClick={() => handleMoveUp(v, prevItem)}
+                                className="transition-colors hover:text-gray-900"
+                              >
+                                <Upload className="h-[15px] w-[15px]" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent
+                              side="top"
+                              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white"
+                            >
+                              Move up
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                      {canMoveDown && (
+                        <TooltipProvider delayDuration={0}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                onClick={() => handleMoveUp(v, nextItem)}
+                                className="transition-colors hover:text-gray-900"
+                              >
+                                <Download className="h-[15px] w-[15px]" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent
+                              side="top"
+                              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white"
+                            >
+                              Move down
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          )})}
+              );
+            },
+          )}
         </div>
       )}
 
@@ -314,11 +345,13 @@ export function VolunteeringTab({
             </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 p-4 md:px-8 border-t border-gray-100 bg-white flex justify-end z-10">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end border-t border-gray-100 bg-white p-4 md:px-8">
             <Button
               onClick={handleSave}
-              disabled={!currentVolunteering?.role || !currentVolunteering?.organization}
-              className="bg-[#2A2A2A] hover:bg-[#1A1A1A] text-white h-9 px-6 rounded-md shadow-sm border-none font-medium"
+              disabled={
+                !currentVolunteering?.role || !currentVolunteering?.organization
+              }
+              className="h-9 rounded-md border-none bg-[#2A2A2A] px-6 font-medium text-white shadow-sm hover:bg-[#1A1A1A]"
             >
               Save
             </Button>

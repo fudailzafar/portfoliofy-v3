@@ -91,9 +91,14 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-  
+
   /* UI/UX Rules: Accessibility & Interaction */
-  a, button, input, select, textarea, [role="button"] {
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  [role='button'] {
     touch-action: manipulation;
   }
 
@@ -111,9 +116,10 @@ body {
   }
 }
 
-
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
+  *,
+  ::before,
+  ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -121,10 +127,19 @@ body {
   }
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   scroll-margin-top: 4rem;
 }
 
-table, th, td, .tabular-nums, input[type='number'] {
+table,
+th,
+td,
+.tabular-nums,
+input[type='number'] {
   font-variant-numeric: tabular-nums;
 }

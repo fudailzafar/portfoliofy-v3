@@ -1,4 +1,9 @@
-import { getCachedUserProfile, getCachedUserIdByUsername, getCachedResume, UserProfile } from '@/lib/server/cachedFunctions';
+import {
+  getCachedUserProfile,
+  getCachedUserIdByUsername,
+  getCachedResume,
+  UserProfile,
+} from '@/lib/server/cachedFunctions';
 
 export async function getUserData(username: string) {
   const user_id = await getCachedUserIdByUsername(username);

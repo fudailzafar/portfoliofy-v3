@@ -6,13 +6,19 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { MessageCircle, ArrowUpRight } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { buildContactUrl, extractUsername } from '@/utils/extractUsername';
 
-export function ContactsTab({ 
-  setProjectToDelete 
-}: { 
-  setProjectToDelete: (id: string) => void 
+export function ContactsTab({
+  setProjectToDelete,
+}: {
+  setProjectToDelete: (id: string) => void;
 }) {
   const { resume, updateResume, setIsEditingTab } = useResumeStore();
   const [view, setView] = useState<'list' | 'form'>('list');
@@ -44,8 +50,8 @@ export function ContactsTab({
   };
 
   return (
-    <div className="max-w-3xl mx-auto h-full flex flex-col">
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+    <div className="mx-auto flex h-full max-w-3xl flex-col">
+      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
         <h2 className="text-2xl font-bold">Contact</h2>
         {view === 'list' && (
           <Button
@@ -59,7 +65,7 @@ export function ContactsTab({
               });
               setView('form');
             }}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none h-8 text-xs px-4 rounded-md"
+            className="h-8 rounded-md border-none bg-gray-100 px-4 text-xs text-gray-900 hover:bg-gray-200"
           >
             Add link
           </Button>
@@ -67,13 +73,16 @@ export function ContactsTab({
       </div>
 
       {view === 'list' && items.length === 0 && (
-        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 opacity-80 mt-12">
-          <div className="p-8 bg-gray-50 rounded-full">
-            <MessageCircle className="w-16 h-16 text-gray-400" strokeWidth={1} />
+        <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
+          <div className="rounded-full bg-gray-50 p-8">
+            <MessageCircle
+              className="h-16 w-16 text-gray-400"
+              strokeWidth={1}
+            />
           </div>
           <Button
             variant="secondary"
-            className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none rounded-md px-6 py-5 h-auto text-sm"
+            className="h-auto rounded-md border-none bg-gray-100 px-6 py-5 text-sm text-gray-900 hover:bg-gray-200"
             onClick={() => {
               setCurrent({
                 platform: '',
@@ -94,26 +103,26 @@ export function ContactsTab({
           {items.map((c: any) => (
             <div
               key={c.id || c.platform}
-              className="flex flex-col sm:flex-row gap-4 sm:gap-12"
+              className="flex flex-col gap-4 sm:flex-row sm:gap-12"
             >
-              <div className="sm:w-32 shrink-0 text-gray-400 text-sm pt-0.5">
+              <div className="shrink-0 pt-0.5 text-sm text-gray-400 sm:w-32">
                 {c.platform}
               </div>
 
-              <div className="flex-1 flex flex-col justify-start items-start">
+              <div className="flex flex-1 flex-col items-start justify-start">
                 <a
                   href={buildContactUrl(c.link, c.platform)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:underline inline-block"
+                  className="inline-block hover:underline"
                 >
                   <span className="text-base font-semibold text-gray-900">
                     {extractUsername(c.link, c.platform)}
-                    <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-gray-900 relative -top-0.5" />
+                    <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-gray-900" />
                   </span>
                 </a>
 
-                <div className="flex items-center gap-4 mt-3 text-xs font-medium text-gray-400">
+                <div className="mt-3 flex items-center gap-4 text-xs font-medium text-gray-400">
                   <button
                     onClick={() => {
                       setCurrent({
@@ -136,13 +145,13 @@ export function ContactsTab({
                       });
                       setView('form');
                     }}
-                    className="hover:text-gray-900 transition-colors"
+                    className="transition-colors hover:text-gray-900"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => setProjectToDelete(c.id)}
-                    className="hover:text-red-600 transition-colors"
+                    className="transition-colors hover:text-red-600"
                   >
                     Delete
                   </button>
@@ -157,7 +166,7 @@ export function ContactsTab({
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-gray-500 text-[13px]">Type*</Label>
+              <Label className="text-[13px] text-gray-500">Type*</Label>
               <Select
                 value={current.type || 'Custom'}
                 onValueChange={(val) => {
@@ -172,7 +181,7 @@ export function ContactsTab({
                   });
                 }}
               >
-                <SelectTrigger className="bg-[#f4f4f4] border-0 h-10 shadow-none text-[14px]">
+                <SelectTrigger className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -199,7 +208,7 @@ export function ContactsTab({
 
             {current.type === 'Custom' ? (
               <div className="space-y-2">
-                <Label className="text-gray-500 text-[13px]">
+                <Label className="text-[13px] text-gray-500">
                   Name of platform*
                 </Label>
                 <Input
@@ -211,13 +220,13 @@ export function ContactsTab({
                     })
                   }
                   disabled={current.type !== 'Custom'}
-                  className="bg-[#f4f4f4] border-0 h-10 shadow-none text-[14px] disabled:opacity-50"
+                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none disabled:opacity-50"
                 />
               </div>
             ) : null}
 
             <div className="space-y-2">
-              <Label className="text-gray-500 text-[13px]">Username*</Label>
+              <Label className="text-[13px] text-gray-500">Username*</Label>
               <Input
                 value={current.username || ''}
                 onChange={(e) => {
@@ -228,12 +237,12 @@ export function ContactsTab({
                     link: buildContactUrl(newUsername, current.platform || ''),
                   });
                 }}
-                className="bg-[#f4f4f4] border-0 h-10 shadow-none text-[14px]"
+                className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-gray-500 text-[13px]">URL*</Label>
+              <Label className="text-[13px] text-gray-500">URL*</Label>
               <Input
                 value={current.link || ''}
                 onChange={(e) => {
@@ -244,17 +253,19 @@ export function ContactsTab({
                     username: extractUsername(newUrl, current.platform || ''),
                   });
                 }}
-                disabled={current.type !== 'Custom' && current.type !== 'Website'}
-                className="bg-[#f4f4f4] border-0 h-10 shadow-none text-[14px] disabled:opacity-50"
+                disabled={
+                  current.type !== 'Custom' && current.type !== 'Website'
+                }
+                className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none disabled:opacity-50"
               />
             </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 p-4 md:px-8 border-t border-gray-100 bg-white flex justify-end z-10">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end border-t border-gray-100 bg-white p-4 md:px-8">
             <Button
               onClick={handleSave}
               disabled={!current.platform || !current.link}
-              className="bg-[#2A2A2A] hover:bg-[#1A1A1A] text-white h-9 px-6 rounded-md shadow-sm border-none font-medium"
+              className="h-9 rounded-md border-none bg-[#2A2A2A] px-6 font-medium text-white shadow-sm hover:bg-[#1A1A1A]"
             >
               Save
             </Button>

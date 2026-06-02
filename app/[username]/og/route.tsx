@@ -122,7 +122,9 @@ export async function GET(request: NextRequest) {
             }}
           >
             <img
-              src={profileImageUrl || `${request.nextUrl.origin}/placeholder.svg`}
+              src={
+                profileImageUrl || `${request.nextUrl.origin}/placeholder.svg`
+              }
               alt="Profile"
               style={{
                 width: '360px',
