@@ -52,7 +52,7 @@ export function ClientLayoutWrapper({
     <TooltipProvider delayDuration={0}>
       <div className="relative flex min-h-screen w-full overflow-x-hidden bg-white font-sans">
         {/* Fixed Sidebar Underneath */}
-        <div className="fixed left-0 top-0 z-0 h-full w-[260px]">
+        <div className="fixed left-0 top-0 z-0 h-full w-[260px] print:hidden">
           <GlobalSidebar />
         </div>
 
@@ -66,7 +66,7 @@ export function ClientLayoutWrapper({
             stiffness: 300,
             damping: 30,
           }}
-          className={`relative z-10 flex min-h-screen flex-1 flex-col bg-white ${isOpen ? 'shadow-[-20px_0_40px_-10px_rgba(0,0,0,0.05)]' : ''}`}
+          className={`relative z-10 flex min-h-screen flex-1 flex-col bg-white print:!transform-none print:shadow-none ${isOpen ? 'shadow-[-20px_0_40px_-10px_rgba(0,0,0,0.05)]' : ''}`}
         >
           {children}
         </motion.div>
