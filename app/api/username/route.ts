@@ -1,4 +1,4 @@
-import { getUsernameById, updateUsername } from '@/lib/server/redisActions';
+import { getUsernameById, updateUsername } from '@/lib/server/dbActions';
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
