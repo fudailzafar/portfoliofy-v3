@@ -6,7 +6,13 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
-const RichTextEditor = dynamic(() => import('@/components/ui/rich-text-editor').then(mod => mod.RichTextEditor), { ssr: false });
+const RichTextEditor = dynamic(
+  () =>
+    import('@/components/ui/rich-text-editor').then(
+      (mod) => mod.RichTextEditor,
+    ),
+  { ssr: false },
+);
 import { useUserActions } from '@/hooks/useUserActions';
 
 export function GeneralTab({

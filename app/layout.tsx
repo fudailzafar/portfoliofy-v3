@@ -95,73 +95,73 @@ export default function RootLayout({
 
   return (
     <SessionProviderWrapper>
-        <ReactQueryClientProvider>
-          <html
-            lang="en"
-            className={`${graphik.variable} ${signifier.variable} ${diatypeMono.variable}`}
-          >
-            <head>
-              <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                  __html: JSON.stringify({
-                    '@context': 'https://schema.org',
-                    '@type': 'Organization',
-                    url: 'https://portfoliofy.me',
-                    logo: 'https://portfoliofy.me/logo.png',
-                    name: 'Portfoliofy',
-                    description:
-                      'Portfoliofy is a progressive platform for mindful professional profiles.',
-                    dateModified: new Date().toISOString(),
-                  }),
-                }}
-              />
-              <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                  __html: JSON.stringify({
-                    '@context': 'https://schema.org',
-                    '@type': 'FAQPage',
-                    mainEntity: [
-                      {
-                        '@type': 'Question',
-                        name: 'What is Portfoliofy?',
-                        acceptedAnswer: {
-                          '@type': 'Answer',
-                          text: 'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
-                        },
+      <ReactQueryClientProvider>
+        <html
+          lang="en"
+          className={`${graphik.variable} ${signifier.variable} ${diatypeMono.variable}`}
+        >
+          <head>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  '@context': 'https://schema.org',
+                  '@type': 'Organization',
+                  url: 'https://portfoliofy.me',
+                  logo: 'https://portfoliofy.me/logo.png',
+                  name: 'Portfoliofy',
+                  description:
+                    'Portfoliofy is a progressive platform for mindful professional profiles.',
+                  dateModified: new Date().toISOString(),
+                }),
+              }}
+            />
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  '@context': 'https://schema.org',
+                  '@type': 'FAQPage',
+                  mainEntity: [
+                    {
+                      '@type': 'Question',
+                      name: 'What is Portfoliofy?',
+                      acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
                       },
-                      {
-                        '@type': 'Question',
-                        name: 'How do I create a profile?',
-                        acceptedAnswer: {
-                          '@type': 'Answer',
-                          text: 'You can create a profile by signing up and using our intuitive editor to craft your mindful professional profile in minutes.',
-                        },
+                    },
+                    {
+                      '@type': 'Question',
+                      name: 'How do I create a profile?',
+                      acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'You can create a profile by signing up and using our intuitive editor to craft your mindful professional profile in minutes.',
                       },
-                    ],
-                  }),
-                }}
-              />
-              {/* rest of your scripts go under */}
-              <Script
-                src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-                strategy="afterInteractive"
-              />
-              <Script id="google-analytics" strategy="afterInteractive">
-                {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${gaId}');`}
-              </Script>
-            </head>
-            <body className="light flex min-h-screen flex-col font-sans antialiased">
-              <main className="flex flex-1 flex-col">
-                <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
-                <SpeedInsights />
-                <Analytics />
-              </main>
-              <Toaster richColors position="top-right" />
-            </body>
-          </html>
-        </ReactQueryClientProvider>
+                    },
+                  ],
+                }),
+              }}
+            />
+            {/* rest of your scripts go under */}
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${gaId}');`}
+            </Script>
+          </head>
+          <body className="light flex min-h-screen flex-col font-sans antialiased">
+            <main className="flex flex-1 flex-col">
+              <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+              <SpeedInsights />
+              <Analytics />
+            </main>
+            <Toaster richColors position="top-right" />
+          </body>
+        </html>
+      </ReactQueryClientProvider>
     </SessionProviderWrapper>
   );
 }
