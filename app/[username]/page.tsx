@@ -1,12 +1,12 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { FullResume } from '@/components/resume/FullResume';
-import { PrintResumeWrapper } from '@/components/resume/PrintResumeWrapper';
+import { FullResume } from '@/app/[username]/_components/resume/FullResume';
+import { PrintResumeWrapper } from '@/app/[username]/_components/resume/PrintResumeWrapper';
 import { Metadata } from 'next';
 import { getUserData } from './utils';
 import { Button } from '@/components/ui/button';
 import { auth } from '@/auth';
-import { EditProfileDialog } from '@/components/resume/editing/EditProfileDialog';
+import { EditProfileDialog } from '@/app/[username]/_components/resume/editing/EditProfileDialog';
 
 export async function generateMetadata({
   params,

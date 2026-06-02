@@ -1,6 +1,6 @@
 import React from 'react';
-import { ResumeData } from '../../lib/server/redisActions';
-import { sortByDateDesc } from '../../lib/resume';
+import { ResumeData } from '@/lib/server/redisActions';
+import { sortByDateDesc } from '@/lib/resume';
 import { cn } from '@/lib/utils';
 
 export const PrintResume = ({
