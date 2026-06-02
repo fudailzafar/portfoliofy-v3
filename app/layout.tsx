@@ -4,7 +4,6 @@ import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryClientProvider } from '@/components/ReactQueryClientProvider';
 import { Metadata, Viewport } from 'next';
-import PlausibleProvider from 'next-plausible';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
@@ -96,7 +95,6 @@ export default function RootLayout({
 
   return (
     <SessionProviderWrapper>
-      <PlausibleProvider domain="portfoliofy.me">
         <ReactQueryClientProvider>
           <html
             lang="en"
@@ -164,7 +162,6 @@ export default function RootLayout({
             </body>
           </html>
         </ReactQueryClientProvider>
-      </PlausibleProvider>
     </SessionProviderWrapper>
   );
 }
