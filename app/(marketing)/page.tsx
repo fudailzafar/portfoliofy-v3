@@ -87,12 +87,7 @@ export default function Home() {
             <div className="mb-8">
               <h3 className="mb-1.5 text-[17px] font-bold">Clean & Minimal</h3>
               <p className="text-[15px] leading-snug text-gray-500">
-                <a
-                  href="/preview"
-                  className="cursor-text text-inherit no-underline hover:text-inherit"
-                >
-                  Profiles
-                </a>{' '}
+                Profiles{' '}
                 are designed to be distraction-free, with optimized typography
                 and only the relevant{' '}
                 <a
