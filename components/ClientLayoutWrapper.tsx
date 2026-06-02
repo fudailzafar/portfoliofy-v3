@@ -78,7 +78,7 @@ export function ClientLayoutWrapper({
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
           <Tooltip>
-            <TooltipTrigger asChild>
+            <TooltipTrigger asChild className="print:hidden">
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(!isOpen)}
