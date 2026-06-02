@@ -19,7 +19,7 @@ import { Pencil } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { DragEndEvent, arrayMove } from '@dnd-kit/sortable';
-import { ResumeData } from '@/lib/server/redisActions';
+import { ResumeData } from '@/lib/server/dbActions';
 import { useUserActions } from '@/hooks/useUserActions';
 import { useS3Upload } from 'next-s3-upload';
 import { toast } from 'sonner';

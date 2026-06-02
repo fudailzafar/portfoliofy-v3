@@ -4,7 +4,7 @@ import {
   setCustomDomain,
   removeCustomDomain,
   getCustomDomainByUserId,
-} from '@/lib/server/redisActions';
+} from '@/lib/server/dbActions';
 
 const VERCEL_API_TOKEN = process.env.VERCEL_API_TOKEN;
 const VERCEL_PROJECT_ID = process.env.VERCEL_PROJECT_ID;

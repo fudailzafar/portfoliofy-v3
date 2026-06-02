@@ -1,9 +1,9 @@
 import { auth } from '@/auth';
-import { upstashRedis } from '@/lib/server/redis';
+import sql from '@/lib/server/db';
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 
-// POST /api/user/avatar — save the S3 URL (uploaded client-side via next-s3-upload) to Redis
+// POST /api/user/avatar — save the S3 URL (uploaded client-side via next-s3-upload) to Postgres
 export async function POST(request: Request) {
   try {
     const session = await auth();
@@ -17,13 +17,12 @@ export async function POST(request: Request) {
     }
 
     const userId = session.user.id;
-    const existing = await upstashRedis.get<Record<string, any>>(
-      `user:profile:${userId}`,
-    );
-    await upstashRedis.set(`user:profile:${userId}`, {
-      ...existing,
-      customImage: url,
-    });
+    
+    await sql`
+      UPDATE users 
+      SET custom_image = ${url}
+      WHERE id = ${userId}
+    `;
 
     revalidateTag('users');
 
@@ -46,14 +45,14 @@ export async function DELETE() {
     }
 
     const userId = session.user.id;
-    const existing = await upstashRedis.get<Record<string, any>>(
-      `user:profile:${userId}`,
-    );
-    if (existing) {
-      const { customImage, ...rest } = existing;
-      await upstashRedis.set(`user:profile:${userId}`, rest);
-      revalidateTag('users');
-    }
+    
+    await sql`
+      UPDATE users 
+      SET custom_image = NULL
+      WHERE id = ${userId}
+    `;
+    
+    revalidateTag('users');
 
     return NextResponse.json({ success: true });
   } catch (error) {

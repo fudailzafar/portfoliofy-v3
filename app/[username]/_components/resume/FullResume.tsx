@@ -1,5 +1,5 @@
 import LoadingFallback from '@/components/LoadingFallback';
-import { ResumeData } from '@/lib/server/redisActions';
+import { ResumeData } from '@/lib/server/dbActions';
 import { sortByDateDesc } from '@/lib/resume';
 import { Education } from './preview/Education';
 import { Header } from './preview/Header';

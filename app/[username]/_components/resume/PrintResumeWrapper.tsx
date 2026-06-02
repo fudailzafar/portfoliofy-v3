@@ -3,7 +3,7 @@
 import React from 'react';
 import { PrintResume } from './PrintResume';
 import { useResumeStore } from '@/store/useResumeStore';
-import { ResumeData } from '@/lib/server/redisActions';
+import { ResumeData } from '@/lib/server/dbActions';
 import { cn } from '@/lib/utils';
 
 export function PrintResumeWrapper({ resume }: { resume?: ResumeData | null }) {

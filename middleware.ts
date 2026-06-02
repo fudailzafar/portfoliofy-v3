@@ -1,7 +1,6 @@
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { PRIVATE_ROUTES } from './lib/routes';
-import { upstashRedis } from '@/lib/server/redis';
 
 import type { NextRequest } from 'next/server';
 
@@ -14,28 +13,36 @@ export default async function middleware(req: NextRequest) {
   const isVercelDomain = hostname.endsWith('.vercel.app');
   const isLocalhost = hostname.includes('localhost');
 
-  // Exclude localhost, main domain, and default Vercel domains
-  if (hostname && !isLocalhost && !isMainDomain && !isVercelDomain) {
-    // It's a custom domain, rewrite to the user's profile
+  // If this is a custom domain, we check Supabase to find the username
+  if (!isMainDomain && !isVercelDomain && !isLocalhost) {
     try {
-      // 1. Get userId by domain
-      const userId = await upstashRedis.get<string>(
-        `domain:to:user:${hostname}`,
-      );
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-      if (userId) {
-        // 2. Get username by userId
-        const username = await upstashRedis.get<string>(`user:id:${userId}`);
+      if (supabaseUrl && supabaseKey) {
+        // Query the Supabase REST API (Edge compatible)
+        const res = await fetch(
+          `${supabaseUrl}/rest/v1/users?custom_domain=eq.${hostname}&select=username`,
+          {
+            headers: {
+              apikey: supabaseKey,
+              Authorization: `Bearer ${supabaseKey}`,
+            },
+          },
+        );
 
-        if (username) {
-          // Rewrite the request to `/[username]` internally
-          const clonedUrl = req.nextUrl.clone();
-          clonedUrl.pathname = `/${username}${clonedUrl.pathname === '/' ? '' : clonedUrl.pathname}`;
-          return NextResponse.rewrite(clonedUrl);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0 && data[0].username) {
+            // Rewrite the request to the dynamic /[username] route
+            return NextResponse.rewrite(
+              new URL(`/${data[0].username}`, req.url),
+            );
+          }
         }
       }
     } catch (error) {
-      console.error('Middleware custom domain error:', error);
+      console.error('Failed to lookup custom domain:', error);
     }
   }
 
