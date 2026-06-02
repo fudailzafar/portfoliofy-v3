@@ -22,8 +22,8 @@ export function SkillsTab() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto h-full flex flex-col">
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+    <div className="mx-auto flex h-full max-w-3xl flex-col">
+      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
         <h2 className="text-2xl font-bold">Skills</h2>
       </div>
 
@@ -44,7 +44,7 @@ export function SkillsTab() {
           <Button
             onClick={handleAddSkill}
             variant="secondary"
-            className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none px-6"
+            className="border-none bg-gray-100 px-6 text-gray-900 hover:bg-gray-200"
           >
             Add
           </Button>
@@ -55,12 +55,12 @@ export function SkillsTab() {
             {skills.map((skill, index) => (
               <div
                 key={index}
-                className="flex items-center bg-gray-100/80 text-gray-900 text-sm px-3 py-1.5 rounded-full"
+                className="flex items-center rounded-full bg-gray-100/80 px-3 py-1.5 text-sm text-gray-900"
               >
                 <span className="mr-2">{skill}</span>
                 <button
                   onClick={() => handleRemoveSkill(index)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center rounded-full focus:outline-none"
+                  className="flex items-center justify-center rounded-full text-gray-400 transition-colors hover:text-gray-600 focus:outline-none"
                   aria-label={`Remove ${skill}`}
                 >
                   <svg

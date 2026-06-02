@@ -26,47 +26,70 @@ export function GlobalSidebar() {
 
   return (
     <>
-      <div className="flex flex-col h-full w-[260px] bg-[#fafafa] border-r border-gray-100 py-6 px-4">
-        <div className="flex-1 mt-2">
-          <div className="bg-[#f2f2f2] rounded-[10px] px-3 py-2 flex items-center justify-between cursor-pointer hover:bg-gray-200/80 transition-colors">
-            <span className="text-[13px] text-gray-500 font-medium">Explore</span>
-            <span className="text-[12px] text-gray-400 tracking-tighter">⌘⇧E</span>
+      <div className="flex h-full w-[260px] flex-col border-r border-gray-100 bg-[#fafafa] px-4 py-6">
+        <div className="mt-2 flex-1">
+          <div className="flex cursor-pointer items-center justify-between rounded-[10px] bg-[#f2f2f2] px-3 py-2 transition-colors hover:bg-gray-200/80">
+            <span className="text-[13px] font-medium text-gray-500">
+              Explore
+            </span>
+            <span className="text-[12px] tracking-tighter text-gray-400">
+              ⌘⇧E
+            </span>
           </div>
         </div>
 
-        <div className="flex flex-col mt-auto pb-4">
+        <div className="mt-auto flex flex-col pb-4">
           {session ? (
             <div className="flex flex-col gap-4 pl-1">
               {/* User Info & Logout */}
-              <div className="pl-4 mb-3">
+              <div className="mb-3 pl-4">
                 <div className="text-[14px] text-gray-800">{displayName}</div>
-                <div className="text-[13px] text-gray-400 mt-1">
-                  Not you? <button onClick={() => signOut({ callbackUrl: '/' })} className="hover:underline text-[#b3b3b3]">Logout</button>
+                <div className="mt-1 text-[13px] text-gray-400">
+                  Not you?{' '}
+                  <button
+                    onClick={() => signOut({ callbackUrl: '/' })}
+                    className="text-[#b3b3b3] hover:underline"
+                  >
+                    Logout
+                  </button>
                 </div>
               </div>
-              
+
               {/* Profile */}
               {usernameQuery.data?.username && (
-                <Link href={`/${usernameQuery.data.username}`} className="flex items-center gap-3 w-fit group">
-                  <div className={`w-1 h-1 rounded-full ${pathname === `/${usernameQuery.data.username}` ? 'bg-black' : 'bg-transparent'}`} />
-                  <span className="text-[14px] text-gray-800 group-hover:underline underline-offset-4">Profile</span>
+                <Link
+                  href={`/${usernameQuery.data.username}`}
+                  className="group flex w-fit items-center gap-3"
+                >
+                  <div
+                    className={`h-1 w-1 rounded-full ${pathname === `/${usernameQuery.data.username}` ? 'bg-black' : 'bg-transparent'}`}
+                  />
+                  <span className="text-[14px] text-gray-800 underline-offset-4 group-hover:underline">
+                    Profile
+                  </span>
                 </Link>
               )}
               {/* About */}
-              <Link href="/" className="flex items-center gap-3 w-fit group">
-                <div className={`w-1 h-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-black' : 'bg-transparent'}`} />
-                <span className="text-[14px] text-gray-800 group-hover:underline underline-offset-4">About</span>
+              <Link href="/" className="group flex w-fit items-center gap-3">
+                <div
+                  className={`h-1 w-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-black' : 'bg-transparent'}`}
+                />
+                <span className="text-[14px] text-gray-800 underline-offset-4 group-hover:underline">
+                  About
+                </span>
               </Link>
-              
+
               {/* Username copy to clipboard */}
               {usernameQuery.data?.username && (
-                <div className="pt-6 mt-2">
-                  <button 
+                <div className="mt-2 pt-6">
+                  <button
                     onClick={() => {
-                      navigator.clipboard.writeText(`portfoliofy.me/${usernameQuery.data.username}`);
+                      navigator.clipboard.writeText(
+                        `portfoliofy.me/${usernameQuery.data.username}`,
+                      );
                       toast.success('Copied to clipboard');
                     }}
-                    className="text-[14px] text-left text-gray-400 hover:text-gray-600 transition-colors pl-4"
+                    className="pl-4 text-left text-[14px] text-gray-400 transition-colors hover:text-gray-600"
                   >
                     portfoliofy.me/{usernameQuery.data.username}
                   </button>
@@ -75,22 +98,28 @@ export function GlobalSidebar() {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              <Link href="/" className="flex items-center gap-3 w-fit group">
-                <div className={`w-1 h-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-black' : 'bg-transparent'}`} />
-                <span className="text-[14px] text-gray-800 group-hover:underline underline-offset-4">About</span>
+              <Link href="/" className="group flex w-fit items-center gap-3">
+                <div
+                  className={`h-1 w-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-black' : 'bg-transparent'}`}
+                />
+                <span className="text-[14px] text-gray-800 underline-offset-4 group-hover:underline">
+                  About
+                </span>
               </Link>
               <button
                 onClick={() => openAuth('login')}
-                className="flex items-center gap-3 w-fit group text-left"
+                className="group flex w-fit items-center gap-3 text-left"
               >
-                <div className="w-1 h-1 rounded-full bg-transparent" />
-                <span className="text-[14px] text-gray-800 group-hover:underline underline-offset-4">Login</span>
+                <div className="h-1 w-1 rounded-full bg-transparent" />
+                <span className="text-[14px] text-gray-800 underline-offset-4 group-hover:underline">
+                  Login
+                </span>
               </button>
               <div className="pt-3">
                 <Button
                   variant="outline"
                   onClick={() => openAuth('signup')}
-                  className="w-full bg-white text-black border border-gray-200 hover:bg-gray-50 rounded-md h-9 shadow-sm text-[13px] font-medium"
+                  className="h-9 w-full rounded-md border border-gray-200 bg-white text-[13px] font-medium text-black shadow-sm hover:bg-gray-50"
                 >
                   Create a profile
                 </Button>

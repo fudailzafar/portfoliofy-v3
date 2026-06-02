@@ -38,8 +38,8 @@ export function Header({
   picture?: string;
 }) {
   return (
-    <header className="flex items-center gap-4 md:gap-6 mb-8">
-      <Avatar className="size-20 md:size-28 shrink-0" aria-hidden="true">
+    <header className="mb-8 flex items-center gap-4 md:gap-6">
+      <Avatar className="size-20 shrink-0 md:size-28" aria-hidden="true">
         <AvatarImage src={picture} alt={`${header.name}'s profile picture`} />
         <AvatarFallback>
           {header.name
@@ -50,33 +50,37 @@ export function Header({
       </Avatar>
 
       <div className="flex-1 space-y-1">
-        <h1 className="text-base md:text-xl font-semibold text-theme-primary " id="resume-name">
+        <h1
+          className="text-base font-semibold text-theme-primary md:text-xl"
+          id="resume-name"
+        >
           {header.name}
         </h1>
-        
+
         {/* Subtitle: {Role} in {Location}, {Pronouns} */}
         {(header.shortAbout || header.location || header.pronouns) && (
           <p
             className="text-pretty text-sm text-theme-secondary"
             aria-labelledby="resume-name"
           >
-            {[
-              header.shortAbout,
-              header.location ? `in ${header.location}` : '',
-            ]
+            {[header.shortAbout, header.location ? `in ${header.location}` : '']
               .filter(Boolean)
               .join(' ')}
             {header.pronouns ? `, ${header.pronouns}` : ''}
           </p>
         )}
-        
+
         {/* Website Link */}
         {header.website && (
           <a
-            href={header.website.startsWith('http') ? header.website : `https://${header.website}`}
+            href={
+              header.website.startsWith('http')
+                ? header.website
+                : `https://${header.website}`
+            }
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-sm  text-theme-secondary hover:text-theme-primary transition-colors mt-1"
+            className="mt-1 block text-sm text-theme-secondary transition-colors hover:text-theme-primary"
           >
             {header.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
           </a>

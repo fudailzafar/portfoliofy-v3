@@ -5,21 +5,42 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { Briefcase, ArrowUpRight, Upload, Download } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { sortByDateDesc } from '@/lib/resume';
 
 const months = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
-export function WorkExperienceTab({ 
-  years, 
-  setProjectToDelete 
-}: { 
-  years: number[], 
-  setProjectToDelete: (id: string) => void 
+export function WorkExperienceTab({
+  years,
+  setProjectToDelete,
+}: {
+  years: number[];
+  setProjectToDelete: (id: string) => void;
 }) {
   const { resume, updateResume, setIsEditingTab } = useResumeStore();
   const [workView, setWorkView] = useState<'list' | 'form'>('list');
@@ -35,7 +56,7 @@ export function WorkExperienceTab({
 
   const handleSave = () => {
     if (!currentWork?.title || !currentWork?.company) return;
-    
+
     const isEdit = !!currentWork.id;
     const newItem = isEdit
       ? currentWork
@@ -54,7 +75,7 @@ export function WorkExperienceTab({
     const newItems = [...work];
     const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
     const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
-    
+
     if (idx1 !== -1 && idx2 !== -1) {
       [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
       updateResume({ workExperience: newItems });
@@ -64,8 +85,8 @@ export function WorkExperienceTab({
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="max-w-3xl mx-auto flex flex-col pb-24">
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+    <div className="mx-auto flex max-w-3xl flex-col pb-24">
+      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
         <h2 className="text-2xl font-bold">Work Experience</h2>
         {workView === 'list' && (
           <Button
@@ -85,25 +106,21 @@ export function WorkExperienceTab({
               });
               setWorkView('form');
             }}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none h-8 text-xs px-4 rounded-md"
+            className="h-8 rounded-md border-none bg-gray-100 px-4 text-xs text-gray-900 hover:bg-gray-200"
           >
             Add work experience
           </Button>
         )}
-
       </div>
 
       {workView === 'list' && work.length === 0 && (
-        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 opacity-80 mt-12">
-          <div className="p-8 bg-gray-50 rounded-full">
-            <Briefcase
-              className="w-16 h-16 text-gray-400"
-              strokeWidth={1}
-            />
+        <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
+          <div className="rounded-full bg-gray-50 p-8">
+            <Briefcase className="h-16 w-16 text-gray-400" strokeWidth={1} />
           </div>
           <Button
             variant="secondary"
-            className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none rounded-md px-6 py-5 h-auto text-sm"
+            className="h-auto rounded-md border-none bg-gray-100 px-6 py-5 text-sm text-gray-900 hover:bg-gray-200"
             onClick={() => {
               setCurrentWork({
                 company: '',
@@ -127,111 +144,123 @@ export function WorkExperienceTab({
 
       {workView === 'list' && work.length > 0 && (
         <div className="space-y-8">
-          {sortByDateDesc(work).map((w: any, index: number, sortedArray: any[]) => {
-            const prevItem = index > 0 ? sortedArray[index - 1] : null;
-            const canMoveUp = prevItem && parseInt(w.start || '0') === parseInt(prevItem.start || '0');
-            const nextItem = index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
-            const canMoveDown = nextItem && parseInt(w.start || '0') === parseInt(nextItem.start || '0');
-            return (
-            <div
-              key={w.id || w.company}
-              className="flex flex-col sm:flex-row gap-4 sm:gap-12"
-            >
-              <div className="sm:w-32 shrink-0 text-gray-400 text-sm pt-0.5">
-                {w.start} — {w.end}
-              </div>
+          {sortByDateDesc(work).map(
+            (w: any, index: number, sortedArray: any[]) => {
+              const prevItem = index > 0 ? sortedArray[index - 1] : null;
+              const canMoveUp =
+                prevItem &&
+                parseInt(w.start || '0') === parseInt(prevItem.start || '0');
+              const nextItem =
+                index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
+              const canMoveDown =
+                nextItem &&
+                parseInt(w.start || '0') === parseInt(nextItem.start || '0');
+              return (
+                <div
+                  key={w.id || w.company}
+                  className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+                >
+                  <div className="shrink-0 pt-0.5 text-sm text-gray-400 sm:w-32">
+                    {w.start} — {w.end}
+                  </div>
 
-              <div className="flex-1 flex flex-col justify-start items-start">
-                {w.link ? (
-                  <a
-                    href={
-                      w.link.startsWith('http')
-                        ? w.link
-                        : `https://${w.link}`
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline inline-block"
-                  >
-                    <span className="text-base font-semibold text-gray-900">
-                      {w.title} at {w.company}
-                      <ArrowUpRight className="inline-block ml-1 w-4 h-4 text-gray-900 relative -top-0.5" />
-                    </span>
-                  </a>
-                ) : (
-                  <p className="text-base font-semibold text-gray-900">
-                    {w.title} at {w.company}
-                  </p>
-                )}
-                {w.location && (
-                  <p className="text-sm text-gray-500 mt-1">
-                    {w.location}
-                  </p>
-                )}
+                  <div className="flex flex-1 flex-col items-start justify-start">
+                    {w.link ? (
+                      <a
+                        href={
+                          w.link.startsWith('http')
+                            ? w.link
+                            : `https://${w.link}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block hover:underline"
+                      >
+                        <span className="text-base font-semibold text-gray-900">
+                          {w.title} at {w.company}
+                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-gray-900" />
+                        </span>
+                      </a>
+                    ) : (
+                      <p className="text-base font-semibold text-gray-900">
+                        {w.title} at {w.company}
+                      </p>
+                    )}
+                    {w.location && (
+                      <p className="mt-1 text-sm text-gray-500">{w.location}</p>
+                    )}
 
-                {w.description && w.description !== '<p></p>' && (
-                  <div
-                    className="mt-1 text-sm text-gray-500 prose prose-sm max-w-none"
-                    dangerouslySetInnerHTML={{
-                      __html: w.description,
-                    }}
-                  />
-                )}
+                    {w.description && w.description !== '<p></p>' && (
+                      <div
+                        className="prose prose-sm mt-1 max-w-none text-sm text-gray-500"
+                        dangerouslySetInnerHTML={{
+                          __html: w.description,
+                        }}
+                      />
+                    )}
 
-                <div className="flex items-center gap-4 mt-3 text-xs font-medium text-gray-400">
-                  <button
-                    onClick={() => {
-                      setCurrentWork(w);
-                      setWorkView('form');
-                    }}
-                    className="hover:text-gray-900 transition-colors"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => setProjectToDelete(w.id)}
-                    className="hover:text-red-600 transition-colors"
-                  >
-                    Delete
-                  </button>
-                  {canMoveUp && (
-                    <TooltipProvider delayDuration={0}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            onClick={() => handleMoveUp(w, prevItem)}
-                            className="hover:text-gray-900 transition-colors"
-                          >
-                            <Upload className="w-[15px] h-[15px]" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="bg-[#111] text-white text-xs px-2.5 py-1.5 rounded-md border-none font-medium mb-1">
-                          Move up
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
-                  {canMoveDown && (
-                    <TooltipProvider delayDuration={0}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            onClick={() => handleMoveUp(w, nextItem)}
-                            className="hover:text-gray-900 transition-colors"
-                          >
-                            <Download className="w-[15px] h-[15px]" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="bg-[#111] text-white text-xs px-2.5 py-1.5 rounded-md border-none font-medium mb-1">
-                          Move down
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
+                    <div className="mt-3 flex items-center gap-4 text-xs font-medium text-gray-400">
+                      <button
+                        onClick={() => {
+                          setCurrentWork(w);
+                          setWorkView('form');
+                        }}
+                        className="transition-colors hover:text-gray-900"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => setProjectToDelete(w.id)}
+                        className="transition-colors hover:text-red-600"
+                      >
+                        Delete
+                      </button>
+                      {canMoveUp && (
+                        <TooltipProvider delayDuration={0}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                onClick={() => handleMoveUp(w, prevItem)}
+                                className="transition-colors hover:text-gray-900"
+                              >
+                                <Upload className="h-[15px] w-[15px]" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent
+                              side="top"
+                              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white"
+                            >
+                              Move up
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                      {canMoveDown && (
+                        <TooltipProvider delayDuration={0}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                onClick={() => handleMoveUp(w, nextItem)}
+                                className="transition-colors hover:text-gray-900"
+                              >
+                                <Download className="h-[15px] w-[15px]" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent
+                              side="top"
+                              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white"
+                            >
+                              Move down
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          )})}
+              );
+            },
+          )}
         </div>
       )}
 
@@ -239,9 +268,7 @@ export function WorkExperienceTab({
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-gray-600 text-xs">
-                Company*
-              </Label>
+              <Label className="text-xs text-gray-600">Company*</Label>
               <Input
                 value={currentWork.company}
                 onChange={(e) =>
@@ -254,9 +281,7 @@ export function WorkExperienceTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-gray-600 text-xs">
-                Position*
-              </Label>
+              <Label className="text-xs text-gray-600">Position*</Label>
               <Input
                 value={currentWork.title}
                 onChange={(e) =>
@@ -272,9 +297,7 @@ export function WorkExperienceTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-gray-600 text-xs">
-                Start Date*
-              </Label>
+              <Label className="text-xs text-gray-600">Start Date*</Label>
               <div className="flex gap-2">
                 <Select
                   value={currentWork.startMonth || ''}
@@ -317,9 +340,7 @@ export function WorkExperienceTab({
             </div>
 
             <div className="space-y-2">
-              <Label className="text-gray-600 text-xs">
-                End Date*
-              </Label>
+              <Label className="text-xs text-gray-600">End Date*</Label>
               <div className="flex gap-2">
                 {currentWork.end !== 'Present' && (
                   <Select
@@ -367,9 +388,7 @@ export function WorkExperienceTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-gray-600 text-xs">
-                Location
-              </Label>
+              <Label className="text-xs text-gray-600">Location</Label>
               <Input
                 value={currentWork.location || ''}
                 onChange={(e) =>
@@ -382,7 +401,7 @@ export function WorkExperienceTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-gray-600 text-xs">Link</Label>
+              <Label className="text-xs text-gray-600">Link</Label>
               <Input
                 value={currentWork.link || ''}
                 onChange={(e) =>
@@ -397,9 +416,7 @@ export function WorkExperienceTab({
           </div>
 
           <div className="space-y-2 pt-2">
-            <Label className="text-gray-600 text-xs">
-              Description
-            </Label>
+            <Label className="text-xs text-gray-600">Description</Label>
             <RichTextEditor
               content={currentWork.description || ''}
               onChange={(val) =>
@@ -408,11 +425,11 @@ export function WorkExperienceTab({
             />
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 p-4 md:px-8 border-t border-gray-100 bg-white flex justify-end z-10">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end border-t border-gray-100 bg-white p-4 md:px-8">
             <Button
               onClick={handleSave}
               disabled={!currentWork?.title || !currentWork?.company}
-              className="bg-[#2A2A2A] hover:bg-[#1A1A1A] text-white h-9 px-6 rounded-md shadow-sm border-none font-medium"
+              className="h-9 rounded-md border-none bg-[#2A2A2A] px-6 font-medium text-white shadow-sm hover:bg-[#1A1A1A]"
             >
               Save
             </Button>

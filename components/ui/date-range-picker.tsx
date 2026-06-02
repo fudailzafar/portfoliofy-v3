@@ -46,9 +46,9 @@ export function DateRangePicker({
 
   return (
     <div className={cn('flex flex-col space-y-4', className)}>
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-0">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-0">
         <div className="flex-1 sm:mr-2">
-          <Label className="text-sm font-medium text-slate-400 mb-2 block">
+          <Label className="mb-2 block text-sm font-medium text-slate-400">
             Start Date
           </Label>
           <Popover open={startOpen} onOpenChange={setStartOpen}>
@@ -60,7 +60,7 @@ export function DateRangePicker({
                   !startDateObj && 'text-muted-foreground',
                 )}
               >
-                <div className="flex items-center w-full">
+                <div className="flex w-full items-center">
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   <span className="flex-1">
                     {startDateObj
@@ -87,7 +87,7 @@ export function DateRangePicker({
           </Popover>
         </div>
         <div className="flex-1 sm:ml-2">
-          <Label className="text-sm font-medium text-slate-400 mb-2 block">
+          <Label className="mb-2 block text-sm font-medium text-slate-400">
             End Date
           </Label>
           <Popover open={endOpen} onOpenChange={setEndOpen}>
@@ -99,7 +99,7 @@ export function DateRangePicker({
                   !endDateObj && 'text-muted-foreground',
                 )}
               >
-                <div className="flex items-center w-full">
+                <div className="flex w-full items-center">
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   <span className="flex-1">
                     {endDateObj
@@ -109,7 +109,7 @@ export function DateRangePicker({
                   {endDateObj && (
                     <div
                       role="button"
-                      className="h-4 w-4 p-0 flex items-center justify-center hover:bg-accent rounded-sm cursor-pointer"
+                      className="flex h-4 w-4 cursor-pointer items-center justify-center rounded-sm p-0 hover:bg-accent"
                       onClick={(e) => {
                         e.stopPropagation();
                         onEndDateChange('');

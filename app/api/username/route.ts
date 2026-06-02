@@ -16,11 +16,16 @@ export async function GET(): Promise<NextResponse<GetResponse>> {
     return NextResponse.json({ username });
   } catch (error) {
     console.error('Error retrieving username:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }
 
-export async function POST(request: Request): Promise<NextResponse<PostResponse>> {
+export async function POST(
+  request: Request,
+): Promise<NextResponse<PostResponse>> {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -30,13 +35,19 @@ export async function POST(request: Request): Promise<NextResponse<PostResponse>
     const { username } = await request.json();
 
     if (!username || typeof username !== 'string') {
-      return NextResponse.json({ error: 'Username is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Username is required' },
+        { status: 400 },
+      );
     }
 
     const success = await updateUsername(session.user.id, username);
 
     if (!success) {
-      return NextResponse.json({ error: 'Username already taken' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Username already taken' },
+        { status: 400 },
+      );
     }
 
     revalidateTag('usernames');
@@ -44,6 +55,9 @@ export async function POST(request: Request): Promise<NextResponse<PostResponse>
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error updating username:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }

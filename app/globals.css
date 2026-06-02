@@ -97,18 +97,17 @@
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
-
 
 /* Dynamic Themes for Portfolio */
 .theme-default {
   --theme-bg: #ffffff;
-  --theme-primary: #111827;     /* text-gray-900 */
-  --theme-secondary: #6b7280;   /* text-gray-500 */
-  --theme-border: #f3f4f6;      /* border-gray-100 */
-  --theme-accent: #3b82f6;      /* blue */
+  --theme-primary: #111827; /* text-gray-900 */
+  --theme-secondary: #6b7280; /* text-gray-500 */
+  --theme-border: #f3f4f6; /* border-gray-100 */
+  --theme-accent: #3b82f6; /* blue */
 }
 
 .theme-brutalist {

@@ -4,7 +4,10 @@ import { auth } from '@/auth';
 import { createUsernameLookup, storeResume } from '@/lib/server/redisActions';
 import { ResumeDataSchemaType } from '@/lib/resume';
 
-export async function claimUsernameAndInitProfile(username: string, displayName: string) {
+export async function claimUsernameAndInitProfile(
+  username: string,
+  displayName: string,
+) {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) {

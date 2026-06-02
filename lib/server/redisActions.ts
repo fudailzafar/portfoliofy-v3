@@ -175,9 +175,11 @@ export const deleteUser = async (opts: {
   const transaction = upstashRedis.multi();
   transaction.del(`${REDIS_KEYS.USER_ID_PREFIX}${userId}`);
   transaction.del(`${REDIS_KEYS.USER_NAME_PREFIX}${username}`);
-  
+
   // Clean up domain if it exists
-  const domain = await upstashRedis.get(`${REDIS_KEYS.USER_TO_DOMAIN_PREFIX}${userId}`);
+  const domain = await upstashRedis.get(
+    `${REDIS_KEYS.USER_TO_DOMAIN_PREFIX}${userId}`,
+  );
   if (domain) {
     transaction.del(`${REDIS_KEYS.USER_TO_DOMAIN_PREFIX}${userId}`);
     transaction.del(`${REDIS_KEYS.DOMAIN_TO_USER_PREFIX}${domain}`);
@@ -236,18 +238,23 @@ export const updateUsername = async (
  * Custom Domain methods
  */
 
-export const setCustomDomain = async (userId: string, domain: string): Promise<boolean> => {
+export const setCustomDomain = async (
+  userId: string,
+  domain: string,
+): Promise<boolean> => {
   try {
-    const currentDomain = await upstashRedis.get<string>(`${REDIS_KEYS.USER_TO_DOMAIN_PREFIX}${userId}`);
+    const currentDomain = await upstashRedis.get<string>(
+      `${REDIS_KEYS.USER_TO_DOMAIN_PREFIX}${userId}`,
+    );
     const transaction = upstashRedis.multi();
-    
+
     if (currentDomain) {
       transaction.del(`${REDIS_KEYS.DOMAIN_TO_USER_PREFIX}${currentDomain}`);
     }
-    
+
     transaction.set(`${REDIS_KEYS.USER_TO_DOMAIN_PREFIX}${userId}`, domain);
     transaction.set(`${REDIS_KEYS.DOMAIN_TO_USER_PREFIX}${domain}`, userId);
-    
+
     const results = await transaction.exec();
     return results.every((r) => r === 'OK');
   } catch (error) {
@@ -258,13 +265,15 @@ export const setCustomDomain = async (userId: string, domain: string): Promise<b
 
 export const removeCustomDomain = async (userId: string): Promise<boolean> => {
   try {
-    const currentDomain = await upstashRedis.get<string>(`${REDIS_KEYS.USER_TO_DOMAIN_PREFIX}${userId}`);
+    const currentDomain = await upstashRedis.get<string>(
+      `${REDIS_KEYS.USER_TO_DOMAIN_PREFIX}${userId}`,
+    );
     if (!currentDomain) return true;
 
     const transaction = upstashRedis.multi();
     transaction.del(`${REDIS_KEYS.USER_TO_DOMAIN_PREFIX}${userId}`);
     transaction.del(`${REDIS_KEYS.DOMAIN_TO_USER_PREFIX}${currentDomain}`);
-    
+
     const results = await transaction.exec();
     return results.every((r) => r === 1);
   } catch (error) {
@@ -273,10 +282,18 @@ export const removeCustomDomain = async (userId: string): Promise<boolean> => {
   }
 };
 
-export const getCustomDomainByUserId = async (userId: string): Promise<string | null> => {
-  return await upstashRedis.get<string>(`${REDIS_KEYS.USER_TO_DOMAIN_PREFIX}${userId}`);
+export const getCustomDomainByUserId = async (
+  userId: string,
+): Promise<string | null> => {
+  return await upstashRedis.get<string>(
+    `${REDIS_KEYS.USER_TO_DOMAIN_PREFIX}${userId}`,
+  );
 };
 
-export const getUserIdByCustomDomain = async (domain: string): Promise<string | null> => {
-  return await upstashRedis.get<string>(`${REDIS_KEYS.DOMAIN_TO_USER_PREFIX}${domain}`);
+export const getUserIdByCustomDomain = async (
+  domain: string,
+): Promise<string | null> => {
+  return await upstashRedis.get<string>(
+    `${REDIS_KEYS.DOMAIN_TO_USER_PREFIX}${domain}`,
+  );
 };

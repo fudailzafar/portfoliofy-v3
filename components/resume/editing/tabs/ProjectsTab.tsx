@@ -5,16 +5,27 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { FolderCode, Upload, Download } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { sortByDateDesc } from '@/lib/resume';
 
-export function ProjectsTab({ 
-  years, 
-  setProjectToDelete 
-}: { 
-  years: number[], 
-  setProjectToDelete: (id: string) => void 
+export function ProjectsTab({
+  years,
+  setProjectToDelete,
+}: {
+  years: number[];
+  setProjectToDelete: (id: string) => void;
 }) {
   const { resume, updateResume, setIsEditingTab } = useResumeStore();
   const [projectsView, setProjectsView] = useState<'list' | 'form'>('list');
@@ -30,7 +41,7 @@ export function ProjectsTab({
 
   const handleSave = () => {
     if (!currentProject?.title || !currentProject?.year) return;
-    
+
     const isEdit = !!currentProject.id;
     const newProject = isEdit
       ? currentProject
@@ -49,7 +60,7 @@ export function ProjectsTab({
     const newItems = [...projects];
     const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
     const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
-    
+
     if (idx1 !== -1 && idx2 !== -1) {
       [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
       updateResume({ projects: newItems });
@@ -59,8 +70,8 @@ export function ProjectsTab({
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="max-w-3xl mx-auto h-full flex flex-col">
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+    <div className="mx-auto flex h-full max-w-3xl flex-col">
+      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
         <h2 className="text-2xl font-bold">Projects</h2>
         {projectsView === 'list' && (
           <Button
@@ -75,25 +86,21 @@ export function ProjectsTab({
               });
               setProjectsView('form');
             }}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none h-8 text-xs px-4 rounded-md"
+            className="h-8 rounded-md border-none bg-gray-100 px-4 text-xs text-gray-900 hover:bg-gray-200"
           >
             Add project
           </Button>
         )}
-
       </div>
 
       {projectsView === 'list' && projects.length === 0 && (
-        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 opacity-80 mt-12">
-          <div className="p-8 bg-gray-50 rounded-full">
-            <FolderCode
-              className="w-16 h-16 text-gray-400"
-              strokeWidth={1}
-            />
+        <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
+          <div className="rounded-full bg-gray-50 p-8">
+            <FolderCode className="h-16 w-16 text-gray-400" strokeWidth={1} />
           </div>
           <Button
             variant="secondary"
-            className="bg-gray-100 hover:bg-gray-200 text-gray-900 border-none rounded-md px-6 py-5 h-auto text-sm"
+            className="h-auto rounded-md border-none bg-gray-100 px-6 py-5 text-sm text-gray-900 hover:bg-gray-200"
             onClick={() => {
               setCurrentProject({
                 title: '',
@@ -112,95 +119,111 @@ export function ProjectsTab({
 
       {projectsView === 'list' && projects.length > 0 && (
         <div className="space-y-8">
-          {sortByDateDesc(projects).map((project: any, index: number, sortedArray: any[]) => {
-            const prevItem = index > 0 ? sortedArray[index - 1] : null;
-            const canMoveUp = prevItem && parseInt(project.year || '0') === parseInt(prevItem.year || '0');
-            const nextItem = index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
-            const canMoveDown = nextItem && parseInt(project.year || '0') === parseInt(nextItem.year || '0');
-            return (
-              <div
-              key={project.id}
-              className="flex flex-col sm:flex-row gap-4 sm:gap-12"
-            >
-              <div className="sm:w-16 shrink-0 text-gray-400 text-sm pt-0.5">
-                {project.year}
-              </div>
+          {sortByDateDesc(projects).map(
+            (project: any, index: number, sortedArray: any[]) => {
+              const prevItem = index > 0 ? sortedArray[index - 1] : null;
+              const canMoveUp =
+                prevItem &&
+                parseInt(project.year || '0') ===
+                  parseInt(prevItem.year || '0');
+              const nextItem =
+                index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
+              const canMoveDown =
+                nextItem &&
+                parseInt(project.year || '0') ===
+                  parseInt(nextItem.year || '0');
+              return (
+                <div
+                  key={project.id}
+                  className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+                >
+                  <div className="shrink-0 pt-0.5 text-sm text-gray-400 sm:w-16">
+                    {project.year}
+                  </div>
 
-              <div className="flex-1 flex flex-col justify-start items-start">
-                <p className="text-base font-semibold text-gray-900">
-                  {project.title}
-                  {project.company && (
-                    <span className="font-normal text-gray-900">
-                      {' '}
-                      at {project.company}
-                    </span>
-                  )}
-                </p>
+                  <div className="flex flex-1 flex-col items-start justify-start">
+                    <p className="text-base font-semibold text-gray-900">
+                      {project.title}
+                      {project.company && (
+                        <span className="font-normal text-gray-900">
+                          {' '}
+                          at {project.company}
+                        </span>
+                      )}
+                    </p>
 
-                {project.description &&
-                  project.description !== '<p></p>' && (
-                    <div
-                      className="mt-1 text-sm text-gray-500 line-clamp-2"
-                      dangerouslySetInnerHTML={{
-                        __html: project.description,
-                      }}
-                    />
-                  )}
+                    {project.description &&
+                      project.description !== '<p></p>' && (
+                        <div
+                          className="mt-1 line-clamp-2 text-sm text-gray-500"
+                          dangerouslySetInnerHTML={{
+                            __html: project.description,
+                          }}
+                        />
+                      )}
 
-                <div className="flex items-center gap-4 mt-3 text-xs font-medium text-gray-400">
-                  <button
-                    onClick={() => {
-                      setCurrentProject(project);
-                      setProjectsView('form');
-                    }}
-                    className="hover:text-gray-900 transition-colors"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => setProjectToDelete(project.id)}
-                    className="hover:text-red-600 transition-colors"
-                  >
-                    Delete
-                  </button>
-                  {canMoveUp && (
-                    <TooltipProvider delayDuration={0}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            onClick={() => handleMoveUp(project, prevItem)}
-                            className="hover:text-gray-900 transition-colors"
-                          >
-                            <Upload className="w-[15px] h-[15px]" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="bg-[#111] text-white text-xs px-2.5 py-1.5 rounded-md border-none font-medium mb-1">
-                          Move up
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
-                  {canMoveDown && (
-                    <TooltipProvider delayDuration={0}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            onClick={() => handleMoveUp(project, nextItem)}
-                            className="hover:text-gray-900 transition-colors"
-                          >
-                            <Download className="w-[15px] h-[15px]" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="bg-[#111] text-white text-xs px-2.5 py-1.5 rounded-md border-none font-medium mb-1">
-                          Move down
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
+                    <div className="mt-3 flex items-center gap-4 text-xs font-medium text-gray-400">
+                      <button
+                        onClick={() => {
+                          setCurrentProject(project);
+                          setProjectsView('form');
+                        }}
+                        className="transition-colors hover:text-gray-900"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => setProjectToDelete(project.id)}
+                        className="transition-colors hover:text-red-600"
+                      >
+                        Delete
+                      </button>
+                      {canMoveUp && (
+                        <TooltipProvider delayDuration={0}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                onClick={() => handleMoveUp(project, prevItem)}
+                                className="transition-colors hover:text-gray-900"
+                              >
+                                <Upload className="h-[15px] w-[15px]" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent
+                              side="top"
+                              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white"
+                            >
+                              Move up
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                      {canMoveDown && (
+                        <TooltipProvider delayDuration={0}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                onClick={() => handleMoveUp(project, nextItem)}
+                                className="transition-colors hover:text-gray-900"
+                              >
+                                <Download className="h-[15px] w-[15px]" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent
+                              side="top"
+                              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white"
+                            >
+                              Move down
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          )})}
+              );
+            },
+          )}
         </div>
       )}
 
@@ -208,9 +231,7 @@ export function ProjectsTab({
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-gray-600 text-xs">
-                Title*
-              </Label>
+              <Label className="text-xs text-gray-600">Title*</Label>
               <Input
                 value={currentProject.title}
                 onChange={(e) =>
@@ -223,7 +244,7 @@ export function ProjectsTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-gray-600 text-xs">Year*</Label>
+              <Label className="text-xs text-gray-600">Year*</Label>
               <Select
                 value={currentProject.year}
                 onValueChange={(val) =>
@@ -249,9 +270,7 @@ export function ProjectsTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-gray-600 text-xs">
-                Company or client
-              </Label>
+              <Label className="text-xs text-gray-600">Company or client</Label>
               <Input
                 value={currentProject.company || ''}
                 onChange={(e) =>
@@ -264,9 +283,7 @@ export function ProjectsTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-gray-600 text-xs">
-                Link to project
-              </Label>
+              <Label className="text-xs text-gray-600">Link to project</Label>
               <Input
                 value={currentProject.link || ''}
                 onChange={(e) =>
@@ -281,9 +298,7 @@ export function ProjectsTab({
           </div>
 
           <div className="space-y-2 pt-2">
-            <Label className="text-gray-600 text-xs">
-              Description
-            </Label>
+            <Label className="text-xs text-gray-600">Description</Label>
             <RichTextEditor
               content={currentProject.description || ''}
               onChange={(val) =>
@@ -295,11 +310,11 @@ export function ProjectsTab({
             />
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 p-4 md:px-8 border-t border-gray-100 bg-white flex justify-end z-10">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end border-t border-gray-100 bg-white p-4 md:px-8">
             <Button
               onClick={handleSave}
               disabled={!currentProject?.title || !currentProject?.year}
-              className="bg-[#2A2A2A] hover:bg-[#1A1A1A] text-white h-9 px-6 rounded-md shadow-sm border-none font-medium"
+              className="h-9 rounded-md border-none bg-[#2A2A2A] px-6 font-medium text-white shadow-sm hover:bg-[#1A1A1A]"
             >
               Save
             </Button>

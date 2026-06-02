@@ -4,22 +4,34 @@
  */
 export function buildContactUrl(link: string, platform: string): string {
   if (!link) return '';
-  
+
   const cleanLink = link.trim();
-  
-  if (cleanLink.toLowerCase().startsWith('http://') || cleanLink.toLowerCase().startsWith('https://')) {
+
+  if (
+    cleanLink.toLowerCase().startsWith('http://') ||
+    cleanLink.toLowerCase().startsWith('https://')
+  ) {
     return cleanLink;
   }
-  
+
   if (cleanLink.toLowerCase().startsWith('mailto:')) {
     return cleanLink;
   }
-  
-  if (platform.toLowerCase() === 'email' || (cleanLink.includes('@') && !cleanLink.includes('://') && !platform.toLowerCase().match(/mastodon|bluesky/))) {
+
+  if (
+    platform.toLowerCase() === 'email' ||
+    (cleanLink.includes('@') &&
+      !cleanLink.includes('://') &&
+      !platform.toLowerCase().match(/mastodon|bluesky/))
+  ) {
     return `mailto:${cleanLink}`;
   }
-  
-  if (cleanLink.includes('.') && !cleanLink.includes(' ') && !cleanLink.startsWith('@')) {
+
+  if (
+    cleanLink.includes('.') &&
+    !cleanLink.includes(' ') &&
+    !cleanLink.startsWith('@')
+  ) {
     return `https://${cleanLink}`;
   }
 
@@ -50,39 +62,39 @@ export function buildContactUrl(link: string, platform: string): string {
 
 export function extractUsername(url: string, platform?: string): string {
   if (!url) return '';
-  
+
   // Clean up the URL
   let cleanUrl = url.trim();
-  
+
   // If it's an email, just return the email address without mailto:
   if (cleanUrl.toLowerCase().startsWith('mailto:')) {
     return cleanUrl.substring(7);
   }
-  
+
   // If it looks like a raw email address, return it
   if (cleanUrl.includes('@') && !cleanUrl.includes('://')) {
     return cleanUrl;
   }
-  
+
   // Remove protocol
   cleanUrl = cleanUrl.replace(/^https?:\/\//i, '');
-  
+
   // Remove www.
   cleanUrl = cleanUrl.replace(/^www\./i, '');
-  
+
   // Remove trailing slashes
   cleanUrl = cleanUrl.replace(/\/+$/, '');
-  
+
   // If it's just a domain (like a personal website), return the domain
   if (!cleanUrl.includes('/')) {
     return cleanUrl;
   }
-  
+
   // Platform specific parsing
   try {
     const parts = cleanUrl.split('/');
     const domain = parts[0].toLowerCase();
-    
+
     // For standard social media (domain.com/username)
     if (
       domain.includes('twitter.com') ||
@@ -98,7 +110,7 @@ export function extractUsername(url: string, platform?: string): string {
       }
       return parts[1] || parts[0];
     }
-    
+
     // For LinkedIn (linkedin.com/in/username)
     if (domain.includes('linkedin.com')) {
       if (parts[1] === 'in' || parts[1] === 'company') {
@@ -106,7 +118,7 @@ export function extractUsername(url: string, platform?: string): string {
       }
       return parts[1] || parts[0];
     }
-    
+
     // For Mastodon it varies widely, usually domain/@username
     if (parts[1] && parts[1].startsWith('@')) {
       return parts[1]; // Keep the @ for mastodon

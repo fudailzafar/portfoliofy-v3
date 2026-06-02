@@ -13,8 +13,8 @@ export function Contact({
 
   return (
     <section className="mb-12 print:mb-8">
-      <h2 
-        className="text-sm font-bold mb-8 print:mb-4 text-theme-primary" 
+      <h2
+        className="mb-8 text-sm font-bold text-theme-primary print:mb-4"
         id="contact-section"
       >
         Contact
@@ -27,24 +27,24 @@ export function Contact({
         {contacts.map((contact) => (
           <div
             key={contact.id || contact.platform}
-            className="flex flex-col sm:flex-row gap-4 sm:gap-12 print:mb-6"
+            className="flex flex-col gap-4 sm:flex-row sm:gap-12 print:mb-6"
           >
             {/* Left column: Platform */}
-            <div className="sm:w-32 shrink-0 text-theme-secondary  text-sm pt-0.5">
+            <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-32">
               {contact.platform}
             </div>
 
             {/* Right column: Content */}
-            <div className="flex-1 flex flex-col justify-start items-start">
-              <a 
+            <div className="flex flex-1 flex-col items-start justify-start">
+              <a
                 href={buildContactUrl(contact.link, contact.platform)}
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:underline inline-block group text-theme-primary"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-block text-theme-primary hover:underline"
               >
                 <span className="text-sm font-semibold">
                   {extractUsername(contact.link, contact.platform)}
-                  <ArrowUpRight className="inline-block ml-1 w-4 h-4 relative -top-0.5" />
+                  <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
                 </span>
               </a>
             </div>

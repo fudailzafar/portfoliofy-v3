@@ -9,7 +9,9 @@ export function WorkExperience({
 }) {
   // Filter out invalid work experiences
   const validWork = useMemo(() => {
-    return work?.filter((item) => item.company && item.title && item.start) || [];
+    return (
+      work?.filter((item) => item.company && item.title && item.start) || []
+    );
   }, [work]);
 
   if (validWork.length === 0) {
@@ -18,8 +20,8 @@ export function WorkExperience({
 
   return (
     <section className="mb-12 print:mb-8">
-      <h2 
-        className="text-sm font-bold mb-8 print:mb-4 text-theme-primary" 
+      <h2
+        className="mb-8 text-sm font-bold text-theme-primary print:mb-4"
         id="work-experience"
       >
         Work Experience
@@ -32,44 +34,48 @@ export function WorkExperience({
         {validWork.map((item, idx) => (
           <div
             key={item.id || idx}
-            className="flex flex-col sm:flex-row gap-4 sm:gap-12 print:mb-6"
+            className="flex flex-col gap-4 sm:flex-row sm:gap-12 print:mb-6"
           >
             {/* Left column: Years */}
-            <div className="sm:w-32 shrink-0 text-theme-secondary  text-sm pt-0.5">
+            <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-32">
               {item.start} — {item.end || 'Now'}
             </div>
 
             {/* Right column: Content */}
-            <div className="flex-1 flex flex-col justify-start items-start">
-              <div className="flex items-center gap-1 group">
+            <div className="flex flex-1 flex-col items-start justify-start">
+              <div className="group flex items-center gap-1">
                 {item.link ? (
-                  <a 
-                    href={item.link.startsWith('http') ? item.link : `https://${item.link}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="hover:underline text-theme-primary"
+                  <a
+                    href={
+                      item.link.startsWith('http')
+                        ? item.link
+                        : `https://${item.link}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-theme-primary hover:underline"
                   >
                     <span className="text-sm font-semibold">
                       {item.title} at {item.company}
-                      <ArrowUpRight className="inline-block ml-1 w-4 h-4 relative -top-0.5" />
+                      <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
                     </span>
                   </a>
                 ) : (
-                  <p className="text-sm font-semibold text-theme-primary ">
+                  <p className="text-sm font-semibold text-theme-primary">
                     {item.title} at {item.company}
                   </p>
                 )}
               </div>
-              
+
               {item.location && (
-                <p className="mt-1 text-sm text-theme-secondary ">
+                <p className="mt-1 text-sm text-theme-secondary">
                   {item.location}
                 </p>
               )}
 
               {item.description && item.description !== '<p></p>' && (
-                <div 
-                  className="mt-4 text-sm text-theme-secondary prose prose-sm max-w-none leading-relaxed prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary"
+                <div
+                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-4 max-w-none text-sm leading-relaxed text-theme-secondary"
                   dangerouslySetInnerHTML={{ __html: item.description }}
                 />
               )}

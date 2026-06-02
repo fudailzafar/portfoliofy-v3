@@ -17,9 +17,7 @@ interface DeleteConfirmDialogProps {
   description: string;
   onConfirm: () => void;
   isLoading?: boolean;
-  /** Label shown on the confirm button (default: "Delete") */
   confirmLabel?: string;
-  /** Label shown while loading (default: "Deleting…") */
   loadingLabel?: string;
 }
 
@@ -39,21 +37,21 @@ export function DeleteConfirmDialog({
           <AlertDialogTitle className="text-xl font-bold text-gray-900">
             Are you sure?
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-sm text-gray-500 mt-2">
+          <AlertDialogDescription className="mt-2 text-sm text-gray-500">
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="mt-6 flex gap-2 sm:justify-end">
           <AlertDialogCancel
             disabled={isLoading}
-            className="rounded-md px-5 border border-gray-200 bg-white hover:bg-gray-50 h-9 text-sm font-medium text-gray-700 m-0"
+            className="m-0 h-9 rounded-md border border-gray-200 bg-white px-5 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isLoading}
-            className="rounded-md px-5 bg-red-600 hover:bg-red-700 text-white h-9 text-sm font-medium border-none m-0"
+            className="m-0 h-9 rounded-md border-none bg-red-600 px-5 text-sm font-medium text-white hover:bg-red-700"
           >
             {isLoading ? loadingLabel : confirmLabel}
           </AlertDialogAction>

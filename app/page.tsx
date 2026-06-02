@@ -3,13 +3,13 @@ import { Footer } from '../components/Footer';
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <main className="flex-1 flex flex-col font-sans text-gray-900 items-center">
-        <div className="w-full max-w-[500px] px-6 pt-24 pb-32 flex flex-col gap-6">
+    <div className="flex min-h-screen flex-col bg-white">
+      <main className="flex flex-1 flex-col items-center font-sans text-gray-900">
+        <div className="flex w-full max-w-[500px] flex-col gap-6 px-6 pb-32 pt-24">
           {/* Hero Section */}
           <HomeHero />
           {/* Feature 1: Create a beautiful profile */}
-          <div className="bg-[#f5f5f5] rounded-[24px] p-5 sm:p-8 pb-0 overflow-hidden flex flex-col relative">
+          <div className="relative flex flex-col overflow-hidden rounded-[24px] bg-[#f5f5f5] p-5 pb-0 sm:p-8">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -24,33 +24,40 @@ export default function Home() {
               }}
             />
             <div className="mb-8">
-              <h3 className="font-bold text-[17px] mb-1.5 text-gray-900">
+              <h3 className="mb-1.5 text-[17px] font-bold text-gray-900">
                 Create a beautiful profile
               </h3>
-              <p className="text-[15px] text-gray-500 leading-snug">
-                A fun and intuitive <a href="/claim" className="text-inherit no-underline hover:text-inherit cursor-text">editor</a> allows you to create a beautiful
-                profile in just a couple minutes.
+              <p className="text-[15px] leading-snug text-gray-500">
+                A fun and intuitive{' '}
+                <a
+                  href="/claim"
+                  className="cursor-text text-inherit no-underline hover:text-inherit"
+                >
+                  editor
+                </a>{' '}
+                allows you to create a beautiful profile in just a couple
+                minutes.
               </p>
             </div>
 
             {/* Mock UI */}
-            <div className="relative h-[200px] flex flex-col justify-start px-4 overflow-hidden -mx-4">
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#f5f5f5] pointer-events-none z-20"></div>
+            <div className="relative -mx-4 flex h-[200px] flex-col justify-start overflow-hidden px-4">
+              <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-b from-transparent to-[#f5f5f5]"></div>
 
-              <div className="text-[24px] text-gray-300 font-medium px-4 mb-4 tracking-tight">
+              <div className="mb-4 px-4 text-[24px] font-medium tracking-tight text-gray-300">
                 Side Projects
               </div>
 
-              <div className="bg-white border shadow-xl rounded-[18px] p-3 sm:p-4 flex items-center justify-between relative z-10 animate-drag w-full mx-auto max-w-[400px]">
-                <span className="font-medium text-[16px] sm:text-[20px] text-gray-900 tracking-tight truncate pr-2">
+              <div className="animate-drag relative z-10 mx-auto flex w-full max-w-[400px] items-center justify-between rounded-[18px] border bg-white p-3 shadow-xl sm:p-4">
+                <span className="truncate pr-2 text-[16px] font-medium tracking-tight text-gray-900 sm:text-[20px]">
                   Work Experience
                 </span>
-                <div className="flex flex-col gap-[3px] opacity-40 relative">
-                  <div className="w-5 h-[2px] bg-black rounded-full"></div>
-                  <div className="w-5 h-[2px] bg-black rounded-full"></div>
+                <div className="relative flex flex-col gap-[3px] opacity-40">
+                  <div className="h-[2px] w-5 rounded-full bg-black"></div>
+                  <div className="h-[2px] w-5 rounded-full bg-black"></div>
 
                   {/* Grabbing Hand SVG */}
-                  <div className="absolute -right-2 -bottom-6 w-8 h-8 opacity-100">
+                  <div className="absolute -bottom-6 -right-2 h-8 w-8 opacity-100">
                     <svg
                       viewBox="0 0 24 24"
                       fill="white"
@@ -66,38 +73,51 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="text-[24px] text-gray-300 font-medium px-4 mt-4 tracking-tight">
+              <div className="mt-4 px-4 text-[24px] font-medium tracking-tight text-gray-300">
                 Features
               </div>
-              <div className="text-[24px] text-gray-300 font-medium px-4 mt-6 tracking-tight">
+              <div className="mt-6 px-4 text-[24px] font-medium tracking-tight text-gray-300">
                 Writing
               </div>
             </div>
           </div>
 
           {/* Feature 2: Clean Design */}
-          <div className="bg-[#f5f5f5] rounded-[24px] p-5 sm:p-8 pb-0 overflow-hidden flex flex-col">
+          <div className="flex flex-col overflow-hidden rounded-[24px] bg-[#f5f5f5] p-5 pb-0 sm:p-8">
             <div className="mb-8">
-              <h3 className="font-bold text-[17px] mb-1.5">Clean & Minimal</h3>
-              <p className="text-[15px] text-gray-500 leading-snug">
-                <a href="/preview" className="text-inherit no-underline hover:text-inherit cursor-text">Profiles</a> are designed to be distraction-free, with optimized
-                typography and only the relevant <a href="/faq" className="text-inherit no-underline hover:text-inherit cursor-text">information</a> shown.
+              <h3 className="mb-1.5 text-[17px] font-bold">Clean & Minimal</h3>
+              <p className="text-[15px] leading-snug text-gray-500">
+                <a
+                  href="/preview"
+                  className="cursor-text text-inherit no-underline hover:text-inherit"
+                >
+                  Profiles
+                </a>{' '}
+                are designed to be distraction-free, with optimized typography
+                and only the relevant{' '}
+                <a
+                  href="/faq"
+                  className="cursor-text text-inherit no-underline hover:text-inherit"
+                >
+                  information
+                </a>{' '}
+                shown.
               </p>
             </div>
 
-            <div className="bg-white rounded-t-[16px] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-gray-200 border-b-0 p-4 sm:p-6 h-[180px]">
+            <div className="h-[180px] rounded-t-[16px] border border-b-0 border-gray-200 bg-white p-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] sm:p-6">
               <div className="flex gap-3 sm:gap-4">
                 <div className="w-1/3 space-y-2">
-                  <div className="h-2 w-16 bg-gray-300 rounded"></div>
-                  <div className="h-2 w-12 bg-gray-200 rounded"></div>
+                  <div className="h-2 w-16 rounded bg-gray-300"></div>
+                  <div className="h-2 w-12 rounded bg-gray-200"></div>
                 </div>
                 <div className="w-2/3 space-y-3">
-                  <div className="h-3 w-32 bg-gray-800 rounded"></div>
-                  <div className="h-2 w-24 bg-gray-400 rounded"></div>
+                  <div className="h-3 w-32 rounded bg-gray-800"></div>
+                  <div className="h-2 w-24 rounded bg-gray-400"></div>
                   <div className="space-y-1.5 pt-2">
-                    <div className="h-1.5 w-full bg-gray-200 rounded"></div>
-                    <div className="h-1.5 w-5/6 bg-gray-200 rounded"></div>
-                    <div className="h-1.5 w-4/6 bg-gray-200 rounded"></div>
+                    <div className="h-1.5 w-full rounded bg-gray-200"></div>
+                    <div className="h-1.5 w-5/6 rounded bg-gray-200"></div>
+                    <div className="h-1.5 w-4/6 rounded bg-gray-200"></div>
                   </div>
                 </div>
               </div>
@@ -105,7 +125,7 @@ export default function Home() {
           </div>
 
           {/* Feature 3: Find who you're looking for */}
-          <div className="bg-[#f5f5f5] rounded-[24px] p-5 sm:p-8 pb-0 overflow-hidden flex flex-col relative">
+          <div className="relative flex flex-col overflow-hidden rounded-[24px] bg-[#f5f5f5] p-5 pb-0 sm:p-8">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -120,52 +140,54 @@ export default function Home() {
               }}
             />
             <div className="mb-8">
-              <h3 className="font-bold text-[17px] mb-1.5 text-gray-900">
+              <h3 className="mb-1.5 text-[17px] font-bold text-gray-900">
                 Find who you're looking for
               </h3>
-              <p className="text-[15px] text-gray-500 leading-snug">
+              <p className="text-[15px] leading-snug text-gray-500">
                 Search by title, location, and username.
               </p>
             </div>
 
             <div className="h-[180px] w-full">
-              <div className="bg-white border shadow-sm rounded-full px-3 sm:px-5 py-2 sm:py-3 flex items-center mb-6 max-w-[95%]">
-                <span className="text-gray-900 font-medium text-[15px] sm:text-[18px] tracking-tight flex items-center">
+              <div className="mb-6 flex max-w-[95%] items-center rounded-full border bg-white px-3 py-2 shadow-sm sm:px-5 sm:py-3">
+                <span className="flex items-center text-[15px] font-medium tracking-tight text-gray-900 sm:text-[18px]">
                   Art director
-                  <span className="inline-block w-[2px] h-[1.1em] bg-blue-500 ml-0.5 animate-blink"></span>
+                  <span className="animate-blink ml-0.5 inline-block h-[1.1em] w-[2px] bg-blue-500"></span>
                 </span>
               </div>
 
               <div className="space-y-4 px-1 sm:px-2">
-                <div className="flex gap-3 sm:gap-4 items-center">
-                  <div className="size-10 sm:size-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-gray-200 sm:size-12">
                     <img
                       src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lauren"
                       alt="Lauren"
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="leading-tight">
-                    <div className="text-[14px] sm:text-[16px] text-gray-400">
+                    <div className="text-[14px] text-gray-400 sm:text-[16px]">
                       Lauren Jochum
                     </div>
-                    <div className="text-[13px] sm:text-[15px] text-gray-400">
+                    <div className="text-[13px] text-gray-400 sm:text-[15px]">
                       <strong className="text-gray-400">Art director</strong> in
                       Berkeley
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-3 sm:gap-4 items-center opacity-30">
-                  <div className="size-10 sm:size-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                <div className="flex items-center gap-3 opacity-30 sm:gap-4">
+                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-gray-200 sm:size-12">
                     <img
                       src="https://api.dicebear.com/7.x/avataaars/svg?seed=Skip"
                       alt="Skip"
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="leading-tight">
-                    <div className="text-[14px] sm:text-[16px] text-gray-400">Skip Hursh</div>
-                    <div className="text-[13px] sm:text-[15px] text-gray-400">
+                    <div className="text-[14px] text-gray-400 sm:text-[16px]">
+                      Skip Hursh
+                    </div>
+                    <div className="text-[13px] text-gray-400 sm:text-[15px]">
                       <strong className="text-gray-400">Art director</strong> in
                       NYC
                     </div>
@@ -176,65 +198,65 @@ export default function Home() {
           </div>
 
           {/* Feature 4: Use it anywhere */}
-          <div className="bg-[#f5f5f5] rounded-[24px] p-5 sm:p-8 pb-0 overflow-hidden flex flex-col">
+          <div className="flex flex-col overflow-hidden rounded-[24px] bg-[#f5f5f5] p-5 pb-0 sm:p-8">
             <div className="mb-6 sm:mb-8">
-              <h3 className="font-bold text-[17px] mb-1.5 text-gray-900">
+              <h3 className="mb-1.5 text-[17px] font-bold text-gray-900">
                 Use it anywhere
               </h3>
-              <p className="text-[15px] text-gray-500 leading-snug">
+              <p className="text-[15px] leading-snug text-gray-500">
                 Add your link wherever your audience is.
               </p>
             </div>
 
-            <div className="bg-white rounded-t-[16px] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-gray-200 border-b-0 p-5 sm:p-8 h-auto sm:h-[220px]">
-              <div className="flex items-center gap-4 sm:gap-8 mb-4">
-                <div className="size-[64px] sm:size-[84px] rounded-full p-[2px] sm:p-[3px] bg-gradient-to-tr from-[#feda75] via-[#fa7e1e] to-[#d62976] shrink-0">
-                  <div className="w-full h-full bg-white rounded-full p-0.5">
-                    <div className="w-full h-full bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-auto rounded-t-[16px] border border-b-0 border-gray-200 bg-white p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] sm:h-[220px] sm:p-8">
+              <div className="mb-4 flex items-center gap-4 sm:gap-8">
+                <div className="size-[64px] shrink-0 rounded-full bg-gradient-to-tr from-[#feda75] via-[#fa7e1e] to-[#d62976] p-[2px] sm:size-[84px] sm:p-[3px]">
+                  <div className="h-full w-full rounded-full bg-white p-0.5">
+                    <div className="h-full w-full overflow-hidden rounded-full bg-gray-200">
                       <img
                         src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tom"
                         alt="Tom Chung"
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-3 sm:gap-6 text-center w-full justify-around sm:justify-center pr-0 sm:pr-4">
+                <div className="flex w-full justify-around gap-3 pr-0 text-center sm:justify-center sm:gap-6 sm:pr-4">
                   <div className="flex flex-col items-center">
-                    <div className="font-semibold text-[17px] sm:text-[19px] text-gray-900">
+                    <div className="text-[17px] font-semibold text-gray-900 sm:text-[19px]">
                       54
                     </div>
-                    <div className="text-[13px] sm:text-[14px] text-gray-900 tracking-tight">
+                    <div className="text-[13px] tracking-tight text-gray-900 sm:text-[14px]">
                       Posts
                     </div>
                   </div>
                   <div className="flex flex-col items-center">
-                    <div className="font-semibold text-[17px] sm:text-[19px] text-gray-900">
+                    <div className="text-[17px] font-semibold text-gray-900 sm:text-[19px]">
                       368
                     </div>
-                    <div className="text-[13px] sm:text-[14px] text-gray-900 tracking-tight">
+                    <div className="text-[13px] tracking-tight text-gray-900 sm:text-[14px]">
                       Followers
                     </div>
                   </div>
-                  <div className="hidden sm:flex flex-col items-center">
-                    <div className="font-semibold text-[17px] sm:text-[19px] text-gray-900">
+                  <div className="hidden flex-col items-center sm:flex">
+                    <div className="text-[17px] font-semibold text-gray-900 sm:text-[19px]">
                       115
                     </div>
-                    <div className="text-[13px] sm:text-[14px] text-gray-900 tracking-tight">
+                    <div className="text-[13px] tracking-tight text-gray-900 sm:text-[14px]">
                       Following
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-col leading-snug ml-1 pb-4 sm:pb-0">
-                <span className="font-semibold text-[15px] sm:text-[16px] text-gray-900">
+              <div className="ml-1 flex flex-col pb-4 leading-snug sm:pb-0">
+                <span className="text-[15px] font-semibold text-gray-900 sm:text-[16px]">
                   Tom Chung
                 </span>
-                <span className="text-[14px] sm:text-[15px] text-gray-500">
+                <span className="text-[14px] text-gray-500 sm:text-[15px]">
                   Architectural Designer
                 </span>
-                <span className="text-[14px] sm:text-[15px] text-[#00376b]">
+                <span className="text-[14px] text-[#00376b] sm:text-[15px]">
                   portfoliofy.me/tom
                 </span>
               </div>

@@ -89,8 +89,8 @@ export function PersonalDomainTab({ username }: { username: string }) {
       : '76.76.21.21';
 
   return (
-    <div className="max-w-2xl mx-auto h-full flex flex-col pt-8">
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+    <div className="mx-auto flex h-full max-w-2xl flex-col pt-8">
+      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
         <h2 className="text-2xl font-bold text-gray-900">Personal Domain</h2>
         <a
           href={
@@ -100,7 +100,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
           }
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center rounded-md text-[13px] font-medium border border-gray-200 bg-white hover:bg-gray-50 text-gray-900 h-8 px-4 transition-colors shadow-sm"
+          className="inline-flex h-8 items-center justify-center rounded-md border border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-900 shadow-sm transition-colors hover:bg-gray-50"
         >
           Visit site
         </a>
@@ -111,12 +111,12 @@ export function PersonalDomainTab({ username }: { username: string }) {
         <div className="space-y-6">
           <div className="flex flex-col gap-4">
             <div className="space-y-1">
-              <h4 className="text-gray-900 text-[14px]">Custom domain</h4>
-              <p className="text-[#888888] text-[13px]">
+              <h4 className="text-[14px] text-gray-900">Custom domain</h4>
+              <p className="text-[13px] text-[#888888]">
                 Optionally set a domain other than{' '}
                 <a
                   href={`https://portfoliofy.me/${username}`}
-                  className="text-gray-900 hover:underline underline-offset-2"
+                  className="text-gray-900 underline-offset-2 hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -126,12 +126,12 @@ export function PersonalDomainTab({ username }: { username: string }) {
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="relative flex-1 max-w-[320px]">
+              <div className="relative max-w-[320px] flex-1">
                 {domainStatus?.verified ? (
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
-                    <div className="bg-[#7cb44d] rounded-full p-[2px]">
+                  <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
+                    <div className="rounded-full bg-[#7cb44d] p-[2px]">
                       <svg
-                        className="w-[10px] h-[10px] text-white"
+                        className="h-[10px] w-[10px] text-white"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -145,17 +145,19 @@ export function PersonalDomainTab({ username }: { username: string }) {
                     </div>
                   </div>
                 ) : domainStatus ? (
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
-                    <div className="bg-[#ebd955] text-white rounded-full w-[14px] h-[14px] flex items-center justify-center text-[10px] font-bold">
+                  <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
+                    <div className="flex h-[14px] w-[14px] items-center justify-center rounded-full bg-[#ebd955] text-[10px] font-bold text-white">
                       ?
                     </div>
                   </div>
                 ) : null}
                 <Input
                   value={customDomain}
-                  onChange={(e) => setCustomDomain(e.target.value.toLowerCase())}
+                  onChange={(e) =>
+                    setCustomDomain(e.target.value.toLowerCase())
+                  }
                   placeholder="yourname.com…"
-                  className={`w-full bg-[#f2f2f2] border-0 focus-visible:ring-0 shadow-none text-[13px] h-9 ${domainStatus ? 'pl-9 text-gray-700' : ''}`}
+                  className={`h-9 w-full border-0 bg-[#f2f2f2] text-[13px] shadow-none focus-visible:ring-0 ${domainStatus ? 'pl-9 text-gray-700' : ''}`}
                   disabled={!!domainStatus}
                 />
               </div>
@@ -163,7 +165,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-9 border-gray-200 text-gray-500 font-normal text-[13px] hover:text-gray-900 rounded-lg"
+                  className="h-9 rounded-lg border-gray-200 text-[13px] font-normal text-gray-500 hover:text-gray-900"
                   onClick={handleDomainSave}
                   disabled={isVerifyingDomain || !customDomain}
                 >
@@ -174,7 +176,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 border-gray-200 text-gray-400 font-normal text-[13px] rounded-lg"
+                    className="h-9 rounded-lg border-gray-200 text-[13px] font-normal text-gray-400"
                     disabled
                   >
                     Save
@@ -182,7 +184,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 border-gray-200 text-gray-500 font-normal text-[13px] hover:text-gray-900 rounded-lg"
+                    className="h-9 rounded-lg border-gray-200 text-[13px] font-normal text-gray-500 hover:text-gray-900"
                     onClick={handleDomainRemove}
                     disabled={isVerifyingDomain}
                   >
@@ -195,35 +197,36 @@ export function PersonalDomainTab({ username }: { username: string }) {
             {domainStatus && (
               <>
                 {domainStatus.verified ? (
-                  <div className="mt-1 relative max-w-[400px]">
-                    <div className="absolute -top-[6px] left-8 w-3 h-3 bg-[#e8eedd] rotate-45 transform origin-center" />
-                    <div className="relative bg-[#e8eedd] text-[#6b8949] text-[13px] px-4 py-2.5 rounded-lg">
+                  <div className="relative mt-1 max-w-[400px]">
+                    <div className="absolute -top-[6px] left-8 h-3 w-3 origin-center rotate-45 transform bg-[#e8eedd]" />
+                    <div className="relative rounded-lg bg-[#e8eedd] px-4 py-2.5 text-[13px] text-[#6b8949]">
                       Your site is published at{' '}
                       <a
                         href={`https://${customDomain}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:underline font-medium decoration-[#6b8949] underline-offset-2"
+                        className="font-medium decoration-[#6b8949] underline-offset-2 hover:underline"
                       >
                         {customDomain}
                       </a>
                     </div>
                   </div>
                 ) : (
-                  <div className="mt-1 relative max-w-[500px]">
-                    <div className="absolute -top-[6px] left-8 w-3 h-3 bg-[#f0eed9] rotate-45 transform origin-center" />
-                    <div className="relative bg-[#f0eed9] rounded-xl overflow-hidden px-5 py-4">
-                      <p className="text-[#645c38] text-[13px] mb-4">
-                        Set the following record on your DNS provider to continue.
+                  <div className="relative mt-1 max-w-[500px]">
+                    <div className="absolute -top-[6px] left-8 h-3 w-3 origin-center rotate-45 transform bg-[#f0eed9]" />
+                    <div className="relative overflow-hidden rounded-xl bg-[#f0eed9] px-5 py-4">
+                      <p className="mb-4 text-[13px] text-[#645c38]">
+                        Set the following record on your DNS provider to
+                        continue.
                       </p>
 
-                      <div className="grid grid-cols-4 gap-2 text-[13px] font-medium text-[#7d754b] mb-1.5">
+                      <div className="mb-1.5 grid grid-cols-4 gap-2 text-[13px] font-medium text-[#7d754b]">
                         <div>Type</div>
                         <div>Name</div>
                         <div className="col-span-2">Value</div>
                       </div>
 
-                      <div className="grid grid-cols-4 gap-2 text-[13px] text-[#4a4529] items-center">
+                      <div className="grid grid-cols-4 items-center gap-2 text-[13px] text-[#4a4529]">
                         <div>
                           {domainStatus.verification?.length > 0
                             ? domainStatus.verification[0].type
@@ -234,15 +237,15 @@ export function PersonalDomainTab({ username }: { username: string }) {
                             ? domainStatus.verification[0].domain
                             : '@'}
                         </div>
-                        <div className="col-span-2 flex items-center justify-between group">
+                        <div className="group col-span-2 flex items-center justify-between">
                           <div
-                            className="bg-[#e4e0c7] px-1.5 py-0.5 rounded cursor-pointer selection:bg-transparent"
+                            className="cursor-pointer rounded bg-[#e4e0c7] px-1.5 py-0.5 selection:bg-transparent"
                             onClick={() => copyValue(dnsValue)}
                           >
                             {dnsValue}
                           </div>
                           <button
-                            className="text-[12px] font-medium opacity-60 hover:opacity-100 transition-opacity"
+                            className="text-[12px] font-medium opacity-60 transition-opacity hover:opacity-100"
                             onClick={() => copyValue(dnsValue)}
                             aria-label="Copy DNS value"
                           >
@@ -252,13 +255,14 @@ export function PersonalDomainTab({ username }: { username: string }) {
                       </div>
                     </div>
 
-                    <div className="mt-3 text-[12px] text-[#a0a0a0] leading-relaxed">
-                      Please note that changing DNS settings can take several minutes to take
-                      effect. If you've already updated your DNS settings{' '}
+                    <div className="mt-3 text-[12px] leading-relaxed text-[#a0a0a0]">
+                      Please note that changing DNS settings can take several
+                      minutes to take effect. If you've already updated your DNS
+                      settings{' '}
                       <button
                         onClick={fetchDomain}
                         disabled={isVerifyingDomain}
-                        className="text-gray-700 hover:text-black font-medium underline decoration-gray-300 underline-offset-2 disabled:opacity-50"
+                        className="font-medium text-gray-700 underline decoration-gray-300 underline-offset-2 hover:text-black disabled:opacity-50"
                       >
                         click here to manually refresh
                       </button>
@@ -272,10 +276,10 @@ export function PersonalDomainTab({ username }: { username: string }) {
         </div>
 
         {/* Typography */}
-        <div className="space-y-4 pt-8 mt-4 border-t border-gray-100">
+        <div className="mt-4 space-y-4 border-t border-gray-100 pt-8">
           <div>
-            <h4 className="text-gray-900 text-[14px]">Typography</h4>
-            <p className="text-[#888888] text-[13px] mt-1">
+            <h4 className="text-[14px] text-gray-900">Typography</h4>
+            <p className="mt-1 text-[13px] text-[#888888]">
               Change the typography shown on{' '}
               <span className="text-gray-900">{siteLabel}</span>
             </p>
@@ -284,33 +288,55 @@ export function PersonalDomainTab({ username }: { username: string }) {
           <div className="flex flex-col gap-5">
             {(
               [
-                { value: 'sans', label: 'Sans', description: 'Graphik, designed by Christian Schwartz in 2009.', fontClass: 'font-sans' },
-                { value: 'serif', label: 'Serif', description: 'Signifier, designed by Kris Sowersby in 2020.', fontClass: 'font-serif' },
-                { value: 'mono', label: 'Mono', description: 'Diatype Mono, designed by Dinamo in 2020.', fontClass: '' },
+                {
+                  value: 'sans',
+                  label: 'Sans',
+                  description:
+                    'Graphik, designed by Christian Schwartz in 2009.',
+                  fontClass: 'font-sans',
+                },
+                {
+                  value: 'serif',
+                  label: 'Serif',
+                  description: 'Signifier, designed by Kris Sowersby in 2020.',
+                  fontClass: 'font-serif',
+                },
+                {
+                  value: 'mono',
+                  label: 'Mono',
+                  description: 'Diatype Mono, designed by Dinamo in 2020.',
+                  fontClass: '',
+                },
               ] as const
             ).map(({ value, label, description, fontClass }) => (
               <div
                 key={value}
-                className="flex items-center gap-4 cursor-pointer group"
+                className="group flex cursor-pointer items-center gap-4"
                 onClick={() => {
                   updateDesign({ typography: value });
                   setHasUnsavedChanges(true);
                 }}
               >
                 <div
-                  className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${
+                  className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${
                     typography === value
                       ? 'border-[2.5px] border-[#3b82f6] bg-white'
                       : 'border border-gray-200 bg-white group-hover:border-gray-300'
                   }`}
                 >
-                  <span className={`text-[22px] font-medium text-gray-900 tracking-tight ${fontClass}`}>
+                  <span
+                    className={`text-[22px] font-medium tracking-tight text-gray-900 ${fontClass}`}
+                  >
                     Aa
                   </span>
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[14px] text-gray-900 font-medium">{label}</span>
-                  <span className="text-[14px] text-[#737373]">{description}</span>
+                  <span className="text-[14px] font-medium text-gray-900">
+                    {label}
+                  </span>
+                  <span className="text-[14px] text-[#737373]">
+                    {description}
+                  </span>
                 </div>
               </div>
             ))}
@@ -318,10 +344,10 @@ export function PersonalDomainTab({ username }: { username: string }) {
         </div>
 
         {/* Theme */}
-        <div className="space-y-4 pt-8 mt-4 border-t border-gray-100">
+        <div className="mt-4 space-y-4 border-t border-gray-100 pt-8">
           <div>
-            <h4 className="text-gray-900 text-[14px]">Theme</h4>
-            <p className="text-[#888888] text-[13px] mt-1">
+            <h4 className="text-[14px] text-gray-900">Theme</h4>
+            <p className="mt-1 text-[13px] text-[#888888]">
               Change the theme shown on {siteLabel}
             </p>
           </div>
@@ -329,26 +355,77 @@ export function PersonalDomainTab({ username }: { username: string }) {
           <div className="flex flex-col gap-5 pt-2">
             {(
               [
-                { value: 'default',  label: 'Default',   description: 'Classic grayscale.',              bg: '#ffffff', fg: '#111827', border: '#e5e7eb' },
-                { value: 'brutalist',label: 'Brutalist',  description: 'Raw internet materials.',         bg: '#b6b6b6', fg: '#000000', border: 'transparent' },
-                { value: 'swiss',    label: 'Swiss',      description: 'International typographic style.',bg: '#e3583d', fg: '#ffffff', border: 'transparent' },
-                { value: 'klein',    label: 'Klein',      description: 'International Klein Blue.',       bg: '#1538a7', fg: '#ffffff', border: 'transparent' },
-                { value: 'red',      label: 'Red',        description: 'Radiates energy.',                bg: '#fcf4f0', fg: '#ea5b4d', border: 'transparent' },
-                { value: 'green',    label: 'Green',      description: 'Lush and leafy.',                 bg: '#eff8eb', fg: '#4fa847', border: 'transparent' },
-                { value: 'blue',     label: 'Blue',       description: 'Da ba dee da ba di.',             bg: '#eaf3fa', fg: '#267efb', border: 'transparent' },
+                {
+                  value: 'default',
+                  label: 'Default',
+                  description: 'Classic grayscale.',
+                  bg: '#ffffff',
+                  fg: '#111827',
+                  border: '#e5e7eb',
+                },
+                {
+                  value: 'brutalist',
+                  label: 'Brutalist',
+                  description: 'Raw internet materials.',
+                  bg: '#b6b6b6',
+                  fg: '#000000',
+                  border: 'transparent',
+                },
+                {
+                  value: 'swiss',
+                  label: 'Swiss',
+                  description: 'International typographic style.',
+                  bg: '#e3583d',
+                  fg: '#ffffff',
+                  border: 'transparent',
+                },
+                {
+                  value: 'klein',
+                  label: 'Klein',
+                  description: 'International Klein Blue.',
+                  bg: '#1538a7',
+                  fg: '#ffffff',
+                  border: 'transparent',
+                },
+                {
+                  value: 'red',
+                  label: 'Red',
+                  description: 'Radiates energy.',
+                  bg: '#fcf4f0',
+                  fg: '#ea5b4d',
+                  border: 'transparent',
+                },
+                {
+                  value: 'green',
+                  label: 'Green',
+                  description: 'Lush and leafy.',
+                  bg: '#eff8eb',
+                  fg: '#4fa847',
+                  border: 'transparent',
+                },
+                {
+                  value: 'blue',
+                  label: 'Blue',
+                  description: 'Da ba dee da ba di.',
+                  bg: '#eaf3fa',
+                  fg: '#267efb',
+                  border: 'transparent',
+                },
               ] as const
             ).map(({ value, label, description, bg, fg, border }) => (
               <div
                 key={value}
-                className="flex items-center gap-4 cursor-pointer group"
+                className="group flex cursor-pointer items-center gap-4"
                 onClick={() => {
                   updateDesign({ theme: value });
                   setHasUnsavedChanges(true);
                 }}
               >
                 <div
-                  className={`flex items-center justify-center w-[60px] h-[60px] rounded-[16px] shrink-0 transition-colors ${
-                    theme === value ? 'border-[2.5px] border-[#3b82f6]' : 'border'
+                  className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${
+                    theme === value
+                      ? 'border-[2.5px] border-[#3b82f6]'
+                      : 'border'
                   } group-hover:border-gray-300`}
                   style={{
                     backgroundColor: bg,
@@ -363,8 +440,12 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   </span>
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[14px] text-gray-900 font-medium">{label}</span>
-                  <span className="text-[14px] text-[#737373]">{description}</span>
+                  <span className="text-[14px] font-medium text-gray-900">
+                    {label}
+                  </span>
+                  <span className="text-[14px] text-[#737373]">
+                    {description}
+                  </span>
                 </div>
               </div>
             ))}

@@ -1,19 +1,30 @@
 import LoadingFallback from '../LoadingFallback';
 import { ResumeData } from '../../lib/server/redisActions';
 import { sortByDateDesc } from '../../lib/resume';
-import { Education } from './Education';
-import { Header } from './Header';
-import { Skills } from './Skills';
-import { Summary } from './Summary';
-import { WorkExperience } from './WorkExperience';
-import { SideProjects } from './SideProjects';
-import { Speaking } from './Speaking';
-import { Projects } from './Projects';
-import { Contact } from './Contact';
-import { Features } from './Features';
-import { Volunteering } from './Volunteering';
+import { Education } from './preview/Education';
+import { Header } from './preview/Header';
+import { Skills } from './preview/Skills';
+import { Summary } from './preview/Summary';
+import { WorkExperience } from './preview/WorkExperience';
+import { SideProjects } from './preview/SideProjects';
+import { Speaking } from './preview/Speaking';
+import { Projects } from './preview/Projects';
+import { Contact } from './preview/Contact';
+import { Features } from './preview/Features';
+import { Volunteering } from './preview/Volunteering';
 
-const DEFAULT_ORDER = ['work', 'side_projects', 'speaking', 'features', 'projects', 'skills', 'education', 'contact', 'awards', 'exhibitions'];
+const DEFAULT_ORDER = [
+  'work',
+  'side_projects',
+  'speaking',
+  'features',
+  'projects',
+  'skills',
+  'education',
+  'contact',
+  'awards',
+  'exhibitions',
+];
 
 export const FullResume = ({
   resume,
@@ -26,11 +37,13 @@ export const FullResume = ({
     return <LoadingFallback message="Loading Resume..." />;
   }
 
-  const order = (resume.sectionOrder || DEFAULT_ORDER).map(id => id === 'writing' ? 'features' : id === 'exhibitions' ? 'volunteering' : id);
+  const order = (resume.sectionOrder || DEFAULT_ORDER).map((id) =>
+    id === 'writing' ? 'features' : id === 'exhibitions' ? 'volunteering' : id,
+  );
 
   return (
     <section
-      className="mx-auto w-full max-w-xl space-y-8 bg-theme-bg print:space-y-4 my-8 px-4"
+      className="mx-auto my-8 w-full max-w-xl space-y-8 bg-theme-bg px-4 print:space-y-4"
       aria-label="Resume Content"
     >
       <Header header={resume?.header} picture={profilePicture} />
@@ -41,19 +54,54 @@ export const FullResume = ({
         {order.map((sectionId) => {
           switch (sectionId) {
             case 'work':
-              return <WorkExperience key={sectionId} work={sortByDateDesc(resume?.workExperience)} />;
+              return (
+                <WorkExperience
+                  key={sectionId}
+                  work={sortByDateDesc(resume?.workExperience)}
+                />
+              );
             case 'side_projects':
-              return <SideProjects key={sectionId} sideProjects={sortByDateDesc(resume?.sideProjects)} />;
+              return (
+                <SideProjects
+                  key={sectionId}
+                  sideProjects={sortByDateDesc(resume?.sideProjects)}
+                />
+              );
             case 'speaking':
-              return <Speaking key={sectionId} speaking={sortByDateDesc(resume?.speaking)} />;
+              return (
+                <Speaking
+                  key={sectionId}
+                  speaking={sortByDateDesc(resume?.speaking)}
+                />
+              );
             case 'features':
-              return <Features key={sectionId} features={sortByDateDesc(resume?.features)} />;
+              return (
+                <Features
+                  key={sectionId}
+                  features={sortByDateDesc(resume?.features)}
+                />
+              );
             case 'volunteering':
-              return <Volunteering key={sectionId} volunteering={sortByDateDesc(resume?.volunteering)} />;
+              return (
+                <Volunteering
+                  key={sectionId}
+                  volunteering={sortByDateDesc(resume?.volunteering)}
+                />
+              );
             case 'projects':
-              return <Projects key={sectionId} projects={sortByDateDesc(resume?.projects)} />;
+              return (
+                <Projects
+                  key={sectionId}
+                  projects={sortByDateDesc(resume?.projects)}
+                />
+              );
             case 'education':
-              return <Education key={sectionId} educations={sortByDateDesc(resume?.education)} />;
+              return (
+                <Education
+                  key={sectionId}
+                  educations={sortByDateDesc(resume?.education)}
+                />
+              );
             case 'contact':
               return <Contact key={sectionId} contacts={resume?.contacts} />;
             case 'skills':

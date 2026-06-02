@@ -17,7 +17,9 @@ export async function POST(request: Request) {
     }
 
     const userId = session.user.id;
-    const existing = await upstashRedis.get<Record<string, any>>(`user:profile:${userId}`);
+    const existing = await upstashRedis.get<Record<string, any>>(
+      `user:profile:${userId}`,
+    );
     await upstashRedis.set(`user:profile:${userId}`, {
       ...existing,
       customImage: url,
@@ -28,7 +30,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Avatar save failed:', error);
-    return NextResponse.json({ error: 'Failed to save avatar' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to save avatar' },
+      { status: 500 },
+    );
   }
 }
 
@@ -41,7 +46,9 @@ export async function DELETE() {
     }
 
     const userId = session.user.id;
-    const existing = await upstashRedis.get<Record<string, any>>(`user:profile:${userId}`);
+    const existing = await upstashRedis.get<Record<string, any>>(
+      `user:profile:${userId}`,
+    );
     if (existing) {
       const { customImage, ...rest } = existing;
       await upstashRedis.set(`user:profile:${userId}`, rest);
@@ -51,6 +58,9 @@ export async function DELETE() {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Avatar removal failed:', error);
-    return NextResponse.json({ error: 'Failed to remove image' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to remove image' },
+      { status: 500 },
+    );
   }
 }

@@ -15,19 +15,24 @@ export function Skills({ skills, className }: SkillsProps) {
   if (!skills || skills.length === 0) return null;
 
   return (
-    <section className={cn("mb-12 print:mb-8", className)}>
-      <h2 className="text-sm font-bold mb-8 print:mb-4 text-theme-primary" id="skills-section">
+    <section className={cn('mb-12 print:mb-8', className)}>
+      <h2
+        className="mb-8 text-sm font-bold text-theme-primary print:mb-4"
+        id="skills-section"
+      >
         Skills
       </h2>
       <div
-        className="text-sm font-semibold text-theme-primary  leading-relaxed"
+        className="text-sm font-semibold leading-relaxed text-theme-primary"
         aria-label="List of skills"
         aria-labelledby="skills-section"
       >
         {skills.map((skill, index) => (
           <span key={skill} className="inline-block">
             {skill}
-            {index < skills.length - 1 && <span className="mx-2 text-theme-secondary">•</span>}
+            {index < skills.length - 1 && (
+              <span className="mx-2 text-theme-secondary">•</span>
+            )}
           </span>
         ))}
       </div>

@@ -12,7 +12,8 @@ export function Education({
 }) {
   // Filter out invalid education entries
   const validEducations = useMemo(
-    () => educations?.filter((edu) => edu.school && edu.degree && edu.end) || [],
+    () =>
+      educations?.filter((edu) => edu.school && edu.degree && edu.end) || [],
     [educations],
   );
 
@@ -22,8 +23,8 @@ export function Education({
 
   return (
     <section className="mb-12 print:mb-8">
-      <h2 
-        className="text-sm font-bold mb-8 print:mb-4 text-theme-primary" 
+      <h2
+        className="mb-8 text-sm font-bold text-theme-primary print:mb-4"
         id="education-section"
       >
         Education
@@ -36,21 +37,21 @@ export function Education({
         {validEducations.map((edu, idx) => (
           <div
             key={edu.id || idx}
-            className="flex flex-col sm:flex-row gap-4 sm:gap-12 print:mb-6"
+            className="flex flex-col gap-4 sm:flex-row sm:gap-12 print:mb-6"
           >
             {/* Left column: Years */}
-            <div className="sm:w-32 shrink-0 text-theme-secondary  text-sm pt-0.5">
+            <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-32">
               {edu.start ? `${edu.start} — ${edu.end}` : edu.end}
             </div>
 
             {/* Right column: Content */}
-            <div className="flex-1 flex flex-col justify-start items-start">
-              <p className="text-sm font-semibold text-theme-primary ">
+            <div className="flex flex-1 flex-col items-start justify-start">
+              <p className="text-sm font-semibold text-theme-primary">
                 {edu.degree} at {edu.school}
               </p>
-              
+
               {edu.location && (
-                <p className="mt-1 text-sm text-theme-secondary ">
+                <p className="mt-1 text-sm text-theme-secondary">
                   {edu.location}
                 </p>
               )}
