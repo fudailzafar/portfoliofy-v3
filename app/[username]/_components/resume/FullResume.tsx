@@ -1,6 +1,6 @@
-import LoadingFallback from '../LoadingFallback';
-import { ResumeData } from '../../lib/server/redisActions';
-import { sortByDateDesc } from '../../lib/resume';
+import LoadingFallback from '@/components/LoadingFallback';
+import { ResumeData } from '@/lib/server/redisActions';
+import { sortByDateDesc } from '@/lib/resume';
 import { Education } from './preview/Education';
 import { Header } from './preview/Header';
 import { Skills } from './preview/Skills';
