@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AuthDialog } from './AuthDialog';
 import { Button } from '@/components/ui/button';
 import { ExploreSidebar } from './ExploreSidebar';
@@ -17,6 +17,12 @@ export function GlobalSidebar() {
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [isExploreMode, setIsExploreMode] = useState(false);
+
+  useEffect(() => {
+    const handleToggle = () => setIsExploreMode((prev) => !prev);
+    window.addEventListener('toggleExploreMode', handleToggle);
+    return () => window.removeEventListener('toggleExploreMode', handleToggle as EventListener);
+  }, []);
 
   const openAuth = (mode: 'login' | 'signup') => {
     setAuthMode(mode);
