@@ -30,12 +30,15 @@ export async function generateMetadata({
     };
   }
 
+  const stripHtml = (html: string) => (html ? html.replace(/<[^>]*>?/gm, '') : '');
+  const plainSummary = stripHtml(resume.resumeData.summary);
+
   return {
     title: `${resume.resumeData.header.name}`,
-    description: resume.resumeData.summary,
+    description: plainSummary,
     openGraph: {
       title: `${resume.resumeData.header.name}`,
-      description: resume.resumeData.summary,
+      description: plainSummary,
       images: [
         {
           url: `https://portfoliofy.me/${username}/og`,
@@ -158,13 +161,15 @@ export default async function ProfilePage({
 
   const profilePicture = userProfile?.avatarUrl ?? undefined;
 
+  const stripHtml = (html: string) => (html ? html.replace(/<[^>]*>?/gm, '') : '');
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: resume.resumeData.header.name,
     image: profilePicture,
     jobTitle: resume.resumeData.header.shortAbout,
-    description: resume.resumeData.summary,
+    description: stripHtml(resume.resumeData.summary),
     email: resume.resumeData.contacts?.find(
       (c: any) => c.platform.toLowerCase() === 'email',
     )?.link,
