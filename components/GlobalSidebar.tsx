@@ -6,8 +6,9 @@ import { useSession, signOut } from 'next-auth/react';
 import { useState } from 'react';
 import { AuthDialog } from './AuthDialog';
 import { Button } from '@/components/ui/button';
-import { useUserActions } from '@/hooks/useUserActions';
+import { ExploreSidebar } from './ExploreSidebar';
 import { toast } from 'sonner';
+import { useUserActions } from '@/hooks/useUserActions';
 
 export function GlobalSidebar() {
   const pathname = usePathname();
@@ -15,6 +16,7 @@ export function GlobalSidebar() {
   const { usernameQuery, resumeQuery } = useUserActions();
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [isExploreMode, setIsExploreMode] = useState(false);
 
   const openAuth = (mode: 'login' | 'signup') => {
     setAuthMode(mode);
@@ -24,11 +26,18 @@ export function GlobalSidebar() {
   const displayName =
     resumeQuery.data?.resume?.resumeData?.header?.name || session?.user?.name;
 
+  if (isExploreMode) {
+    return <ExploreSidebar onClose={() => setIsExploreMode(false)} />;
+  }
+
   return (
     <>
       <div className="flex h-full w-[260px] flex-col border-r border-gray-100 bg-[#fafafa] px-4 py-6">
         <div className="mt-2 flex-1">
-          <div className="flex cursor-pointer items-center justify-between rounded-[10px] bg-[#f2f2f2] px-3 py-2 transition-colors hover:bg-gray-200/80">
+          <div 
+            onClick={() => setIsExploreMode(true)}
+            className="flex cursor-pointer items-center justify-between rounded-[10px] bg-[#f2f2f2] px-3 py-2 transition-colors hover:bg-gray-200/80"
+          >
             <span className="text-[13px] font-medium text-gray-500">
               Explore
             </span>
