@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Resume, ResumeData } from '@/lib/server/redisActions';
+import { Resume, ResumeData } from '@/lib/server/dbActions';
 import { useS3Upload } from 'next-s3-upload';
 type PublishStatuses = 'live' | 'draft';
 import { ResumeDataSchema } from '@/lib/resume';
