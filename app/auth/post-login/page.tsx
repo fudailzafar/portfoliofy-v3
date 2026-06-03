@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 /**
  * Post-login redirect handler.
  * After Google OAuth, NextAuth redirects here.
- * We check Redis to decide: new user → /claim, returning user → /username
+ * We check db to decide: new user → /claim, returning user → /username
  */
 export default async function PostLoginPage() {
   const session = await auth();
