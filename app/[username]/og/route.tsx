@@ -1,6 +1,11 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 import { getUserData } from '../utils';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+const graphikMedium = readFileSync(join(process.cwd(), 'public/fonts/Graphik-Medium.woff'));
+const graphikRegular = readFileSync(join(process.cwd(), 'public/fonts/Graphik-Regular.woff'));
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,155 +13,145 @@ export async function GET(request: NextRequest) {
 
     const { user_id, resume, userProfile } = await getUserData(username);
 
-    const { searchParams } = new URL(request.url);
-
     // Get data from resume
-    const name = resume?.resumeData?.header?.name;
-    const role = resume?.resumeData?.header?.shortAbout;
-    const location = resume?.resumeData?.header?.location;
-    const website = `www.portfoliofy.me/${username}`;
+    const name = resume?.resumeData?.header?.name || username;
+    const role = resume?.resumeData?.header?.shortAbout || '';
+    const location = resume?.resumeData?.header?.location || '';
 
-    // Use profile image from Redis user profile
-    const profileImageUrl = userProfile?.customImage;
+    let subtitle = role;
+    if (role && location) {
+      subtitle = `${role} in ${location}`;
+    } else if (!role && location) {
+      subtitle = `Based in ${location}`;
+    }
+
+    // Use profile image from Postgres users table
+    const profileImageUrl = userProfile?.customImage || userProfile?.image || `${request.nextUrl.origin}/placeholder.svg`;
+
+    // 40x40 subtle grid pattern
+    const gridSvg = `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTQwIDBIMHY0MGg0MFYweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zOS41IDB2NDBNMCAzOS41aDQwIiBzdHJva2U9IiNlNWU1ZTUiIHN0cm9rZS13aWR0aD0iMSIvPjwvc3ZnPg==`;
 
     return new ImageResponse(
-      <div
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'white',
-          padding: '80px',
-          position: 'relative',
-        }}
-      >
-        {/* Logo and Location */}
+      (
         <div
           style={{
-            display: 'flex',
+            height: '100%',
             width: '100%',
-            justifyContent: 'space-between',
+            display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            position: 'absolute',
-            top: 60,
-            left: 80,
-            right: 0,
-            paddingRight: 40,
+            justifyContent: 'center',
+            backgroundColor: '#fafafa',
+            position: 'relative',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img
-              src="https://portfoliofy.me/logo.png"
-              alt="Portfoliofy Logo"
-              style={{
-                width: '203px',
-                height: '46px',
-              }}
-            />
-          </div>
+          {/* Grid Background */}
           <div
             style={{
-              fontSize: '24px',
-              color: '#666',
-              textAlign: 'right',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundImage: `url(${gridSvg})`,
+              backgroundSize: '40px 40px',
             }}
-          >
-            {location}
-          </div>
-        </div>
+          />
+          
+          {/* Radial Gradient Overlay for focus */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(250,250,250,1) 0%, rgba(250,250,250,0) 70%)',
+            }}
+          />
 
-        {/* Main Content */}
-        <div
-          style={{
-            display: 'flex',
-            width: '100%',
-            marginTop: '40px',
-            height: '480px',
-          }}
-        >
-          {/* Left side - Text content */}
+          {/* Content Wrapper */}
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
+              alignItems: 'center',
               justifyContent: 'center',
-              width: '60%',
-              paddingRight: '40px',
+              zIndex: 10,
+              padding: '0 40px',
             }}
           >
-            <h1
+            {/* Circular Profile Image */}
+            <img
+              src={profileImageUrl}
+              alt="Profile"
               style={{
-                fontSize: '72px',
-                fontWeight: 'semibold',
-                margin: '0 0 20px 0',
-                color: '#222',
-                lineHeight: 1.1,
+                width: '180px',
+                height: '180px',
+                borderRadius: '90px',
+                objectFit: 'cover',
+                marginBottom: '40px',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+                border: '4px solid white',
+              }}
+            />
+
+            {/* Title (Name) */}
+            <div
+              style={{
+                fontFamily: 'Graphik-Medium',
+                fontSize: '68px',
+                fontWeight: 500,
+                color: '#111111',
+                marginBottom: '16px',
+                textAlign: 'center',
+                letterSpacing: '-0.02em',
               }}
             >
               {name}
-            </h1>
-            <p
-              style={{
-                fontSize: '32px',
-                color: '#444',
-                margin: 0,
-                lineHeight: 1.4,
-              }}
-            >
-              {role && role?.length > 90
-                ? `${role?.substring(0, 90)}...`
-                : role}
-            </p>
-          </div>
+            </div>
 
-          {/* Right side - Profile image */}
-          <div
-            style={{
-              width: '40%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <img
-              src={
-                profileImageUrl || `${request.nextUrl.origin}/placeholder.svg`
-              }
-              alt="Profile"
-              style={{
-                width: '360px',
-                height: '360px',
-                borderRadius: '16px',
-                objectFit: 'cover',
-              }}
-            />
+            {/* Subtitle (Role in Location) */}
+            {subtitle && (
+              <div
+                style={{
+                  fontFamily: 'Graphik-Regular',
+                  fontSize: '36px',
+                  color: '#4a4a4a',
+                  textAlign: 'center',
+                  letterSpacing: '-0.01em',
+                }}
+              >
+                {subtitle}
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Website URL at bottom */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 20,
-            fontSize: '24px',
-            color: '#666',
-          }}
-        >
-          {website}
-        </div>
-      </div>,
+      ),
       {
         width: 1200,
         height: 630,
-      },
+        fonts: [
+          {
+            name: 'Graphik-Medium',
+            data: graphikMedium,
+            weight: 500,
+            style: 'normal',
+          },
+          {
+            name: 'Graphik-Regular',
+            data: graphikRegular,
+            weight: 400,
+            style: 'normal',
+          },
+        ],
+      }
     );
   } catch (e: any) {
-    console.log(`${e.message}`);
+    console.error('OG Image Generation Error:', e);
     return new Response(`Failed to generate the image`, {
       status: 500,
     });
   }
 }
+  
