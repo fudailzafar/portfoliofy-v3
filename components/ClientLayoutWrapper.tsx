@@ -21,14 +21,15 @@ export function ClientLayoutWrapper({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Listen for Cmd+E or Ctrl+E (without shift)
-      if (
-        (e.metaKey || e.ctrlKey) &&
-        e.key.toLowerCase() === 'e' &&
-        !e.shiftKey
-      ) {
+      // Listen for Cmd+E or Ctrl+E
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'e') {
         e.preventDefault();
-        setIsOpen((prev) => !prev);
+        if (e.shiftKey) {
+          setIsOpen(true);
+          window.dispatchEvent(new CustomEvent('toggleExploreMode'));
+        } else {
+          setIsOpen((prev) => !prev);
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
