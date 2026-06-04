@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ExploreSort, useExplore } from '@/hooks/useExplore';
-import { X, Search } from 'lucide-react';
+import { X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface ExploreSidebarProps {
