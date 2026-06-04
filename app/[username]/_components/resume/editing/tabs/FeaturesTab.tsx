@@ -312,11 +312,18 @@ export function FeaturesTab({
             />
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end border-t border-gray-100 bg-white p-4 md:px-8">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-gray-100 bg-white p-4 md:px-8">
+            <button
+              onClick={() => setFeaturesView('list')}
+              className="px-4 text-[14px] font-medium text-black hover:underline hover:underline-offset-2"
+            >
+              Cancel
+            </button>
             <Button
               onClick={handleSave}
               disabled={!currentFeature?.title || !currentFeature?.year}
-              className="h-9 rounded-md border-none bg-[#2A2A2A] px-6 font-medium text-white shadow-sm hover:bg-[#1A1A1A]"
+              variant="outline"
+              className="h-9 rounded-md border border-gray-200 bg-white px-6 font-medium text-black shadow-sm"
             >
               Save
             </Button>
