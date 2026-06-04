@@ -38,7 +38,7 @@ export function SortableSidebarItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'flex cursor-pointer items-center justify-between pl-10 pr-6 py-2.5 text-sm transition-colors',
+        'flex cursor-pointer items-center justify-between py-2.5 pl-10 pr-6 text-sm transition-colors',
         isActive
           ? 'bg-gray-100 text-black'
           : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900',

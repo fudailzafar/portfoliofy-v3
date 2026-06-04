@@ -28,7 +28,7 @@ export function useExplore(query: string, sort: ExploreSort) {
       if (!response.ok) {
         throw new Error('Failed to fetch explore data');
       }
-      
+
       const data = await response.json();
       return data.users as ExploreUser[];
     },

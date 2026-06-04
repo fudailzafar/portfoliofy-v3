@@ -16,16 +16,17 @@ export const getCachedUserProfile = async (
   return unstable_cache(
     async () => {
       try {
-        const [row] = await sql`SELECT name, email, image, custom_image FROM users WHERE id = ${userId}`;
+        const [row] =
+          await sql`SELECT name, email, image, custom_image FROM users WHERE id = ${userId}`;
         if (!row) return null;
-        
+
         const profile: UserProfile = {
           name: row.name,
           email: row.email,
           image: row.image,
           customImage: row.customImage,
         };
-        
+
         profile.avatarUrl = profile.customImage ?? profile.image ?? undefined;
         return profile;
       } catch (error) {

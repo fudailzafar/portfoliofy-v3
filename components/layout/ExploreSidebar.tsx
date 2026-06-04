@@ -22,8 +22,8 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col bg-white border-r border-[#E5E5E5]">
-      <div className="flex flex-col gap-4 mx-4 pt-6 border-b border-[#E5E5E5]">
+    <div className="flex h-full w-full flex-col border-r border-[#E5E5E5] bg-white">
+      <div className="mx-4 flex flex-col gap-4 border-b border-[#E5E5E5] pt-6">
         <div className="flex items-center gap-3">
           <div className="relative flex-1">
             <input
@@ -31,7 +31,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
               placeholder="Explore people..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full rounded-full bg-[#F2F2F2] px-4 py-2 text-[14px] text-gray-900 placeholder:text-gray-400 outline-none transition-all"
+              className="w-full rounded-full bg-[#F2F2F2] px-4 py-2 text-[14px] text-gray-900 outline-none transition-all placeholder:text-gray-400"
             />
             {query && (
               <button
@@ -55,10 +55,8 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
             <button
               key={tab.id}
               onClick={() => setSort(tab.id)}
-              className={`relative pb-3 text-[13px] transition-all cursor-default ${
-                sort === tab.id
-                  ? 'text-black'
-                  : 'text-gray-400'
+              className={`relative cursor-default pb-3 text-[13px] transition-all ${
+                sort === tab.id ? 'text-black' : 'text-gray-400'
               }`}
             >
               {tab.label}
@@ -75,9 +73,13 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
 
       <div className="flex-1 overflow-y-auto px-2 py-2">
         {isLoading ? (
-          <div className="p-4 text-center text-[13px] text-gray-400">Loading...</div>
+          <div className="p-4 text-center text-[13px] text-gray-400">
+            Loading...
+          </div>
         ) : users?.length === 0 ? (
-          <div className="p-4 text-center text-[13px] text-gray-400">No results found</div>
+          <div className="p-4 text-center text-[13px] text-gray-400">
+            No results found
+          </div>
         ) : (
           <div className="flex flex-col">
             {users?.map((user) => (
@@ -104,7 +106,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                     {user.name || user.username}
                   </span>
                   {user.shortAbout && (
-                    <span className="line-clamp-2 text-[13px] leading-tight text-gray-500 mt-0.5">
+                    <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-gray-500">
                       {user.shortAbout}
                     </span>
                   )}

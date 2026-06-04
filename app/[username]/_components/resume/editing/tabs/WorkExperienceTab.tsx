@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
+import { SortButtons } from '../SortButtons';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { Briefcase, ArrowUpRight, Upload, Download } from 'lucide-react';
+import { Briefcase, ArrowUpRight } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -20,12 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { sortByDateDesc } from '@/lib/resume';
 
 const months = [
@@ -51,7 +46,12 @@ export function WorkExperienceTab({
   setProjectToDelete: (id: string) => void;
 }) {
   const { resume, updateResume } = useResumeStore();
-  const { view: workView, setView: setWorkView, current: currentWork, setCurrent: setCurrentWork } = useTabEditor<any>();
+  const {
+    view: workView,
+    setView: setWorkView,
+    current: currentWork,
+    setCurrent: setCurrentWork,
+  } = useTabEditor<any>();
 
   if (!resume) return null;
   const work = resume.workExperience || [];
@@ -217,46 +217,12 @@ export function WorkExperienceTab({
                       >
                         Delete
                       </button>
-                      {canMoveUp && (
-                        <TooltipProvider delayDuration={0}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                onClick={() => handleMoveUp(w, prevItem)}
-                                className="transition-colors hover:text-gray-900"
-                              >
-                                <Upload className="h-[15px] w-[15px]" />
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent
-                              side="top"
-                              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white"
-                            >
-                              Move up
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      )}
-                      {canMoveDown && (
-                        <TooltipProvider delayDuration={0}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                onClick={() => handleMoveUp(w, nextItem)}
-                                className="transition-colors hover:text-gray-900"
-                              >
-                                <Download className="h-[15px] w-[15px]" />
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent
-                              side="top"
-                              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white"
-                            >
-                              Move down
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      )}
+                      <SortButtons
+                        canMoveUp={canMoveUp}
+                        canMoveDown={canMoveDown}
+                        onMoveUp={() => handleMoveUp(w, prevItem)}
+                        onMoveDown={() => handleMoveUp(w, nextItem)}
+                      />
                     </div>
                   </div>
                 </div>
