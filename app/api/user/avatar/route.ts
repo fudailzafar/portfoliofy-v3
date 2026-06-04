@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     }
 
     const userId = session.user.id;
-    
+
     await sql`
       UPDATE users 
       SET custom_image = ${url}
@@ -45,13 +45,13 @@ export async function DELETE() {
     }
 
     const userId = session.user.id;
-    
+
     await sql`
       UPDATE users 
       SET custom_image = NULL
       WHERE id = ${userId}
     `;
-    
+
     revalidateTag('users', 'max');
 
     return NextResponse.json({ success: true });
