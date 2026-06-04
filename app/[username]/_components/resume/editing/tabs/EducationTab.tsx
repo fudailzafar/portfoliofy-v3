@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
+import { useTabEditor } from '@/hooks/useTabEditor';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -28,14 +29,8 @@ export function EducationTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const { resume, updateResume, setIsEditingTab } = useResumeStore();
-  const [eduView, setEduView] = useState<'list' | 'form'>('list');
-
-  useEffect(() => {
-    setIsEditingTab(eduView === 'form');
-    return () => setIsEditingTab(false);
-  }, [eduView, setIsEditingTab]);
-  const [currentEdu, setCurrentEdu] = useState<any>(null);
+  const { resume, updateResume } = useResumeStore();
+  const { view: eduView, setView: setEduView, current: currentEdu, setCurrent: setCurrentEdu } = useTabEditor<any>();
 
   if (!resume) return null;
   const education = resume.education || [];

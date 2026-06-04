@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
+import { useTabEditor } from '@/hooks/useTabEditor';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -20,14 +21,8 @@ export function ContactsTab({
 }: {
   setProjectToDelete: (id: string) => void;
 }) {
-  const { resume, updateResume, setIsEditingTab } = useResumeStore();
-  const [view, setView] = useState<'list' | 'form'>('list');
-
-  useEffect(() => {
-    setIsEditingTab(view === 'form');
-    return () => setIsEditingTab(false);
-  }, [view, setIsEditingTab]);
-  const [current, setCurrent] = useState<any>(null);
+  const { resume, updateResume } = useResumeStore();
+  const { view: view, setView: setView, current: current, setCurrent: setCurrent } = useTabEditor<any>();
 
   if (!resume) return null;
   const items = resume.contacts || [];

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
+import { useTabEditor } from '@/hooks/useTabEditor';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -49,14 +50,8 @@ export function WorkExperienceTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const { resume, updateResume, setIsEditingTab } = useResumeStore();
-  const [workView, setWorkView] = useState<'list' | 'form'>('list');
-
-  useEffect(() => {
-    setIsEditingTab(workView === 'form');
-    return () => setIsEditingTab(false);
-  }, [workView, setIsEditingTab]);
-  const [currentWork, setCurrentWork] = useState<any>(null);
+  const { resume, updateResume } = useResumeStore();
+  const { view: workView, setView: setWorkView, current: currentWork, setCurrent: setCurrentWork } = useTabEditor<any>();
 
   if (!resume) return null;
   const work = resume.workExperience || [];
