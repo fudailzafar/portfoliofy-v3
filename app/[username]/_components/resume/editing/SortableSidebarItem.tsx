@@ -54,8 +54,8 @@ export function SortableSidebarItem({
       <span>{label}</span>
       <div
         className={cn(
-          'flex items-center justify-center px-2 py-1 text-[18px] leading-none text-gray-300 select-none hover:text-gray-400',
-          isDragging ? 'cursor-grabbing' : 'cursor-grab',
+          'flex flex-col gap-[4px] p-2 opacity-50 transition-opacity hover:opacity-100',
+          isDragging ? 'cursor-grabbing opacity-100' : 'cursor-grab',
         )}
         {...attributes}
         {...listeners}
@@ -63,7 +63,8 @@ export function SortableSidebarItem({
           e.stopPropagation();
         }}
       >
-        =
+        <div className="h-[2px] w-3.5 rounded-full bg-gray-400" />
+        <div className="h-[2px] w-3.5 rounded-full bg-gray-400" />
       </div>
     </div>
   );
