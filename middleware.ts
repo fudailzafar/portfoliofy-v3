@@ -49,7 +49,10 @@ export default async function middleware(req: NextRequest) {
   // Run NextAuth middleware for normal requests
   const authMiddleware = auth((req) => {
     // Always allow NextAuth's own API routes and the public explore route
-    if (req.nextUrl.pathname.startsWith('/api/auth') || req.nextUrl.pathname.startsWith('/api/explore')) {
+    if (
+      req.nextUrl.pathname.startsWith('/api/auth') ||
+      req.nextUrl.pathname.startsWith('/api/explore')
+    ) {
       return;
     }
 

@@ -22,7 +22,12 @@ export function ContactsTab({
   setProjectToDelete: (id: string) => void;
 }) {
   const { resume, updateResume } = useResumeStore();
-  const { view: view, setView: setView, current: current, setCurrent: setCurrent } = useTabEditor<any>();
+  const {
+    view: view,
+    setView: setView,
+    current: current,
+    setCurrent: setCurrent,
+  } = useTabEditor<any>();
 
   if (!resume) return null;
   const items = resume.contacts || [];
@@ -252,7 +257,9 @@ export function ContactsTab({
               </>
             ) : current.type === 'Website' ? (
               <div className="space-y-2">
-                <Label className="text-[13px] text-gray-500">Website URL*</Label>
+                <Label className="text-[13px] text-gray-500">
+                  Website URL*
+                </Label>
                 <Input
                   value={current.link || ''}
                   onChange={(e) => {
@@ -268,7 +275,9 @@ export function ContactsTab({
               </div>
             ) : (
               <div className="space-y-2">
-                <Label className="text-[13px] text-gray-500">Username or Profile URL*</Label>
+                <Label className="text-[13px] text-gray-500">
+                  Username or Profile URL*
+                </Label>
                 <Input
                   value={current.username || ''}
                   onChange={(e) => {
@@ -276,7 +285,10 @@ export function ContactsTab({
                     setCurrent({
                       ...current,
                       username: newUsername,
-                      link: buildContactUrl(newUsername, current.platform || ''),
+                      link: buildContactUrl(
+                        newUsername,
+                        current.platform || '',
+                      ),
                     });
                   }}
                   className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
