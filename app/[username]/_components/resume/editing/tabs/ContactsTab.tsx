@@ -206,7 +206,7 @@ export function ContactsTab({
               </Select>
             </div>
 
-            {current.type === 'Custom' ? (
+            {current.type === 'Custom' && (
               <div className="space-y-2">
                 <Label className="text-[13px] text-gray-500">
                   Name of platform*
@@ -219,53 +219,89 @@ export function ContactsTab({
                       platform: e.target.value,
                     })
                   }
-                  disabled={current.type !== 'Custom'}
-                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none disabled:opacity-50"
+                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
                 />
               </div>
-            ) : null}
+            )}
 
-            <div className="space-y-2">
-              <Label className="text-[13px] text-gray-500">Username*</Label>
-              <Input
-                value={current.username || ''}
-                onChange={(e) => {
-                  const newUsername = e.target.value;
-                  setCurrent({
-                    ...current,
-                    username: newUsername,
-                    link: buildContactUrl(newUsername, current.platform || ''),
-                  });
-                }}
-                className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-[13px] text-gray-500">URL*</Label>
-              <Input
-                value={current.link || ''}
-                onChange={(e) => {
-                  const newUrl = e.target.value;
-                  setCurrent({
-                    ...current,
-                    link: newUrl,
-                    username: extractUsername(newUrl, current.platform || ''),
-                  });
-                }}
-                disabled={
-                  current.type !== 'Custom' && current.type !== 'Website'
-                }
-                className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none disabled:opacity-50"
-              />
-            </div>
+            {current.type === 'Custom' ? (
+              <>
+                <div className="space-y-2">
+                  <Label className="text-[13px] text-gray-500">Username*</Label>
+                  <Input
+                    value={current.username || ''}
+                    onChange={(e) => {
+                      const newUsername = e.target.value;
+                      setCurrent({
+                        ...current,
+                        username: newUsername,
+                      });
+                    }}
+                    className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[13px] text-gray-500">URL*</Label>
+                  <Input
+                    value={current.link || ''}
+                    onChange={(e) => {
+                      const newUrl = e.target.value;
+                      setCurrent({
+                        ...current,
+                        link: newUrl,
+                      });
+                    }}
+                    className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
+                  />
+                </div>
+              </>
+            ) : current.type === 'Website' ? (
+              <div className="space-y-2">
+                <Label className="text-[13px] text-gray-500">Website URL*</Label>
+                <Input
+                  value={current.link || ''}
+                  onChange={(e) => {
+                    const newUrl = e.target.value;
+                    setCurrent({
+                      ...current,
+                      link: newUrl,
+                      username: extractUsername(newUrl, current.platform || ''),
+                    });
+                  }}
+                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
+                />
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label className="text-[13px] text-gray-500">Username or Profile URL*</Label>
+                <Input
+                  value={current.username || ''}
+                  onChange={(e) => {
+                    const newUsername = e.target.value;
+                    setCurrent({
+                      ...current,
+                      username: newUsername,
+                      link: buildContactUrl(newUsername, current.platform || ''),
+                    });
+                  }}
+                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
+                />
+              </div>
+            )}
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end border-t border-gray-100 bg-white p-4 md:px-8">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-gray-100 bg-white p-4 md:px-8">
+            <button
+              onClick={() => setView('list')}
+              className="px-4 text-[14px] font-medium text-black hover:underline hover:underline-offset-2"
+            >
+              Cancel
+            </button>
             <Button
               onClick={handleSave}
               disabled={!current.platform || !current.link}
-              className="h-9 rounded-md border-none bg-[#2A2A2A] px-6 font-medium text-white shadow-sm hover:bg-[#1A1A1A]"
+              variant="outline"
+              className="h-9 rounded-md border border-gray-200 bg-white px-6 font-medium text-black shadow-sm"
             >
               Save
             </Button>
