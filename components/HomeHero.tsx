@@ -43,7 +43,7 @@ export function HomeHero() {
         <div className="flex justify-end">
           <Button
             onClick={handleCreateProfile}
-            className="h-12 rounded-md bg-[#111] px-8 text-[16px] font-medium tracking-wide text-white hover:bg-black"
+            className="h-12 rounded-full bg-[#111] px-8 text-[16px] font-medium tracking-wide text-white hover:bg-black"
           >
             Create a profile
           </Button>

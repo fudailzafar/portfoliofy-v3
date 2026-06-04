@@ -152,7 +152,7 @@ export default function RootLayout({
               {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${gaId}');`}
             </Script>
           </head>
-          <body className="light flex min-h-screen flex-col font-sans antialiased">
+          <body className="flex min-h-screen flex-col font-sans antialiased">
             <main className="flex flex-1 flex-col">
               <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
               <SpeedInsights />
