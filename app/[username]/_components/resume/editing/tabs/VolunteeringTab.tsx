@@ -302,7 +302,6 @@ export function VolunteeringTab({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Now">Now</SelectItem>
-                  <SelectItem value="Ongoing">Ongoing</SelectItem>
                   {Array.from(
                     { length: 50 },
                     (_, i) => new Date().getFullYear() - i,
