@@ -50,7 +50,7 @@ export async function POST(
       );
     }
 
-    revalidateTag('usernames');
+    revalidateTag('usernames', 'max');
 
     return NextResponse.json({ success: true });
   } catch (error) {

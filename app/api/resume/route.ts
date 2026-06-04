@@ -36,7 +36,7 @@ export async function POST(
     }
     const body = await request.json();
     await storeResume(session.user.id, body);
-    revalidateTag('resumes');
+    revalidateTag('resumes', 'max');
     return NextResponse.json({ success: true });
   } catch (error) {
     if (error instanceof z.ZodError) {

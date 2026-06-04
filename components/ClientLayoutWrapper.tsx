@@ -46,28 +46,28 @@ export function ClientLayoutWrapper({
   // Expose sidebar state via CSS variable so other fixed elements (like edit button) can follow
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty('--sidebar-offset', isOpen ? '260px' : '0px');
+    root.style.setProperty('--sidebar-offset', isOpen ? '330px' : '0px');
   }, [isOpen]);
 
   return (
     <TooltipProvider delayDuration={0}>
       <div className="relative flex min-h-screen w-full overflow-x-hidden bg-white font-sans">
         {/* Fixed Sidebar Underneath */}
-        <div className="fixed left-0 top-0 z-0 h-full w-[260px] print:hidden">
+        <div className="fixed left-0 top-0 z-0 h-full w-[330px] print:hidden">
           <GlobalSidebar />
         </div>
 
         {/* Main Content Layer */}
         <motion.div
           animate={{
-            x: isOpen ? 260 : 0,
+            x: isOpen ? 330 : 0,
           }}
           transition={{
             type: 'spring',
             stiffness: 300,
             damping: 30,
           }}
-          className={`relative z-10 flex min-h-screen flex-1 flex-col bg-white print:!transform-none print:shadow-none ${isOpen ? 'shadow-[-20px_0_40px_-10px_rgba(0,0,0,0.05)]' : ''}`}
+          className="relative z-10 flex min-h-screen flex-1 flex-col bg-white print:!transform-none print:shadow-none"
         >
           {children}
         </motion.div>
@@ -75,7 +75,7 @@ export function ClientLayoutWrapper({
         {/* Floating Menu Toggle Button */}
         <motion.div
           className="fixed bottom-6 left-6 z-50 flex items-center gap-3 print:hidden"
-          animate={{ x: isOpen ? 260 : 0 }}
+          animate={{ x: isOpen ? 330 : 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
           <Tooltip>
@@ -83,13 +83,13 @@ export function ClientLayoutWrapper({
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex size-[48px] flex-col items-center justify-center gap-1 rounded-full border border-gray-200 bg-white shadow-sm outline-none transition-colors"
+                className="flex size-[50px] flex-col items-center justify-center gap-1 rounded-full border border-gray-200 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.05)] outline-none transition-colors hover:bg-gray-50"
               >
-                {/* 3 lines menu icon - exact match to reference */}
+                {/* 3 lines menu icon */}
                 <div className="flex flex-col gap-[5px]">
-                  <div className="h-[1.5px] w-[18px] rounded-full bg-[#111]" />
-                  <div className="h-[1.5px] w-[18px] rounded-full bg-[#111]" />
-                  <div className="h-[1.5px] w-[12px] rounded-full bg-[#111]" />
+                  <div className="h-[1.5px] w-[20px] rounded-full bg-[#111]" />
+                  <div className="h-[1.5px] w-[20px] rounded-full bg-[#111]" />
+                  <div className="h-[1.5px] w-[14px] rounded-full bg-[#111]" />
                 </div>
               </motion.button>
             </TooltipTrigger>
