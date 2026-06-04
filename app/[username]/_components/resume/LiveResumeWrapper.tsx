@@ -28,11 +28,10 @@ export function LiveResumeWrapper({
   const themeClass = `theme-${theme}`;
 
   return (
-    <div className={`flex flex-1 flex-col bg-theme-bg ${fontClass} ${themeClass}`}>
-      <FullResume
-        resume={displayResume}
-        profilePicture={profilePicture}
-      />
+    <div
+      className={`flex flex-1 flex-col bg-theme-bg ${fontClass} ${themeClass}`}
+    >
+      <FullResume resume={displayResume} profilePicture={profilePicture} />
     </div>
   );
 }

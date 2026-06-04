@@ -30,7 +30,8 @@ export async function generateMetadata({
     };
   }
 
-  const stripHtml = (html: string) => (html ? html.replace(/<[^>]*>?/gm, '') : '');
+  const stripHtml = (html: string) =>
+    html ? html.replace(/<[^>]*>?/gm, '') : '';
   const plainSummary = stripHtml(resume.resumeData.summary);
 
   return {
@@ -161,7 +162,8 @@ export default async function ProfilePage({
 
   const profilePicture = userProfile?.avatarUrl ?? undefined;
 
-  const stripHtml = (html: string) => (html ? html.replace(/<[^>]*>?/gm, '') : '');
+  const stripHtml = (html: string) =>
+    html ? html.replace(/<[^>]*>?/gm, '') : '';
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -176,7 +178,6 @@ export default async function ProfilePage({
     url: `https://portfoliofy.me/${username}`,
     skills: resume.resumeData.header.skills,
   };
-
 
   return (
     <div className="flex min-h-screen flex-col font-sans">

@@ -33,7 +33,7 @@ export async function getResume(userId: string): Promise<Resume | undefined> {
       FROM resumes
       WHERE user_id = ${userId}
     `;
-    
+
     if (!row) return undefined;
 
     // Parse JSON fields if postgres.js returned them as strings
@@ -65,10 +65,14 @@ export async function storeResume(
 ): Promise<void> {
   try {
     const validatedData = ResumeSchema.parse(resumeData);
-    
+
     // We stringify the JSON parts
-    const fileJson = validatedData.file ? JSON.stringify(validatedData.file) : null;
-    const resumeDataJson = validatedData.resumeData ? JSON.stringify(validatedData.resumeData) : null;
+    const fileJson = validatedData.file
+      ? JSON.stringify(validatedData.file)
+      : null;
+    const resumeDataJson = validatedData.resumeData
+      ? JSON.stringify(validatedData.resumeData)
+      : null;
 
     await sql`
       INSERT INTO resumes (user_id, status, file, file_content, resume_data)
@@ -202,7 +206,10 @@ export const updateUsername = async (
   }
 };
 
-export const setCustomDomain = async (userId: string, domain: string): Promise<boolean> => {
+export const setCustomDomain = async (
+  userId: string,
+  domain: string,
+): Promise<boolean> => {
   try {
     await sql`
       UPDATE users 
@@ -230,18 +237,24 @@ export const removeCustomDomain = async (userId: string): Promise<boolean> => {
   }
 };
 
-export const getCustomDomainByUserId = async (userId: string): Promise<string | null> => {
+export const getCustomDomainByUserId = async (
+  userId: string,
+): Promise<string | null> => {
   try {
-    const [row] = await sql`SELECT custom_domain FROM users WHERE id = ${userId}`;
+    const [row] =
+      await sql`SELECT custom_domain FROM users WHERE id = ${userId}`;
     return row?.customDomain || null; // Postgres.js transforms snake_case to camelCase
   } catch (error) {
     return null;
   }
 };
 
-export const getUserIdByCustomDomain = async (domain: string): Promise<string | null> => {
+export const getUserIdByCustomDomain = async (
+  domain: string,
+): Promise<string | null> => {
   try {
-    const [row] = await sql`SELECT id FROM users WHERE custom_domain = ${domain}`;
+    const [row] =
+      await sql`SELECT id FROM users WHERE custom_domain = ${domain}`;
     return row?.id || null;
   } catch (error) {
     return null;

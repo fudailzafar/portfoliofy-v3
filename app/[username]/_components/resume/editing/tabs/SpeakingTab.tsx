@@ -4,7 +4,7 @@ import { useTabEditor } from '@/hooks/useTabEditor';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Mic, Upload, Download } from 'lucide-react';
+import { Mic } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -19,6 +19,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { sortByDateDesc } from '@/lib/resume';
+import { SortButtons } from '../SortButtons';
 
 export function SpeakingTab({
   years,
@@ -28,7 +29,12 @@ export function SpeakingTab({
   setProjectToDelete: (id: string) => void;
 }) {
   const { resume, updateResume } = useResumeStore();
-  const { view: speakingView, setView: setSpeakingView, current: currentSpeaking, setCurrent: setCurrentSpeaking } = useTabEditor<any>();
+  const {
+    view: speakingView,
+    setView: setSpeakingView,
+    current: currentSpeaking,
+    setCurrent: setCurrentSpeaking,
+  } = useTabEditor<any>();
 
   if (!resume) return null;
   const speaking = resume.speaking || [];
@@ -161,50 +167,12 @@ export function SpeakingTab({
                       >
                         Delete
                       </button>
-                      {canMoveUp && (
-                        <TooltipProvider delayDuration={0}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                onClick={() =>
-                                  handleMoveUp(engagement, prevItem)
-                                }
-                                className="transition-colors hover:text-gray-900"
-                              >
-                                <Upload className="h-[15px] w-[15px]" />
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent
-                              side="top"
-                              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white"
-                            >
-                              Move up
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      )}
-                      {canMoveDown && (
-                        <TooltipProvider delayDuration={0}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                onClick={() =>
-                                  handleMoveUp(engagement, nextItem)
-                                }
-                                className="transition-colors hover:text-gray-900"
-                              >
-                                <Download className="h-[15px] w-[15px]" />
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent
-                              side="top"
-                              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white"
-                            >
-                              Move down
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      )}
+                      <SortButtons
+                        canMoveUp={canMoveUp}
+                        canMoveDown={canMoveDown}
+                        onMoveUp={() => handleMoveUp(engagement, prevItem)}
+                        onMoveDown={() => handleMoveUp(engagement, nextItem)}
+                      />
                     </div>
                   </div>
                 </div>

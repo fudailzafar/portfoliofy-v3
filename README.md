@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="Portfoliofy Logo" src="./public/og.png" width="100%">
+  <img alt="Portfoliofy Logo" src="./public/opengraph-image.png" width="100%">
   <br/>
   <h1>Portfoliofy</h1>
   <p>A progressive platform used by thousands of people to create more mindful professional profiles.</p>
@@ -39,6 +39,7 @@ This project uses a modern, scalable full-stack architecture:
 ### Prerequisites
 
 Ensure you have created accounts and obtained API keys for the following services:
+
 - [Supabase](https://supabase.com/) (PostgreSQL Database)
 - [AWS](https://aws.amazon.com/) (S3 Bucket)
 - Google Cloud Console (OAuth Credentials for NextAuth)
@@ -75,7 +76,8 @@ AUTH_SECRET="generate_a_random_base64_string"
 GOOGLE_CLIENT_ID="your_google_oauth_client_id"
 GOOGLE_CLIENT_SECRET="your_google_oauth_secret"
 ```
-*(Note: Ensure you are using the Supabase Transaction Pooler URL on port `6543` for Serverless environments).*
+
+_(Note: Ensure you are using the Supabase Transaction Pooler URL on port `6543` for Serverless environments)._
 
 ### 4. Initialize the Database
 

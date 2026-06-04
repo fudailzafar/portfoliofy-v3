@@ -21,7 +21,11 @@ export function GlobalSidebar() {
   useEffect(() => {
     const handleToggle = () => setIsExploreMode((prev) => !prev);
     window.addEventListener('toggleExploreMode', handleToggle);
-    return () => window.removeEventListener('toggleExploreMode', handleToggle as EventListener);
+    return () =>
+      window.removeEventListener(
+        'toggleExploreMode',
+        handleToggle as EventListener,
+      );
   }, []);
 
   const openAuth = (mode: 'login' | 'signup') => {
@@ -40,14 +44,12 @@ export function GlobalSidebar() {
     <>
       <div className="flex h-full w-[330px] flex-col border-r border-[#E5E5E5] px-4 py-6">
         <div className="mt-2 flex-1 pr-4">
-          <div 
+          <div
             onClick={() => setIsExploreMode(true)}
             className="flex cursor-pointer items-center justify-between rounded-full bg-[#F2F2F2] px-4 py-2.5 transition-all hover:bg-gray-200/60"
           >
-            <span className="text-[14px] text-[#AAAAAA]">
-              Explore
-            </span>
-            <span className="font-sans text-[12px] not-italic tracking-[0.2em] text-[#AAAAAA]" >
+            <span className="text-[14px] text-[#AAAAAA]">Explore</span>
+            <span className="font-sans text-[12px] not-italic tracking-[0.2em] text-[#AAAAAA]">
               ⌘⇧E
             </span>
           </div>
@@ -125,16 +127,16 @@ export function GlobalSidebar() {
               </Link>
 
               {/* Login */}
-              <div className='pt-1'>
+              <div className="pt-1">
                 <button
-                onClick={() => openAuth('login')}
-                className="group flex w-fit items-center gap-3 text-left"
-              >
-                <div className="h-1 w-1 rounded-full bg-transparent" />
-                <span className="text-[14px] text-gray-800 underline-offset-4 group-hover:underline">
-                  Login
-                </span>
-              </button>
+                  onClick={() => openAuth('login')}
+                  className="group flex w-fit items-center gap-3 text-left"
+                >
+                  <div className="h-1 w-1 rounded-full bg-transparent" />
+                  <span className="text-[14px] text-gray-800 underline-offset-4 group-hover:underline">
+                    Login
+                  </span>
+                </button>
               </div>
 
               {/* Create a profile */}
