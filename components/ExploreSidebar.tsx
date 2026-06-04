@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ExploreSort, useExplore } from '@/hooks/useExplore';
 import { X, Search } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface ExploreSidebarProps {
   onClose: () => void;
@@ -21,21 +22,21 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col bg-[#fafafa]">
-      <div className="flex flex-col gap-4 px-4 pt-6 pb-2 border-b border-gray-100">
+    <div className="flex h-full w-full flex-col bg-white border-r border-[#E5E5E5]">
+      <div className="flex flex-col gap-4 mx-4 pt-6 border-b border-[#E5E5E5]">
         <div className="flex items-center gap-3">
           <div className="relative flex-1">
             <input
               type="text"
-              placeholder="Name, location, title..."
+              placeholder="Explore people..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full rounded-full bg-gray-100 px-4 py-2 text-[14px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:bg-gray-200"
+              className="w-full rounded-full bg-[#F2F2F2] px-4 py-2 text-[14px] text-gray-900 placeholder:text-gray-400 outline-none transition-all"
             />
             {query && (
               <button
                 onClick={() => setQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700"
               >
                 <X size={14} />
               </button>
@@ -43,7 +44,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
           </div>
           <button
             onClick={onClose}
-            className="text-[14px] font-medium text-gray-700 transition-colors hover:text-black"
+            className="text-[14px] text-black transition-colors hover:underline hover:underline-offset-2"
           >
             Done
           </button>
@@ -54,15 +55,18 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
             <button
               key={tab.id}
               onClick={() => setSort(tab.id)}
-              className={`relative pb-2 text-[13px] transition-colors ${
+              className={`relative pb-3 text-[13px] transition-all cursor-default ${
                 sort === tab.id
-                  ? 'font-medium text-black'
-                  : 'text-gray-400 hover:text-gray-600'
+                  ? 'text-black'
+                  : 'text-gray-400'
               }`}
             >
               {tab.label}
               {sort === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-black" />
+                <motion.div
+                  layoutId="exploreTabIndicator"
+                  className="absolute -bottom-[1px] left-0 right-0 h-[1px] bg-black"
+                />
               )}
             </button>
           ))}

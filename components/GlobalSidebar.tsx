@@ -38,16 +38,16 @@ export function GlobalSidebar() {
 
   return (
     <>
-      <div className="flex h-full w-[260px] flex-col border-r border-gray-100 bg-[#fafafa] px-4 py-6">
-        <div className="mt-2 flex-1">
+      <div className="flex h-full w-[330px] flex-col border-r border-[#E5E5E5] px-4 py-6">
+        <div className="mt-2 flex-1 pr-4">
           <div 
             onClick={() => setIsExploreMode(true)}
-            className="flex cursor-pointer items-center justify-between rounded-[10px] bg-[#f2f2f2] px-3 py-2 transition-colors hover:bg-gray-200/80"
+            className="flex cursor-pointer items-center justify-between rounded-full bg-[#F2F2F2] px-4 py-2.5 transition-all hover:bg-gray-200/60"
           >
-            <span className="text-[13px] font-medium text-gray-500">
+            <span className="text-[14px] text-[#AAAAAA]">
               Explore
             </span>
-            <span className="text-[12px] tracking-tighter text-gray-400">
+            <span className="font-sans text-[12px] not-italic tracking-[0.2em] text-[#AAAAAA]" >
               ⌘⇧E
             </span>
           </div>
@@ -84,6 +84,7 @@ export function GlobalSidebar() {
                   </span>
                 </Link>
               )}
+
               {/* About */}
               <Link href="/" className="group flex w-fit items-center gap-3">
                 <div
@@ -113,6 +114,7 @@ export function GlobalSidebar() {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
+              {/* About */}
               <Link href="/" className="group flex w-fit items-center gap-3">
                 <div
                   className={`h-1 w-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-black' : 'bg-transparent'}`}
@@ -121,7 +123,10 @@ export function GlobalSidebar() {
                   About
                 </span>
               </Link>
-              <button
+
+              {/* Login */}
+              <div className='pt-1'>
+                <button
                 onClick={() => openAuth('login')}
                 className="group flex w-fit items-center gap-3 text-left"
               >
@@ -130,14 +135,16 @@ export function GlobalSidebar() {
                   Login
                 </span>
               </button>
-              <div className="pt-3">
-                <Button
-                  variant="outline"
+              </div>
+
+              {/* Create a profile */}
+              <div className="pl-2 pt-3">
+                <button
                   onClick={() => openAuth('signup')}
-                  className="h-9 w-full rounded-md border border-gray-200 bg-white text-[13px] font-medium text-black shadow-sm hover:bg-gray-50"
+                  className="h-[32px] w-[130px] rounded-[8px] border border-gray-200 bg-white text-[14px] font-medium text-black transition-all active:bg-gray-100"
                 >
                   Create a profile
-                </Button>
+                </button>
               </div>
             </div>
           )}
