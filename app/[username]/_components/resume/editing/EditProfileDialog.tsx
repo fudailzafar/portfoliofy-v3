@@ -18,7 +18,8 @@ import { useResumeStore } from '@/store/useResumeStore';
 import { Pencil } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { DragEndEvent, arrayMove } from '@dnd-kit/sortable';
+import { arrayMove } from '@dnd-kit/sortable';
+import { DragEndEvent } from '@dnd-kit/core';
 import { ResumeData } from '@/lib/server/dbActions';
 import { useUserActions } from '@/hooks/useUserActions';
 import { useS3Upload } from 'next-s3-upload';
@@ -381,8 +382,6 @@ export function EditProfileDialog({
         setOpen(false);
         if (uname !== username) {
           router.push(`/${uname}`);
-        } else {
-          router.refresh();
         }
       }
     } catch {
