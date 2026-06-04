@@ -206,24 +206,10 @@ export default async function ProfilePage({
         <div
           className={`flex flex-1 flex-col bg-theme-bg ${fontClass} ${themeClass}`}
         >
-          <div className="flex-1">
-            <FullResume
-              resume={resume?.resumeData}
-              profilePicture={profilePicture}
-            />
-          </div>
-
-          <div className="mb-4 mt-8 text-center">
-            <Link
-              href={`/?ref=${username}`}
-              className="text-sm text-theme-secondary"
-            >
-              Made by{' '}
-              <span className="text-theme-primary underline underline-offset-2 transition-colors hover:text-theme-accent">
-                Portfoliofy
-              </span>
-            </Link>
-          </div>
+          <FullResume
+            resume={resume?.resumeData}
+            profilePicture={profilePicture}
+          />
         </div>
       </div>
 
