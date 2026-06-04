@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
+import { useTabEditor } from '@/hooks/useTabEditor';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -26,16 +27,8 @@ export function VolunteeringTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const { resume, updateResume, setIsEditingTab } = useResumeStore();
-  const [volunteeringView, setVolunteeringView] = useState<'list' | 'form'>(
-    'list',
-  );
-
-  useEffect(() => {
-    setIsEditingTab(volunteeringView === 'form');
-    return () => setIsEditingTab(false);
-  }, [volunteeringView, setIsEditingTab]);
-  const [currentVolunteering, setCurrentVolunteering] = useState<any>(null);
+  const { resume, updateResume } = useResumeStore();
+  const { view: volunteeringView, setView: setVolunteeringView, current: currentVolunteering, setCurrent: setCurrentVolunteering } = useTabEditor<any>();
 
   if (!resume) return null;
   const volunteering = resume.volunteering || [];
