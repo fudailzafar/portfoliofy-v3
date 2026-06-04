@@ -2,13 +2,13 @@ import type React from 'react';
 import localFont from 'next/font/local';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
-import { ReactQueryClientProvider } from '@/components/ReactQueryClientProvider';
+import { ReactQueryClientProvider } from '@/components/providers/ReactQueryClientProvider';
 import { Metadata, Viewport } from 'next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
-import { ClientLayoutWrapper } from '@/components/ClientLayoutWrapper';
-import { SessionProviderWrapper } from '@/components/SessionProviderWrapper';
+import { ClientLayoutWrapper } from '@/components/layout/ClientLayoutWrapper';
+import { SessionProviderWrapper } from '@/components/providers/SessionProviderWrapper';
 
 const graphik = localFont({
   src: [
