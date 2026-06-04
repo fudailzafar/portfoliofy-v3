@@ -1,1 +1,1 @@
-export const PRIVATE_ROUTES = ['preview', 'api', 'upload', 'pdf', 'claim'];
+export const PRIVATE_ROUTES = ['api', 'claim'];

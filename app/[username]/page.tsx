@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { FullResume } from '@/app/[username]/_components/resume/FullResume';
+import { LiveResumeWrapper } from '@/app/[username]/_components/resume/LiveResumeWrapper';
 import { PrintResumeWrapper } from '@/app/[username]/_components/resume/PrintResumeWrapper';
 import { Metadata } from 'next';
 import { getUserData } from './utils';
@@ -177,15 +177,6 @@ export default async function ProfilePage({
     skills: resume.resumeData.header.skills,
   };
 
-  const typography = resume.resumeData?.design?.typography || 'sans';
-  const theme = resume.resumeData?.design?.theme || 'default';
-  const fontClass =
-    typography === 'serif'
-      ? 'font-serif'
-      : typography === 'mono'
-        ? 'font-mono'
-        : 'font-sans';
-  const themeClass = `theme-${theme}`;
 
   return (
     <div className="flex min-h-screen flex-col font-sans">
@@ -203,14 +194,10 @@ export default async function ProfilePage({
           />
         )}
 
-        <div
-          className={`flex flex-1 flex-col bg-theme-bg ${fontClass} ${themeClass}`}
-        >
-          <FullResume
-            resume={resume?.resumeData}
-            profilePicture={profilePicture}
-          />
-        </div>
+        <LiveResumeWrapper
+          initialResume={resume?.resumeData}
+          profilePicture={profilePicture}
+        />
       </div>
 
       {/* Print-only layout */}
