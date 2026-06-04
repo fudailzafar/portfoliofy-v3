@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
   () =>
-    import('@/components/ui/rich-text-editor').then(
+    import('@/components/composite/rich-text-editor').then(
       (mod) => mod.RichTextEditor,
     ),
   { ssr: false },

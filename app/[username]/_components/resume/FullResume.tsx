@@ -1,4 +1,4 @@
-import LoadingFallback from '@/components/LoadingFallback';
+import LoadingFallback from '@/components/common/LoadingFallback';
 import { ResumeData } from '@/lib/server/dbActions';
 import { sortByDateDesc } from '@/lib/resume';
 import { Education } from './preview/Education';
