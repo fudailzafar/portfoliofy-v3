@@ -50,7 +50,7 @@ export function ProfileSidebar({
       )}
     >
       <div className="flex flex-col gap-0">
-        <div className="mb-3 mt-0 pl-6 text-sm font-medium capitalize tracking-wide text-gray-400">
+        <div className="mb-3 mt-6 pl-6 text-xs capitalize tracking-wide text-gray-400">
           Profile
         </div>
 
