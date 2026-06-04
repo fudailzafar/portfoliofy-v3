@@ -18,10 +18,10 @@ export function SidebarButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'rounded-md px-3 py-2.5 text-left text-sm transition-colors',
+        'pl-10 pr-6 py-2.5 text-left text-sm transition-colors',
         isActive
-          ? 'bg-gray-100 text-gray-900'
-          : 'text-gray-600 hover:bg-gray-50',
+          ? 'bg-gray-100 text-black'
+          : 'text-gray-500 hover:bg-gray-50',
         disabled && 'cursor-not-allowed opacity-50 hover:bg-transparent',
       )}
     >
