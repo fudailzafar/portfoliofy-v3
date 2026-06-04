@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { AuthDialog } from './AuthDialog';
+import { AuthDialog } from '@/components/auth/AuthDialog';
 
 export function HomeHero() {
   const { data: session } = useSession();
