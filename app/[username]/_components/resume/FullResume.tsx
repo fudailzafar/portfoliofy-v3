@@ -1,5 +1,3 @@
-'use client'
-
 import LoadingFallback from '@/components/common/LoadingFallback';
 import { ResumeData } from '@/lib/server/dbActions';
 import { sortByDateDesc } from '@/lib/resume';
