@@ -12,6 +12,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { cn } from '@/lib/utils';
 import { SortableSidebarItem } from './SortableSidebarItem';
 import { SidebarButton } from './SidebarButton';
@@ -48,8 +49,8 @@ export function ProfileSidebar({
         showMobileMenu ? 'flex' : 'hidden sm:flex',
       )}
     >
-      <div className="flex flex-col gap-0 px-4">
-        <div className="mb-3 mt-0 px-3 text-xs font-semibold uppercase tracking-wider text-gray-300">
+      <div className="flex flex-col gap-0">
+        <div className="mb-3 mt-0 pl-6 text-sm font-medium capitalize tracking-wide text-gray-400">
           Profile
         </div>
 
@@ -66,6 +67,7 @@ export function ProfileSidebar({
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={onDragEnd}
+          modifiers={[restrictToVerticalAxis]}
         >
           <SortableContext
             items={sectionOrder}
@@ -91,7 +93,7 @@ export function ProfileSidebar({
           </SortableContext>
         </DndContext>
 
-        <div className="mb-3 mt-6 px-3 text-xs font-semibold uppercase tracking-wider text-gray-300">
+        <div className="mb-3 mt-6 pl-6 text-xs capitalize tracking-wide text-gray-400">
           Account
         </div>
 
@@ -104,7 +106,7 @@ export function ProfileSidebar({
           }}
         />
         <SidebarButton
-          label="Print"
+          label="Print Profile"
           isActive={activeTab === 'print'}
           onClick={() => {
             setActiveTab('print');

@@ -38,10 +38,10 @@ export function SortableSidebarItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'flex cursor-pointer items-center justify-between rounded-md px-3 py-2 text-sm transition-colors',
+        'flex cursor-pointer items-center justify-between pl-10 pr-6 py-2.5 text-sm transition-colors',
         isActive
-          ? 'bg-gray-100 text-gray-900'
-          : 'text-gray-500 hover:bg-gray-50',
+          ? 'bg-gray-100 text-black'
+          : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900',
         disabled && 'opacity-50 hover:bg-transparent hover:text-gray-500',
         isDragging && 'bg-gray-200 opacity-50',
       )}
@@ -54,7 +54,7 @@ export function SortableSidebarItem({
       <span>{label}</span>
       <div
         className={cn(
-          'flex items-center justify-center px-2 py-1 font-bold text-gray-300',
+          'flex items-center justify-center px-2 py-1 text-[18px] leading-none text-gray-300 select-none hover:text-gray-400',
           isDragging ? 'cursor-grabbing' : 'cursor-grab',
         )}
         {...attributes}
