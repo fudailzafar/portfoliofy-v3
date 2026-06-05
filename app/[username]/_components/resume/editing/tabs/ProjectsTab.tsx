@@ -13,7 +13,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { FolderCode, Upload, Download } from 'lucide-react';
+import { FolderCode } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -21,12 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { sortByDateDesc } from '@/lib/resume';
 
 export function ProjectsTab({

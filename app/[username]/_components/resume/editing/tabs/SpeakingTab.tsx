@@ -110,7 +110,7 @@ export function SpeakingTab({
               setSpeakingView('form');
             }}
           >
-            Add a speaking engagement
+            Add a talk you've given
           </Button>
         </div>
       )}
