@@ -1,5 +1,6 @@
 import { HomeHero } from '@/components/layout/HomeHero';
 import { Footer } from '@/components/layout/Footer';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -29,12 +30,12 @@ export default function Home() {
               </h3>
               <p className="text-[15px] leading-snug text-gray-500">
                 A fun and intuitive{' '}
-                <a
+                <Link
                   href="/claim"
                   className="cursor-text text-inherit no-underline hover:text-inherit"
                 >
                   editor
-                </a>{' '}
+                </Link>{' '}
                 allows you to create a beautiful profile in just a couple
                 minutes.
               </p>
@@ -89,12 +90,12 @@ export default function Home() {
               <p className="text-[15px] leading-snug text-gray-500">
                 Profiles are designed to be distraction-free, with optimized
                 typography and only the relevant{' '}
-                <a
+                <Link
                   href="/faq"
                   className="cursor-text text-inherit no-underline hover:text-inherit"
                 >
                   information
-                </a>{' '}
+                </Link>{' '}
                 shown.
               </p>
             </div>
@@ -135,7 +136,7 @@ export default function Home() {
             />
             <div className="mb-8">
               <h3 className="mb-1.5 text-[17px] font-bold text-gray-900">
-                Find who you're looking for
+                Find who you&apos;re looking for
               </h3>
               <p className="text-[15px] leading-snug text-gray-500">
                 Search by title, location, and username.
@@ -153,6 +154,7 @@ export default function Home() {
               <div className="space-y-4 px-1 sm:px-2">
                 <div className="flex items-center gap-3 sm:gap-4">
                   <div className="size-10 shrink-0 overflow-hidden rounded-full bg-gray-200 sm:size-12">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lauren"
                       alt="Lauren"
@@ -171,6 +173,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-3 opacity-30 sm:gap-4">
                   <div className="size-10 shrink-0 overflow-hidden rounded-full bg-gray-200 sm:size-12">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="https://api.dicebear.com/7.x/avataaars/svg?seed=Skip"
                       alt="Skip"
@@ -207,6 +210,7 @@ export default function Home() {
                 <div className="size-[64px] shrink-0 rounded-full bg-gradient-to-tr from-[#feda75] via-[#fa7e1e] to-[#d62976] p-[2px] sm:size-[84px] sm:p-[3px]">
                   <div className="h-full w-full rounded-full bg-white p-0.5">
                     <div className="h-full w-full overflow-hidden rounded-full bg-gray-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tom"
                         alt="Tom Chung"

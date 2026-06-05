@@ -11,7 +11,7 @@ export default function TermsPage() {
 
         <div className="space-y-8 text-[15px] leading-relaxed text-gray-700">
           <p>
-            When you use Portfoliofy ("the service"), now and in the future, you
+            When you use Portfoliofy (&quot;the service&quot;), now and in the future, you
             are agreeing to the terms of service as outlined in this document.
           </p>
 
@@ -20,7 +20,7 @@ export default function TermsPage() {
             <ul className="list-disc space-y-2 pl-5">
               <li>
                 Your use of the service is at your sole risk. We provide the
-                service on an 'as is' and 'as available' basis.
+                service on an &apos;as is&apos; and &apos;as available&apos; basis.
               </li>
               <li>
                 You are responsible for all the content posted and created under

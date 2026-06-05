@@ -14,8 +14,6 @@ import { Features } from './preview/Features';
 import { Volunteering } from './preview/Volunteering';
 import { DEFAULT_SECTION_ORDER } from '@/lib/resume';
 
-
-
 export const FullResume = ({
   resume,
   profilePicture,
