@@ -2,7 +2,7 @@
 
 import { auth } from '@/auth';
 import { createUsernameLookup, storeResume } from '@/lib/server/dbActions';
-import { ResumeDataSchemaType } from '@/lib/resume';
+import { ResumeDataSchemaType, ResumeDataSchema } from '@/lib/resume';
 
 export async function claimUsernameAndInitProfile(
   username: string,
@@ -21,7 +21,7 @@ export async function claimUsernameAndInitProfile(
   }
 
   // 2. Initialize empty resume profile
-  const emptyResumeData: ResumeDataSchemaType = {
+  const emptyResumeData: ResumeDataSchemaType = ResumeDataSchema.parse({
     header: {
       name: displayName,
       shortAbout: '',
@@ -33,7 +33,7 @@ export async function claimUsernameAndInitProfile(
     education: [],
     projects: [],
     contacts: [],
-  };
+  });
 
   await storeResume(userId, {
     status: 'live',

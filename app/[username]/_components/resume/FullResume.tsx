@@ -12,19 +12,9 @@ import { Projects } from './preview/Projects';
 import { Contact } from './preview/Contact';
 import { Features } from './preview/Features';
 import { Volunteering } from './preview/Volunteering';
+import { DEFAULT_SECTION_ORDER } from '@/lib/resume';
 
-const DEFAULT_ORDER = [
-  'work',
-  'side_projects',
-  'speaking',
-  'features',
-  'projects',
-  'skills',
-  'education',
-  'contact',
-  'awards',
-  'volunteering',
-];
+
 
 export const FullResume = ({
   resume,
@@ -37,7 +27,7 @@ export const FullResume = ({
     return <LoadingFallback message="Loading Resume..." />;
   }
 
-  const order = resume.sectionOrder || DEFAULT_ORDER;
+  const order = resume.sectionOrder || DEFAULT_SECTION_ORDER;
 
   return (
     <section
@@ -105,7 +95,7 @@ export const FullResume = ({
             case 'skills':
               return <Skills key={sectionId} skills={resume?.header?.skills} />;
             default:
-              return null; // For awards, exhibitions which are not implemented yet
+              return null;
           }
         })}
       </div>

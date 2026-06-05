@@ -23,6 +23,7 @@ import { DragEndEvent } from '@dnd-kit/core';
 import { ResumeData } from '@/lib/server/dbActions';
 import { useUserActions } from '@/hooks/useUserActions';
 import { useS3Upload } from 'next-s3-upload';
+import { DEFAULT_SECTION_ORDER } from '@/lib/resume';
 import { toast } from 'sonner';
 import { ProfileSidebar } from './ProfileSidebar';
 import { ProfileContent } from './ProfileContent';
@@ -32,18 +33,7 @@ import { DeleteConfirmDialog, UnsavedChangesDialog } from './dialogs';
 // Constants — hoisted outside the component so they are never reallocated
 // ---------------------------------------------------------------------------
 
-const DEFAULT_SECTION_ORDER = [
-  'work',
-  'side_projects',
-  'speaking',
-  'projects',
-  'skills',
-  'education',
-  'contact',
-  'awards',
-  'volunteering',
-  'features',
-];
+
 
 const TAB_DEFINITIONS: Record<string, { label: string; disabled: boolean }> = {
   work: { label: 'Work Experience', disabled: false },
