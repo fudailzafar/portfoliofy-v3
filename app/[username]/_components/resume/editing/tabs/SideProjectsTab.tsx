@@ -114,7 +114,7 @@ export function SideProjectsTab({
               setSideProjectsView('form');
             }}
           >
-            Add a side project you're proud of
+            Add a side project you&apos;re proud of
           </Button>
         </div>
       )}

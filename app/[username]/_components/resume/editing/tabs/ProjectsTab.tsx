@@ -7,7 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
-  () => import('@/components/composite/RichTextEditor').then((mod) => mod.RichTextEditor),
+  () =>
+    import('@/components/composite/RichTextEditor').then(
+      (mod) => mod.RichTextEditor,
+    ),
   { ssr: false },
 );
 import { FolderCode } from 'lucide-react';
@@ -111,7 +114,7 @@ export function ProjectsTab({
               setProjectsView('form');
             }}
           >
-            Add a work project you're proud of
+            Add a work project you&apos;re proud of
           </Button>
         </div>
       )}

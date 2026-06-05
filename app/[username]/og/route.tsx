@@ -89,6 +89,7 @@ export async function GET(request: NextRequest) {
           }}
         >
           {/* Circular Profile Image */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={profileImageUrl}
             alt="Profile"

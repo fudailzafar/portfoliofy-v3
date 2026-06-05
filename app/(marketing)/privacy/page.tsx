@@ -24,14 +24,14 @@ export default function PrivacyPage() {
               account. For example in order to sign up for an account you must
               provide an email address, username, and display name. You may
               provide us with more information for your public profile, but we
-              don't require that information to create an account.
+              don&apos;t require that information to create an account.
             </li>
             <li>
               If you have an account with us we collect the information that you
               provide for your public profile. For example, if you have an
               account, your username is part of that public profile, along with
               any other information you put into your public profile, like a
-              photo or an "About me" description. Your public profile
+              photo or an &quot;About me&quot; description. Your public profile
               information is just that — public — so please keep that in mind
               when deciding what information you would like to include.
             </li>

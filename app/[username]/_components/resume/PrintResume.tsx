@@ -29,7 +29,6 @@ export const PrintResume = ({
   } = resume;
   const skillsList: string[] = (resume as any).skills || header?.skills || [];
 
-
   const order = sectionOrder || DEFAULT_SECTION_ORDER;
 
   const renderSection = (

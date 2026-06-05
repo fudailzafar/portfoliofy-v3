@@ -90,6 +90,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
               >
                 <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-200">
                   {user.customImage || user.userImage ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
                     <img
                       src={user.customImage || user.userImage!}
                       alt={user.name || user.username}

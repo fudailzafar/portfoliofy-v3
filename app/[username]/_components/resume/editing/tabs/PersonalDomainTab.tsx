@@ -257,7 +257,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
 
                     <div className="mt-3 text-[12px] leading-relaxed text-[#a0a0a0]">
                       Please note that changing DNS settings can take several
-                      minutes to take effect. If you've already updated your DNS
+                      minutes to take effect. If you&apos;ve already updated your DNS
                       settings{' '}
                       <button
                         onClick={fetchDomain}

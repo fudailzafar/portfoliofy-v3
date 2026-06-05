@@ -15,14 +15,14 @@ export default function FAQPage() {
               What do you call this platform?
             </h3>
             <p className="text-gray-600">
-              It's simply referred to as Portfoliofy. For example you could say,
-              "I just created my Portfoliofy account!".
+              It&apos;s simply referred to as Portfoliofy. For example you could say,
+              &quot;I just created my Portfoliofy account!&quot;.
             </p>
           </div>
 
           <div className="space-y-2">
             <h3 className="text-lg font-bold text-gray-900">
-              Who's behind Portfoliofy?
+              Who&apos;s behind Portfoliofy?
             </h3>
             <p className="text-gray-600">
               Just me,{' '}
@@ -42,13 +42,13 @@ export default function FAQPage() {
               some projects, work history, and other bits that might make me
               sound competent. Something easy to share, less garish than
               LinkedIn, and more dynamic than a static PDF. Non-visual, more
-              akin to a text oriented personal website. Something that wasn't
+              akin to a text oriented personal website. Something that wasn&apos;t
               just a one off page, where I could bring in friends and
               collaborators, and profiles could be navigated from one to the
               other like a blogroll.
             </p>
             <p className="pt-2 text-gray-600">
-              I thought this might be useful, so I'm putting it out there to see
+              I thought this might be useful, so I&apos;m putting it out there to see
               if it is.
             </p>
           </div>
@@ -59,7 +59,7 @@ export default function FAQPage() {
             </h3>
             <p className="text-gray-600">
               If the above resonates with you, you should try using Portfoliofy.
-              I'm curious to see who might find it useful (or not).
+              I&apos;m curious to see who might find it useful (or not).
             </p>
           </div>
 
@@ -74,7 +74,7 @@ export default function FAQPage() {
 
           <div className="space-y-2">
             <h3 className="text-lg font-bold text-gray-900">
-              I'd like to report a profile for inappropriate content or
+              I&apos;d like to report a profile for inappropriate content or
               harassment, who can I reach out to?
             </h3>
             <p className="text-gray-600">
