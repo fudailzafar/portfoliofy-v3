@@ -20,14 +20,14 @@ export function Contact({
         Contact
       </h2>
       <div
-        className="flex flex-col gap-8"
+        className="flex flex-col gap-6 sm:gap-3 ml-6 sm:ml-0"
         role="feed"
         aria-labelledby="contact-section"
       >
         {contacts.map((contact) => (
           <div
             key={contact.id || contact.platform}
-            className="flex flex-col gap-4 sm:flex-row sm:gap-12 print:mb-6"
+            className="flex flex-col gap-0 sm:flex-row sm:gap-12 print:mb-6"
           >
             {/* Left column: Platform */}
             <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-32">
