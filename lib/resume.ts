@@ -202,10 +202,7 @@ export const ResumeDataSchema = z.object({
   features: FeaturesSection.optional().default([]),
   volunteering: VolunteeringSection.optional().default([]),
   contacts: ContactSection.optional().default([]),
-  sectionOrder: z
-    .array(z.string())
-    .optional()
-    .default(DEFAULT_SECTION_ORDER),
+  sectionOrder: z.array(z.string()).optional().default(DEFAULT_SECTION_ORDER),
   design: z
     .object({
       typography: z.enum(['sans', 'serif', 'mono']).optional().default('sans'),

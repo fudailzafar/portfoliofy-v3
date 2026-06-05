@@ -100,6 +100,7 @@ export function GeneralTab({
                 </svg>
               </div>
             )}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               width={300}
               height={300}
