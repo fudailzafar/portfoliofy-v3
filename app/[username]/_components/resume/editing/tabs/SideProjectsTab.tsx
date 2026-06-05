@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
   () =>
-    import('@/components/composite/rich-text-editor').then(
+    import('@/components/composite/RichTextEditor').then(
       (mod) => mod.RichTextEditor,
     ),
   { ssr: false },
@@ -21,12 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { sortByDateDesc } from '@/lib/resume';
 
 export function SideProjectsTab({
