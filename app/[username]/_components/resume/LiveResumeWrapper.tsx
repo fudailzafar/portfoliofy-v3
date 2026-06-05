@@ -7,15 +7,17 @@ import { ResumeData } from '@/lib/server/dbActions';
 export function LiveResumeWrapper({
   initialResume,
   profilePicture,
+  isOwner,
 }: {
   initialResume?: ResumeData | null;
   profilePicture?: string;
+  isOwner?: boolean;
 }) {
   const storeResume = useResumeStore((state) => state.resume);
 
-  // If the user is actively editing (storeResume exists), display it instantly!
+  // If the user is actively editing (storeResume exists) AND they own the profile, display it instantly!
   // Otherwise, fallback to the server-fetched initial resume.
-  const displayResume = storeResume || initialResume;
+  const displayResume = (isOwner && storeResume) ? storeResume : initialResume;
 
   const typography = displayResume?.design?.typography || 'sans';
   const theme = displayResume?.design?.theme || 'default';
