@@ -8,7 +8,7 @@ interface SettingsTabProps {
 
 export function SettingsTab({ onDeleteAccount }: SettingsTabProps) {
   return (
-    <div className="mx-auto flex h-full max-w-2xl flex-col pt-8">
+    <div className="mx-auto flex h-full max-w-2xl flex-col">
       <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
         <h2 className="text-2xl font-bold text-gray-900">Settings</h2>
       </div>

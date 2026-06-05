@@ -110,7 +110,7 @@ export function WorkExperienceTab({
             }}
             className="h-8 rounded-md border-none bg-gray-100 px-4 text-xs text-gray-900 hover:bg-gray-200"
           >
-            Add work experience
+            Add a job you've had
           </Button>
         )}
       </div>
