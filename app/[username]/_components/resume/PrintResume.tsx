@@ -1,6 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/lib/server/dbActions';
-import { sortByDateDesc } from '@/lib/resume';
+import { sortByDateDesc, DEFAULT_SECTION_ORDER } from '@/lib/resume';
 import { cn } from '@/lib/utils';
 
 export const PrintResume = ({
@@ -29,19 +29,8 @@ export const PrintResume = ({
   } = resume;
   const skillsList: string[] = (resume as any).skills || header?.skills || [];
 
-  const DEFAULT_ORDER = [
-    'work',
-    'side_projects',
-    'speaking',
-    'features',
-    'projects',
-    'skills',
-    'education',
-    'contact',
-    'awards',
-    'volunteering',
-  ];
-  const order = sectionOrder || DEFAULT_ORDER;
+
+  const order = sectionOrder || DEFAULT_SECTION_ORDER;
 
   const renderSection = (
     id: string,
