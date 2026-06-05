@@ -17,14 +17,14 @@ export function Volunteering({ volunteering }: VolunteeringProps) {
         Volunteering
       </h2>
       <div
-        className="flex flex-col gap-8"
+        className="flex flex-col gap-8 ml-6 sm:ml-0"
         role="feed"
         aria-labelledby="volunteering-section"
       >
         {volunteering.map((v) => (
           <div
             key={v.id}
-            className="flex flex-col gap-4 sm:flex-row sm:gap-12 print:mb-6"
+            className="flex flex-col gap-1 sm:flex-row sm:gap-12 print:mb-6"
           >
             {/* Year Column */}
             <div
