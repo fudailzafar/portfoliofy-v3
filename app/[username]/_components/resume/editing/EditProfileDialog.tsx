@@ -33,8 +33,6 @@ import { DeleteConfirmDialog, UnsavedChangesDialog } from './dialogs';
 // Constants — hoisted outside the component so they are never reallocated
 // ---------------------------------------------------------------------------
 
-
-
 const TAB_DEFINITIONS: Record<string, { label: string; disabled: boolean }> = {
   work: { label: 'Work Experience', disabled: false },
   side_projects: { label: 'Side Projects', disabled: false },
@@ -138,11 +136,11 @@ export function EditProfileDialog({
     return () => {
       if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
     };
-  }, [uname, isInitialUsername, checkUsernameMutation.mutateAsync]);
+  }, [uname, isInitialUsername, checkUsernameMutation]);
 
   // Section order — normalise legacy ids on first load only
   const [sectionOrder, setSectionOrder] = useState<string[]>(
-    () => resume.sectionOrder || DEFAULT_SECTION_ORDER
+    () => resume.sectionOrder || DEFAULT_SECTION_ORDER,
   );
 
   // Years list — stable; only computed once

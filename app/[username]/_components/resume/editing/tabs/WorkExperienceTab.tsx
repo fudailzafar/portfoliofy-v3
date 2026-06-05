@@ -7,7 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
-  () => import('@/components/composite/RichTextEditor').then((mod) => mod.RichTextEditor),
+  () =>
+    import('@/components/composite/RichTextEditor').then(
+      (mod) => mod.RichTextEditor,
+    ),
   { ssr: false },
 );
 import { Briefcase, ArrowUpRight } from 'lucide-react';
@@ -107,7 +110,7 @@ export function WorkExperienceTab({
             }}
             className="h-8 rounded-md border-none bg-gray-100 px-4 text-xs text-gray-900 hover:bg-gray-200"
           >
-            Add a job you've had
+            Add a job you&apos;ve had
           </Button>
         )}
       </div>
