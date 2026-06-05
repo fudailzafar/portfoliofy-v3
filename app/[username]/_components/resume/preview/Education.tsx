@@ -30,14 +30,14 @@ export function Education({
         Education
       </h2>
       <div
-        className="flex flex-col gap-8"
+        className="flex flex-col gap-8 ml-6 sm:ml-0"
         role="feed"
         aria-labelledby="education-section"
       >
         {validEducations.map((edu, idx) => (
           <div
             key={edu.id || idx}
-            className="flex flex-col gap-4 sm:flex-row sm:gap-12 print:mb-6"
+            className="flex flex-col gap-1 sm:flex-row sm:gap-12 print:mb-6"
           >
             {/* Left column: Years */}
             <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-32">
