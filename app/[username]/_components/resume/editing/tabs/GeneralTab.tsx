@@ -210,7 +210,7 @@ export function GeneralTab({
             </span>
             <Input
               id="uname"
-              placeholder='your-username'
+              placeholder="your-username"
               value={uname}
               onChange={(e) =>
                 setUname(
@@ -246,7 +246,7 @@ export function GeneralTab({
           </div>
           <Input
             id="displayName"
-            placeholder='The name on your profile'
+            placeholder="The name on your profile"
             maxLength={48}
             value={header?.name || ''}
             onChange={(e) => updateHeader({ name: e.target.value })}
@@ -264,7 +264,7 @@ export function GeneralTab({
           </div>
           <Input
             id="shortAbout"
-            placeholder='Architect, painter, etc'
+            placeholder="Architect, painter, etc"
             maxLength={32}
             value={header?.shortAbout || ''}
             onChange={(e) => updateHeader({ shortAbout: e.target.value })}
@@ -282,7 +282,7 @@ export function GeneralTab({
           </div>
           <Input
             id="location"
-            placeholder='Where you&apos;re based'
+            placeholder="Where you're based"
             maxLength={32}
             value={header?.location || ''}
             onChange={(e) => updateHeader({ location: e.target.value })}
@@ -300,7 +300,7 @@ export function GeneralTab({
           </div>
           <Input
             id="pronouns"
-            placeholder='He/Him, etc'
+            placeholder="He/Him, etc"
             maxLength={12}
             value={header?.pronouns || ''}
             onChange={(e) => updateHeader({ pronouns: e.target.value })}

@@ -1,31 +1,5 @@
-import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ResumeDataSchemaType } from '@/lib/resume';
-
-interface SocialButtonProps {
-  href: string;
-  icon: React.ElementType;
-  label: string;
-}
-
-function SocialButton({ href, icon: Icon, label }: SocialButtonProps) {
-  return (
-    <Button className="size-8" variant="outline" size="icon" asChild>
-      <a
-        href={
-          href.startsWith('mailto:') || href.startsWith('tel:')
-            ? href
-            : `${href}${href.includes('?') ? '&' : '?'}`
-        }
-        aria-label={label}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Icon className="size-4" aria-hidden="true" />
-      </a>
-    </Button>
-  );
-}
 
 /**
  * Header component displaying personal information and contact details
@@ -51,7 +25,7 @@ export function Header({
 
       <div className="flex-1 space-y-1">
         <h1
-          className="text-base font-semibold text-theme-primary md:text-xl"
+          className="text-xl font-semibold text-theme-primary"
           id="resume-name"
         >
           {header.name}
