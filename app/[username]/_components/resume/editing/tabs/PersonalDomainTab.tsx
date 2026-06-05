@@ -28,7 +28,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
         setCustomDomain('');
         setDomainStatus(null);
       }
-    } catch { }
+    } catch {}
     setIsVerifyingDomain(false);
   };
 
@@ -318,10 +318,11 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 }}
               >
                 <div
-                  className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${typography === value
+                  className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${
+                    typography === value
                       ? 'border-[2.5px] border-[#3b82f6] bg-white'
                       : 'border border-gray-200 bg-white group-hover:border-gray-300'
-                    }`}
+                  }`}
                 >
                   <span
                     className={`text-[22px] font-medium tracking-tight text-gray-900 ${fontClass}`}
@@ -421,10 +422,11 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 }}
               >
                 <div
-                  className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${theme === value
+                  className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${
+                    theme === value
                       ? 'border-[2.5px] border-[#3b82f6]'
                       : 'border'
-                    } group-hover:border-gray-300`}
+                  } group-hover:border-gray-300`}
                   style={{
                     backgroundColor: bg,
                     borderColor: theme === value ? '#3b82f6' : border,

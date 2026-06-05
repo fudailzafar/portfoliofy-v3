@@ -17,7 +17,7 @@ export function Volunteering({ volunteering }: VolunteeringProps) {
         Volunteering
       </h2>
       <div
-        className="flex flex-col gap-8 ml-6 sm:ml-0"
+        className="ml-6 flex flex-col gap-8 sm:ml-0"
         role="feed"
         aria-labelledby="volunteering-section"
       >

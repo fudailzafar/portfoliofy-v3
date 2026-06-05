@@ -15,14 +15,11 @@ export function Summary({ summary }: AboutProps) {
 
   return (
     <>
-      <h2
-        className="text-sm font-bold text-theme-primary"
-        id="about-section"
-      >
+      <h2 className="text-sm font-bold text-theme-primary" id="about-section">
         About
       </h2>
       <div
-        className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary max-w-none text-pretty text-sm text-theme-secondary print:text-[12px] ml-6 sm:ml-0"
+        className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary ml-6 max-w-none text-pretty text-sm text-theme-secondary sm:ml-0 print:text-[12px]"
         aria-labelledby="about-section"
         dangerouslySetInnerHTML={{ __html: summary }}
       />
