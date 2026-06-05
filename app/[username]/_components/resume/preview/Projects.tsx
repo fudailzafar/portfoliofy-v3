@@ -19,14 +19,14 @@ export function Projects({
         Projects
       </h2>
       <div
-        className="flex flex-col gap-8"
+        className="flex flex-col gap-8 ml-6 sm:ml-0"
         role="feed"
         aria-labelledby="projects-section"
       >
         {projects.map((project) => (
           <div
             key={project.id || project.title}
-            className="flex flex-col gap-4 sm:flex-row sm:gap-12 print:mb-6"
+            className="flex flex-col gap-1 sm:flex-row sm:gap-12 print:mb-6"
           >
             {/* Left column: Year */}
             <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-32">
