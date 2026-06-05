@@ -39,11 +39,9 @@ export const PrintResume = ({
     'education',
     'contact',
     'awards',
-    'exhibitions',
+    'volunteering',
   ];
-  const order = (sectionOrder || DEFAULT_ORDER).map((id) =>
-    id === 'writing' ? 'features' : id === 'exhibitions' ? 'volunteering' : id,
-  );
+  const order = sectionOrder || DEFAULT_ORDER;
 
   const renderSection = (
     id: string,
@@ -210,7 +208,7 @@ export const PrintResume = ({
               <div key="volunteering">
                 {renderSection(
                   'volunteering',
-                  'Exhibitions',
+                  'Volunteering',
                   sortByDateDesc(volunteering).map((v: any) => (
                     <div key={v.id || v.organization} className="flex gap-4">
                       <div className="w-24 shrink-0 pt-0.5 text-xs text-gray-500">
