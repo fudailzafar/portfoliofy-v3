@@ -77,7 +77,7 @@ export default function Home() {
                 Features
               </div>
               <div className="mt-6 px-4 text-[24px] font-medium tracking-tight text-gray-300">
-                Writing
+                Features
               </div>
             </div>
           </div>

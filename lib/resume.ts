@@ -1,5 +1,18 @@
 import { z } from 'zod';
 
+export const DEFAULT_SECTION_ORDER = [
+  'work',
+  'side_projects',
+  'speaking',
+  'features',
+  'volunteering',
+  'projects',
+  'skills',
+  'education',
+  'contact',
+  'awards',
+];
+
 export const sortByDateDesc = <
   T extends {
     startYear?: string;
@@ -192,18 +205,7 @@ export const ResumeDataSchema = z.object({
   sectionOrder: z
     .array(z.string())
     .optional()
-    .default([
-      'work',
-      'side_projects',
-      'speaking',
-      'features',
-      'volunteering',
-      'projects',
-      'skills',
-      'education',
-      'contact',
-      'awards',
-    ]),
+    .default(DEFAULT_SECTION_ORDER),
   design: z
     .object({
       typography: z.enum(['sans', 'serif', 'mono']).optional().default('sans'),
