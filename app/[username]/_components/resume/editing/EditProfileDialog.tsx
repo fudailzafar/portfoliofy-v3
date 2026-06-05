@@ -151,14 +151,8 @@ export function EditProfileDialog({
   }, [uname, isInitialUsername, checkUsernameMutation.mutateAsync]);
 
   // Section order — normalise legacy ids on first load only
-  const [sectionOrder, setSectionOrder] = useState<string[]>(() =>
-    (resume.sectionOrder || DEFAULT_SECTION_ORDER).map((id) =>
-      id === 'writing'
-        ? 'features'
-        : id === 'exhibitions'
-          ? 'volunteering'
-          : id,
-    ),
+  const [sectionOrder, setSectionOrder] = useState<string[]>(
+    () => resume.sectionOrder || DEFAULT_SECTION_ORDER
   );
 
   // Years list — stable; only computed once
