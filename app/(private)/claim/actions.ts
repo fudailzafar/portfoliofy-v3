@@ -15,7 +15,13 @@ export async function claimUsernameAndInitProfile(
   }
 
   // 1. Claim username
-  const success = await createUsernameLookup({ userId, username });
+  const success = await createUsernameLookup({
+    userId,
+    username,
+    name: session?.user?.name,
+    email: session?.user?.email,
+    image: session?.user?.image,
+  });
   if (!success) {
     return { error: 'Username is not available or invalid' };
   }
