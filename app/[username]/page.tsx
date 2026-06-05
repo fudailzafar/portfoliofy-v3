@@ -198,6 +198,7 @@ export default async function ProfilePage({
         <LiveResumeWrapper
           initialResume={resume?.resumeData}
           profilePicture={profilePicture}
+          isOwner={userId === user_id}
         />
       </div>
 
