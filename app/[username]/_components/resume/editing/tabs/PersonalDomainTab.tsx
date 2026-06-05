@@ -28,7 +28,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
         setCustomDomain('');
         setDomainStatus(null);
       }
-    } catch {}
+    } catch { }
     setIsVerifyingDomain(false);
   };
 
@@ -89,7 +89,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
       : '76.76.21.21';
 
   return (
-    <div className="mx-auto flex h-full max-w-2xl flex-col pt-8">
+    <div className="mx-auto flex h-full max-w-2xl flex-col">
       <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
         <h2 className="text-2xl font-bold text-gray-900">Personal Domain</h2>
         <a
@@ -165,7 +165,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-9 rounded-lg border-gray-200 text-[13px] font-normal text-gray-500 hover:text-gray-900"
+                  className="h-8 rounded-md border border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-900 shadow-sm transition-colors hover:bg-gray-50"
                   onClick={handleDomainSave}
                   disabled={isVerifyingDomain || !customDomain}
                 >
@@ -318,11 +318,10 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 }}
               >
                 <div
-                  className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${
-                    typography === value
+                  className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${typography === value
                       ? 'border-[2.5px] border-[#3b82f6] bg-white'
                       : 'border border-gray-200 bg-white group-hover:border-gray-300'
-                  }`}
+                    }`}
                 >
                   <span
                     className={`text-[22px] font-medium tracking-tight text-gray-900 ${fontClass}`}
@@ -422,11 +421,10 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 }}
               >
                 <div
-                  className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${
-                    theme === value
+                  className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${theme === value
                       ? 'border-[2.5px] border-[#3b82f6]'
                       : 'border'
-                  } group-hover:border-gray-300`}
+                    } group-hover:border-gray-300`}
                   style={{
                     backgroundColor: bg,
                     borderColor: theme === value ? '#3b82f6' : border,

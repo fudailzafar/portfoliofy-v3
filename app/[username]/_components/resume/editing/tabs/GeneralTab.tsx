@@ -14,6 +14,7 @@ const RichTextEditor = dynamic(
   { ssr: false },
 );
 import { useUserActions } from '@/hooks/useUserActions';
+import { Check, X } from 'lucide-react';
 
 export function GeneralTab({
   initialUsername,
@@ -209,6 +210,7 @@ export function GeneralTab({
             </span>
             <Input
               id="uname"
+              placeholder='your-username'
               value={uname}
               onChange={(e) =>
                 setUname(
@@ -221,34 +223,13 @@ export function GeneralTab({
               {isInitialUsername ? null : checkUsernameMutation.isPending ? (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-black" />
               ) : isValidUname ? (
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M20 6L9 17L4 12"
-                    stroke="#009505"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-green-500 p-0.5">
+                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                </div>
               ) : (
-                <svg
-                  className="h-4 w-4 text-[#950000]"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
+                <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-red-500 p-0.5">
+                  <X className="h-3 w-3 text-white" strokeWidth={3} />
+                </div>
               )}
             </div>
           </div>
@@ -265,6 +246,7 @@ export function GeneralTab({
           </div>
           <Input
             id="displayName"
+            placeholder='The name on your profile'
             maxLength={48}
             value={header?.name || ''}
             onChange={(e) => updateHeader({ name: e.target.value })}
@@ -282,6 +264,7 @@ export function GeneralTab({
           </div>
           <Input
             id="shortAbout"
+            placeholder='Architect, painter, etc'
             maxLength={32}
             value={header?.shortAbout || ''}
             onChange={(e) => updateHeader({ shortAbout: e.target.value })}
@@ -299,6 +282,7 @@ export function GeneralTab({
           </div>
           <Input
             id="location"
+            placeholder='Where you&apos;re based'
             maxLength={32}
             value={header?.location || ''}
             onChange={(e) => updateHeader({ location: e.target.value })}
@@ -316,6 +300,7 @@ export function GeneralTab({
           </div>
           <Input
             id="pronouns"
+            placeholder='He/Him, etc'
             maxLength={12}
             value={header?.pronouns || ''}
             onChange={(e) => updateHeader({ pronouns: e.target.value })}

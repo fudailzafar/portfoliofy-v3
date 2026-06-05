@@ -16,7 +16,7 @@ export function Summary({ summary }: AboutProps) {
   return (
     <>
       <h2
-        className="mb-4 text-sm font-bold text-theme-primary"
+        className="text-sm font-bold text-theme-primary"
         id="about-section"
       >
         About
