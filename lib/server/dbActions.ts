@@ -102,9 +102,15 @@ export async function storeResume(
 export const createUsernameLookup = async ({
   userId,
   username,
+  name,
+  email,
+  image,
 }: {
   userId: string;
   username: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
 }): Promise<boolean> => {
   if (FORBIDDEN_USERNAMES.includes(username.toLowerCase())) {
     return false;
@@ -113,8 +119,8 @@ export const createUsernameLookup = async ({
   try {
     // Insert into users. If id or username already exists, it will throw a unique constraint error.
     await sql`
-      INSERT INTO users (id, username)
-      VALUES (${userId}, ${username})
+      INSERT INTO users (id, username, name, email, image)
+      VALUES (${userId}, ${username}, ${name || null}, ${email || null}, ${image || null})
     `;
     return true;
   } catch (error: any) {
