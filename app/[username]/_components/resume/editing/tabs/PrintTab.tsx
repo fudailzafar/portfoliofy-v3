@@ -69,7 +69,7 @@ export function PrintTab() {
         })}
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-gray-100 bg-white p-4 md:left-64 flex-none md:px-8">
+      <div className="fixed bottom-0 left-0 right-0 z-10 flex flex-none justify-end gap-3 border-t border-gray-100 bg-white p-4 md:left-64 md:px-8">
         <Button
           onClick={() => window.print()}
           className="h-9 rounded-md border-none bg-[#2A2A2A] px-6 font-medium text-white shadow-sm hover:bg-[#1A1A1A]"

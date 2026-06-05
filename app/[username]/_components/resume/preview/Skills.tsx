@@ -23,7 +23,7 @@ export function Skills({ skills, className }: SkillsProps) {
         Skills
       </h2>
       <div
-        className="text-sm font-semibold leading-relaxed text-theme-primary ml-6 sm:ml-0"
+        className="ml-6 text-sm font-semibold leading-relaxed text-theme-primary sm:ml-0"
         aria-label="List of skills"
         aria-labelledby="skills-section"
       >
