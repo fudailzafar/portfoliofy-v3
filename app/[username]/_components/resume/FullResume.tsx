@@ -23,7 +23,7 @@ const DEFAULT_ORDER = [
   'education',
   'contact',
   'awards',
-  'exhibitions',
+  'volunteering',
 ];
 
 export const FullResume = ({
@@ -37,9 +37,7 @@ export const FullResume = ({
     return <LoadingFallback message="Loading Resume..." />;
   }
 
-  const order = (resume.sectionOrder || DEFAULT_ORDER).map((id) =>
-    id === 'writing' ? 'features' : id === 'exhibitions' ? 'volunteering' : id,
-  );
+  const order = resume.sectionOrder || DEFAULT_ORDER;
 
   return (
     <section
