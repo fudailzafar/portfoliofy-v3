@@ -72,7 +72,7 @@ export function SpeakingTab({
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
-      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
+      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
         <h2 className="text-2xl font-bold">Speaking</h2>
         {speakingView === 'list' && (
           <Button
@@ -86,7 +86,7 @@ export function SpeakingTab({
               });
               setSpeakingView('form');
             }}
-            className="h-8 rounded-md border-none bg-gray-100 px-4 text-xs text-gray-900 hover:bg-gray-200"
+            className="h-8 rounded-md border-none bg-surface-2 px-4 text-xs text-content-primary hover:bg-surface-3"
           >
             Add engagement
           </Button>
@@ -95,12 +95,12 @@ export function SpeakingTab({
 
       {speakingView === 'list' && speaking.length === 0 && (
         <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
-          <div className="rounded-full bg-gray-50 p-8">
-            <Mic className="h-16 w-16 text-gray-400" strokeWidth={1} />
+          <div className="rounded-full bg-surface-2 p-8">
+            <Mic className="h-16 w-16 text-content-muted" strokeWidth={1} />
           </div>
           <Button
             variant="secondary"
-            className="h-auto rounded-md border-none bg-gray-100 px-6 py-5 text-sm text-gray-900 hover:bg-gray-200"
+            className="h-auto rounded-md border-none bg-surface-2 px-6 py-5 text-sm text-content-primary hover:bg-surface-3"
             onClick={() => {
               setCurrentSpeaking({
                 title: '',
@@ -137,17 +137,17 @@ export function SpeakingTab({
                   key={engagement.id}
                   className="flex flex-col gap-4 sm:flex-row sm:gap-12"
                 >
-                  <div className="shrink-0 pt-0.5 text-sm text-gray-400 sm:w-16">
+                  <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-16">
                     {engagement.year}
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <p className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                    <p className="text-base font-semibold text-content-primary">
                       {engagement.title}
                     </p>
 
                     {engagement.location && (
-                      <div className="mt-1 line-clamp-2 text-sm text-gray-500">
+                      <div className="mt-1 line-clamp-2 text-sm text-content-muted">
                         {engagement.location}
                       </div>
                     )}
@@ -178,7 +178,7 @@ export function SpeakingTab({
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-gray-600">Title*</Label>
+              <Label className="text-xs text-content-secondary">Title*</Label>
               <Input
                 value={currentSpeaking.title}
                 onChange={(e) =>
@@ -191,7 +191,7 @@ export function SpeakingTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-gray-600">Year*</Label>
+              <Label className="text-xs text-content-secondary">Year*</Label>
               <Select
                 value={currentSpeaking.year}
                 onValueChange={(val) =>
@@ -217,7 +217,7 @@ export function SpeakingTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-gray-600">Location</Label>
+              <Label className="text-xs text-content-secondary">Location</Label>
               <Input
                 value={currentSpeaking.location || ''}
                 onChange={(e) =>
@@ -230,7 +230,7 @@ export function SpeakingTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-gray-600">Link</Label>
+              <Label className="text-xs text-content-secondary">Link</Label>
               <Input
                 value={currentSpeaking.link || ''}
                 onChange={(e) =>
@@ -244,10 +244,10 @@ export function SpeakingTab({
             </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-gray-100 bg-white p-4 md:px-8 dark:border-[#333] dark:bg-[#121212]">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-border-subtle bg-surface-1 p-4 md:px-8">
             <button
               onClick={() => setSpeakingView('list')}
-              className="px-4 text-[14px] font-medium text-black hover:underline hover:underline-offset-2 dark:text-gray-200"
+              className="px-4 text-[14px] font-medium text-content-primary hover:underline hover:underline-offset-2"
             >
               Cancel
             </button>
@@ -255,7 +255,7 @@ export function SpeakingTab({
               onClick={handleSave}
               disabled={!currentSpeaking?.title || !currentSpeaking?.year}
               variant="outline"
-              className="h-9 rounded-md border border-gray-200 bg-white px-6 font-medium text-black shadow-sm dark:border-[#333] dark:bg-[#1f1f1f] dark:text-gray-200 dark:hover:bg-[#2c2c2c]"
+              className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
             >
               Save
             </Button>

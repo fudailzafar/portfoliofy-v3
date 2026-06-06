@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { AuthDialog } from '@/components/auth/AuthDialog';
-import { Button } from '@/components/ui/button';
 import { ExploreSidebar } from './ExploreSidebar';
 import { toast } from 'sonner';
 import { useUserActions } from '@/hooks/useUserActions';
@@ -42,14 +41,14 @@ export function GlobalSidebar() {
 
   return (
     <>
-      <div className="flex h-full w-[330px] flex-col border-r border-[#E5E5E5] dark:border-[#333] px-4 py-6 dark:bg-[#121212]">
+      <div className="flex h-full w-[330px] flex-col border-r border-border-strong px-4 py-6 bg-surface-1">
         <div className="mt-2 flex-1 pr-4">
           <div
             onClick={() => setIsExploreMode(true)}
-            className="flex cursor-pointer items-center justify-between rounded-full bg-[#F2F2F2] dark:bg-[#1f1f1f] px-4 py-2.5 transition-all hover:bg-gray-200/60 dark:hover:bg-[#2c2c2c]"
+            className="flex cursor-pointer items-center justify-between rounded-full bg-surface-2 px-4 py-2.5 transition-all hover:bg-surface-3"
           >
-            <span className="text-[14px] text-[#AAAAAA] dark:text-gray-400">Explore</span>
-            <span className="font-sans text-[12px] not-italic tracking-[0.2em] text-[#AAAAAA] dark:text-gray-500">
+            <span className="text-[14px] text-content-muted">Explore</span>
+            <span className="font-sans text-[12px] not-italic tracking-[0.2em] text-content-muted dark:text-content-muted">
               ⌘⇧E
             </span>
           </div>
@@ -60,8 +59,8 @@ export function GlobalSidebar() {
             <div className="flex flex-col gap-4 pl-1">
               {/* User Info & Logout */}
               <div className="mb-3 pl-4">
-                <div className="text-[14px] text-gray-800 dark:text-gray-100">{displayName}</div>
-                <div className="mt-1 text-[13px] text-gray-400">
+                <div className="text-[14px] text-content-primary">{displayName}</div>
+                <div className="mt-1 text-[13px] text-content-muted">
                   Not you?{' '}
                   <button
                     onClick={() => signOut({ callbackUrl: '/' })}
@@ -79,9 +78,9 @@ export function GlobalSidebar() {
                   className="group flex w-fit items-center gap-3"
                 >
                   <div
-                    className={`h-1 w-1 rounded-full ${pathname === `/${usernameQuery.data.username}` ? 'bg-black dark:bg-gray-200' : 'bg-transparent'}`}
+                    className={`h-1 w-1 rounded-full ${pathname === `/${usernameQuery.data.username}` ? 'bg-action-primary dark:bg-surface-3' : 'bg-transparent'}`}
                   />
-                  <span className="text-[14px] text-gray-800 dark:text-gray-200 underline-offset-4 group-hover:underline">
+                  <span className="text-[14px] text-content-secondary underline-offset-4 group-hover:underline">
                     Profile
                   </span>
                 </Link>
@@ -90,9 +89,9 @@ export function GlobalSidebar() {
               {/* About */}
               <Link href="/" className="group flex w-fit items-center gap-3">
                 <div
-                  className={`h-1 w-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-black dark:bg-gray-200' : 'bg-transparent'}`}
+                  className={`h-1 w-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-action-primary dark:bg-surface-3' : 'bg-transparent'}`}
                 />
-                <span className="text-[14px] text-gray-800 dark:text-gray-200 underline-offset-4 group-hover:underline">
+                <span className="text-[14px] text-content-secondary underline-offset-4 group-hover:underline">
                   About
                 </span>
               </Link>
@@ -107,7 +106,7 @@ export function GlobalSidebar() {
                       );
                       toast.success('Copied to clipboard');
                     }}
-                    className="pl-4 text-left text-[14px] text-gray-400 dark:text-gray-500 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
+                    className="pl-4 text-left text-[14px] text-content-muted transition-colors hover:text-content-secondary dark:hover:text-gray-300"
                   >
                     portfoliofy.me/{usernameQuery.data.username}
                   </button>
@@ -120,9 +119,9 @@ export function GlobalSidebar() {
               {/* About */}
               <Link href="/" className="group flex w-fit items-center gap-3">
                 <div
-                  className={`h-1 w-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-black' : 'bg-transparent'}`}
+                  className={`h-1 w-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-action-primary' : 'bg-transparent'}`}
                 />
-                <span className="text-[14px] text-gray-800 dark:text-gray-200 underline-offset-4 group-hover:underline">
+                <span className="text-[14px] text-content-secondary underline-offset-4 group-hover:underline">
                   About
                 </span>
               </Link>
@@ -134,7 +133,7 @@ export function GlobalSidebar() {
                   className="group flex w-fit items-center gap-3 text-left"
                 >
                   <div className="h-1 w-1 rounded-full bg-transparent" />
-                  <span className="text-[14px] text-gray-800 dark:text-gray-200 underline-offset-4 group-hover:underline">
+                  <span className="text-[14px] text-content-secondary underline-offset-4 group-hover:underline">
                     Login
                   </span>
                 </button>
@@ -144,7 +143,7 @@ export function GlobalSidebar() {
               <div className="pl-2 pt-3">
                 <button
                   onClick={() => openAuth('signup')}
-                  className="h-[32px] w-[130px] rounded-[8px] border border-gray-200 bg-white text-[14px] font-medium text-black transition-all active:bg-gray-100"
+                  className="h-[32px] w-[130px] rounded-[8px] border border-border-strong bg-surface-1 text-[14px] font-medium text-content-primary transition-all active:bg-surface-2"
                 >
                   Create a profile
                 </button>

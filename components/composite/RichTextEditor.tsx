@@ -39,7 +39,7 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          'min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 prose prose-sm max-w-none',
+          'min-h-[120px] w-full rounded-md border border-border-strong bg-surface-2 px-3 py-2 text-sm shadow-sm placeholder:text-content-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-strong disabled:cursor-not-allowed disabled:opacity-50 prose prose-sm max-w-none',
       },
     },
     onUpdate: ({ editor }) => {
@@ -79,7 +79,7 @@ export function RichTextEditor({
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-1 rounded-md border bg-muted/50 p-1">
+      <div className="flex items-center gap-1 rounded-md border border-border-strong bg-surface-2 p-1">
         <Button
           type="button"
           variant="ghost"

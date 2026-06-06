@@ -52,7 +52,7 @@ export function ContactsTab({
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
-      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
+      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
         <h2 className="text-2xl font-bold">Contact</h2>
         {view === 'list' && (
           <Button
@@ -66,7 +66,7 @@ export function ContactsTab({
               });
               setView('form');
             }}
-            className="h-8 rounded-md border-none bg-gray-100 px-4 text-xs text-gray-900 hover:bg-gray-200"
+            className="h-8 rounded-md border-none bg-surface-2 px-4 text-xs text-content-primary hover:bg-surface-3"
           >
             Add link
           </Button>
@@ -75,15 +75,15 @@ export function ContactsTab({
 
       {view === 'list' && items.length === 0 && (
         <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
-          <div className="rounded-full bg-gray-50 p-8">
+          <div className="rounded-full bg-surface-2 p-8">
             <MessageCircle
-              className="h-16 w-16 text-gray-400"
+              className="h-16 w-16 text-content-muted"
               strokeWidth={1}
             />
           </div>
           <Button
             variant="secondary"
-            className="h-auto rounded-md border-none bg-gray-100 px-6 py-5 text-sm text-gray-900 hover:bg-gray-200"
+            className="h-auto rounded-md border-none bg-surface-2 px-6 py-5 text-sm text-content-primary hover:bg-surface-3"
             onClick={() => {
               setCurrent({
                 platform: '',
@@ -106,7 +106,7 @@ export function ContactsTab({
               key={c.id || c.platform}
               className="flex flex-col gap-4 sm:flex-row sm:gap-12"
             >
-              <div className="shrink-0 pt-0.5 text-sm text-gray-400 sm:w-32">
+              <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-32">
                 {c.platform}
               </div>
 
@@ -117,9 +117,9 @@ export function ContactsTab({
                   rel="noopener noreferrer"
                   className="inline-block hover:underline"
                 >
-                  <span className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                  <span className="text-base font-semibold text-content-primary">
                     {extractUsername(c.link, c.platform)}
-                    <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-gray-900" />
+                    <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                   </span>
                 </a>
 
@@ -157,7 +157,7 @@ export function ContactsTab({
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-[13px] text-gray-500">Type*</Label>
+              <Label className="text-[13px] text-content-muted">Type*</Label>
               <Select
                 value={current.type || 'Custom'}
                 onValueChange={(val) => {
@@ -172,7 +172,7 @@ export function ContactsTab({
                   });
                 }}
               >
-                <SelectTrigger className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none dark:bg-[#1f1f1f] dark:text-gray-200">
+                <SelectTrigger className="h-10 border-0 bg-surface-2 text-[14px] shadow-none">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -199,7 +199,7 @@ export function ContactsTab({
 
             {current.type === 'Custom' && (
               <div className="space-y-2">
-                <Label className="text-[13px] text-gray-500">
+                <Label className="text-[13px] text-content-muted">
                   Name of platform*
                 </Label>
                 <Input
@@ -210,7 +210,7 @@ export function ContactsTab({
                       platform: e.target.value,
                     })
                   }
-                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none dark:bg-[#1f1f1f] dark:text-gray-200"
+                  className="h-10 border-0 bg-surface-2 text-[14px] shadow-none"
                 />
               </div>
             )}
@@ -218,7 +218,7 @@ export function ContactsTab({
             {current.type === 'Custom' ? (
               <>
                 <div className="space-y-2">
-                  <Label className="text-[13px] text-gray-500">Username*</Label>
+                  <Label className="text-[13px] text-content-muted">Username*</Label>
                   <Input
                     value={current.username || ''}
                     onChange={(e) => {
@@ -228,11 +228,11 @@ export function ContactsTab({
                         username: newUsername,
                       });
                     }}
-                    className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none dark:bg-[#1f1f1f] dark:text-gray-200"
+                    className="h-10 border-0 bg-surface-2 text-[14px] shadow-none"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[13px] text-gray-500">URL*</Label>
+                  <Label className="text-[13px] text-content-muted">URL*</Label>
                   <Input
                     value={current.link || ''}
                     onChange={(e) => {
@@ -242,13 +242,13 @@ export function ContactsTab({
                         link: newUrl,
                       });
                     }}
-                    className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none dark:bg-[#1f1f1f] dark:text-gray-200"
+                    className="h-10 border-0 bg-surface-2 text-[14px] shadow-none"
                   />
                 </div>
               </>
             ) : current.type === 'Website' ? (
               <div className="space-y-2">
-                <Label className="text-[13px] text-gray-500">
+                <Label className="text-[13px] text-content-muted">
                   Website URL*
                 </Label>
                 <Input
@@ -261,12 +261,12 @@ export function ContactsTab({
                       username: extractUsername(newUrl, current.platform || ''),
                     });
                   }}
-                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none dark:bg-[#1f1f1f] dark:text-gray-200"
+                  className="h-10 border-0 bg-surface-2 text-[14px] shadow-none"
                 />
               </div>
             ) : (
               <div className="space-y-2">
-                <Label className="text-[13px] text-gray-500">
+                <Label className="text-[13px] text-content-muted">
                   Username or Profile URL*
                 </Label>
                 <Input
@@ -282,16 +282,16 @@ export function ContactsTab({
                       ),
                     });
                   }}
-                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none dark:bg-[#1f1f1f] dark:text-gray-200"
+                  className="h-10 border-0 bg-surface-2 text-[14px] shadow-none"
                 />
               </div>
             )}
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-gray-100 bg-white p-4 md:px-8 dark:border-[#333] dark:bg-[#121212]">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-border-subtle bg-surface-1 p-4 md:px-8">
             <button
               onClick={() => setView('list')}
-              className="px-4 text-[14px] font-medium text-black hover:underline hover:underline-offset-2 dark:text-gray-200"
+              className="px-4 text-[14px] font-medium text-content-primary hover:underline hover:underline-offset-2"
             >
               Cancel
             </button>
@@ -299,7 +299,7 @@ export function ContactsTab({
               onClick={handleSave}
               disabled={!current.platform || !current.link}
               variant="outline"
-              className="h-9 rounded-md border border-gray-200 bg-white px-6 font-medium text-black shadow-sm dark:border-[#333] dark:bg-[#1f1f1f] dark:text-gray-200 dark:hover:bg-[#2c2c2c]"
+              className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
             >
               Save
             </Button>

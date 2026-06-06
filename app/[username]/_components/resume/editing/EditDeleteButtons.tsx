@@ -8,10 +8,10 @@ interface EditDeleteButtonsProps {
 
 export function EditDeleteButtons({ onEdit, onDelete, children }: EditDeleteButtonsProps) {
   return (
-    <div className="mt-3 flex items-center gap-4 text-xs font-medium text-gray-400">
+    <div className="mt-3 flex items-center gap-4 text-xs font-medium text-content-muted">
       <button
         onClick={onEdit}
-        className="transition-colors hover:text-gray-900"
+        className="transition-colors hover:text-content-primary"
       >
         Edit
       </button>

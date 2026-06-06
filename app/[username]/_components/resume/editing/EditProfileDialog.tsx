@@ -364,6 +364,8 @@ export function EditProfileDialog({
         setOpen(false);
         if (uname !== username) {
           router.push(`/${uname}`);
+        } else {
+          router.refresh();
         }
       }
     } catch {
@@ -424,10 +426,10 @@ export function EditProfileDialog({
                     left: '80px',
                     zIndex: 50,
                   }}
-                  className="flex size-[48px] items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm outline-none transition-colors dark:border-[#333] dark:bg-[#121212] dark:hover:bg-[#1f1f1f]"
+                  className="flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm outline-none transition-colors"
                 >
                   <Pencil
-                    className="h-[18px] w-[18px] text-[#111] dark:text-gray-200"
+                    className="h-[18px] w-[18px] text-content-primary"
                     strokeWidth={1.5}
                   />
                 </motion.button>
@@ -436,14 +438,14 @@ export function EditProfileDialog({
             <TooltipContent
               side="top"
               sideOffset={12}
-              className="flex items-center gap-1.5 rounded-lg border-none bg-[#111] px-3 py-1.5 text-[13px] font-medium text-white shadow-md"
+              className="flex items-center gap-1.5 rounded-lg border-none bg-action-primary px-3 py-1.5 text-[13px] font-medium text-surface-1 shadow-md"
             >
               <span>Edit profile</span>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
-        <DialogContent className="flex h-[85vh] max-w-5xl flex-col gap-0 overflow-hidden overscroll-contain bg-white p-0 sm:flex-row dark:border-[#333] dark:bg-[#121212]">
+        <DialogContent className="flex h-[85vh] max-w-5xl flex-col gap-0 overflow-hidden overscroll-contain bg-surface-1 p-0 sm:flex-row">
           <DialogTitle className="sr-only">Edit Profile</DialogTitle>
 
           {/* Sidebar */}

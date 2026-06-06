@@ -35,12 +35,12 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
             >
               {/* Header */}
               <div className="flex flex-col gap-1.5">
-                <h2 className="text-lg font-medium tracking-tight text-gray-900 dark:text-gray-100">
+                <h2 className="text-lg font-medium tracking-tight text-content-primary">
                   {mode === 'login'
                     ? 'Login to your account﻿ 👋'
                     : 'Create a new profile ✨'}
                 </h2>
-                <p className="text-[14px] leading-snug text-gray-500 dark:text-gray-400">
+                <p className="text-[14px] leading-snug text-content-muted">
                   By continuing you agree to our terms of service and privacy
                   policy.
                 </p>
@@ -50,7 +50,7 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={handleGoogleSignIn}
-                className="flex h-11 w-full items-center justify-center gap-3 rounded-md border border-gray-200 bg-white px-4 text-sm font-medium text-gray-800 shadow-sm outline-none transition-colors hover:bg-gray-50"
+                className="flex h-11 w-full items-center justify-center gap-3 rounded-md border border-border-strong bg-surface-1 px-4 text-sm font-medium text-content-primary shadow-sm outline-none transition-colors hover:bg-surface-2"
               >
                 {/* Google SVG Icon */}
                 <svg

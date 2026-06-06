@@ -41,7 +41,7 @@ export const PrintResume = ({
 
     return (
       <div className="page-break-inside-avoid mb-12 grid grid-cols-12 gap-8">
-        <div className="col-span-4 pt-1 text-sm text-gray-900">{title}</div>
+        <div className="col-span-4 pt-1 text-sm text-content-primary">{title}</div>
         <div className="col-span-8 flex flex-col gap-6">{content}</div>
       </div>
     );
@@ -50,15 +50,15 @@ export const PrintResume = ({
   return (
     <div
       className={cn(
-        'mx-auto w-full max-w-4xl bg-white px-8 py-12 text-black',
+        'mx-auto w-full max-w-4xl bg-surface-1 px-8 py-12 text-content-primary',
         className,
       )}
     >
       {/* Header */}
       <div className="mb-16 grid grid-cols-12 gap-8">
         <div className="col-span-4 flex flex-col justify-start">
-          <h1 className="text-xl text-black">{header?.name}</h1>
-          <p className="mt-1 text-sm text-gray-600">{header?.shortAbout}</p>
+          <h1 className="text-xl text-content-primary">{header?.name}</h1>
+          <p className="mt-1 text-sm text-content-secondary">{header?.shortAbout}</p>
         </div>
         <div className="col-span-8">
           {/* About section is rendered here if not hidden */}
@@ -66,7 +66,7 @@ export const PrintResume = ({
             summary &&
             summary !== '<p></p>' && (
               <div
-                className="prose prose-sm prose-p:my-2 prose-a:text-black max-w-none text-sm leading-relaxed text-gray-800"
+                className="prose prose-sm prose-p:my-2 prose-a:text-content-primary max-w-none text-sm leading-relaxed text-content-primary"
                 dangerouslySetInnerHTML={{ __html: summary }}
               />
             )}
@@ -85,7 +85,7 @@ export const PrintResume = ({
                   'Work Experience',
                   sortByDateDesc(workExperience).map((w: any) => (
                     <div key={w.id || w.company} className="flex gap-4">
-                      <div className="w-24 shrink-0 pt-0.5 text-xs text-gray-500">
+                      <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {w.start} — {w.end}
                       </div>
                       <div>
@@ -93,13 +93,13 @@ export const PrintResume = ({
                           {w.title} at {w.company}
                         </p>
                         {w.location && (
-                          <p className="mt-0.5 text-xs text-gray-500">
+                          <p className="mt-0.5 text-xs text-content-muted">
                             {w.location}
                           </p>
                         )}
                         {w.description && w.description !== '<p></p>' && (
                           <div
-                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-gray-600"
+                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
                             dangerouslySetInnerHTML={{ __html: w.description }}
                           />
                         )}
@@ -118,14 +118,14 @@ export const PrintResume = ({
                   'Projects',
                   sortByDateDesc(projects).map((p: any) => (
                     <div key={p.id || p.title} className="flex gap-4">
-                      <div className="w-24 shrink-0 pt-0.5 text-xs text-gray-500">
+                      <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {p.year}
                       </div>
                       <div>
                         <p className="text-sm">{p.title}</p>
                         {p.description && p.description !== '<p></p>' && (
                           <div
-                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-gray-600"
+                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
                             dangerouslySetInnerHTML={{ __html: p.description }}
                           />
                         )}
@@ -144,14 +144,14 @@ export const PrintResume = ({
                   'Side Projects',
                   sortByDateDesc(sideProjects).map((p: any) => (
                     <div key={p.id || p.title} className="flex gap-4">
-                      <div className="w-24 shrink-0 pt-0.5 text-xs text-gray-500">
+                      <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {p.year}
                       </div>
                       <div>
                         <p className="text-sm">{p.title}</p>
                         {p.description && p.description !== '<p></p>' && (
                           <div
-                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-gray-600"
+                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
                             dangerouslySetInnerHTML={{ __html: p.description }}
                           />
                         )}
@@ -170,7 +170,7 @@ export const PrintResume = ({
                   'Features',
                   sortByDateDesc(features).map((f: any) => (
                     <div key={f.id || f.title} className="flex gap-4">
-                      <div className="w-24 shrink-0 pt-0.5 text-xs text-gray-500">
+                      <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {f.year}
                       </div>
                       <div>
@@ -180,7 +180,7 @@ export const PrintResume = ({
                         </p>
                         {f.description && f.description !== '<p></p>' && (
                           <div
-                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-gray-600"
+                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
                             dangerouslySetInnerHTML={{ __html: f.description }}
                           />
                         )}
@@ -199,7 +199,7 @@ export const PrintResume = ({
                   'Volunteering',
                   sortByDateDesc(volunteering).map((v: any) => (
                     <div key={v.id || v.organization} className="flex gap-4">
-                      <div className="w-24 shrink-0 pt-0.5 text-xs text-gray-500">
+                      <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {v.startYear} — {v.endYear}
                       </div>
                       <div>
@@ -207,7 +207,7 @@ export const PrintResume = ({
                           {v.role} at {v.organization}
                         </p>
                         {v.location && (
-                          <p className="mt-0.5 text-xs text-gray-500">
+                          <p className="mt-0.5 text-xs text-content-muted">
                             {v.location}
                           </p>
                         )}
@@ -226,7 +226,7 @@ export const PrintResume = ({
                   'Speaking',
                   sortByDateDesc(speaking).map((s: any) => (
                     <div key={s.id || s.title} className="flex gap-4">
-                      <div className="w-24 shrink-0 pt-0.5 text-xs text-gray-500">
+                      <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {s.year}
                       </div>
                       <div>
@@ -249,7 +249,7 @@ export const PrintResume = ({
                   'Education',
                   sortByDateDesc(education).map((e: any) => (
                     <div key={e.id || e.school} className="flex gap-4">
-                      <div className="w-24 shrink-0 pt-0.5 text-xs text-gray-500">
+                      <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {e.start} — {e.end}
                       </div>
                       <div>
@@ -257,7 +257,7 @@ export const PrintResume = ({
                           {e.degree} at {e.school}
                         </p>
                         {e.location && (
-                          <p className="mt-0.5 text-xs text-gray-500">
+                          <p className="mt-0.5 text-xs text-content-muted">
                             {e.location}
                           </p>
                         )}
@@ -276,7 +276,7 @@ export const PrintResume = ({
                   'Skills',
                   <div className="flex flex-wrap gap-2">
                     {skillsList.map((skill: string) => (
-                      <span key={skill} className="text-sm text-gray-800">
+                      <span key={skill} className="text-sm text-content-primary">
                         {skill}
                       </span>
                     ))}
@@ -297,7 +297,7 @@ export const PrintResume = ({
                         key={c.id || c.link}
                         className="flex items-start gap-4"
                       >
-                        <div className="w-24 shrink-0 pt-0.5 text-sm capitalize text-gray-800">
+                        <div className="w-24 shrink-0 pt-0.5 text-sm capitalize text-content-primary">
                           {c.platform}:
                         </div>
                         <div>
@@ -307,7 +307,7 @@ export const PrintResume = ({
                                 ? c.link
                                 : `https://${c.link}`
                             }
-                            className="text-sm text-black hover:underline"
+                            className="text-sm text-content-primary hover:underline"
                           >
                             {c.link}
                           </a>
