@@ -2,21 +2,21 @@ import { Footer } from '@/components/layout/Footer';
 
 export default function TermsPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white dark:bg-[#121212]">
+    <div className="flex min-h-screen flex-col bg-surface-1">
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-20 font-sans">
-        <h1 className="mb-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+        <h1 className="mb-2 text-4xl font-bold tracking-tight text-content-primary">
           Terms of Service
         </h1>
-        <p className="mb-12 text-gray-500 dark:text-gray-400">Effective May 27, 2026</p>
+        <p className="mb-12 text-content-muted">Effective May 27, 2026</p>
 
-        <div className="space-y-8 text-[15px] leading-relaxed text-gray-700 dark:text-gray-300">
+        <div className="space-y-8 text-[15px] leading-relaxed text-content-secondary">
           <p>
             When you use Portfoliofy (&quot;the service&quot;), now and in the future, you
             are agreeing to the terms of service as outlined in this document.
           </p>
 
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Basics</h2>
+            <h2 className="text-xl font-bold text-content-primary">Basics</h2>
             <ul className="list-disc space-y-2 pl-5">
               <li>
                 Your use of the service is at your sole risk. We provide the
@@ -31,7 +31,7 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Conduct</h2>
+            <h2 className="text-xl font-bold text-content-primary">Conduct</h2>
             <ul className="list-disc space-y-2 pl-5">
               <li>
                 We do not tolerate harassment or hate speech of any kind. If
@@ -51,7 +51,7 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Termination</h2>
+            <h2 className="text-xl font-bold text-content-primary">Termination</h2>
             <p>
               We reserve the right, at any time and without prior notice, to
               remove or disable any content or account for any reason or no
@@ -60,7 +60,7 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Legal</h2>
+            <h2 className="text-xl font-bold text-content-primary">Legal</h2>
             <p>
               To the fullest extent of the law we assume no responsibility for
               the following:

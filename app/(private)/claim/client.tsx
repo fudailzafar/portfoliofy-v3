@@ -86,12 +86,12 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
   };
 
   return (
-    <div className="flex min-h-[70vh] flex-1 flex-col items-center justify-center gap-6 px-4 py-12 dark:bg-[#121212]">
-      <div className="w-full max-w-md rounded-xl border border-gray-200 bg-white p-8 shadow-sm dark:border-[#333] dark:bg-[#1f1f1f]">
-        <h1 className="mb-2 text-left text-2xl font-bold dark:text-gray-100">
+    <div className="flex min-h-[70vh] flex-1 flex-col items-center justify-center gap-6 px-4 py-12">
+      <div className="w-full max-w-md rounded-xl border border-border-strong bg-surface-1 p-8 shadow-sm">
+        <h1 className="mb-2 text-left text-2xl font-bold">
           Welcome to Portfoliofy👋🏻
         </h1>
-        <p className="mb-8 text-left text-sm text-gray-500 dark:text-gray-400">
+        <p className="mb-8 text-left text-sm text-content-muted">
           We just need a few details to finish creating your account. You can
           always change this later.
         </p>
@@ -99,7 +99,7 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="username" className="dark:text-gray-200">Username</Label>
+              <Label htmlFor="username" className="">Username</Label>
               {status === 'taken' && (
                 <span className="text-xs font-medium text-red-500">
                   Username is taken
@@ -116,7 +116,7 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
                   )
                 }
                 className={cn(
-                  'pr-10 dark:bg-[#2c2c2c] dark:border-[#333] dark:text-gray-100',
+                  'pr-10   ',
                   status === 'taken' &&
                     'border-red-500 focus-visible:ring-red-500',
                 )}
@@ -126,12 +126,12 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
               />
               {status === 'checking' && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                  <Loader2 className="h-4 w-4 animate-spin text-content-muted" />
                 </div>
               )}
               {status === 'available' && (
                 <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-green-500 p-0.5">
-                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                  <Check className="h-3 w-3 text-surface-1" strokeWidth={3} />
                 </div>
               )}
             </div>
@@ -139,8 +139,8 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="displayName" className="dark:text-gray-200">Display Name</Label>
-              <span className="text-xs text-gray-400">
+              <Label htmlFor="displayName" className="">Display Name</Label>
+              <span className="text-xs text-content-muted">
                 {displayName.length} of 48
               </span>
             </div>
@@ -152,11 +152,11 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
                 placeholder="The name on your profile"
                 maxLength={48}
                 required
-                className="pr-10 dark:bg-[#2c2c2c] dark:border-[#333] dark:text-gray-100"
+                className="pr-10"
               />
               {displayName.length > 0 && (
                 <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-green-500 p-0.5">
-                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                  <Check className="h-3 w-3 text-surface-1" strokeWidth={3} />
                 </div>
               )}
             </div>
@@ -168,13 +168,13 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
               onClick={async () => {
                 await signOut({ callbackUrl: '/' });
               }}
-              className="text-xs text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+              className="text-xs text-content-muted transition-colors hover:text-content-primary"
             >
               Log in with a different email
             </button>
             <Button
               type="submit"
-              className="bg-design-black text-white hover:bg-design-black/95 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+              className="bg-design-black text-surface-1 hover:bg-design-black/95 dark:bg-surface-1 dark:text-content-primary dark:hover:bg-surface-3"
               disabled={
                 isSubmitting ||
                 !username ||

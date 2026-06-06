@@ -40,6 +40,27 @@ const config: Config = {
           gray: '#5d5d5d',
           resume: '#6B7280',
         },
+        surface: {
+          1: 'var(--surface-1)',
+          2: 'var(--surface-2)',
+          3: 'var(--surface-3)',
+          card: 'var(--surface-card)',
+        },
+        content: {
+          primary: 'var(--content-primary)',
+          secondary: 'var(--content-secondary)',
+          muted: 'var(--content-muted)',
+        },
+        action: {
+          primary: 'var(--action-primary)',
+          'primary-hover': 'var(--action-primary-hover)',
+          foreground: 'var(--action-foreground)',
+          danger: 'var(--action-danger)',
+          'danger-hover': 'var(--action-danger-hover)',
+          'danger-foreground': 'var(--action-danger-foreground)',
+        },
+        'border-subtle': 'var(--border-subtle)',
+        'border-strong': 'var(--border-strong)',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

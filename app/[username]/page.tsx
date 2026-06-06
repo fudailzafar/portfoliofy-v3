@@ -65,7 +65,7 @@ export default async function ProfilePage({
 
   if (!user_id) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-white to-gray-50 px-4 py-8 md:py-12 dark:from-[#121212] dark:to-[#1a1a1a]">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-white to-surface-2 px-4 py-8 md:py-12 dark:from-[#121212] dark:to-[#1a1a1a]">
         <div className="w-full max-w-4xl space-y-6 text-center md:space-y-8">
           {/* Header */}
           <div className="space-y-3 md:space-y-4">
@@ -76,11 +76,11 @@ export default async function ProfilePage({
             </div>
 
             <h1 className="break-all text-xl font-bold sm:text-2xl md:text-3xl lg:text-4xl">
-              <span className="text-gray-500 dark:text-gray-400">portfoliofy.me/</span>
-              <span className="text-gray-900 dark:text-gray-100">{username}</span>
+              <span className="text-content-muted">portfoliofy.me/</span>
+              <span className="text-content-primary">{username}</span>
             </h1>
 
-            <p className="px-4 text-base text-gray-600 sm:text-lg md:text-xl dark:text-gray-300">
+            <p className="px-4 text-base text-content-secondary sm:text-lg md:text-xl">
               This username is available! Claim it now and create your
               professional portfolio.
             </p>
@@ -88,32 +88,32 @@ export default async function ProfilePage({
 
           {/* Features */}
           <div className="grid grid-cols-1 gap-3 py-4 sm:grid-cols-2 md:grid-cols-3 md:gap-4 md:py-8">
-            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md md:p-6 dark:border-[#333] dark:bg-[#1f1f1f]">
+            <div className="rounded-lg border border-border-strong bg-surface-1 p-4 shadow-sm transition-shadow hover:shadow-md md:p-6">
               <div className="mb-2 text-2xl md:text-3xl">⚡</div>
-              <h3 className="mb-1 text-sm font-semibold md:text-base dark:text-gray-100">
+              <h3 className="mb-1 text-sm font-semibold md:text-base">
                 Quick Setup
               </h3>
-              <p className="text-xs text-gray-600 md:text-sm dark:text-gray-400">
+              <p className="text-xs text-content-secondary md:text-sm">
                 Upload your resume and go live in minutes
               </p>
             </div>
 
-            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md md:p-6 dark:border-[#333] dark:bg-[#1f1f1f]">
+            <div className="rounded-lg border border-border-strong bg-surface-1 p-4 shadow-sm transition-shadow hover:shadow-md md:p-6">
               <div className="mb-2 text-2xl md:text-3xl">🎨</div>
-              <h3 className="mb-1 text-sm font-semibold md:text-base dark:text-gray-100">
+              <h3 className="mb-1 text-sm font-semibold md:text-base">
                 Beautiful Design
               </h3>
-              <p className="text-xs text-gray-600 md:text-sm dark:text-gray-400">
+              <p className="text-xs text-content-secondary md:text-sm">
                 Professional portfolio that stands out
               </p>
             </div>
 
-            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:col-span-2 md:col-span-1 md:p-6 dark:border-[#333] dark:bg-[#1f1f1f]">
+            <div className="rounded-lg border border-border-strong bg-surface-1 p-4 shadow-sm transition-shadow hover:shadow-md sm:col-span-2 md:col-span-1 md:p-6">
               <div className="mb-2 text-2xl md:text-3xl">🔗</div>
-              <h3 className="mb-1 text-sm font-semibold md:text-base dark:text-gray-100">
+              <h3 className="mb-1 text-sm font-semibold md:text-base">
                 Your Domain
               </h3>
-              <p className="break-all text-xs text-gray-600 md:text-sm dark:text-gray-400">
+              <p className="break-all text-xs text-content-secondary md:text-sm">
                 portfoliofy.me/{username}
               </p>
             </div>
@@ -124,7 +124,7 @@ export default async function ProfilePage({
             <Link href={'/claim'} className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="w-full bg-design-black px-6 py-5 text-base text-white hover:bg-design-black/95 sm:w-auto md:px-8 md:py-6 md:text-lg dark:bg-white dark:text-black dark:hover:bg-gray-200"
+                className="w-full bg-design-black px-6 py-5 text-base text-surface-1 hover:bg-design-black/95 sm:w-auto md:px-8 md:py-6 md:text-lg dark:bg-surface-1 dark:text-content-primary dark:hover:bg-surface-3"
               >
                 Claim Handle Now
               </Button>
@@ -133,14 +133,14 @@ export default async function ProfilePage({
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full px-6 py-5 text-base sm:w-auto md:px-8 md:py-6 md:text-lg dark:border-[#333] dark:text-gray-200 dark:hover:bg-[#1f1f1f]"
+                className="w-full px-6 py-5 text-base sm:w-auto md:px-8 md:py-6 md:text-lg dark:hover:bg-surface-card"
               >
                 Sign in
               </Button>
             </Link>
           </div>
 
-          <p className="px-4 text-xs text-gray-500 md:text-sm dark:text-gray-400">
+          <p className="px-4 text-xs text-content-muted md:text-sm">
             Already have an account? Sign in to set this as your username.
           </p>
 
@@ -148,7 +148,7 @@ export default async function ProfilePage({
           <div className="pt-4 md:pt-8">
             <Link
               href="/"
-              className="text-xs text-gray-600 underline hover:text-gray-900 md:text-sm dark:text-gray-400 dark:hover:text-gray-200"
+              className="text-xs text-content-secondary underline hover:text-content-primary md:text-sm"
             >
               ← Back to home
             </Link>

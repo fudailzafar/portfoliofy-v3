@@ -51,7 +51,7 @@ export function ClientLayoutWrapper({
 
   return (
     <TooltipProvider delayDuration={0}>
-      <div className="relative flex min-h-screen w-full overflow-x-hidden bg-white font-sans dark:bg-[#121212]">
+      <div className="relative flex min-h-screen w-full overflow-x-hidden bg-surface-1 font-sans">
         {/* Fixed Sidebar Underneath */}
         <div className="fixed left-0 top-0 z-0 h-full w-[330px] print:hidden">
           <GlobalSidebar />
@@ -67,7 +67,7 @@ export function ClientLayoutWrapper({
             stiffness: 300,
             damping: 30,
           }}
-          className="relative z-10 flex min-h-screen flex-1 flex-col bg-white print:!transform-none print:shadow-none dark:bg-[#121212]"
+          className="relative z-10 flex min-h-screen flex-1 flex-col bg-surface-1 print:!transform-none print:shadow-none"
         >
           {children}
         </motion.div>
@@ -83,20 +83,20 @@ export function ClientLayoutWrapper({
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex size-[50px] flex-col items-center justify-center gap-1 rounded-full border border-gray-200 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.05)] outline-none transition-colors hover:bg-gray-50 dark:border-[#333] dark:bg-[#121212] dark:hover:bg-[#1f1f1f]"
+                className="flex size-[50px] flex-col items-center justify-center gap-1 rounded-full border border-border-strong bg-surface-1 shadow-[0_2px_10px_rgba(0,0,0,0.05)] outline-none transition-colors"
               >
                 {/* 3 lines menu icon */}
                 <div className="flex flex-col gap-[5px]">
-                  <div className="h-[1.5px] w-[20px] rounded-full bg-[#111] dark:bg-gray-200" />
-                  <div className="h-[1.5px] w-[20px] rounded-full bg-[#111] dark:bg-gray-200" />
-                  <div className="h-[1.5px] w-[14px] rounded-full bg-[#111] dark:bg-gray-200" />
+                  <div className="h-[1.5px] w-[20px] rounded-full bg-content-primary" />
+                  <div className="h-[1.5px] w-[20px] rounded-full bg-content-primary" />
+                  <div className="h-[1.5px] w-[14px] rounded-full bg-content-primary" />
                 </div>
               </motion.button>
             </TooltipTrigger>
             <TooltipContent
               side="top"
               sideOffset={12}
-              className="flex items-center gap-1.5 rounded-lg border-none bg-[#111] px-3 py-1.5 text-[13px] font-medium text-white shadow-md"
+              className="flex items-center gap-1.5 rounded-lg border-none bg-action-primary px-3 py-1.5 text-[13px] font-medium text-surface-1 shadow-md"
             >
               <span>Menu</span>
               <span className="text-[11px] tracking-tighter opacity-60">

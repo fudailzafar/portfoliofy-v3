@@ -65,12 +65,12 @@ export function ProfileSidebar({
   return (
     <div
       className={cn(
-        'scrollbar-hide h-full w-full shrink-0 flex-col overflow-y-auto border-r border-gray-100 bg-white py-6 sm:w-64 dark:border-[#333] dark:bg-[#121212]',
+        'scrollbar-hide h-full w-full shrink-0 flex-col overflow-y-auto border-r border-border-subtle bg-surface-1 py-6 sm:w-64  ',
         showMobileMenu ? 'flex' : 'hidden sm:flex',
       )}
     >
       <div className="flex flex-col gap-0">
-        <div className="mb-3 mt-6 pl-6 text-xs capitalize tracking-wide text-gray-400">
+        <div className="mb-3 mt-6 pl-6 text-xs capitalize tracking-wide text-content-muted">
           Profile
         </div>
 
@@ -113,11 +113,11 @@ export function ProfileSidebar({
           </SortableContext>
         </DndContext>
 
-        <div className="mb-3 mt-6 pl-6 text-xs capitalize tracking-wide text-gray-400">
+        <div className="mb-3 mt-6 pl-6 text-xs capitalize tracking-wide text-content-muted">
           Account
         </div>
 
-        <div className="flex items-center justify-between py-2.5 pl-10 pr-6 text-sm text-gray-500">
+        <div className="flex items-center justify-between py-2.5 pl-10 pr-6 text-sm text-content-muted">
           <span>Dark Mode</span>
           <Switch 
             checked={mounted ? isDark : false}

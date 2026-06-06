@@ -20,7 +20,7 @@ export function PrintResumeWrapper({ resume }: { resume?: ResumeData | null }) {
     <PrintResume
       resume={resume}
       printHiddenSections={printHiddenSections}
-      className={cn('hidden print:block print:bg-white', fontClass)}
+      className={cn('hidden print:block print:bg-surface-1', fontClass)}
     />
   );
 }

@@ -22,8 +22,8 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col border-r border-[#E5E5E5] bg-white dark:border-[#333] dark:bg-[#121212]">
-      <div className="mx-4 flex flex-col gap-4 border-b border-[#E5E5E5] pt-6 dark:border-[#333]">
+    <div className="flex h-full w-full flex-col border-r border-border-strong bg-surface-1">
+      <div className="mx-4 flex flex-col gap-4 border-b border-border-strong pt-6">
         <div className="flex items-center gap-3">
           <div className="relative flex-1">
             <input
@@ -31,12 +31,12 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
               placeholder="Explore people..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full rounded-full bg-[#F2F2F2] px-4 py-2 text-[14px] text-gray-900 outline-none transition-all placeholder:text-gray-400 dark:bg-[#1f1f1f] dark:text-gray-200 dark:placeholder:text-gray-500"
+              className="w-full rounded-full bg-surface-3 px-4 py-2 text-[14px] text-content-primary outline-none transition-all placeholder:text-content-muted"
             />
             {query && (
               <button
                 onClick={() => setQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:hover:bg-[#333] dark:hover:text-gray-200"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-content-muted transition-colors hover:bg-surface-3 hover:text-content-secondary"
               >
                 <X size={14} />
               </button>
@@ -44,7 +44,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
           </div>
           <button
             onClick={onClose}
-            className="text-[14px] text-black transition-colors hover:underline hover:underline-offset-2 dark:text-gray-200"
+            className="text-[14px] text-content-primary transition-colors hover:underline hover:underline-offset-2"
           >
             Done
           </button>
@@ -56,14 +56,14 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
               key={tab.id}
               onClick={() => setSort(tab.id)}
               className={`relative cursor-default pb-3 text-[13px] transition-all ${
-                sort === tab.id ? 'text-black dark:text-gray-200' : 'text-gray-400 dark:text-gray-500'
+                sort === tab.id ? 'text-content-primary ' : 'text-content-muted'
               }`}
             >
               {tab.label}
               {sort === tab.id && (
                 <motion.div
                   layoutId="exploreTabIndicator"
-                  className="absolute -bottom-[1px] left-0 right-0 h-[1px] bg-black dark:bg-white"
+                  className="absolute -bottom-[1px] left-0 right-0 h-[1px] bg-action-primary"
                 />
               )}
             </button>
@@ -73,11 +73,11 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
 
       <div className="flex-1 overflow-y-auto px-2 py-2">
         {isLoading ? (
-          <div className="p-4 text-center text-[13px] text-gray-400">
+          <div className="p-4 text-center text-[13px] text-content-muted">
             Loading...
           </div>
         ) : users?.length === 0 ? (
-          <div className="p-4 text-center text-[13px] text-gray-400">
+          <div className="p-4 text-center text-[13px] text-content-muted">
             No results found
           </div>
         ) : (
@@ -86,9 +86,9 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
               <button
                 key={user.username}
                 onClick={() => router.push(`/${user.username}`)}
-                className="flex items-start gap-3 rounded-[10px] px-3 py-3 text-left transition-colors hover:bg-gray-200/50 dark:hover:bg-[#1f1f1f]"
+                className="flex items-start gap-3 rounded-[10px] px-3 py-3 text-left transition-colors hover:bg-surface-3/50"
               >
-                <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-200 dark:bg-[#333]">
+                <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-surface-3">
                   {user.customImage || user.userImage ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
@@ -97,17 +97,17 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gray-300 text-[14px] font-medium text-gray-600 dark:bg-[#333] dark:text-gray-200">
+                    <div className="flex h-full w-full items-center justify-center bg-surface-3 text-[14px] font-medium text-content-secondary">
                       {(user.name || user.username).charAt(0).toUpperCase()}
                     </div>
                   )}
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[14px] font-medium text-gray-900 dark:text-gray-100">
+                  <span className="text-[14px] font-medium text-content-primary">
                     {user.name || user.username}
                   </span>
                   {user.shortAbout && (
-                    <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-gray-500 dark:text-gray-400">
+                    <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
                       {user.shortAbout}
                     </span>
                   )}
