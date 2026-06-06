@@ -60,7 +60,7 @@ export function ProfileContent({
   return (
     <div
       className={cn(
-        'relative h-full flex-1 flex-col bg-white',
+        'relative h-full flex-1 flex-col bg-white dark:bg-[#121212]',
         !showMobileMenu ? 'flex' : 'hidden sm:flex',
       )}
     >
@@ -155,7 +155,7 @@ export function ProfileContent({
 
       {/* Bottom action bar */}
       {!isEditingTab && (
-        <div className="flex-none border-t border-gray-100 bg-white p-4 md:px-8">
+        <div className="flex-none border-t border-gray-100 bg-white p-4 md:px-8 dark:border-[#333] dark:bg-[#121212]">
           <div className="flex justify-end">
             <Button
               onClick={onSave}

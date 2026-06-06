@@ -9,6 +9,7 @@ import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
 import { ClientLayoutWrapper } from '@/components/layout/ClientLayoutWrapper';
 import { SessionProviderWrapper } from '@/components/providers/SessionProviderWrapper';
+import { ThemeProvider } from '@/components/providers/ThemeProvider';
 
 const graphik = localFont({
   src: [
@@ -153,12 +154,18 @@ export default function RootLayout({
             </Script>
           </head>
           <body className="flex min-h-screen flex-col font-sans antialiased">
-            <main className="flex flex-1 flex-col">
-              <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
-              <SpeedInsights />
-              <Analytics />
-            </main>
-            <Toaster richColors position="top-right" />
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem
+            >
+              <main className="flex flex-1 flex-col">
+                <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+                <SpeedInsights />
+                <Analytics />
+              </main>
+              <Toaster richColors position="top-right" />
+            </ThemeProvider>
           </body>
         </html>
       </ReactQueryClientProvider>

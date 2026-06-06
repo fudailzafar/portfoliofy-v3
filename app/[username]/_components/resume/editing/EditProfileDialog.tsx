@@ -424,10 +424,10 @@ export function EditProfileDialog({
                     left: '80px',
                     zIndex: 50,
                   }}
-                  className="flex size-[48px] items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm outline-none transition-colors"
+                  className="flex size-[48px] items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm outline-none transition-colors dark:border-[#333] dark:bg-[#121212] dark:hover:bg-[#1f1f1f]"
                 >
                   <Pencil
-                    className="h-[18px] w-[18px] text-[#111]"
+                    className="h-[18px] w-[18px] text-[#111] dark:text-gray-200"
                     strokeWidth={1.5}
                   />
                 </motion.button>
@@ -443,7 +443,7 @@ export function EditProfileDialog({
           </Tooltip>
         </TooltipProvider>
 
-        <DialogContent className="flex h-[85vh] max-w-5xl flex-col gap-0 overflow-hidden overscroll-contain bg-white p-0 sm:flex-row">
+        <DialogContent className="flex h-[85vh] max-w-5xl flex-col gap-0 overflow-hidden overscroll-contain bg-white p-0 sm:flex-row dark:border-[#333] dark:bg-[#121212]">
           <DialogTitle className="sr-only">Edit Profile</DialogTitle>
 
           {/* Sidebar */}

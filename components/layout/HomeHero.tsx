@@ -22,7 +22,7 @@ export function HomeHero() {
   return (
     <>
       <div className="mb-8 flex flex-col">
-        <h1 className="mb-8 text-[20px] font-normal leading-[1.3] tracking-tight text-gray-900 md:text-[24px]">
+        <h1 className="mb-8 text-[20px] font-normal leading-[1.3] tracking-tight text-gray-900 md:text-[24px] dark:text-gray-100">
           <strong translate="no">Portfoliofy</strong> is a{' '}
           <a
             href="https://web.dev/progressive-web-apps/"
@@ -43,7 +43,7 @@ export function HomeHero() {
         <div className="flex justify-end">
           <Button
             onClick={handleCreateProfile}
-            className="h-12 rounded-full bg-[#111] px-8 text-[16px] font-medium tracking-wide text-white hover:bg-black"
+            className="h-12 rounded-full bg-[#111] px-8 text-[16px] font-medium tracking-wide text-white hover:bg-black dark:bg-white dark:text-black dark:hover:bg-gray-200"
           >
             Create a profile
           </Button>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
+import { EditDeleteButtons } from '../EditDeleteButtons';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -144,7 +145,7 @@ export function ProjectsTab({
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <p className="text-base font-semibold text-gray-900">
+                    <p className="text-base font-semibold text-gray-900 dark:text-gray-100">
                       {project.title}
                       {project.company && (
                         <span className="font-normal text-gray-900">
@@ -164,29 +165,20 @@ export function ProjectsTab({
                         />
                       )}
 
-                    <div className="mt-3 flex items-center gap-4 text-xs font-medium text-gray-400">
-                      <button
-                        onClick={() => {
-                          setCurrentProject(project);
-                          setProjectsView('form');
-                        }}
-                        className="transition-colors hover:text-gray-900"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => setProjectToDelete(project.id)}
-                        className="transition-colors hover:text-red-600"
-                      >
-                        Delete
-                      </button>
+                    <EditDeleteButtons
+                      onEdit={() => {
+                        setCurrentProject(project);
+                        setProjectsView('form');
+                      }}
+                      onDelete={() => setProjectToDelete(project.id)}
+                    >
                       <SortButtons
                         canMoveUp={canMoveUp}
                         canMoveDown={canMoveDown}
                         onMoveUp={() => handleMoveUp(project, prevItem)}
                         onMoveDown={() => handleMoveUp(project, nextItem)}
                       />
-                    </div>
+                    </EditDeleteButtons>
                   </div>
                 </div>
               );
@@ -278,10 +270,10 @@ export function ProjectsTab({
             />
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-gray-100 bg-white p-4 md:px-8">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-gray-100 bg-white p-4 md:px-8 dark:border-[#333] dark:bg-[#121212]">
             <button
               onClick={() => setProjectsView('list')}
-              className="px-4 text-[14px] font-medium text-black hover:underline hover:underline-offset-2"
+              className="px-4 text-[14px] font-medium text-black hover:underline hover:underline-offset-2 dark:text-gray-200"
             >
               Cancel
             </button>
@@ -289,7 +281,7 @@ export function ProjectsTab({
               onClick={handleSave}
               disabled={!currentProject?.title || !currentProject?.year}
               variant="outline"
-              className="h-9 rounded-md border border-gray-200 bg-white px-6 font-medium text-black shadow-sm"
+              className="h-9 rounded-md border border-gray-200 bg-white px-6 font-medium text-black shadow-sm dark:border-[#333] dark:bg-[#1f1f1f] dark:text-gray-200 dark:hover:bg-[#2c2c2c]"
             >
               Save
             </Button>

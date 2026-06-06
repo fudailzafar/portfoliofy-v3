@@ -29,14 +29,14 @@ export function SortButtons({
             <TooltipTrigger asChild>
               <button
                 onClick={onMoveUp}
-                className="transition-colors hover:text-gray-900"
+                className="transition-colors hover:text-gray-900 dark:hover:text-gray-200"
               >
                 <Upload className="h-[15px] w-[15px]" />
               </button>
             </TooltipTrigger>
             <TooltipContent
               side="top"
-              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white"
+              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white dark:border dark:border-[#333] dark:bg-[#1f1f1f] dark:text-gray-200"
             >
               Move up
             </TooltipContent>
@@ -49,14 +49,14 @@ export function SortButtons({
             <TooltipTrigger asChild>
               <button
                 onClick={onMoveDown}
-                className="transition-colors hover:text-gray-900"
+                className="transition-colors hover:text-gray-900 dark:hover:text-gray-200"
               >
                 <Download className="h-[15px] w-[15px]" />
               </button>
             </TooltipTrigger>
             <TooltipContent
               side="top"
-              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white"
+              className="mb-1 rounded-md border-none bg-[#111] px-2.5 py-1.5 text-xs font-medium text-white dark:border dark:border-[#333] dark:bg-[#1f1f1f] dark:text-gray-200"
             >
               Move down
             </TooltipContent>

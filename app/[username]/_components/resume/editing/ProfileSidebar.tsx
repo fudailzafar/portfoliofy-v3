@@ -16,6 +16,9 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { cn } from '@/lib/utils';
 import { SortableSidebarItem } from './SortableSidebarItem';
 import { SidebarButton } from './SidebarButton';
+import { useTheme } from 'next-themes';
+import { Switch } from '@/components/ui/switch';
+import React from 'react';
 
 interface ProfileSidebarProps {
   activeTab: string;
@@ -41,11 +44,28 @@ export function ProfileSidebar({
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor),
   );
+  
+  const { theme, resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+  const [isDark, setIsDark] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+    setIsDark(resolvedTheme === 'dark' || theme === 'dark');
+  }, [resolvedTheme, theme]);
+
+  const handleThemeToggle = (checked: boolean) => {
+    setIsDark(checked);
+    // Let the switch animation finish smoothly before triggering the heavy global reflow
+    setTimeout(() => {
+      setTheme(checked ? 'dark' : 'light');
+    }, 150);
+  };
 
   return (
     <div
       className={cn(
-        'scrollbar-hide h-full w-full shrink-0 flex-col overflow-y-auto border-r border-gray-100 bg-white py-6 sm:w-64',
+        'scrollbar-hide h-full w-full shrink-0 flex-col overflow-y-auto border-r border-gray-100 bg-white py-6 sm:w-64 dark:border-[#333] dark:bg-[#121212]',
         showMobileMenu ? 'flex' : 'hidden sm:flex',
       )}
     >
@@ -95,6 +115,15 @@ export function ProfileSidebar({
 
         <div className="mb-3 mt-6 pl-6 text-xs capitalize tracking-wide text-gray-400">
           Account
+        </div>
+
+        <div className="flex items-center justify-between py-2.5 pl-10 pr-6 text-sm text-gray-500">
+          <span>Dark Mode</span>
+          <Switch 
+            checked={mounted ? isDark : false}
+            onCheckedChange={handleThemeToggle}
+            className="data-[state=checked]:bg-[#0A84FF]"
+          />
         </div>
 
         <SidebarButton
