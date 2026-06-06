@@ -1,6 +1,6 @@
 'use client';
 
-import { Upload, Download } from 'lucide-react';
+import { ArrowUpToLine, ArrowDownToLine } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -31,7 +31,7 @@ export function SortButtons({
                 onClick={onMoveUp}
                 className="transition-colors hover:text-content-primary"
               >
-                <Upload className="h-[15px] w-[15px]" />
+                <ArrowUpToLine className="h-[15px] w-[15px]" />
               </button>
             </TooltipTrigger>
             <TooltipContent
@@ -51,7 +51,7 @@ export function SortButtons({
                 onClick={onMoveDown}
                 className="transition-colors hover:text-content-primary"
               >
-                <Download className="h-[15px] w-[15px]" />
+                <ArrowDownToLine className="h-[15px] w-[15px]" />
               </button>
             </TooltipTrigger>
             <TooltipContent
