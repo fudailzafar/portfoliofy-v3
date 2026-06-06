@@ -2,14 +2,14 @@ import { Footer } from '@/components/layout/Footer';
 
 export default function PrivacyPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-[#121212]">
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-20 font-sans">
-        <h1 className="mb-2 text-4xl font-bold tracking-tight text-gray-900">
+        <h1 className="mb-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
           Privacy Policy
         </h1>
-        <p className="mb-12 text-gray-500">Effective May 27, 2026</p>
+        <p className="mb-12 text-gray-500 dark:text-gray-400">Effective May 27, 2026</p>
 
-        <div className="space-y-6 text-[15px] leading-relaxed text-gray-700">
+        <div className="space-y-6 text-[15px] leading-relaxed text-gray-700 dark:text-gray-300">
           <p>
             We care about your privacy and only collect information we deem
             necessary to providing your requested service. Accordingly we have

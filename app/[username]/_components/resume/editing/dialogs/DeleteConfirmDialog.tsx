@@ -34,24 +34,24 @@ export function DeleteConfirmDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-sm rounded-xl p-6">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-xl font-bold text-gray-900">
+          <AlertDialogTitle className="text-xl font-bold text-gray-900 dark:text-gray-100">
             Are you sure?
           </AlertDialogTitle>
-          <AlertDialogDescription className="mt-2 text-sm text-gray-500">
+          <AlertDialogDescription className="mt-2 text-sm text-gray-500 dark:text-gray-400">
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="mt-6 flex gap-2 sm:justify-end">
           <AlertDialogCancel
             disabled={isLoading}
-            className="m-0 h-9 rounded-md border border-gray-200 bg-white px-5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="m-0 h-9 rounded-md border border-gray-200 bg-white px-5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-[#333] dark:bg-[#1f1f1f] dark:text-gray-200 dark:hover:bg-[#2c2c2c]"
           >
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isLoading}
-            className="m-0 h-9 rounded-md border-none bg-red-600 px-5 text-sm font-medium text-white hover:bg-red-700"
+            className="m-0 h-9 rounded-md border-none bg-red-600 px-5 text-sm font-medium text-white hover:bg-red-700 dark:bg-red-600/90 dark:hover:bg-red-600"
           >
             {isLoading ? loadingLabel : confirmLabel}
           </AlertDialogAction>

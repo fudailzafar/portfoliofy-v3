@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
+import { EditDeleteButtons } from '../EditDeleteButtons';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -110,7 +111,7 @@ export function WorkExperienceTab({
             }}
             className="h-8 rounded-md border-none bg-gray-100 px-4 text-xs text-gray-900 hover:bg-gray-200"
           >
-            Add a job you&apos;ve had
+            Add workplace
           </Button>
         )}
       </div>
@@ -139,7 +140,7 @@ export function WorkExperienceTab({
               setWorkView('form');
             }}
           >
-            Add a role
+            Add a job you&apos;ve had
           </Button>
         </div>
       )}
@@ -178,13 +179,13 @@ export function WorkExperienceTab({
                         rel="noopener noreferrer"
                         className="inline-block hover:underline"
                       >
-                        <span className="text-base font-semibold text-gray-900">
+                        <span className="text-base font-semibold text-gray-900 dark:text-gray-100">
                           {w.title} at {w.company}
                           <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-gray-900" />
                         </span>
                       </a>
                     ) : (
-                      <p className="text-base font-semibold text-gray-900">
+                      <p className="text-base font-semibold text-gray-900 dark:text-gray-100">
                         {w.title} at {w.company}
                       </p>
                     )}
@@ -201,29 +202,20 @@ export function WorkExperienceTab({
                       />
                     )}
 
-                    <div className="mt-3 flex items-center gap-4 text-xs font-medium text-gray-400">
-                      <button
-                        onClick={() => {
-                          setCurrentWork(w);
-                          setWorkView('form');
-                        }}
-                        className="transition-colors hover:text-gray-900"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => setProjectToDelete(w.id)}
-                        className="transition-colors hover:text-red-600"
-                      >
-                        Delete
-                      </button>
+                    <EditDeleteButtons
+                      onEdit={() => {
+                        setCurrentWork(w);
+                        setWorkView('form');
+                      }}
+                      onDelete={() => setProjectToDelete(w.id)}
+                    >
                       <SortButtons
                         canMoveUp={canMoveUp}
                         canMoveDown={canMoveDown}
                         onMoveUp={() => handleMoveUp(w, prevItem)}
                         onMoveDown={() => handleMoveUp(w, nextItem)}
                       />
-                    </div>
+                    </EditDeleteButtons>
                   </div>
                 </div>
               );
@@ -393,10 +385,10 @@ export function WorkExperienceTab({
             />
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-gray-100 bg-white p-4 md:px-8">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-gray-100 bg-white p-4 md:px-8 dark:border-[#333] dark:bg-[#121212]">
             <button
               onClick={() => setWorkView('list')}
-              className="px-4 text-[14px] font-medium text-black hover:underline hover:underline-offset-2"
+              className="px-4 text-[14px] font-medium text-black hover:underline hover:underline-offset-2 dark:text-gray-200"
             >
               Cancel
             </button>
@@ -404,7 +396,7 @@ export function WorkExperienceTab({
               onClick={handleSave}
               disabled={!currentWork?.title || !currentWork?.company}
               variant="outline"
-              className="h-9 rounded-md border border-gray-200 bg-white px-6 font-medium text-black shadow-sm"
+              className="h-9 rounded-md border border-gray-200 bg-white px-6 font-medium text-black shadow-sm dark:border-[#333] dark:bg-[#1f1f1f] dark:text-gray-200 dark:hover:bg-[#2c2c2c]"
             >
               Save
             </Button>
