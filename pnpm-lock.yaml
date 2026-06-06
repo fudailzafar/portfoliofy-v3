@@ -89,6 +89,9 @@ importers:
       next-s3-upload:
         specifier: ^0.3.4
         version: 0.3.4(next@16.2.7(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
+      next-themes:
+        specifier: ^0.4.6
+        version: 0.4.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       postgres:
         specifier: ^3.4.9
         version: 3.4.9
@@ -2414,6 +2417,12 @@ packages:
     peerDependencies:
       next: '>=9.4'
       react: '>=16'
+
+  next-themes@0.4.6:
+    resolution: {integrity: sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==}
+    peerDependencies:
+      react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
 
   next@16.2.7:
     resolution: {integrity: sha512-eMJxgjRzBaj3olkP4cBamHDXL79A8FC6u1GcsO1D1Tsx8bw/LLXUJCaoajVxtnhD3A1IJqIT8IcRJjgBIPJq4w==}
@@ -5718,6 +5727,11 @@ snapshots:
       next: 16.2.7(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react: 19.2.6
       uuid: 8.3.2
+
+  next-themes@0.4.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+    dependencies:
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
 
   next@16.2.7(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:

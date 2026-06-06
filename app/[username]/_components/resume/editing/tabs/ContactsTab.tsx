@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { buildContactUrl, extractUsername } from '@/utils/extractUsername';
+import { EditDeleteButtons } from '../EditDeleteButtons';
 
 export function ContactsTab({
   setProjectToDelete,
@@ -116,46 +117,36 @@ export function ContactsTab({
                   rel="noopener noreferrer"
                   className="inline-block hover:underline"
                 >
-                  <span className="text-base font-semibold text-gray-900">
+                  <span className="text-base font-semibold text-gray-900 dark:text-gray-100">
                     {extractUsername(c.link, c.platform)}
                     <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-gray-900" />
                   </span>
                 </a>
 
-                <div className="mt-3 flex items-center gap-4 text-xs font-medium text-gray-400">
-                  <button
-                    onClick={() => {
-                      setCurrent({
-                        ...c,
-                        type: [
-                          'Website',
-                          'Email',
-                          'LinkedIn',
-                          'GitHub',
-                          'X',
-                          'Threads',
-                          'Figma',
-                          'Instagram',
-                          'Bluesky',
-                          'Mastodon',
-                        ].includes(c.platform)
-                          ? c.platform
-                          : 'Custom',
-                        username: extractUsername(c.link, c.platform),
-                      });
-                      setView('form');
-                    }}
-                    className="transition-colors hover:text-gray-900"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => setProjectToDelete(c.id)}
-                    className="transition-colors hover:text-red-600"
-                  >
-                    Delete
-                  </button>
-                </div>
+                <EditDeleteButtons
+                  onEdit={() => {
+                    setCurrent({
+                      ...c,
+                      type: [
+                        'Website',
+                        'Email',
+                        'LinkedIn',
+                        'GitHub',
+                        'X',
+                        'Threads',
+                        'Figma',
+                        'Instagram',
+                        'Bluesky',
+                        'Mastodon',
+                      ].includes(c.platform)
+                        ? c.platform
+                        : 'Custom',
+                      username: extractUsername(c.link, c.platform),
+                    });
+                    setView('form');
+                  }}
+                  onDelete={() => setProjectToDelete(c.id)}
+                />
               </div>
             </div>
           ))}
@@ -181,7 +172,7 @@ export function ContactsTab({
                   });
                 }}
               >
-                <SelectTrigger className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none">
+                <SelectTrigger className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none dark:bg-[#1f1f1f] dark:text-gray-200">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -219,7 +210,7 @@ export function ContactsTab({
                       platform: e.target.value,
                     })
                   }
-                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
+                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none dark:bg-[#1f1f1f] dark:text-gray-200"
                 />
               </div>
             )}
@@ -237,7 +228,7 @@ export function ContactsTab({
                         username: newUsername,
                       });
                     }}
-                    className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
+                    className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none dark:bg-[#1f1f1f] dark:text-gray-200"
                   />
                 </div>
                 <div className="space-y-2">
@@ -251,7 +242,7 @@ export function ContactsTab({
                         link: newUrl,
                       });
                     }}
-                    className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
+                    className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none dark:bg-[#1f1f1f] dark:text-gray-200"
                   />
                 </div>
               </>
@@ -270,7 +261,7 @@ export function ContactsTab({
                       username: extractUsername(newUrl, current.platform || ''),
                     });
                   }}
-                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
+                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none dark:bg-[#1f1f1f] dark:text-gray-200"
                 />
               </div>
             ) : (
@@ -291,16 +282,16 @@ export function ContactsTab({
                       ),
                     });
                   }}
-                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none"
+                  className="h-10 border-0 bg-[#f4f4f4] text-[14px] shadow-none dark:bg-[#1f1f1f] dark:text-gray-200"
                 />
               </div>
             )}
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-gray-100 bg-white p-4 md:px-8">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-gray-100 bg-white p-4 md:px-8 dark:border-[#333] dark:bg-[#121212]">
             <button
               onClick={() => setView('list')}
-              className="px-4 text-[14px] font-medium text-black hover:underline hover:underline-offset-2"
+              className="px-4 text-[14px] font-medium text-black hover:underline hover:underline-offset-2 dark:text-gray-200"
             >
               Cancel
             </button>
@@ -308,7 +299,7 @@ export function ContactsTab({
               onClick={handleSave}
               disabled={!current.platform || !current.link}
               variant="outline"
-              className="h-9 rounded-md border border-gray-200 bg-white px-6 font-medium text-black shadow-sm"
+              className="h-9 rounded-md border border-gray-200 bg-white px-6 font-medium text-black shadow-sm dark:border-[#333] dark:bg-[#1f1f1f] dark:text-gray-200 dark:hover:bg-[#2c2c2c]"
             >
               Save
             </Button>

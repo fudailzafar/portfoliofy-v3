@@ -51,7 +51,7 @@ export function ClientLayoutWrapper({
 
   return (
     <TooltipProvider delayDuration={0}>
-      <div className="relative flex min-h-screen w-full overflow-x-hidden bg-white font-sans">
+      <div className="relative flex min-h-screen w-full overflow-x-hidden bg-white font-sans dark:bg-[#121212]">
         {/* Fixed Sidebar Underneath */}
         <div className="fixed left-0 top-0 z-0 h-full w-[330px] print:hidden">
           <GlobalSidebar />
@@ -67,7 +67,7 @@ export function ClientLayoutWrapper({
             stiffness: 300,
             damping: 30,
           }}
-          className="relative z-10 flex min-h-screen flex-1 flex-col bg-white print:!transform-none print:shadow-none"
+          className="relative z-10 flex min-h-screen flex-1 flex-col bg-white print:!transform-none print:shadow-none dark:bg-[#121212]"
         >
           {children}
         </motion.div>
@@ -83,13 +83,13 @@ export function ClientLayoutWrapper({
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex size-[50px] flex-col items-center justify-center gap-1 rounded-full border border-gray-200 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.05)] outline-none transition-colors hover:bg-gray-50"
+                className="flex size-[50px] flex-col items-center justify-center gap-1 rounded-full border border-gray-200 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.05)] outline-none transition-colors hover:bg-gray-50 dark:border-[#333] dark:bg-[#121212] dark:hover:bg-[#1f1f1f]"
               >
                 {/* 3 lines menu icon */}
                 <div className="flex flex-col gap-[5px]">
-                  <div className="h-[1.5px] w-[20px] rounded-full bg-[#111]" />
-                  <div className="h-[1.5px] w-[20px] rounded-full bg-[#111]" />
-                  <div className="h-[1.5px] w-[14px] rounded-full bg-[#111]" />
+                  <div className="h-[1.5px] w-[20px] rounded-full bg-[#111] dark:bg-gray-200" />
+                  <div className="h-[1.5px] w-[20px] rounded-full bg-[#111] dark:bg-gray-200" />
+                  <div className="h-[1.5px] w-[14px] rounded-full bg-[#111] dark:bg-gray-200" />
                 </div>
               </motion.button>
             </TooltipTrigger>

@@ -90,8 +90,8 @@ export function PersonalDomainTab({ username }: { username: string }) {
 
   return (
     <div className="mx-auto flex h-full max-w-2xl flex-col">
-      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
-        <h2 className="text-2xl font-bold text-gray-900">Personal Domain</h2>
+      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4 dark:border-[#333]">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Personal Domain</h2>
         <a
           href={
             domainStatus?.verified && customDomain
@@ -100,7 +100,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
           }
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-8 items-center justify-center rounded-md border border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-900 shadow-sm transition-colors hover:bg-gray-50"
+          className="inline-flex h-8 items-center justify-center rounded-md border border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-900 shadow-sm transition-colors hover:bg-gray-50 dark:border-[#333] dark:bg-[#1f1f1f] dark:text-gray-200 dark:hover:bg-[#2c2c2c]"
         >
           Visit site
         </a>
@@ -111,12 +111,12 @@ export function PersonalDomainTab({ username }: { username: string }) {
         <div className="space-y-6">
           <div className="flex flex-col gap-4">
             <div className="space-y-1">
-              <h4 className="text-[14px] text-gray-900">Custom domain</h4>
-              <p className="text-[13px] text-[#888888]">
+              <h4 className="text-[14px] text-gray-900 dark:text-gray-100">Custom domain</h4>
+              <p className="text-[13px] text-[#888888] dark:text-gray-400">
                 Optionally set a domain other than{' '}
                 <a
                   href={`https://portfoliofy.me/${username}`}
-                  className="text-gray-900 underline-offset-2 hover:underline"
+                  className="text-gray-900 underline-offset-2 hover:underline dark:text-gray-200"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -157,7 +157,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                     setCustomDomain(e.target.value.toLowerCase())
                   }
                   placeholder="yourname.com…"
-                  className={`h-9 w-full border-0 bg-[#f2f2f2] text-[13px] shadow-none focus-visible:ring-0 ${domainStatus ? 'pl-9 text-gray-700' : ''}`}
+                  className={`h-9 w-full border-0 bg-[#f2f2f2] text-[13px] shadow-none focus-visible:ring-0 dark:bg-[#2c2c2c] dark:text-gray-100 ${domainStatus ? 'pl-9 text-gray-700' : ''}`}
                   disabled={!!domainStatus}
                 />
               </div>
@@ -165,7 +165,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 rounded-md border border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-900 shadow-sm transition-colors hover:bg-gray-50"
+                  className="h-8 rounded-md border border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-900 shadow-sm transition-colors hover:bg-gray-50 dark:border-[#333] dark:bg-[#1f1f1f] dark:text-gray-200 dark:hover:bg-[#2c2c2c]"
                   onClick={handleDomainSave}
                   disabled={isVerifyingDomain || !customDomain}
                 >
@@ -176,7 +176,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 rounded-lg border-gray-200 text-[13px] font-normal text-gray-400"
+                    className="h-9 rounded-lg border-gray-200 text-[13px] font-normal text-gray-400 dark:border-[#333] dark:text-gray-500"
                     disabled
                   >
                     Save
@@ -184,7 +184,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 rounded-lg border-gray-200 text-[13px] font-normal text-gray-500 hover:text-gray-900"
+                    className="h-9 rounded-lg border-gray-200 text-[13px] font-normal text-gray-500 hover:text-gray-900 dark:border-[#333] dark:text-gray-400 dark:hover:text-gray-200"
                     onClick={handleDomainRemove}
                     disabled={isVerifyingDomain}
                   >
@@ -262,7 +262,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                       <button
                         onClick={fetchDomain}
                         disabled={isVerifyingDomain}
-                        className="font-medium text-gray-700 underline decoration-gray-300 underline-offset-2 hover:text-black disabled:opacity-50"
+                        className="font-medium text-gray-700 underline decoration-gray-300 underline-offset-2 hover:text-black disabled:opacity-50 dark:text-gray-300 dark:decoration-gray-600 dark:hover:text-white"
                       >
                         click here to manually refresh
                       </button>
@@ -276,12 +276,12 @@ export function PersonalDomainTab({ username }: { username: string }) {
         </div>
 
         {/* Typography */}
-        <div className="mt-4 space-y-4 border-t border-gray-100 pt-8">
+        <div className="mt-4 space-y-4 border-t border-gray-100 pt-8 dark:border-[#333]">
           <div>
-            <h4 className="text-[14px] text-gray-900">Typography</h4>
-            <p className="mt-1 text-[13px] text-[#888888]">
+            <h4 className="text-[14px] text-gray-900 dark:text-gray-100">Typography</h4>
+            <p className="mt-1 text-[13px] text-[#888888] dark:text-gray-400">
               Change the typography shown on{' '}
-              <span className="text-gray-900">{siteLabel}</span>
+              <span className="text-gray-900 dark:text-gray-200">{siteLabel}</span>
             </p>
           </div>
 
@@ -320,21 +320,21 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 <div
                   className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${
                     typography === value
-                      ? 'border-[2.5px] border-[#3b82f6] bg-white'
-                      : 'border border-gray-200 bg-white group-hover:border-gray-300'
+                      ? 'border-[2.5px] border-[#3b82f6] bg-white dark:bg-[#121212]'
+                      : 'border border-gray-200 bg-white group-hover:border-gray-300 dark:border-[#333] dark:bg-[#1f1f1f] dark:group-hover:border-gray-500'
                   }`}
                 >
                   <span
-                    className={`text-[22px] font-medium tracking-tight text-gray-900 ${fontClass}`}
+                    className={`text-[22px] font-medium tracking-tight text-gray-900 dark:text-gray-100 ${fontClass}`}
                   >
                     Aa
                   </span>
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[14px] font-medium text-gray-900">
+                  <span className="text-[14px] font-medium text-gray-900 dark:text-gray-100">
                     {label}
                   </span>
-                  <span className="text-[14px] text-[#737373]">
+                  <span className="text-[14px] text-[#737373] dark:text-gray-400">
                     {description}
                   </span>
                 </div>
@@ -344,10 +344,10 @@ export function PersonalDomainTab({ username }: { username: string }) {
         </div>
 
         {/* Theme */}
-        <div className="mt-4 space-y-4 border-t border-gray-100 pt-8">
+        <div className="mt-4 space-y-4 border-t border-gray-100 pt-8 dark:border-[#333]">
           <div>
-            <h4 className="text-[14px] text-gray-900">Theme</h4>
-            <p className="mt-1 text-[13px] text-[#888888]">
+            <h4 className="text-[14px] text-gray-900 dark:text-gray-100">Theme</h4>
+            <p className="mt-1 text-[13px] text-[#888888] dark:text-gray-400">
               Change the theme shown on {siteLabel}
             </p>
           </div>
@@ -440,10 +440,10 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   </span>
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[14px] font-medium text-gray-900">
+                  <span className="text-[14px] font-medium text-gray-900 dark:text-gray-100">
                     {label}
                   </span>
-                  <span className="text-[14px] text-[#737373]">
+                  <span className="text-[14px] text-[#737373] dark:text-gray-400">
                     {description}
                   </span>
                 </div>
