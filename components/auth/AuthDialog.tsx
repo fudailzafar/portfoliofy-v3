@@ -35,12 +35,12 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
             >
               {/* Header */}
               <div className="flex flex-col gap-1.5">
-                <h2 className="text-lg font-medium tracking-tight text-gray-900">
+                <h2 className="text-lg font-medium tracking-tight text-gray-900 dark:text-gray-100">
                   {mode === 'login'
                     ? 'Login to your account﻿ 👋'
                     : 'Create a new profile ✨'}
                 </h2>
-                <p className="text-[14px] leading-snug text-gray-500">
+                <p className="text-[14px] leading-snug text-gray-500 dark:text-gray-400">
                   By continuing you agree to our terms of service and privacy
                   policy.
                 </p>
