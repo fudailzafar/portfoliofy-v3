@@ -78,9 +78,9 @@ export function GeneralTab({
           /* ── Has image: static avatar (not clickable) ── */
           <div className="relative size-20 shrink-0 overflow-hidden rounded-full">
             {isUploadingPicture && (
-              <div className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-black/40">
+              <div className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-action-primary/40">
                 <svg
-                  className="size-5 animate-spin text-white"
+                  className="size-5 animate-spin text-surface-1"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
@@ -113,11 +113,11 @@ export function GeneralTab({
           /* ── No image: clickable camera placeholder ── */
           <label
             htmlFor="avatar-upload"
-            className="group relative flex size-20 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-gray-100"
+            className="group relative flex size-20 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-surface-2"
           >
             {isUploadingPicture ? (
               <svg
-                className="size-6 animate-spin text-gray-400"
+                className="size-6 animate-spin text-content-muted"
                 fill="none"
                 viewBox="0 0 24 24"
               >
@@ -139,7 +139,7 @@ export function GeneralTab({
               <>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="size-8 text-gray-400 transition-colors group-hover:text-gray-500"
+                  className="size-8 text-content-muted transition-colors group-hover:text-content-muted"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -157,7 +157,7 @@ export function GeneralTab({
                   />
                 </svg>
                 {/* Subtle ring on hover */}
-                <div className="absolute inset-0 rounded-full opacity-0 ring-2 ring-inset ring-gray-300 transition-opacity group-hover:opacity-100" />
+                <div className="absolute inset-0 rounded-full opacity-0 ring-2 ring-inset ring-border-strong transition-opacity group-hover:opacity-100" />
               </>
             )}
           </label>
@@ -171,7 +171,7 @@ export function GeneralTab({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 text-xs text-gray-600 transition-colors hover:border-red-200 hover:text-red-600"
+                className="h-8 text-xs text-content-secondary transition-colors hover:border-red-200 hover:text-red-600"
                 onClick={removePicture}
                 disabled={isUploadingPicture}
               >
@@ -192,7 +192,7 @@ export function GeneralTab({
               >
                 {isUploadingPicture ? 'Removing…' : 'Upload image'}
               </Button>
-              <p className="text-[11px] leading-tight text-gray-400">
+              <p className="text-[11px] leading-tight text-content-muted">
                 JPG, PNG or GIF · max 5MB
               </p>
             </>
@@ -202,11 +202,11 @@ export function GeneralTab({
 
       <div className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="uname" className="text-xs text-gray-600">
+          <Label htmlFor="uname" className="text-xs text-content-secondary">
             Username*
           </Label>
-          <div className="relative flex items-center overflow-hidden rounded-md border border-gray-200 bg-white focus-within:ring-1 focus-within:ring-black dark:border-[#333] dark:bg-transparent dark:focus-within:ring-white">
-            <span className="absolute left-3 top-1/2 z-10 -translate-y-1/2 select-none text-sm text-gray-400">
+          <div className="relative flex items-center overflow-hidden rounded-md border border-border-strong bg-surface-card focus-within:ring-1 focus-within:ring-black dark:focus-within:ring-white">
+            <span className="absolute left-3 top-1/2 z-10 -translate-y-1/2 select-none text-sm text-content-muted">
               portfoliofy.me/
             </span>
             <Input
@@ -222,14 +222,14 @@ export function GeneralTab({
             />
             <div className="flex items-center pr-3">
               {isInitialUsername ? null : checkUsernameMutation.isPending ? (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-black" />
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-border-strong border-t-black" />
               ) : isValidUname ? (
                 <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-green-500 p-0.5">
-                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                  <Check className="h-3 w-3 text-surface-1" strokeWidth={3} />
                 </div>
               ) : (
                 <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-red-500 p-0.5">
-                  <X className="h-3 w-3 text-white" strokeWidth={3} />
+                  <X className="h-3 w-3 text-surface-1" strokeWidth={3} />
                 </div>
               )}
             </div>
@@ -238,10 +238,10 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="displayName" className="text-xs text-gray-600">
+            <Label htmlFor="displayName" className="text-xs text-content-secondary">
               Display name*
             </Label>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-content-muted">
               {(header?.name || '').length} of 48
             </span>
           </div>
@@ -256,10 +256,10 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="shortAbout" className="text-xs text-gray-600">
+            <Label htmlFor="shortAbout" className="text-xs text-content-secondary">
               What do you do?
             </Label>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-content-muted">
               {(header?.shortAbout || '').length} of 32
             </span>
           </div>
@@ -274,10 +274,10 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="location" className="text-xs text-gray-600">
+            <Label htmlFor="location" className="text-xs text-content-secondary">
               Location
             </Label>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-content-muted">
               {(header?.location || '').length} of 32
             </span>
           </div>
@@ -292,10 +292,10 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="pronouns" className="text-xs text-gray-600">
+            <Label htmlFor="pronouns" className="text-xs text-content-secondary">
               Pronouns
             </Label>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-content-muted">
               {(header?.pronouns || '').length} of 12
             </span>
           </div>
@@ -310,10 +310,10 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="website" className="text-xs text-gray-600">
+            <Label htmlFor="website" className="text-xs text-content-secondary">
               Website
             </Label>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-content-muted">
               {(header?.website || '').length} of 96
             </span>
           </div>
@@ -326,8 +326,8 @@ export function GeneralTab({
           />
         </div>
 
-        <div className="space-y-2 border-t border-gray-100 pt-4">
-          <Label className="text-xs text-gray-600">About</Label>
+        <div className="space-y-2 border-t border-border-subtle pt-4">
+          <Label className="text-xs text-content-secondary">About</Label>
           <RichTextEditor
             content={summary || ''}
             onChange={(val) => updateResume({ summary: val })}
