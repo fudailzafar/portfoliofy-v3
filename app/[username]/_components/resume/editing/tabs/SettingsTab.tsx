@@ -10,8 +10,8 @@ export function SettingsTab({ onDeleteAccount }: SettingsTabProps) {
 
   return (
     <div className="mx-auto flex h-full max-w-2xl flex-col">
-      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4 dark:border-[#333]">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Settings</h2>
+      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
+        <h2 className="text-2xl font-bold text-content-primary">Settings</h2>
       </div>
       <div className="space-y-10">
         <div className="space-y-6">
@@ -29,7 +29,7 @@ export function SettingsTab({ onDeleteAccount }: SettingsTabProps) {
               <Button
                 variant="destructive"
                 onClick={onDeleteAccount}
-                className="w-full whitespace-nowrap rounded-md bg-red-600 px-6 text-white shadow-sm hover:bg-red-700 sm:w-auto"
+                className="w-full whitespace-nowrap rounded-md bg-red-600 px-6 text-surface-1 shadow-sm hover:bg-red-700 sm:w-auto"
               >
                 Delete Account
               </Button>

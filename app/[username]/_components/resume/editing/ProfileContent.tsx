@@ -60,7 +60,7 @@ export function ProfileContent({
   return (
     <div
       className={cn(
-        'relative h-full flex-1 flex-col bg-white dark:bg-[#121212]',
+        'relative h-full flex-1 flex-col bg-surface-1 ',
         !showMobileMenu ? 'flex' : 'hidden sm:flex',
       )}
     >
@@ -68,7 +68,7 @@ export function ProfileContent({
         <div className="mb-6 flex items-center sm:hidden">
           <button
             onClick={() => setShowMobileMenu(true)}
-            className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
+            className="flex items-center text-sm font-medium text-content-secondary hover:text-content-primary"
           >
             <svg
               className="mr-1 h-5 w-5"
@@ -155,14 +155,14 @@ export function ProfileContent({
 
       {/* Bottom action bar */}
       {!isEditingTab && (
-        <div className="flex-none border-t border-gray-100 bg-white p-4 md:px-8 dark:border-[#333] dark:bg-[#121212]">
+        <div className="flex-none border-t border-border-subtle bg-surface-1 p-4 md:px-8">
           <div className="flex justify-end">
             <Button
               onClick={onSave}
               disabled={
                 isSaving || !isValidUname || checkUsernameMutationIsPending
               }
-              className="h-9 rounded-md border-none bg-[#2A2A2A] px-6 font-medium text-white shadow-sm hover:bg-[#1A1A1A]"
+              className="h-9 rounded-md border-none bg-[#2A2A2A] px-6 font-medium text-surface-1 shadow-sm hover:bg-[#1A1A1A]"
             >
               {isSaving ? 'Saving…' : 'Done'}
             </Button>

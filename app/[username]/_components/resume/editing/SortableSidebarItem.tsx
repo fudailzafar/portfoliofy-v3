@@ -40,10 +40,10 @@ export function SortableSidebarItem({
       className={cn(
         'flex cursor-pointer items-center justify-between py-2.5 pl-10 pr-6 text-sm transition-colors',
         isActive
-          ? 'bg-gray-100 text-black dark:bg-[#1f1f1f] dark:text-gray-200'
-          : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-[#1f1f1f] dark:hover:text-gray-200',
-        disabled && 'opacity-50 hover:bg-transparent hover:text-gray-500 dark:hover:bg-transparent dark:hover:text-gray-400',
-        isDragging && 'bg-gray-200 opacity-50 dark:bg-[#333]',
+          ? 'bg-surface-2 text-content-primary  '
+          : 'text-content-muted hover:bg-surface-2 hover:text-content-primary  dark:hover:bg-surface-card ',
+        disabled && 'opacity-50 hover:bg-transparent hover:text-content-muted dark:hover:bg-transparent dark:hover:text-content-muted',
+        isDragging && 'bg-surface-3 opacity-50 dark:bg-[#333]',
       )}
       onClick={() => {
         if (!disabled) {
@@ -63,8 +63,8 @@ export function SortableSidebarItem({
           e.stopPropagation();
         }}
       >
-        <div className="h-[2px] w-3.5 rounded-full bg-gray-400 dark:bg-gray-500" />
-        <div className="h-[2px] w-3.5 rounded-full bg-gray-400 dark:bg-gray-500" />
+        <div className="h-[2px] w-3.5 rounded-full bg-content-muted" />
+        <div className="h-[2px] w-3.5 rounded-full bg-content-muted" />
       </div>
     </div>
   );

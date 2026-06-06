@@ -89,7 +89,7 @@ export function WorkExperienceTab({
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col pb-24">
-      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
+      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
         <h2 className="text-2xl font-bold">Work Experience</h2>
         {workView === 'list' && (
           <Button
@@ -109,7 +109,7 @@ export function WorkExperienceTab({
               });
               setWorkView('form');
             }}
-            className="h-8 rounded-md border-none bg-gray-100 px-4 text-xs text-gray-900 hover:bg-gray-200"
+            className="h-8 rounded-md border-none bg-surface-2 px-4 text-xs text-content-primary hover:bg-surface-3"
           >
             Add workplace
           </Button>
@@ -118,12 +118,12 @@ export function WorkExperienceTab({
 
       {workView === 'list' && work.length === 0 && (
         <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
-          <div className="rounded-full bg-gray-50 p-8">
-            <Briefcase className="h-16 w-16 text-gray-400" strokeWidth={1} />
+          <div className="rounded-full bg-surface-2 p-8">
+            <Briefcase className="h-16 w-16 text-content-muted" strokeWidth={1} />
           </div>
           <Button
             variant="secondary"
-            className="h-auto rounded-md border-none bg-gray-100 px-6 py-5 text-sm text-gray-900 hover:bg-gray-200"
+            className="h-auto rounded-md border-none bg-surface-2 px-6 py-5 text-sm text-content-primary hover:bg-surface-3"
             onClick={() => {
               setCurrentWork({
                 company: '',
@@ -163,7 +163,7 @@ export function WorkExperienceTab({
                   key={w.id || w.company}
                   className="flex flex-col gap-4 sm:flex-row sm:gap-12"
                 >
-                  <div className="shrink-0 pt-0.5 text-sm text-gray-400 sm:w-32">
+                  <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-32">
                     {w.start} — {w.end}
                   </div>
 
@@ -179,23 +179,23 @@ export function WorkExperienceTab({
                         rel="noopener noreferrer"
                         className="inline-block hover:underline"
                       >
-                        <span className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                        <span className="text-base font-semibold text-content-primary">
                           {w.title} at {w.company}
-                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-gray-900" />
+                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                         </span>
                       </a>
                     ) : (
-                      <p className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                      <p className="text-base font-semibold text-content-primary">
                         {w.title} at {w.company}
                       </p>
                     )}
                     {w.location && (
-                      <p className="mt-1 text-sm text-gray-500">{w.location}</p>
+                      <p className="mt-1 text-sm text-content-muted">{w.location}</p>
                     )}
 
                     {w.description && w.description !== '<p></p>' && (
                       <div
-                        className="prose prose-sm mt-1 max-w-none text-sm text-gray-500"
+                        className="prose prose-sm mt-1 max-w-none text-sm text-content-muted"
                         dangerouslySetInnerHTML={{
                           __html: w.description,
                         }}
@@ -228,7 +228,7 @@ export function WorkExperienceTab({
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-gray-600">Company*</Label>
+              <Label className="text-xs text-content-secondary">Company*</Label>
               <Input
                 value={currentWork.company}
                 onChange={(e) =>
@@ -241,7 +241,7 @@ export function WorkExperienceTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-gray-600">Position*</Label>
+              <Label className="text-xs text-content-secondary">Position*</Label>
               <Input
                 value={currentWork.title}
                 onChange={(e) =>
@@ -257,7 +257,7 @@ export function WorkExperienceTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-gray-600">Start Date*</Label>
+              <Label className="text-xs text-content-secondary">Start Date*</Label>
               <div className="flex gap-2">
                 <Select
                   value={currentWork.startMonth || ''}
@@ -300,7 +300,7 @@ export function WorkExperienceTab({
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs text-gray-600">End Date*</Label>
+              <Label className="text-xs text-content-secondary">End Date*</Label>
               <div className="flex gap-2">
                 {currentWork.end !== 'Present' && (
                   <Select
@@ -348,7 +348,7 @@ export function WorkExperienceTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-gray-600">Location</Label>
+              <Label className="text-xs text-content-secondary">Location</Label>
               <Input
                 value={currentWork.location || ''}
                 onChange={(e) =>
@@ -361,7 +361,7 @@ export function WorkExperienceTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-gray-600">Link</Label>
+              <Label className="text-xs text-content-secondary">Link</Label>
               <Input
                 value={currentWork.link || ''}
                 onChange={(e) =>
@@ -376,7 +376,7 @@ export function WorkExperienceTab({
           </div>
 
           <div className="space-y-2 pt-2">
-            <Label className="text-xs text-gray-600">Description</Label>
+            <Label className="text-xs text-content-secondary">Description</Label>
             <RichTextEditor
               content={currentWork.description || ''}
               onChange={(val) =>
@@ -385,10 +385,10 @@ export function WorkExperienceTab({
             />
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-gray-100 bg-white p-4 md:px-8 dark:border-[#333] dark:bg-[#121212]">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-border-subtle bg-surface-1 p-4 md:px-8">
             <button
               onClick={() => setWorkView('list')}
-              className="px-4 text-[14px] font-medium text-black hover:underline hover:underline-offset-2 dark:text-gray-200"
+              className="px-4 text-[14px] font-medium text-content-primary hover:underline hover:underline-offset-2"
             >
               Cancel
             </button>
@@ -396,7 +396,7 @@ export function WorkExperienceTab({
               onClick={handleSave}
               disabled={!currentWork?.title || !currentWork?.company}
               variant="outline"
-              className="h-9 rounded-md border border-gray-200 bg-white px-6 font-medium text-black shadow-sm dark:border-[#333] dark:bg-[#1f1f1f] dark:text-gray-200 dark:hover:bg-[#2c2c2c]"
+              className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
             >
               Save
             </Button>

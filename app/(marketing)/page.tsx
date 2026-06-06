@@ -4,13 +4,13 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col bg-white dark:bg-[#121212]">
-      <main className="flex flex-1 flex-col items-center font-sans text-gray-900 dark:text-gray-100">
+    <div className="flex min-h-screen flex-col bg-surface-1">
+      <main className="flex flex-1 flex-col items-center font-sans text-content-primary">
         <div className="flex w-full max-w-[500px] flex-col gap-6 px-6 pb-32 pt-24">
           {/* Hero Section */}
           <HomeHero />
           {/* Feature 1: Create a beautiful profile */}
-          <div className="relative flex flex-col overflow-hidden rounded-[24px] bg-[#f5f5f5] p-5 pb-0 sm:p-8 dark:bg-[#1f1f1f]">
+          <div className="relative flex flex-col overflow-hidden rounded-[24px] bg-surface-2 p-5 pb-0 sm:p-8">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -25,10 +25,10 @@ export default function Home() {
               }}
             />
             <div className="mb-8">
-              <h3 className="mb-1.5 text-[17px] font-bold text-gray-900 dark:text-gray-100">
+              <h3 className="mb-1.5 text-[17px] font-bold text-content-primary">
                 Create a beautiful profile
               </h3>
-              <p className="text-[15px] leading-snug text-gray-500 dark:text-gray-400">
+              <p className="text-[15px] leading-snug text-content-muted">
                 A fun and intuitive{' '}
                 <Link
                   href="/claim"
@@ -43,19 +43,19 @@ export default function Home() {
 
             {/* Mock UI */}
             <div className="relative -mx-4 flex h-[200px] flex-col justify-start overflow-hidden px-4">
-              <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-b from-transparent to-[#f5f5f5] dark:to-[#1f1f1f]"></div>
+              <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-b from-transparent to-surface-2"></div>
 
-              <div className="mb-4 px-4 text-[24px] font-medium tracking-tight text-gray-300 dark:text-gray-600">
+              <div className="mb-4 px-4 text-[24px] font-medium tracking-tight text-content-muted">
                 Side Projects
               </div>
 
-              <div className="animate-drag relative z-10 mx-auto flex w-full max-w-[400px] items-center justify-between rounded-[18px] border border-gray-200 bg-white p-3 shadow-xl sm:p-4 dark:border-[#333] dark:bg-[#2c2c2c] dark:shadow-none">
-                <span className="truncate pr-2 text-[16px] font-medium tracking-tight text-gray-900 sm:text-[20px] dark:text-gray-100">
+              <div className="animate-drag relative z-10 mx-auto flex w-full max-w-[400px] items-center justify-between rounded-[18px] border border-border-strong bg-surface-1 p-3 shadow-xl sm:p-4 dark:shadow-none">
+                <span className="truncate pr-2 text-[16px] font-medium tracking-tight text-content-primary sm:text-[20px]">
                   Work Experience
                 </span>
                 <div className="relative flex flex-col gap-[3px] opacity-40 dark:opacity-60">
-                  <div className="h-[2px] w-5 rounded-full bg-black dark:bg-white"></div>
-                  <div className="h-[2px] w-5 rounded-full bg-black dark:bg-white"></div>
+                  <div className="h-[2px] w-5 rounded-full bg-action-primary dark:bg-surface-1"></div>
+                  <div className="h-[2px] w-5 rounded-full bg-action-primary dark:bg-surface-1"></div>
 
                   {/* Grabbing Hand SVG */}
                   <div className="absolute -bottom-6 -right-2 h-8 w-8 opacity-100">
@@ -63,7 +63,7 @@ export default function Home() {
                       viewBox="0 0 24 24"
                       fill="currentColor"
                       stroke="currentColor"
-                      className="text-white dark:text-[#2c2c2c] dark:stroke-white"
+                      className="text-surface-1  dark:stroke-white"
                       strokeWidth="1.5"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -75,20 +75,20 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="mt-4 px-4 text-[24px] font-medium tracking-tight text-gray-300 dark:text-gray-600">
+              <div className="mt-4 px-4 text-[24px] font-medium tracking-tight text-content-muted">
                 Features
               </div>
-              <div className="mt-6 px-4 text-[24px] font-medium tracking-tight text-gray-300 dark:text-gray-600">
+              <div className="mt-6 px-4 text-[24px] font-medium tracking-tight text-content-muted">
                 Features
               </div>
             </div>
           </div>
 
           {/* Feature 2: Clean Design */}
-          <div className="flex flex-col overflow-hidden rounded-[24px] bg-[#f5f5f5] p-5 pb-0 sm:p-8 dark:bg-[#1f1f1f]">
+          <div className="flex flex-col overflow-hidden rounded-[24px] bg-surface-2 p-5 pb-0 sm:p-8">
             <div className="mb-8">
-              <h3 className="mb-1.5 text-[17px] font-bold dark:text-gray-100">Clean & Minimal</h3>
-              <p className="text-[15px] leading-snug text-gray-500 dark:text-gray-400">
+              <h3 className="mb-1.5 text-[17px] font-bold">Clean & Minimal</h3>
+              <p className="text-[15px] leading-snug text-content-muted">
                 Profiles are designed to be distraction-free, with optimized
                 typography and only the relevant{' '}
                 <Link
@@ -101,19 +101,19 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="h-[180px] rounded-t-[16px] border border-b-0 border-gray-200 bg-white p-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] sm:p-6 dark:border-[#333] dark:bg-[#2c2c2c] dark:shadow-none">
+            <div className="h-[180px] rounded-t-[16px] border border-b-0 border-border-strong bg-surface-1 p-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] sm:p-6 dark:shadow-none">
               <div className="flex gap-3 sm:gap-4">
                 <div className="w-1/3 space-y-2">
-                  <div className="h-2 w-16 rounded bg-gray-300 dark:bg-gray-600"></div>
-                  <div className="h-2 w-12 rounded bg-gray-200 dark:bg-gray-700"></div>
+                  <div className="h-2 w-16 rounded bg-border-strong"></div>
+                  <div className="h-2 w-12 rounded bg-surface-3"></div>
                 </div>
                 <div className="w-2/3 space-y-3">
-                  <div className="h-3 w-32 rounded bg-gray-800 dark:bg-gray-300"></div>
-                  <div className="h-2 w-24 rounded bg-gray-400 dark:bg-gray-500"></div>
+                  <div className="h-3 w-32 rounded bg-surface-card"></div>
+                  <div className="h-2 w-24 rounded bg-content-muted"></div>
                   <div className="space-y-1.5 pt-2">
-                    <div className="h-1.5 w-full rounded bg-gray-200 dark:bg-gray-700"></div>
-                    <div className="h-1.5 w-5/6 rounded bg-gray-200 dark:bg-gray-700"></div>
-                    <div className="h-1.5 w-4/6 rounded bg-gray-200 dark:bg-gray-700"></div>
+                    <div className="h-1.5 w-full rounded bg-surface-3"></div>
+                    <div className="h-1.5 w-5/6 rounded bg-surface-3"></div>
+                    <div className="h-1.5 w-4/6 rounded bg-surface-3"></div>
                   </div>
                 </div>
               </div>
@@ -121,7 +121,7 @@ export default function Home() {
           </div>
 
           {/* Feature 3: Find who you're looking for */}
-          <div className="relative flex flex-col overflow-hidden rounded-[24px] bg-[#f5f5f5] p-5 pb-0 sm:p-8 dark:bg-[#1f1f1f]">
+          <div className="relative flex flex-col overflow-hidden rounded-[24px] bg-surface-2 p-5 pb-0 sm:p-8">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -136,17 +136,17 @@ export default function Home() {
               }}
             />
             <div className="mb-8">
-              <h3 className="mb-1.5 text-[17px] font-bold text-gray-900 dark:text-gray-100">
+              <h3 className="mb-1.5 text-[17px] font-bold text-content-primary">
                 Find who you&apos;re looking for
               </h3>
-              <p className="text-[15px] leading-snug text-gray-500 dark:text-gray-400">
+              <p className="text-[15px] leading-snug text-content-muted">
                 Search by title, location, and username.
               </p>
             </div>
 
             <div className="h-[180px] w-full">
-              <div className="mb-6 flex max-w-[95%] items-center rounded-full border bg-white px-3 py-2 shadow-sm sm:px-5 sm:py-3 dark:border-[#333] dark:bg-[#2c2c2c] dark:shadow-none">
-                <span className="flex items-center text-[15px] font-medium tracking-tight text-gray-900 sm:text-[18px] dark:text-gray-100">
+              <div className="mb-6 flex max-w-[95%] items-center rounded-full border bg-surface-1 px-3 py-2 shadow-sm sm:px-5 sm:py-3 dark:shadow-none">
+                <span className="flex items-center text-[15px] font-medium tracking-tight text-content-primary sm:text-[18px]">
                   Art director
                   <span className="animate-blink ml-0.5 inline-block h-[1.1em] w-[2px] bg-blue-500"></span>
                 </span>
@@ -154,7 +154,7 @@ export default function Home() {
 
               <div className="space-y-4 px-1 sm:px-2">
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-gray-200 sm:size-12 dark:bg-gray-700">
+                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-12 ">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lauren"
@@ -163,17 +163,17 @@ export default function Home() {
                     />
                   </div>
                   <div className="leading-tight">
-                    <div className="text-[14px] text-gray-400 sm:text-[16px] dark:text-gray-500">
+                    <div className="text-[14px] text-content-muted sm:text-[16px] dark:text-content-muted">
                       Lauren Jochum
                     </div>
-                    <div className="text-[13px] text-gray-400 sm:text-[15px] dark:text-gray-500">
-                      <strong className="text-gray-400 dark:text-gray-300">Art director</strong> in
+                    <div className="text-[13px] text-content-muted sm:text-[15px] dark:text-content-muted">
+                      <strong className="text-content-muted">Art director</strong> in
                       Berkeley
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 opacity-30 sm:gap-4">
-                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-gray-200 sm:size-12 dark:bg-gray-700">
+                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-12 ">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="https://api.dicebear.com/7.x/avataaars/svg?seed=Skip"
@@ -182,11 +182,11 @@ export default function Home() {
                     />
                   </div>
                   <div className="leading-tight">
-                    <div className="text-[14px] text-gray-400 sm:text-[16px] dark:text-gray-500">
+                    <div className="text-[14px] text-content-muted sm:text-[16px] dark:text-content-muted">
                       Skip Hursh
                     </div>
-                    <div className="text-[13px] text-gray-400 sm:text-[15px] dark:text-gray-500">
-                      <strong className="text-gray-400 dark:text-gray-300">Art director</strong> in
+                    <div className="text-[13px] text-content-muted sm:text-[15px] dark:text-content-muted">
+                      <strong className="text-content-muted">Art director</strong> in
                       NYC
                     </div>
                   </div>
@@ -196,21 +196,21 @@ export default function Home() {
           </div>
 
           {/* Feature 4: Use it anywhere */}
-          <div className="flex flex-col overflow-hidden rounded-[24px] bg-[#f5f5f5] p-5 pb-0 sm:p-8 dark:bg-[#1f1f1f]">
+          <div className="flex flex-col overflow-hidden rounded-[24px] bg-surface-2 p-5 pb-0 sm:p-8">
             <div className="mb-6 sm:mb-8">
-              <h3 className="mb-1.5 text-[17px] font-bold text-gray-900 dark:text-gray-100">
+              <h3 className="mb-1.5 text-[17px] font-bold text-content-primary">
                 Use it anywhere
               </h3>
-              <p className="text-[15px] leading-snug text-gray-500 dark:text-gray-400">
+              <p className="text-[15px] leading-snug text-content-muted">
                 Add your link wherever your audience is.
               </p>
             </div>
 
-            <div className="h-auto rounded-t-[16px] border border-b-0 border-gray-200 bg-white p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] sm:h-[220px] sm:p-8 dark:border-[#333] dark:bg-[#2c2c2c] dark:shadow-none">
+            <div className="h-auto rounded-t-[16px] border border-b-0 border-border-strong bg-surface-1 p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] sm:h-[220px] sm:p-8 dark:shadow-none">
               <div className="mb-4 flex items-center gap-4 sm:gap-8">
                 <div className="size-[64px] shrink-0 rounded-full bg-gradient-to-tr from-[#feda75] via-[#fa7e1e] to-[#d62976] p-[2px] sm:size-[84px] sm:p-[3px]">
-                  <div className="h-full w-full rounded-full bg-white p-0.5 dark:bg-[#2c2c2c]">
-                    <div className="h-full w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                  <div className="h-full w-full rounded-full bg-surface-1 p-0.5">
+                    <div className="h-full w-full overflow-hidden rounded-full bg-surface-3">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tom"
@@ -222,26 +222,26 @@ export default function Home() {
                 </div>
                 <div className="flex w-full justify-around gap-3 pr-0 text-center sm:justify-center sm:gap-6 sm:pr-4">
                   <div className="flex flex-col items-center">
-                    <div className="text-[17px] font-semibold text-gray-900 sm:text-[19px] dark:text-gray-100">
+                    <div className="text-[17px] font-semibold text-content-primary sm:text-[19px]">
                       54
                     </div>
-                    <div className="text-[13px] tracking-tight text-gray-900 sm:text-[14px] dark:text-gray-300">
+                    <div className="text-[13px] tracking-tight text-content-primary sm:text-[14px]">
                       Posts
                     </div>
                   </div>
                   <div className="flex flex-col items-center">
-                    <div className="text-[17px] font-semibold text-gray-900 sm:text-[19px] dark:text-gray-100">
+                    <div className="text-[17px] font-semibold text-content-primary sm:text-[19px]">
                       368
                     </div>
-                    <div className="text-[13px] tracking-tight text-gray-900 sm:text-[14px] dark:text-gray-300">
+                    <div className="text-[13px] tracking-tight text-content-primary sm:text-[14px]">
                       Followers
                     </div>
                   </div>
                   <div className="hidden flex-col items-center sm:flex">
-                    <div className="text-[17px] font-semibold text-gray-900 sm:text-[19px] dark:text-gray-100">
+                    <div className="text-[17px] font-semibold text-content-primary sm:text-[19px]">
                       115
                     </div>
-                    <div className="text-[13px] tracking-tight text-gray-900 sm:text-[14px] dark:text-gray-300">
+                    <div className="text-[13px] tracking-tight text-content-primary sm:text-[14px]">
                       Following
                     </div>
                   </div>
@@ -249,13 +249,13 @@ export default function Home() {
               </div>
 
               <div className="ml-1 flex flex-col pb-4 leading-snug sm:pb-0">
-                <span className="text-[15px] font-semibold text-gray-900 sm:text-[16px] dark:text-gray-100">
+                <span className="text-[15px] font-semibold text-content-primary sm:text-[16px]">
                   Tom Chung
                 </span>
-                <span className="text-[14px] text-gray-500 sm:text-[15px] dark:text-gray-400">
+                <span className="text-[14px] text-content-muted sm:text-[15px]">
                   Architectural Designer
                 </span>
-                <span className="text-[14px] text-[#00376b] sm:text-[15px] dark:text-[#60a5fa]">
+                <span className="text-[14px] text-action-primary sm:text-[15px]">
                   portfoliofy.me/tom
                 </span>
               </div>
