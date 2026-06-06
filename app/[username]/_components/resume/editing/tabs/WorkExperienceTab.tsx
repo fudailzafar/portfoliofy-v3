@@ -3,6 +3,8 @@ import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { TabHeader } from '../TabHeader';
+import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -46,7 +48,8 @@ export function WorkExperienceTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const { resume, updateResume } = useResumeStore();
+  const resume = useResumeStore((state) => state.resume);
+  const updateResume = useResumeStore((state) => state.updateResume);
   const {
     view: workView,
     setView: setWorkView,
@@ -89,60 +92,47 @@ export function WorkExperienceTab({
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col pb-24">
-      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-2xl font-bold">Work Experience</h2>
-        {workView === 'list' && (
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setCurrentWork({
-                company: '',
-                title: '',
-                startMonth: '',
-                start: currentYear.toString(),
-                endMonth: '',
-                end: 'Present',
-                location: '',
-                link: '',
-                contract: '',
-                description: '',
-              });
-              setWorkView('form');
-            }}
-            className="h-8 rounded-md border-none bg-surface-2 px-4 text-xs text-content-primary hover:bg-surface-3"
-          >
-            Add workplace
-          </Button>
-        )}
-      </div>
+      <TabHeader
+        title="Work Experience"
+        showAddButton={workView === 'list'}
+        onAdd={() => {
+          setCurrentWork({
+            company: '',
+            title: '',
+            startMonth: '',
+            start: currentYear.toString(),
+            endMonth: '',
+            end: 'Present',
+            location: '',
+            link: '',
+            contract: '',
+            description: '',
+          });
+          setWorkView('form');
+        }}
+        addButtonText="Add workplace"
+      />
 
       {workView === 'list' && work.length === 0 && (
-        <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
-          <div className="rounded-full bg-surface-2 p-8">
-            <Briefcase className="h-16 w-16 text-content-muted" strokeWidth={1} />
-          </div>
-          <Button
-            variant="secondary"
-            className="h-auto rounded-md border-none bg-surface-2 px-6 py-5 text-sm text-content-primary hover:bg-surface-3"
-            onClick={() => {
-              setCurrentWork({
-                company: '',
-                title: '',
-                startMonth: '',
-                start: currentYear.toString(),
-                endMonth: '',
-                end: 'Present',
-                location: '',
-                link: '',
-                contract: '',
-                description: '',
-              });
-              setWorkView('form');
-            }}
-          >
-            Add a job you&apos;ve had
-          </Button>
-        </div>
+        <EmptyState
+          icon={Briefcase}
+          buttonText="Add workplace"
+          onClick={() => {
+            setCurrentWork({
+              company: '',
+              title: '',
+              startMonth: '',
+              start: currentYear.toString(),
+              endMonth: '',
+              end: 'Present',
+              location: '',
+              link: '',
+              contract: '',
+              description: '',
+            });
+            setWorkView('form');
+          }}
+        />
       )}
 
       {workView === 'list' && work.length > 0 && (

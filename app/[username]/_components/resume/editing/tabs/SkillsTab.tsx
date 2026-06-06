@@ -4,7 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 export function SkillsTab() {
-  const { resume, updateHeader } = useResumeStore();
+  const resume = useResumeStore((state) => state.resume);
+  const updateHeader = useResumeStore((state) => state.updateHeader);
   const [skillInput, setSkillInput] = useState('');
 
   if (!resume) return null;

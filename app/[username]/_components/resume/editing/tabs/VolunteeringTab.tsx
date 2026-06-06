@@ -3,6 +3,8 @@ import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { TabHeader } from '../TabHeader';
+import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -23,7 +25,8 @@ export function VolunteeringTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const { resume, updateResume } = useResumeStore();
+  const resume = useResumeStore((state) => state.resume);
+  const updateResume = useResumeStore((state) => state.updateResume);
   const {
     view: volunteeringView,
     setView: setVolunteeringView,
@@ -67,55 +70,39 @@ export function VolunteeringTab({
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
-      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-2xl font-bold">Volunteering</h2>
-        {volunteeringView === 'list' && (
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setCurrentVolunteering({
-                role: '',
-                organization: '',
-                startYear: '',
-                endYear: '',
-                location: '',
-                link: '',
-              });
-              setVolunteeringView('form');
-            }}
-            className="h-8 rounded-md border-none bg-surface-2 px-4 text-xs text-content-primary hover:bg-surface-3"
-          >
-            Add volunteering
-          </Button>
-        )}
-      </div>
+      <TabHeader
+        title="Volunteering"
+        showAddButton={volunteeringView === 'list'}
+        onAdd={() => {
+          setCurrentVolunteering({
+            role: '',
+            organization: '',
+            startYear: '',
+            endYear: '',
+            location: '',
+            link: '',
+          });
+          setVolunteeringView('form');
+        }}
+        addButtonText="Add volunteering"
+      />
 
       {volunteeringView === 'list' && volunteering.length === 0 && (
-        <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
-          <div className="rounded-full bg-surface-2 p-8">
-            <HeartHandshake
-              className="h-16 w-16 text-content-muted"
-              strokeWidth={1}
-            />
-          </div>
-          <Button
-            variant="secondary"
-            className="h-auto rounded-md border-none bg-surface-2 px-6 py-5 text-sm text-content-primary hover:bg-surface-3"
-            onClick={() => {
-              setCurrentVolunteering({
-                role: '',
-                organization: '',
-                startYear: '',
-                endYear: '',
-                location: '',
-                link: '',
-              });
-              setVolunteeringView('form');
-            }}
-          >
-            Add volunteering
-          </Button>
-        </div>
+        <EmptyState
+          icon={HeartHandshake}
+          buttonText="Add volunteering"
+          onClick={() => {
+            setCurrentVolunteering({
+              role: '',
+              organization: '',
+              startYear: '',
+              endYear: '',
+              location: '',
+              link: '',
+            });
+            setVolunteeringView('form');
+          }}
+        />
       )}
 
       {volunteeringView === 'list' && volunteering.length > 0 && (

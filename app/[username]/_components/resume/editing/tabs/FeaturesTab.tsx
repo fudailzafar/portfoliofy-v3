@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
+import { EditDeleteButtons } from '../EditDeleteButtons';
+import { TabHeader } from '../TabHeader';
+import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -30,7 +33,8 @@ export function FeaturesTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const { resume, updateResume } = useResumeStore();
+  const resume = useResumeStore((state) => state.resume);
+  const updateResume = useResumeStore((state) => state.updateResume);
   const {
     view: featuresView,
     setView: setFeaturesView,
@@ -73,50 +77,37 @@ export function FeaturesTab({
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
-      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-2xl font-bold">Features</h2>
-        {featuresView === 'list' && (
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setCurrentFeature({
-                title: '',
-                year: currentYear.toString(),
-                link: '',
-                location: '',
-                description: '',
-              });
-              setFeaturesView('form');
-            }}
-            className="h-8 rounded-md border-none bg-surface-2 px-4 text-xs text-content-primary hover:bg-surface-3"
-          >
-            Add feature
-          </Button>
-        )}
-      </div>
+      <TabHeader
+        title="Features"
+        showAddButton={featuresView === 'list'}
+        onAdd={() => {
+          setCurrentFeature({
+            title: '',
+            year: currentYear.toString(),
+            link: '',
+            location: '',
+            description: '',
+          });
+          setFeaturesView('form');
+        }}
+        addButtonText="Add feature"
+      />
 
       {featuresView === 'list' && features.length === 0 && (
-        <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
-          <div className="rounded-full bg-surface-2 p-8">
-            <FolderCode className="h-16 w-16 text-content-muted" strokeWidth={1} />
-          </div>
-          <Button
-            variant="secondary"
-            className="h-auto rounded-md border-none bg-surface-2 px-6 py-5 text-sm text-content-primary hover:bg-surface-3"
-            onClick={() => {
-              setCurrentFeature({
-                title: '',
-                year: currentYear.toString(),
-                link: '',
-                location: '',
-                description: '',
-              });
-              setFeaturesView('form');
-            }}
-          >
-            Add a feature
-          </Button>
-        </div>
+        <EmptyState
+          icon={FolderCode}
+          buttonText="Add a feature"
+          onClick={() => {
+            setCurrentFeature({
+              title: '',
+              year: currentYear.toString(),
+              link: '',
+              location: '',
+              description: '',
+            });
+            setFeaturesView('form');
+          }}
+        />
       )}
 
       {featuresView === 'list' && features.length > 0 && (
@@ -159,29 +150,20 @@ export function FeaturesTab({
                         />
                       )}
 
-                    <div className="mt-3 flex items-center gap-4 text-xs font-medium text-content-muted">
-                      <button
-                        onClick={() => {
-                          setCurrentFeature(feature);
-                          setFeaturesView('form');
-                        }}
-                        className="transition-colors hover:text-content-primary"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => setProjectToDelete(feature.id)}
-                        className="transition-colors hover:text-red-600"
-                      >
-                        Delete
-                      </button>
+                    <EditDeleteButtons
+                      onEdit={() => {
+                        setCurrentFeature(feature);
+                        setFeaturesView('form');
+                      }}
+                      onDelete={() => setProjectToDelete(feature.id)}
+                    >
                       <SortButtons
                         canMoveUp={canMoveUp}
                         canMoveDown={canMoveDown}
                         onMoveUp={() => handleMoveUp(feature, prevItem)}
                         onMoveDown={() => handleMoveUp(feature, nextItem)}
                       />
-                    </div>
+                    </EditDeleteButtons>
                   </div>
                 </div>
               );
