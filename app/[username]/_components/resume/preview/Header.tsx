@@ -13,7 +13,7 @@ export function Header({
 }) {
   return (
     <header className="mb-8 flex items-center gap-4 md:gap-6">
-      <Avatar className="size-20 shrink-0 md:size-28" aria-hidden="true">
+      <Avatar className="size-20 shrink-0 md:size-24" aria-hidden="true">
         <AvatarImage src={picture} alt={`${header.name}'s profile picture`} />
         <AvatarFallback>
           {header.name
