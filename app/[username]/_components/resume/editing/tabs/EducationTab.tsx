@@ -2,6 +2,8 @@
 
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { TabHeader } from '../TabHeader';
+import { EmptyState } from '../EmptyState';
 import React, { useState, useEffect } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
@@ -31,7 +33,8 @@ export function EducationTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const { resume, updateResume } = useResumeStore();
+  const resume = useResumeStore((state) => state.resume);
+  const updateResume = useResumeStore((state) => state.updateResume);
   const {
     view: eduView,
     setView: setEduView,
@@ -74,53 +77,37 @@ export function EducationTab({
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
-      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-2xl font-bold">Education</h2>
-        {eduView === 'list' && (
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setCurrentEdu({
-                school: '',
-                degree: '',
-                start: currentYear.toString(),
-                end: 'Now',
-                location: '',
-              });
-              setEduView('form');
-            }}
-            className="h-8 rounded-md border-none bg-surface-2 px-4 text-xs text-content-primary hover:bg-surface-3"
-          >
-            Add education
-          </Button>
-        )}
-      </div>
+      <TabHeader
+        title="Education"
+        showAddButton={eduView === 'list'}
+        onAdd={() => {
+          setCurrentEdu({
+            school: '',
+            degree: '',
+            start: currentYear.toString(),
+            end: 'Now',
+            location: '',
+          });
+          setEduView('form');
+        }}
+        addButtonText="Add education"
+      />
 
       {eduView === 'list' && education.length === 0 && (
-        <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
-          <div className="rounded-full bg-surface-2 p-8">
-            <GraduationCap
-              className="h-16 w-16 text-content-muted"
-              strokeWidth={1}
-            />
-          </div>
-          <Button
-            variant="secondary"
-            className="h-auto rounded-md border-none bg-surface-2 px-6 py-5 text-sm text-content-primary hover:bg-surface-3"
-            onClick={() => {
-              setCurrentEdu({
-                school: '',
-                degree: '',
-                start: currentYear.toString(),
-                end: 'Now',
-                location: '',
-              });
-              setEduView('form');
-            }}
-          >
-            Add a school you attended
-          </Button>
-        </div>
+        <EmptyState
+          icon={GraduationCap}
+          buttonText="Add education"
+          onClick={() => {
+            setCurrentEdu({
+              school: '',
+              degree: '',
+              start: currentYear.toString(),
+              end: 'Now',
+              location: '',
+            });
+            setEduView('form');
+          }}
+        />
       )}
 
       {eduView === 'list' && education.length > 0 && (

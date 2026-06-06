@@ -16,13 +16,16 @@ import {
 } from '@/components/ui/select';
 import { buildContactUrl, extractUsername } from '@/utils/extractUsername';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { TabHeader } from '../TabHeader';
+import { EmptyState } from '../EmptyState';
 
 export function ContactsTab({
   setProjectToDelete,
 }: {
   setProjectToDelete: (id: string) => void;
 }) {
-  const { resume, updateResume } = useResumeStore();
+  const resume = useResumeStore((state) => state.resume);
+  const updateResume = useResumeStore((state) => state.updateResume);
   const {
     view: view,
     setView: setView,
@@ -52,51 +55,33 @@ export function ContactsTab({
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
-      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-2xl font-bold">Contact</h2>
-        {view === 'list' && (
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setCurrent({
-                platform: '',
-                link: '',
-                type: 'Custom',
-                username: '',
-              });
-              setView('form');
-            }}
-            className="h-8 rounded-md border-none bg-surface-2 px-4 text-xs text-content-primary hover:bg-surface-3"
-          >
-            Add link
-          </Button>
-        )}
-      </div>
+      <TabHeader
+        title="Contact"
+        showAddButton={view === 'list'}
+        onAdd={() => {
+          setCurrent({
+            platform: '',
+            link: '',
+            type: 'Social',
+          });
+          setView('form');
+        }}
+        addButtonText="Add link"
+      />
 
       {view === 'list' && items.length === 0 && (
-        <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
-          <div className="rounded-full bg-surface-2 p-8">
-            <MessageCircle
-              className="h-16 w-16 text-content-muted"
-              strokeWidth={1}
-            />
-          </div>
-          <Button
-            variant="secondary"
-            className="h-auto rounded-md border-none bg-surface-2 px-6 py-5 text-sm text-content-primary hover:bg-surface-3"
-            onClick={() => {
-              setCurrent({
-                platform: '',
-                link: '',
-                type: 'Custom',
-                username: '',
-              });
-              setView('form');
-            }}
-          >
-            Let others know how to reach you
-          </Button>
-        </div>
+        <EmptyState
+          icon={MessageCircle}
+          buttonText="+ Add Contact"
+          onClick={() => {
+            setCurrent({
+              platform: '',
+              link: '',
+              type: 'Social',
+            });
+            setView('form');
+          }}
+        />
       )}
 
       {view === 'list' && items.length > 0 && (

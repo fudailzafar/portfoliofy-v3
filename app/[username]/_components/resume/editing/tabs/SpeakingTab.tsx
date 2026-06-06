@@ -21,6 +21,8 @@ import {
 import { sortByDateDesc } from '@/lib/resume';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { TabHeader } from '../TabHeader';
+import { EmptyState } from '../EmptyState';
 
 export function SpeakingTab({
   years,
@@ -29,7 +31,8 @@ export function SpeakingTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const { resume, updateResume } = useResumeStore();
+  const resume = useResumeStore((state) => state.resume);
+  const updateResume = useResumeStore((state) => state.updateResume);
   const {
     view: speakingView,
     setView: setSpeakingView,
@@ -72,48 +75,35 @@ export function SpeakingTab({
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
-      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-2xl font-bold">Speaking</h2>
-        {speakingView === 'list' && (
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setCurrentSpeaking({
-                title: '',
-                year: currentYear.toString(),
-                link: '',
-                location: '',
-              });
-              setSpeakingView('form');
-            }}
-            className="h-8 rounded-md border-none bg-surface-2 px-4 text-xs text-content-primary hover:bg-surface-3"
-          >
-            Add engagement
-          </Button>
-        )}
-      </div>
+      <TabHeader
+        title="Speaking"
+        showAddButton={speakingView === 'list'}
+        onAdd={() => {
+          setCurrentSpeaking({
+            title: '',
+            year: currentYear.toString(),
+            link: '',
+            location: '',
+          });
+          setSpeakingView('form');
+        }}
+        addButtonText="Add engagement"
+      />
 
       {speakingView === 'list' && speaking.length === 0 && (
-        <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
-          <div className="rounded-full bg-surface-2 p-8">
-            <Mic className="h-16 w-16 text-content-muted" strokeWidth={1} />
-          </div>
-          <Button
-            variant="secondary"
-            className="h-auto rounded-md border-none bg-surface-2 px-6 py-5 text-sm text-content-primary hover:bg-surface-3"
-            onClick={() => {
-              setCurrentSpeaking({
-                title: '',
-                year: currentYear.toString(),
-                link: '',
-                location: '',
-              });
-              setSpeakingView('form');
-            }}
-          >
-            Add a talk you&apos;ve given
-          </Button>
-        </div>
+        <EmptyState
+          icon={Mic}
+          buttonText="Add a talk you've given"
+          onClick={() => {
+            setCurrentSpeaking({
+              title: '',
+              year: currentYear.toString(),
+              link: '',
+              location: '',
+            });
+            setSpeakingView('form');
+          }}
+        />
       )}
 
       {speakingView === 'list' && speaking.length > 0 && (
