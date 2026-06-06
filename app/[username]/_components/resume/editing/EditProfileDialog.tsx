@@ -96,9 +96,19 @@ export function EditProfileDialog({
     isEditingTab,
   } = useResumeStore();
 
+  const {
+    saveResumeDataMutation,
+    updateUsernameMutation,
+    checkUsernameMutation,
+    resumeQuery,
+  } = useUserActions();
+
+  // Use React Query's fresh data if available, otherwise fallback to server component's initial data
+  const freshResume = resumeQuery.data?.resume?.resumeData || resume;
+
   useEffect(() => {
-    initResume(resume, username);
-  }, [resume, username, initResume]);
+    initResume(freshResume, username);
+  }, [freshResume, username, initResume]);
 
   const [open, setOpen] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(true);
@@ -113,12 +123,6 @@ export function EditProfileDialog({
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isInitialUsername = uname === username;
-
-  const {
-    saveResumeDataMutation,
-    updateUsernameMutation,
-    checkUsernameMutation,
-  } = useUserActions();
 
   const isValidUname =
     /^[a-zA-Z0-9-]+$/.test(uname) &&
