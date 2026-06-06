@@ -7,7 +7,9 @@ import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
 
 export function PersonalDomainTab({ username }: { username: string }) {
-  const { resume, updateDesign, setHasUnsavedChanges } = useResumeStore();
+  const resume = useResumeStore((state) => state.resume);
+  const updateDesign = useResumeStore((state) => state.updateDesign);
+  const setHasUnsavedChanges = useResumeStore((state) => state.setHasUnsavedChanges);
 
   const typography = resume?.design?.typography ?? 'sans';
   const theme = resume?.design?.theme ?? 'default';

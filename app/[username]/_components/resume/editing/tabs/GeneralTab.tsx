@@ -33,8 +33,11 @@ export function GeneralTab({
   removePicture: () => Promise<void>;
   onAvatarUpload?: () => void;
 }) {
-  const { resume, uname, setUname, updateHeader, updateResume } =
-    useResumeStore();
+  const resume = useResumeStore((state) => state.resume);
+  const uname = useResumeStore((state) => state.uname);
+  const setUname = useResumeStore((state) => state.setUname);
+  const updateHeader = useResumeStore((state) => state.updateHeader);
+  const updateResume = useResumeStore((state) => state.updateResume);
   const { checkUsernameMutation } = useUserActions();
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 

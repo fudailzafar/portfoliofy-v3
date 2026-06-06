@@ -3,6 +3,8 @@ import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { TabHeader } from '../TabHeader';
+import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -31,7 +33,8 @@ export function ProjectsTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const { resume, updateResume } = useResumeStore();
+  const resume = useResumeStore((state) => state.resume);
+  const updateResume = useResumeStore((state) => state.updateResume);
   const {
     view: projectsView,
     setView: setProjectsView,
@@ -74,50 +77,37 @@ export function ProjectsTab({
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
-      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-2xl font-bold">Projects</h2>
-        {projectsView === 'list' && (
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setCurrentProject({
-                title: '',
-                year: currentYear.toString(),
-                company: '',
-                link: '',
-                description: '',
-              });
-              setProjectsView('form');
-            }}
-            className="h-8 rounded-md border-none bg-surface-2 px-4 text-xs text-content-primary hover:bg-surface-3"
-          >
-            Add project
-          </Button>
-        )}
-      </div>
+      <TabHeader
+        title="Projects"
+        showAddButton={projectsView === 'list'}
+        onAdd={() => {
+          setCurrentProject({
+            title: '',
+            year: currentYear.toString(),
+            company: '',
+            link: '',
+            description: '',
+          });
+          setProjectsView('form');
+        }}
+        addButtonText="Add project"
+      />
 
       {projectsView === 'list' && projects.length === 0 && (
-        <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
-          <div className="rounded-full bg-surface-2 p-8">
-            <FolderCode className="h-16 w-16 text-content-muted" strokeWidth={1} />
-          </div>
-          <Button
-            variant="secondary"
-            className="h-auto rounded-md border-none bg-surface-2 px-6 py-5 text-sm text-content-primary hover:bg-surface-3"
-            onClick={() => {
-              setCurrentProject({
-                title: '',
-                year: currentYear.toString(),
-                company: '',
-                link: '',
-                description: '',
-              });
-              setProjectsView('form');
-            }}
-          >
-            Add a work project you&apos;re proud of
-          </Button>
-        </div>
+        <EmptyState
+          icon={FolderCode}
+          buttonText="Add a work project you're proud of"
+          onClick={() => {
+            setCurrentProject({
+              title: '',
+              year: currentYear.toString(),
+              company: '',
+              link: '',
+              description: '',
+            });
+            setProjectsView('form');
+          }}
+        />
       )}
 
       {projectsView === 'list' && projects.length > 0 && (
