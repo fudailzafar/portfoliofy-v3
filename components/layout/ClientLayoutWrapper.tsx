@@ -77,7 +77,15 @@ export function ClientLayoutWrapper({
           }}
           className="relative z-10 flex min-h-screen flex-1 flex-col bg-surface-1 print:!transform-none print:shadow-none"
         >
-          {children}
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex min-h-screen flex-1 flex-col"
+          >
+            {children}
+          </motion.div>
         </motion.div>
 
         {/* Floating Menu Toggle Button */}
