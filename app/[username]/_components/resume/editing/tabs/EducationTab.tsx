@@ -4,7 +4,7 @@ import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { TabHeader } from '../TabHeader';
 import { EmptyState } from '../EmptyState';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { Label } from '@/components/ui/label';
@@ -74,6 +74,7 @@ export function EducationTab({
   };
 
   const currentYear = new Date().getFullYear();
+  const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
@@ -112,7 +113,7 @@ export function EducationTab({
 
       {eduView === 'list' && education.length > 0 && (
         <div className="space-y-8">
-          {sortByDateDesc(education).map(
+          {sortedEducation.map(
             (edu: any, index: number, sortedArray: any[]) => {
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
               const canMoveUp =

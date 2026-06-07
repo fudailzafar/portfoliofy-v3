@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import LoadingFallback from '@/components/common/LoadingFallback';
 import { ResumeData } from '@/lib/server/dbActions';
 import { sortByDateDesc } from '@/lib/resume';
@@ -27,6 +28,14 @@ export const FullResume = ({
 
   const order = resume.sectionOrder || DEFAULT_SECTION_ORDER;
 
+  const sortedWork = useMemo(() => sortByDateDesc(resume?.workExperience), [resume?.workExperience]);
+  const sortedSideProjects = useMemo(() => sortByDateDesc(resume?.sideProjects), [resume?.sideProjects]);
+  const sortedSpeaking = useMemo(() => sortByDateDesc(resume?.speaking), [resume?.speaking]);
+  const sortedFeatures = useMemo(() => sortByDateDesc(resume?.features), [resume?.features]);
+  const sortedVolunteering = useMemo(() => sortByDateDesc(resume?.volunteering), [resume?.volunteering]);
+  const sortedProjects = useMemo(() => sortByDateDesc(resume?.projects), [resume?.projects]);
+  const sortedEducation = useMemo(() => sortByDateDesc(resume?.education), [resume?.education]);
+
   return (
     <section
       className="mx-auto my-8 w-full max-w-xl space-y-8 bg-theme-bg px-6 md:px-4 print:space-y-4"
@@ -43,49 +52,49 @@ export const FullResume = ({
               return (
                 <WorkExperience
                   key={sectionId}
-                  work={sortByDateDesc(resume?.workExperience)}
+                  work={sortedWork}
                 />
               );
             case 'side_projects':
               return (
                 <SideProjects
                   key={sectionId}
-                  sideProjects={sortByDateDesc(resume?.sideProjects)}
+                  sideProjects={sortedSideProjects}
                 />
               );
             case 'speaking':
               return (
                 <Speaking
                   key={sectionId}
-                  speaking={sortByDateDesc(resume?.speaking)}
+                  speaking={sortedSpeaking}
                 />
               );
             case 'features':
               return (
                 <Features
                   key={sectionId}
-                  features={sortByDateDesc(resume?.features)}
+                  features={sortedFeatures}
                 />
               );
             case 'volunteering':
               return (
                 <Volunteering
                   key={sectionId}
-                  volunteering={sortByDateDesc(resume?.volunteering)}
+                  volunteering={sortedVolunteering}
                 />
               );
             case 'projects':
               return (
                 <Projects
                   key={sectionId}
-                  projects={sortByDateDesc(resume?.projects)}
+                  projects={sortedProjects}
                 />
               );
             case 'education':
               return (
                 <Education
                   key={sectionId}
-                  educations={sortByDateDesc(resume?.education)}
+                  educations={sortedEducation}
                 />
               );
             case 'contact':

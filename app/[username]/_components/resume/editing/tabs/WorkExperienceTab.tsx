@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
@@ -89,6 +89,7 @@ export function WorkExperienceTab({
   };
 
   const currentYear = new Date().getFullYear();
+  const sortedWork = useMemo(() => sortByDateDesc(work), [work]);
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col pb-24">
@@ -137,7 +138,7 @@ export function WorkExperienceTab({
 
       {workView === 'list' && work.length > 0 && (
         <div className="space-y-8">
-          {sortByDateDesc(work).map(
+          {sortedWork.map(
             (w: any, index: number, sortedArray: any[]) => {
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
               const canMoveUp =

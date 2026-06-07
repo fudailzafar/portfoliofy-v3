@@ -6,7 +6,7 @@ import Link from '@tiptap/extension-link';
 import { Button } from '@/components/ui/button';
 import { List, ListOrdered, Link as LinkIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export function RichTextEditor({
   content,
@@ -15,6 +15,8 @@ export function RichTextEditor({
   content: string;
   onChange: (html: string) => void;
 }) {
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -43,7 +45,12 @@ export function RichTextEditor({
       },
     },
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+      debounceRef.current = setTimeout(() => {
+        onChange(editor.getHTML());
+      }, 500);
     },
   });
 
@@ -89,6 +96,7 @@ export function RichTextEditor({
             'h-8 w-8 p-0',
             editor.isActive('bulletList') && 'bg-muted',
           )}
+          aria-label="Toggle bullet list"
         >
           <List className="h-4 w-4" />
         </Button>
@@ -101,6 +109,7 @@ export function RichTextEditor({
             'h-8 w-8 p-0',
             editor.isActive('orderedList') && 'bg-muted',
           )}
+          aria-label="Toggle ordered list"
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
@@ -111,6 +120,7 @@ export function RichTextEditor({
           size="sm"
           onClick={setLink}
           className={cn('h-8 w-8 p-0', editor.isActive('link') && 'bg-muted')}
+          aria-label="Add or edit link"
         >
           <LinkIcon className="h-4 w-4" />
         </Button>
