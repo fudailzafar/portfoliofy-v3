@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ResumeData } from '@/lib/server/dbActions';
 import { sortByDateDesc, DEFAULT_SECTION_ORDER } from '@/lib/resume';
 import { cn } from '@/lib/utils';
@@ -30,6 +30,14 @@ export const PrintResume = ({
   const skillsList: string[] = (resume as any).skills || header?.skills || [];
 
   const order = sectionOrder || DEFAULT_SECTION_ORDER;
+
+  const sortedWork = useMemo(() => sortByDateDesc(workExperience), [workExperience]);
+  const sortedProjects = useMemo(() => sortByDateDesc(projects), [projects]);
+  const sortedSideProjects = useMemo(() => sortByDateDesc(sideProjects), [sideProjects]);
+  const sortedFeatures = useMemo(() => sortByDateDesc(features), [features]);
+  const sortedVolunteering = useMemo(() => sortByDateDesc(volunteering), [volunteering]);
+  const sortedSpeaking = useMemo(() => sortByDateDesc(speaking), [speaking]);
+  const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
 
   const renderSection = (
     id: string,
@@ -83,7 +91,7 @@ export const PrintResume = ({
                 {renderSection(
                   'work',
                   'Work Experience',
-                  sortByDateDesc(workExperience).map((w: any) => (
+                  sortedWork.map((w: any) => (
                     <div key={w.id || w.company} className="flex gap-4">
                       <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {w.start} — {w.end}
@@ -116,7 +124,7 @@ export const PrintResume = ({
                 {renderSection(
                   'projects',
                   'Projects',
-                  sortByDateDesc(projects).map((p: any) => (
+                  sortedProjects.map((p: any) => (
                     <div key={p.id || p.title} className="flex gap-4">
                       <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {p.year}
@@ -142,7 +150,7 @@ export const PrintResume = ({
                 {renderSection(
                   'side_projects',
                   'Side Projects',
-                  sortByDateDesc(sideProjects).map((p: any) => (
+                  sortedSideProjects.map((p: any) => (
                     <div key={p.id || p.title} className="flex gap-4">
                       <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {p.year}
@@ -168,7 +176,7 @@ export const PrintResume = ({
                 {renderSection(
                   'features',
                   'Features',
-                  sortByDateDesc(features).map((f: any) => (
+                  sortedFeatures.map((f: any) => (
                     <div key={f.id || f.title} className="flex gap-4">
                       <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {f.year}
@@ -197,7 +205,7 @@ export const PrintResume = ({
                 {renderSection(
                   'volunteering',
                   'Volunteering',
-                  sortByDateDesc(volunteering).map((v: any) => (
+                  sortedVolunteering.map((v: any) => (
                     <div key={v.id || v.organization} className="flex gap-4">
                       <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {v.startYear} — {v.endYear}
@@ -224,7 +232,7 @@ export const PrintResume = ({
                 {renderSection(
                   'speaking',
                   'Speaking',
-                  sortByDateDesc(speaking).map((s: any) => (
+                  sortedSpeaking.map((s: any) => (
                     <div key={s.id || s.title} className="flex gap-4">
                       <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {s.year}
@@ -247,7 +255,7 @@ export const PrintResume = ({
                 {renderSection(
                   'education',
                   'Education',
-                  sortByDateDesc(education).map((e: any) => (
+                  sortedEducation.map((e: any) => (
                     <div key={e.id || e.school} className="flex gap-4">
                       <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
                         {e.start} — {e.end}

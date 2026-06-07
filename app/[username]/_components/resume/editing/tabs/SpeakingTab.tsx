@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { Label } from '@/components/ui/label';
@@ -72,6 +72,7 @@ export function SpeakingTab({
   };
 
   const currentYear = new Date().getFullYear();
+  const sortedSpeaking = useMemo(() => sortByDateDesc(speaking), [speaking]);
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
@@ -108,7 +109,7 @@ export function SpeakingTab({
 
       {speakingView === 'list' && speaking.length > 0 && (
         <div className="space-y-8">
-          {sortByDateDesc(speaking).map(
+          {sortedSpeaking.map(
             (engagement: any, index: number, sortedArray: any[]) => {
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
               const canMoveUp =
