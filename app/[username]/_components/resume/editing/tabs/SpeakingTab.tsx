@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Mic } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -133,9 +134,27 @@ export function SpeakingTab({
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <p className="text-base font-semibold text-content-primary">
-                      {engagement.title}
-                    </p>
+                    {engagement.link ? (
+                      <a
+                        href={
+                          engagement.link.startsWith('http')
+                            ? engagement.link
+                            : `https://${engagement.link}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block hover:underline"
+                      >
+                        <span className="text-base font-semibold text-content-primary">
+                          {engagement.title}
+                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                        </span>
+                      </a>
+                    ) : (
+                      <p className="text-base font-semibold text-content-primary">
+                        {engagement.title}
+                      </p>
+                    )}
 
                     {engagement.location && (
                       <div className="mt-1 line-clamp-2 text-sm text-content-muted">

@@ -269,6 +269,12 @@ export const PrintResume = ({
                             {e.location}
                           </p>
                         )}
+                        {e.description && e.description !== '<p></p>' && (
+                          <div
+                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
+                            dangerouslySetInnerHTML={{ __html: e.description }}
+                          />
+                        )}
                       </div>
                     </div>
                   )),
