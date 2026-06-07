@@ -158,7 +158,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   onChange={(e) =>
                     setCustomDomain(e.target.value.toLowerCase())
                   }
-                  placeholder="yourname.com…"
+                  placeholder="yourname.com"
                   className={`h-9 w-full border-0 bg-[#f2f2f2] text-[13px] shadow-none focus-visible:ring-0   ${domainStatus ? 'pl-9 text-content-secondary' : ''}`}
                   disabled={!!domainStatus}
                 />
@@ -167,7 +167,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-colors hover:bg-surface-3"
+                  className="h-10 rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-colors hover:bg-surface-3"
                   onClick={handleDomainSave}
                   disabled={isVerifyingDomain || !customDomain}
                 >
@@ -178,7 +178,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 rounded-lg border-border-strong text-[13px] font-normal text-content-muted dark:text-content-muted"
+                    className="h-10 rounded-lg border-border-strong text-[13px] font-normal text-content-muted dark:text-content-muted"
                     disabled
                   >
                     Save
@@ -186,7 +186,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 rounded-lg border-border-strong text-[13px] font-normal text-content-muted hover:text-content-primary"
+                    className="h-10 rounded-lg border-border-strong text-[13px] font-normal text-content-muted hover:text-content-primary"
                     onClick={handleDomainRemove}
                     disabled={isVerifyingDomain}
                   >
@@ -247,7 +247,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                             {dnsValue}
                           </div>
                           <button
-                            className="text-[12px] font-medium opacity-60 transition-opacity hover:opacity-100"
+                            className="text-[12px] font-medium opacity-60 transition-opacity active:opacity-100 hover:underline-offset-4 hover:underline"
                             onClick={() => copyValue(dnsValue)}
                             aria-label="Copy DNS value"
                           >
