@@ -2,7 +2,7 @@ import { useState, UIEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { ExploreSort, useExplore } from '@/hooks/useExplore';
 import { X } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
 interface ExploreSidebarProps {
@@ -36,24 +36,24 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
     const diffInMonths = Math.floor(diffInDays / 30);
 
     if (diffInMinutes < 60) {
-      if (diffInMinutes <= 0) return 'Joined just now';
-      if (diffInMinutes === 1) return 'Joined a minute ago';
-      return `Joined ${diffInMinutes} minutes ago`;
+      if (diffInMinutes <= 0) return 'just now';
+      if (diffInMinutes === 1) return 'a minute ago';
+      return `${diffInMinutes} minutes ago`;
     }
     if (diffInHours < 24) {
-      if (diffInHours === 1) return 'Joined an hour ago';
-      return `Joined ${diffInHours} hours ago`;
+      if (diffInHours === 1) return 'an hour ago';
+      return `${diffInHours} hours ago`;
     }
     if (diffInDays <= 99) {
-      if (diffInDays === 1) return 'Joined a day ago';
-      return `Joined ${diffInDays} days ago`;
+      if (diffInDays === 1) return 'a day ago';
+      return `${diffInDays} days ago`;
     }
     if (diffInMonths < 12) {
-      if (diffInMonths <= 1) return 'Joined a month ago';
-      return `Joined ${diffInMonths} months ago`;
+      if (diffInMonths <= 1) return 'a month ago';
+      return `${diffInMonths} months ago`;
     }
     const diffInYears = Math.floor(diffInDays / 365);
-    return diffInYears === 1 ? 'Joined a year ago' : `Joined ${diffInYears} years ago`;
+    return diffInYears === 1 ? 'a year ago' : `${diffInYears} years ago`;
   };
 
   const tabs: { id: ExploreSort; label: string }[] = [
@@ -126,13 +126,25 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
             No results found
           </div>
         ) : (
-          <div className="flex flex-col">
-            {users?.map((user) => (
-              <button
-                key={user.username}
-                onClick={() => router.push(`/${user.username}`)}
-                className="flex items-start gap-3 rounded-[10px] px-3 py-3 text-left transition-colors hover:bg-surface-3/50"
-              >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={sort}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.30 }}
+                  className="flex flex-col"
+                >
+                  {users?.map((user) => (
+                    <button
+                      key={user.username}
+                      onClick={() => router.push(`/${user.username}`)}
+                      className={`flex items-start gap-3 px-3 text-left transition-colors hover:bg-surface-3/50 ${
+                        sort === 'activity'
+                          ? 'mb-3 border-b border-border-subtle pb-4 pt-3'
+                          : 'rounded-[10px] py-3'
+                      }`}
+                    >
                 <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-surface-3">
                   {user.customImage || user.userImage ? (
                     <Image
@@ -154,21 +166,35 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                   </span>
                   {sort === 'new' ? (
                     <span className="mt-0.5 line-clamp-1 text-[13px] leading-tight text-content-muted">
-                      {formatRelativeTime(user.createdAt)}
+                      Joined {formatRelativeTime(user.createdAt)}
                     </span>
-                  ) : user.shortAbout ? (
-                    <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
-                      {user.shortAbout}
-                    </span>
-                  ) : null}
+                  ) : sort === 'activity' ? (
+                    <>
+                      {user.shortAbout && (
+                        <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
+                          {user.shortAbout}
+                        </span>
+                      )}
+                      <span className="mt-1.5 text-[12px] text-content-muted/60">
+                        {formatRelativeTime(user.updatedAt)}
+                      </span>
+                    </>
+                  ) : (
+                    user.shortAbout && (
+                      <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
+                        {user.shortAbout}
+                      </span>
+                    )
+                  )}
                 </div>
-              </button>
-            ))}
-            {isFetchingNextPage && (
-              <div className="py-4 text-center text-[13px] text-content-muted">
-                Loading more...
-              </div>
-            )}
+                </button>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        )}
+        {isFetchingNextPage && (
+          <div className="py-4 text-center text-[13px] text-content-muted">
+            Loading more...
           </div>
         )}
       </div>
