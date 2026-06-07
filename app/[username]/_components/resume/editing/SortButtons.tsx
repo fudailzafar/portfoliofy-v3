@@ -30,6 +30,7 @@ export function SortButtons({
               <button
                 onClick={onMoveUp}
                 className="transition-colors hover:text-content-primary"
+                aria-label="Move item up"
               >
                 <ArrowUpToLine className="h-[15px] w-[15px]" />
               </button>
@@ -50,6 +51,7 @@ export function SortButtons({
               <button
                 onClick={onMoveDown}
                 className="transition-colors hover:text-content-primary"
+                aria-label="Move item down"
               >
                 <ArrowDownToLine className="h-[15px] w-[15px]" />
               </button>
