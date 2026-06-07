@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Upload, Download, HeartHandshake } from 'lucide-react';
+import { Upload, Download, HeartHandshake, ArrowUpRight } from 'lucide-react';
 import { sortByDateDesc } from '@/lib/resume';
 
 export function VolunteeringTab({
@@ -133,9 +133,27 @@ export function VolunteeringTab({
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <p className="text-base font-semibold text-content-primary">
-                      {v.role} at {v.organization}
-                    </p>
+                    {v.link ? (
+                      <a
+                        href={
+                          v.link.startsWith('http')
+                            ? v.link
+                            : `https://${v.link}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block hover:underline"
+                      >
+                        <span className="text-base font-semibold text-content-primary">
+                          {v.role} at {v.organization}
+                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                        </span>
+                      </a>
+                    ) : (
+                      <p className="text-base font-semibold text-content-primary">
+                        {v.role} at {v.organization}
+                      </p>
+                    )}
                     {v.location && (
                       <p className="mt-0.5 text-sm text-content-muted">
                         {v.location}

@@ -10,7 +10,7 @@ import { useTabEditor } from '@/hooks/useTabEditor';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, Upload, Download } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -18,13 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { sortByDateDesc } from '@/lib/resume';
+import { RichTextEditor } from '@/components/composite/RichTextEditor';
 
 export function EducationTab({
   years,
@@ -88,6 +83,7 @@ export function EducationTab({
             start: currentYear.toString(),
             end: 'Now',
             location: '',
+            description: '',
           });
           setEduView('form');
         }}
@@ -141,6 +137,14 @@ export function EducationTab({
                       <p className="mt-1 text-sm text-content-muted">
                         {edu.location}
                       </p>
+                    )}
+                    {edu.description && edu.description !== '<p></p>' && (
+                      <div
+                        className="prose prose-sm mt-1 max-w-none text-sm text-content-muted"
+                        dangerouslySetInnerHTML={{
+                          __html: edu.description,
+                        }}
+                      />
                     )}
                     <EditDeleteButtons
                       onEdit={() => {
@@ -248,6 +252,19 @@ export function EducationTab({
                 placeholder="Providence, RI"
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-content-secondary">Description</Label>
+            <RichTextEditor
+              content={currentEdu.description || ''}
+              onChange={(val) =>
+                setCurrentEdu({
+                  ...currentEdu,
+                  description: val,
+                })
+              }
+            />
           </div>
 
           <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-border-subtle bg-surface-1 p-4 md:px-8">

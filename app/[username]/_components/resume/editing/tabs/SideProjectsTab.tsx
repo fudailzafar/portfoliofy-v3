@@ -16,7 +16,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { FolderCode, Upload, Download } from 'lucide-react';
+import { FolderCode, Upload, Download, Sparkles, ArrowUpRight } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -136,9 +136,27 @@ export function SideProjectsTab({
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <p className="text-base font-semibold text-content-primary">
-                      {project.title}
-                    </p>
+                    {project.link ? (
+                      <a
+                        href={
+                          project.link.startsWith('http')
+                            ? project.link
+                            : `https://${project.link}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block hover:underline"
+                      >
+                        <span className="text-base font-semibold text-content-primary">
+                          {project.title}
+                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                        </span>
+                      </a>
+                    ) : (
+                      <p className="text-base font-semibold text-content-primary">
+                        {project.title}
+                      </p>
+                    )}
 
                     {project.description &&
                       project.description !== '<p></p>' && (

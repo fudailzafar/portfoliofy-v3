@@ -16,7 +16,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { FolderCode } from 'lucide-react';
+import { FolderCode, ArrowUpRight } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -136,10 +136,29 @@ export function FeaturesTab({
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <p className="text-base font-semibold text-content-primary">
-                      {feature.title}
-                      {feature.location ? ` on ${feature.location}` : ''}
-                    </p>
+                    {feature.link ? (
+                      <a
+                        href={
+                          feature.link.startsWith('http')
+                            ? feature.link
+                            : `https://${feature.link}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block hover:underline"
+                      >
+                        <span className="text-base font-semibold text-content-primary">
+                          {feature.title}
+                          {feature.location ? ` on ${feature.location}` : ''}
+                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                        </span>
+                      </a>
+                    ) : (
+                      <p className="text-base font-semibold text-content-primary">
+                        {feature.title}
+                        {feature.location ? ` on ${feature.location}` : ''}
+                      </p>
+                    )}
 
                     {feature.description &&
                       feature.description !== '<p></p>' && (
@@ -177,7 +196,7 @@ export function FeaturesTab({
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Title*</Label>
+              <Label className="text-xs text-content-secondary">Thing done*</Label>
               <Input
                 value={currentFeature.title}
                 onChange={(e) =>
@@ -186,11 +205,11 @@ export function FeaturesTab({
                     title: e.target.value,
                   })
                 }
-                placeholder="Pattern on Hypebeast"
+                placeholder="Podcast, interview, article, etc"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Location</Label>
+              <Label className="text-xs text-content-secondary">Where*</Label>
               <Input
                 value={currentFeature.location || ''}
                 onChange={(e) =>
@@ -199,7 +218,7 @@ export function FeaturesTab({
                     location: e.target.value,
                   })
                 }
-                placeholder="New York, NY"
+                placeholder="New York Times, Awwwards, ProductHunt, etc"
               />
             </div>
 
@@ -216,7 +235,7 @@ export function FeaturesTab({
                     link: e.target.value,
                   })
                 }
-                placeholder="https://hypebeast.com/pattern"
+                placeholder="https://example.com"
               />
             </div>
             <div className="space-y-2">

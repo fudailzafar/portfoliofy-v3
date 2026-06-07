@@ -17,6 +17,7 @@ const RichTextEditor = dynamic(
   { ssr: false },
 );
 import { FolderCode } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -136,15 +137,39 @@ export function ProjectsTab({
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <p className="text-base font-semibold text-content-primary">
-                      {project.title}
-                      {project.company && (
-                        <span className="font-normal text-content-primary">
-                          {' '}
-                          at {project.company}
+                    {project.link ? (
+                      <a
+                        href={
+                          project.link.startsWith('http')
+                            ? project.link
+                            : `https://${project.link}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block hover:underline"
+                      >
+                        <span className="text-base font-semibold text-content-primary">
+                          {project.title}
+                          {project.company && (
+                            <span className="font-normal text-content-primary">
+                              {' '}
+                              at {project.company}
+                            </span>
+                          )}
+                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                         </span>
-                      )}
-                    </p>
+                      </a>
+                    ) : (
+                      <p className="text-base font-semibold text-content-primary">
+                        {project.title}
+                        {project.company && (
+                          <span className="font-normal text-content-primary">
+                            {' '}
+                            at {project.company}
+                          </span>
+                        )}
+                      </p>
+                    )}
 
                     {project.description &&
                       project.description !== '<p></p>' && (
