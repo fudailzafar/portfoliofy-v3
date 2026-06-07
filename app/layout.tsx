@@ -80,6 +80,11 @@ export const metadata: Metadata = {
   verification: {
     google: 'QgVm-W9_sWA8B47coaItOUCg-3pX84KbM2wEtP9Jpm4',
   },
+  appleWebApp: {
+    capable: true,
+    title: 'Portfoliofy',
+    statusBarStyle: 'default',
+  },
 };
 
 export const viewport: Viewport = {

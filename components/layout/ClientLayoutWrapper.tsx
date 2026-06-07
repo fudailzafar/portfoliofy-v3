@@ -20,6 +20,14 @@ export function ClientLayoutWrapper({
   const pathname = usePathname();
 
   useEffect(() => {
+    if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
+      navigator.serviceWorker.register('/sw.js').catch((err) => {
+        console.error('Service Worker registration failed:', err);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Listen for Cmd+E or Ctrl+E
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'e') {
