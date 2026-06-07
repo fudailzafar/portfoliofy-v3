@@ -55,6 +55,15 @@ export function Education({
                   {edu.location}
                 </p>
               )}
+
+              {edu.description && edu.description !== '<p></p>' && (
+                <div
+                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-1 max-w-none text-sm leading-relaxed text-content-muted"
+                  dangerouslySetInnerHTML={{
+                    __html: edu.description,
+                  }}
+                />
+              )}
             </div>
           </div>
         ))}
