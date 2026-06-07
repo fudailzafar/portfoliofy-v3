@@ -145,19 +145,19 @@ export function SpeakingTab({
                         rel="noopener noreferrer"
                         className="inline-block hover:underline"
                       >
-                        <span className="text-base font-semibold text-content-primary">
+                        <span className="text-sm font-semibold text-content-primary">
                           {engagement.title}
                           <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                         </span>
                       </a>
                     ) : (
-                      <p className="text-base font-semibold text-content-primary">
+                      <p className="text-sm font-semibold text-content-primary">
                         {engagement.title}
                       </p>
                     )}
 
                     {engagement.location && (
-                      <div className="mt-1 line-clamp-2 text-sm text-content-muted">
+                      <div className="mt-1 text-sm text-content-muted">
                         {engagement.location}
                       </div>
                     )}

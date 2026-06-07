@@ -147,14 +147,14 @@ export function FeaturesTab({
                         rel="noopener noreferrer"
                         className="inline-block hover:underline"
                       >
-                        <span className="text-base font-semibold text-content-primary">
+                        <span className="text-sm font-semibold text-content-primary">
                           {feature.title}
                           {feature.location ? ` on ${feature.location}` : ''}
                           <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                         </span>
                       </a>
                     ) : (
-                      <p className="text-base font-semibold text-content-primary">
+                      <p className="text-sm font-semibold text-content-primary">
                         {feature.title}
                         {feature.location ? ` on ${feature.location}` : ''}
                       </p>
@@ -163,7 +163,7 @@ export function FeaturesTab({
                     {feature.description &&
                       feature.description !== '<p></p>' && (
                         <div
-                          className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-1 max-w-none text-sm leading-relaxed text-content-muted"
+                          className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
                           dangerouslySetInnerHTML={{
                             __html: feature.description,
                           }}

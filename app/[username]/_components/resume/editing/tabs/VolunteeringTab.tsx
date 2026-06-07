@@ -144,18 +144,18 @@ export function VolunteeringTab({
                         rel="noopener noreferrer"
                         className="inline-block hover:underline"
                       >
-                        <span className="text-base font-semibold text-content-primary">
+                        <span className="text-sm font-semibold text-content-primary">
                           {v.role} at {v.organization}
                           <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                         </span>
                       </a>
                     ) : (
-                      <p className="text-base font-semibold text-content-primary">
+                      <p className="text-sm font-semibold text-content-primary">
                         {v.role} at {v.organization}
                       </p>
                     )}
                     {v.location && (
-                      <p className="mt-0.5 text-sm text-content-muted">
+                      <p className="mt-1 text-sm text-content-muted">
                         {v.location}
                       </p>
                     )}
