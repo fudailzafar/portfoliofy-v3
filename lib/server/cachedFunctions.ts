@@ -1,6 +1,7 @@
 import { getResume, getUserIdByUsername } from '@/lib/server/dbActions';
 import sql from '@/lib/server/db';
 import { unstable_cache } from 'next/cache';
+import { cache } from 'react';
 
 export interface UserProfile {
   name: string | null;
@@ -10,7 +11,7 @@ export interface UserProfile {
   avatarUrl?: string | null;
 }
 
-export const getCachedUserProfile = async (
+export const getCachedUserProfile = cache(async (
   userId: string,
 ): Promise<UserProfile | null> => {
   return unstable_cache(
@@ -40,9 +41,9 @@ export const getCachedUserProfile = async (
       revalidate: 86400, // 1 day
     },
   )();
-};
+});
 
-export const getCachedResume = async (userId: string) => {
+export const getCachedResume = cache(async (userId: string) => {
   return unstable_cache(
     async () => {
       return await getResume(userId);
@@ -53,9 +54,9 @@ export const getCachedResume = async (userId: string) => {
       revalidate: 86400, // 1 day
     },
   )();
-};
+});
 
-export const getCachedUserIdByUsername = async (
+export const getCachedUserIdByUsername = cache(async (
   username: string,
 ): Promise<string | null> => {
   return unstable_cache(
@@ -68,4 +69,4 @@ export const getCachedUserIdByUsername = async (
       revalidate: 86400, // 1 day
     },
   )();
-};
+});
