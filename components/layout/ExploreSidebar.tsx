@@ -22,16 +22,17 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col border-r border-border-strong bg-surface-1">
-      <div className="mx-4 flex flex-col gap-4 border-b border-border-strong pt-6">
+    <div className="flex h-full w-[330px] flex-col border-r border-border-strong bg-surface-1">
+      <div className="mx-4 flex flex-col gap-4 border-b border-border-strong pt-8">
         <div className="flex items-center gap-3">
           <div className="relative flex-1">
             <input
               type="text"
+              autoFocus
               placeholder="Explore people..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full rounded-full bg-surface-3 px-4 py-2 text-[14px] text-content-primary outline-none transition-all placeholder:text-content-muted"
+              className="h-10 w-full rounded-full bg-surface-2 px-4 text-[14px] text-content-primary outline-none transition-all placeholder:text-content-muted focus:bg-surface-3"
             />
             {query && (
               <button
