@@ -103,6 +103,10 @@ const EducationSection = z.array(
     start: z.string().describe('Start year'),
     end: z.string().describe('End year'),
     location: z.string().optional().describe('Location of the school'),
+    description: z
+      .string()
+      .optional()
+      .describe('Rich text description of education'),
   }),
 );
 
