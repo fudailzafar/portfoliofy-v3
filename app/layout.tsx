@@ -161,7 +161,7 @@ export default function RootLayout({
           <body className="flex min-h-screen flex-col font-sans antialiased">
             <ThemeProvider
               attribute="class"
-              defaultTheme="light"
+              defaultTheme="system"
               enableSystem
             >
               <main className="flex flex-1 flex-col">
