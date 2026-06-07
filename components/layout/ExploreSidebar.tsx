@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, UIEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { ExploreSort, useExplore } from '@/hooks/useExplore';
 import { X } from 'lucide-react';
@@ -14,7 +14,47 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<ExploreSort>('activity');
 
-  const { data: users, isLoading } = useExplore(query, sort);
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useExplore(query, sort);
+
+  const users = data?.pages.flatMap((page) => page.users) || [];
+
+  const handleScroll = (e: UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop <= clientHeight * 1.5) {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    }
+  };
+
+  const formatRelativeTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const diffInSeconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+    const diffInMonths = Math.floor(diffInDays / 30);
+
+    if (diffInMinutes < 60) {
+      if (diffInMinutes <= 0) return 'Joined just now';
+      if (diffInMinutes === 1) return 'Joined a minute ago';
+      return `Joined ${diffInMinutes} minutes ago`;
+    }
+    if (diffInHours < 24) {
+      if (diffInHours === 1) return 'Joined an hour ago';
+      return `Joined ${diffInHours} hours ago`;
+    }
+    if (diffInDays <= 99) {
+      if (diffInDays === 1) return 'Joined a day ago';
+      return `Joined ${diffInDays} days ago`;
+    }
+    if (diffInMonths < 12) {
+      if (diffInMonths <= 1) return 'Joined a month ago';
+      return `Joined ${diffInMonths} months ago`;
+    }
+    const diffInYears = Math.floor(diffInDays / 365);
+    return diffInYears === 1 ? 'Joined a year ago' : `Joined ${diffInYears} years ago`;
+  };
 
   const tabs: { id: ExploreSort; label: string }[] = [
     { id: 'activity', label: 'Activity' },
@@ -73,7 +113,10 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-2 py-2">
+      <div 
+        className="flex-1 overflow-y-auto px-2 py-2"
+        onScroll={handleScroll}
+      >
         {isLoading ? (
           <div className="p-4 text-center text-[13px] text-content-muted">
             Loading...
@@ -109,14 +152,23 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                   <span className="text-[14px] font-medium text-content-primary">
                     {user.name || user.username}
                   </span>
-                  {user.shortAbout && (
+                  {sort === 'new' ? (
+                    <span className="mt-0.5 line-clamp-1 text-[13px] leading-tight text-content-muted">
+                      {formatRelativeTime(user.createdAt)}
+                    </span>
+                  ) : user.shortAbout ? (
                     <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
                       {user.shortAbout}
                     </span>
-                  )}
+                  ) : null}
                 </div>
               </button>
             ))}
+            {isFetchingNextPage && (
+              <div className="py-4 text-center text-[13px] text-content-muted">
+                Loading more...
+              </div>
+            )}
           </div>
         )}
       </div>
