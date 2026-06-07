@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
@@ -74,6 +74,7 @@ export function FeaturesTab({
   };
 
   const currentYear = new Date().getFullYear();
+  const sortedFeatures = useMemo(() => sortByDateDesc(features), [features]);
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
@@ -112,7 +113,7 @@ export function FeaturesTab({
 
       {featuresView === 'list' && features.length > 0 && (
         <div className="space-y-8">
-          {sortByDateDesc(features).map(
+          {sortedFeatures.map(
             (feature: any, index: number, sortedArray: any[]) => {
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
               const canMoveUp =
