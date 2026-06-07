@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { ExploreSort, useExplore } from '@/hooks/useExplore';
 import { X } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 interface ExploreSidebarProps {
   onClose: () => void;
@@ -89,13 +90,14 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                 onClick={() => router.push(`/${user.username}`)}
                 className="flex items-start gap-3 rounded-[10px] px-3 py-3 text-left transition-colors hover:bg-surface-3/50"
               >
-                <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-surface-3">
+                <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-surface-3">
                   {user.customImage || user.userImage ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img
+                    <Image
                       src={user.customImage || user.userImage!}
                       alt={user.name || user.username}
-                      className="h-full w-full object-cover"
+                      fill
+                      sizes="40px"
+                      className="object-cover"
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-surface-3 text-[14px] font-medium text-content-secondary">
