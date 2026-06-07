@@ -6,15 +6,30 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const q = searchParams.get('q') || '';
     const sort = searchParams.get('sort') || 'activity';
+    const cursor = searchParams.get('cursor');
 
     let orderBy = sql`r.updated_at DESC`;
+    let cursorCondition = sql``;
+
     if (sort === 'new') {
       orderBy = sql`u.created_at DESC`;
+      if (cursor) {
+        cursorCondition = sql`AND u.created_at < ${cursor}`;
+      }
     } else if (sort === 'a-z') {
       orderBy = sql`LOWER(((r.resume_data#>>'{}')::jsonb)->'header'->>'name') ASC`;
+      if (cursor) {
+        cursorCondition = sql`AND LOWER(((r.resume_data#>>'{}')::jsonb)->'header'->>'name') > ${cursor}`;
+      }
+    } else {
+      // default 'activity'
+      if (cursor) {
+        cursorCondition = sql`AND r.updated_at < ${cursor}`;
+      }
     }
 
     const searchQuery = `%${q}%`;
+    const limit = 20;
 
     const users = await sql`
       SELECT 
@@ -33,11 +48,27 @@ export async function GET(request: Request) {
           OR (((r.resume_data#>>'{}')::jsonb)->'header'->>'name') ILIKE ${searchQuery}
           OR (((r.resume_data#>>'{}')::jsonb)->'header'->>'shortAbout') ILIKE ${searchQuery}
         )
+        ${cursorCondition}
       ORDER BY ${orderBy}
-      LIMIT 50
+      LIMIT ${limit + 1}
     `;
 
-    return NextResponse.json({ users });
+    const hasNextPage = users.length > limit;
+    const results = hasNextPage ? users.slice(0, -1) : users;
+
+    let nextCursor = null;
+    if (hasNextPage) {
+      const lastItem = results[results.length - 1];
+      if (sort === 'new') {
+        nextCursor = lastItem.createdAt;
+      } else if (sort === 'a-z') {
+        nextCursor = lastItem.name?.toLowerCase();
+      } else {
+        nextCursor = lastItem.updatedAt;
+      }
+    }
+
+    return NextResponse.json({ users: results, nextCursor });
   } catch (error) {
     console.error('Error fetching explore data:', error);
     return NextResponse.json(
