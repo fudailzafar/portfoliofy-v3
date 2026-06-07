@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
 
 export type ExploreUser = {
@@ -17,12 +17,13 @@ export function useExplore(query: string, sort: ExploreSort) {
   // Debounce the query to avoid spamming the API while typing
   const [debouncedQuery] = useDebounce(query, 300);
 
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['explore', debouncedQuery, sort],
-    queryFn: async () => {
+    queryFn: async ({ pageParam }) => {
       const params = new URLSearchParams();
       if (debouncedQuery) params.set('q', debouncedQuery);
       if (sort) params.set('sort', sort);
+      if (pageParam) params.set('cursor', pageParam as string);
 
       const response = await fetch(`/api/explore?${params.toString()}`);
       if (!response.ok) {
@@ -30,7 +31,12 @@ export function useExplore(query: string, sort: ExploreSort) {
       }
 
       const data = await response.json();
-      return data.users as ExploreUser[];
+      return {
+        users: data.users as ExploreUser[],
+        nextCursor: data.nextCursor as string | null,
+      };
     },
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
 }
