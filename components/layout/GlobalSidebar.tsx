@@ -42,10 +42,10 @@ export function GlobalSidebar() {
   return (
     <>
       <div className="flex h-full w-[330px] flex-col border-r border-border-strong px-4 py-6 bg-surface-1">
-        <div className="mt-2 flex-1 pr-4">
+        <div className="mt-2 flex-1">
           <div
             onClick={() => setIsExploreMode(true)}
-            className="flex cursor-pointer items-center justify-between rounded-full bg-surface-2 px-4 py-2.5 transition-all hover:bg-surface-3"
+            className="flex h-10 cursor-pointer items-center justify-between rounded-full bg-surface-2 px-4 transition-all hover:bg-surface-3"
           >
             <span className="text-[14px] text-content-muted">Explore</span>
             <span className="font-sans text-[12px] not-italic tracking-[0.2em] text-content-muted dark:text-content-muted">
