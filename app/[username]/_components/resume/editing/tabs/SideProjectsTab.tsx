@@ -147,13 +147,13 @@ export function SideProjectsTab({
                         rel="noopener noreferrer"
                         className="inline-block hover:underline"
                       >
-                        <span className="text-base font-semibold text-content-primary">
+                        <span className="text-sm font-semibold text-content-primary">
                           {project.title}
                           <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                         </span>
                       </a>
                     ) : (
-                      <p className="text-base font-semibold text-content-primary">
+                      <p className="text-sm font-semibold text-content-primary">
                         {project.title}
                       </p>
                     )}
@@ -161,7 +161,7 @@ export function SideProjectsTab({
                     {project.description &&
                       project.description !== '<p></p>' && (
                         <div
-                          className="mt-1 line-clamp-2 text-sm text-content-muted"
+                          className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
                           dangerouslySetInnerHTML={{
                             __html: project.description,
                           }}
