@@ -20,7 +20,15 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { sortByDateDesc } from '@/lib/resume';
-import { RichTextEditor } from '@/components/composite/RichTextEditor';
+import dynamic from 'next/dynamic';
+
+const RichTextEditor = dynamic(
+  () =>
+    import('@/components/composite/RichTextEditor').then(
+      (mod) => mod.RichTextEditor,
+    ),
+  { ssr: false },
+);
 
 export function EducationTab({
   years,
