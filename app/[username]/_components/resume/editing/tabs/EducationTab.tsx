@@ -170,7 +170,7 @@ export function EducationTab({
       )}
 
       {eduView === 'form' && currentEdu && (
-        <div className="space-y-6">
+        <div className="space-y-6 pb-24">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">School*</Label>
@@ -231,7 +231,7 @@ export function EducationTab({
                   <SelectValue placeholder="Year" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Present">Present</SelectItem>
+                  <SelectItem value="Now">Now</SelectItem>
                   {years.map((y) => (
                     <SelectItem key={y} value={y.toString()}>
                       {y}
@@ -271,7 +271,7 @@ export function EducationTab({
           <TabFormActions
             onCancel={() => setEduView('list')}
             onSave={handleSave}
-            isSaveDisabled={!currentEdu?.school || !currentEdu?.degree || !currentEdu?.startYear || !currentEdu?.endYear}
+            isSaveDisabled={!currentEdu?.school || !currentEdu?.degree || !currentEdu?.end}
           />
         </div>
       )}

@@ -163,7 +163,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                     )}
                   </div>
                   {sort === 'activity' && user.statusEmoji && (
-                    <div className="absolute -bottom-1 -right-2 z-10 flex h-[18px] w-6 items-center justify-center rounded-full border-[1.5px] border-surface-1 bg-surface-2 shadow-sm">
+                    <div className="absolute -bottom-1 -right-2 z-10 flex h-[18px] w-6 items-center justify-center rounded-full border-[1px] border-border-strong bg-surface-1 shadow-sm">
                       <Twemoji 
                         tag="span" 
                         className="flex items-center justify-center leading-none text-[9px]" 
