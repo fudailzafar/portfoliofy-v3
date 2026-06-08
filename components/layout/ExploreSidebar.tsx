@@ -4,6 +4,7 @@ import { ExploreSort, useExplore } from '@/hooks/useExplore';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import Twemoji from 'react-twemoji';
 
 interface ExploreSidebarProps {
   onClose: () => void;
@@ -145,18 +146,31 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                           : 'rounded-[10px] py-3'
                       }`}
                     >
-                <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-surface-3">
-                  {user.customImage || user.userImage ? (
-                    <Image
-                      src={user.customImage || user.userImage!}
-                      alt={user.name || user.username}
-                      fill
-                      sizes="40px"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-surface-3 text-[14px] font-medium text-content-secondary">
-                      {(user.name || user.username).charAt(0).toUpperCase()}
+                <div className="relative h-10 w-10 shrink-0">
+                  <div className="relative h-full w-full overflow-hidden rounded-full bg-surface-3">
+                    {user.customImage || user.userImage ? (
+                      <Image
+                        src={user.customImage || user.userImage!}
+                        alt={user.name || user.username}
+                        fill
+                        sizes="40px"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-surface-3 text-[14px] font-medium text-content-secondary">
+                        {(user.name || user.username).charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  {sort === 'activity' && user.statusEmoji && (
+                    <div className="absolute -bottom-1 -right-2 z-10 flex h-[18px] w-6 items-center justify-center rounded-full border-[1.5px] border-surface-1 bg-surface-2 shadow-sm">
+                      <Twemoji 
+                        tag="span" 
+                        className="flex items-center justify-center leading-none text-[9px]" 
+                        options={{ className: 'h-[1.2em] w-[1.2em]' }}
+                      >
+                        {user.statusEmoji}
+                      </Twemoji>
                     </div>
                   )}
                 </div>
@@ -170,13 +184,13 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                     </span>
                   ) : sort === 'activity' ? (
                     <>
-                      {user.shortAbout && (
+                      {user.statusText && (
                         <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
-                          {user.shortAbout}
+                          {user.statusText}
                         </span>
                       )}
                       <span className="mt-1.5 text-[12px] text-content-muted/60">
-                        {formatRelativeTime(user.updatedAt)}
+                        {user.statusUpdatedAt ? formatRelativeTime(user.statusUpdatedAt) : formatRelativeTime(user.updatedAt)}
                       </span>
                     </>
                   ) : (
