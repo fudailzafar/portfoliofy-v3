@@ -27,6 +27,11 @@ export function StatusEditor({
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
+      // Ignore clicks on the toggle button itself so we don't conflict with its onClick
+      if ((e.target as Element).closest('#status-toggle-btn')) {
+        return;
+      }
+
       // Close emoji picker if clicked outside of it
       if (
         showEmojiPicker &&

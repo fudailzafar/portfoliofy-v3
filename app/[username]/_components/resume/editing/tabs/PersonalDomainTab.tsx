@@ -102,7 +102,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
           }
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-8 items-center justify-center rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-colors hover:bg-surface-3"
+          className="inline-flex h-8 items-center justify-center rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-colors active:bg-surface-3"
         >
           Visit site
         </a>

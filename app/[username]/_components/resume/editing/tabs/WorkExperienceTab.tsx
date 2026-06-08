@@ -104,7 +104,7 @@ export function WorkExperienceTab({
             startMonth: '',
             start: currentYear.toString(),
             endMonth: '',
-            end: 'Present',
+            end: 'Now',
             location: '',
             link: '',
             contract: '',
@@ -126,7 +126,7 @@ export function WorkExperienceTab({
               startMonth: '',
               start: currentYear.toString(),
               endMonth: '',
-              end: 'Present',
+              end: 'Now',
               location: '',
               link: '',
               contract: '',
@@ -294,7 +294,7 @@ export function WorkExperienceTab({
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">End Date*</Label>
               <div className="flex gap-2">
-                {currentWork.end !== 'Present' && (
+                {currentWork.end !== 'Now' && (
                   <Select
                     value={currentWork.endMonth || ''}
                     onValueChange={(val) =>
@@ -326,7 +326,7 @@ export function WorkExperienceTab({
                     <SelectValue placeholder="Year" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Present">Present</SelectItem>
+                    <SelectItem value="Now">Now</SelectItem>
                     {years.map((y) => (
                       <SelectItem key={y} value={y.toString()}>
                         {y}

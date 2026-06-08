@@ -72,8 +72,9 @@ export function Header({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
-                    onClick={() => setIsEditingStatus(true)}
-                    className="absolute -bottom-1 -right-2 flex h-7 w-9 items-center justify-center rounded-full border-2 border-surface-1 bg-surface-2 text-sm shadow-sm transition-transform hover:scale-110 hover:bg-surface-3"
+                    id="status-toggle-btn"
+                    onClick={() => setIsEditingStatus((prev) => !prev)}
+                    className="absolute -bottom-1 -right-2 flex h-7 w-10 items-center justify-center rounded-full border-[1px] border-border-strong bg-surface-1 text-sm shadow-md transition-transform"
                   >
                     <Twemoji 
                       tag="span" 
