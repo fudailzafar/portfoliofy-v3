@@ -58,8 +58,13 @@ export function WorkExperienceTab({
     setCurrent: setCurrentWork,
   } = useTabEditor<any>();
 
+  const work = useMemo(
+    () => resume?.workExperience || [],
+    [resume?.workExperience],
+  );
+  const sortedWork = useMemo(() => sortByDateDesc(work), [work]);
+
   if (!resume) return null;
-  const work = resume.workExperience || [];
 
   const handleSave = () => {
     if (!currentWork?.title || !currentWork?.company) return;
@@ -90,7 +95,6 @@ export function WorkExperienceTab({
   };
 
   const currentYear = new Date().getFullYear();
-  const sortedWork = useMemo(() => sortByDateDesc(work), [work]);
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col pb-24">

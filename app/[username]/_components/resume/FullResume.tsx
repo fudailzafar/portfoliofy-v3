@@ -28,11 +28,7 @@ export const FullResume = ({
   isOwner?: boolean;
   userProfile?: UserProfile;
 }) => {
-  if (!resume) {
-    return <LoadingFallback message="Loading Resume..." />;
-  }
-
-  const order = resume.sectionOrder || DEFAULT_SECTION_ORDER;
+  const order = resume?.sectionOrder || DEFAULT_SECTION_ORDER;
 
   const sortedWork = useMemo(
     () => sortByDateDesc(resume?.workExperience),
@@ -66,6 +62,10 @@ export const FullResume = ({
     () => sortByDateDesc(resume?.awards),
     [resume?.awards],
   );
+
+  if (!resume) {
+    return <LoadingFallback message="Loading Resume..." />;
+  }
 
   return (
     <section
