@@ -22,8 +22,10 @@ export function LiveResumeWrapper({
   // Otherwise, fallback to the server-fetched initial resume.
   const displayResume = isOwner && storeResume ? storeResume : initialResume;
 
-  const typography = displayResume?.design?.typography || 'sans';
-  const theme = displayResume?.design?.theme || 'default';
+  if (!displayResume) return null;
+
+  const typography = displayResume.design?.typography || 'sans';
+  const theme = displayResume.design?.theme || 'default';
   const fontClass =
     typography === 'serif'
       ? 'font-serif'
