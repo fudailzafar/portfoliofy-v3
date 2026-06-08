@@ -42,6 +42,7 @@ const TAB_DEFINITIONS: Record<string, { label: string; disabled: boolean }> = {
   education: { label: 'Education', disabled: false },
   contact: { label: 'Contact', disabled: false },
   awards: { label: 'Awards', disabled: false },
+  certifications: { label: 'Certifications', disabled: false },
   volunteering: { label: 'Volunteering', disabled: false },
   features: { label: 'Features', disabled: false },
   print: { label: 'Print', disabled: false },
@@ -56,6 +57,7 @@ type DeleteTarget =
   | { type: 'education'; id: string }
   | { type: 'work'; id: string }
   | { type: 'award'; id: string }
+  | { type: 'certification'; id: string }
   | { type: 'contact'; id: string };
 
 const DELETE_DESCRIPTIONS: Record<DeleteTarget['type'], string> = {
@@ -74,6 +76,8 @@ const DELETE_DESCRIPTIONS: Record<DeleteTarget['type'], string> = {
     'This will permanently delete this feature. This action cannot be undone.',
   award:
     'This will permanently delete this award. This action cannot be undone.',
+  certification:
+    'This will permanently delete this certification. This action cannot be undone.',
   education:
     'This will permanently delete this education entry. This action cannot be undone.',
 };
@@ -145,10 +149,14 @@ export function EditProfileDialog({
     };
   }, [uname, isInitialUsername, checkUsernameMutation]);
 
-  // Section order — normalise legacy ids on first load only
-  const [sectionOrder, setSectionOrder] = useState<string[]>(
-    () => resume.sectionOrder || DEFAULT_SECTION_ORDER,
-  );
+  const [sectionOrder, setSectionOrder] = useState<string[]>(() => {
+    const existingOrder = resume.sectionOrder || DEFAULT_SECTION_ORDER;
+    // Ensure any newly added sections (like certifications) are appended to legacy users' arrays
+    const missingSections = DEFAULT_SECTION_ORDER.filter(
+      (section) => !existingOrder.includes(section),
+    );
+    return [...existingOrder, ...missingSections];
+  });
 
   // Years list — stable; only computed once
   const years = useMemo(() => {
@@ -199,6 +207,10 @@ export function EditProfileDialog({
   );
   const setDeleteAward = useMemo(
     () => makeDeleteSetter('award'),
+    [makeDeleteSetter],
+  );
+  const setDeleteCertification = useMemo(
+    () => makeDeleteSetter('certification'),
     [makeDeleteSetter],
   );
   const setDeleteContact = useMemo(
@@ -261,6 +273,12 @@ export function EditProfileDialog({
         const s = useResumeStore.getState();
         s.updateResume({
           awards: s.resume?.awards?.filter((p: any) => p.id !== id),
+        });
+      },
+      certification: (id) => {
+        const s = useResumeStore.getState();
+        s.updateResume({
+          certifications: s.resume?.certifications?.filter((p: any) => p.id !== id),
         });
       },
       education: (id) => {
@@ -500,6 +518,7 @@ export function EditProfileDialog({
                 volunteering: setDeleteVolunteering,
                 feature: setDeleteFeature,
                 award: setDeleteAward,
+                certification: setDeleteCertification,
                 contact: setDeleteContact,
               };
               return handlers[type]?.(id);
