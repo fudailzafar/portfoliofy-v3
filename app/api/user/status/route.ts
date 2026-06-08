@@ -25,6 +25,7 @@ export async function PUT(req: Request) {
       WHERE id = ${userId}
     `;
 
+    // @ts-expect-error Next.js 16 Canary types require second profile argument
     revalidateTag('users');
 
     return NextResponse.json({ success: true });
