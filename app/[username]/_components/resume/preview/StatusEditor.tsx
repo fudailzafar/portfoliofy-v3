@@ -168,25 +168,24 @@ export function StatusEditor({
             />
 
             <div className="flex items-center justify-end gap-2 pt-2">
-              <Button
-                variant="ghost"
-                size="sm"
+              <button
                 onClick={onClose}
-                className="text-content-secondary"
+                className="px-4 text-[14px] font-medium text-content-primary hover:underline hover:underline-offset-2"
               >
                 Cancel
-              </Button>
+              </button>
               {!text.trim() ? (
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handleClear}
-                  className="text-content-secondary"
+                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
                 >
                   Clear status
                 </Button>
               ) : (
-                <Button size="sm" onClick={handleSave}>
+                <Button size="sm" onClick={handleSave} variant="outline"
+                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm">
                   Set status
                 </Button>
               )}
