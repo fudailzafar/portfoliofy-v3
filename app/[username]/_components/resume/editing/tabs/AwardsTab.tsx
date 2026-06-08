@@ -4,6 +4,7 @@ import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { TabHeader } from '../TabHeader';
+import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -277,22 +278,11 @@ export function AwardsTab({
             />
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-end gap-3 border-t border-border-subtle bg-surface-1 p-4 md:px-8">
-            <button
-              onClick={() => setAwardsView('list')}
-              className="px-4 text-[14px] font-medium text-content-primary hover:underline hover:underline-offset-2"
-            >
-              Cancel
-            </button>
-            <Button
-              onClick={handleSave}
-              disabled={!currentAward?.title || !currentAward?.year || !currentAward?.issuer}
-              variant="outline"
-              className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
-            >
-              Save
-            </Button>
-          </div>
+          <TabFormActions
+            onCancel={() => setAwardsView('list')}
+            onSave={handleSave}
+            isSaveDisabled={!currentAward?.title || !currentAward?.year || !currentAward?.issuer}
+          />
         </div>
       )}
     </div>
