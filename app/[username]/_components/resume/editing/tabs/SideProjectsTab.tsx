@@ -17,7 +17,13 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { FolderCode, Upload, Download, Sparkles, ArrowUpRight } from 'lucide-react';
+import {
+  FolderCode,
+  Upload,
+  Download,
+  Sparkles,
+  ArrowUpRight,
+} from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -77,7 +83,10 @@ export function SideProjectsTab({
   };
 
   const currentYear = new Date().getFullYear();
-  const sortedSideProjects = useMemo(() => sortByDateDesc(sideProjects), [sideProjects]);
+  const sortedSideProjects = useMemo(
+    () => sortByDateDesc(sideProjects),
+    [sideProjects],
+  );
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
@@ -251,7 +260,9 @@ export function SideProjectsTab({
           </div>
 
           <div className="space-y-2 pt-2">
-            <Label className="text-xs text-content-secondary">Description</Label>
+            <Label className="text-xs text-content-secondary">
+              Description
+            </Label>
             <RichTextEditor
               content={currentSideProject.description || ''}
               onChange={(val) =>
@@ -266,7 +277,9 @@ export function SideProjectsTab({
           <TabFormActions
             onCancel={() => setSideProjectsView('list')}
             onSave={handleSave}
-            isSaveDisabled={!currentSideProject?.title || !currentSideProject?.year}
+            isSaveDisabled={
+              !currentSideProject?.title || !currentSideProject?.year
+            }
           />
         </div>
       )}

@@ -39,16 +39,16 @@
     --surface-2: #f4f4f4;
     --surface-3: #f2f2f2;
     --surface-card: #ffffff;
-    
+
     /* Text */
     --content-primary: #111827;
     --content-secondary: #4b5563;
     --content-muted: #6b7280;
-    
+
     /* Borders */
     --border-subtle: #f3f4f6;
     --border-strong: #e5e7eb;
-    
+
     /* Actions */
     --action-primary: #111827;
     --action-primary-hover: #000000;
@@ -92,16 +92,16 @@
     --surface-2: #1f1f1f;
     --surface-3: #2c2c2c;
     --surface-card: #1f1f1f;
-    
+
     /* Text */
     --content-primary: #f3f4f6;
     --content-secondary: #e5e7eb;
     --content-muted: #9ca3af;
-    
+
     /* Borders */
     --border-subtle: #333333;
     --border-strong: #444444;
-    
+
     /* Actions */
     --action-primary: #ffffff;
     --action-primary-hover: #e5e7eb;

@@ -56,7 +56,7 @@ export function SkillsTab() {
             {skills.map((skill, index) => (
               <div
                 key={index}
-                className="flex items-center rounded-full bg-surface-2/80 px-3 py-1.5 text-sm text-content-primary"
+                className="bg-surface-2/80 flex items-center rounded-full px-3 py-1.5 text-sm text-content-primary"
               >
                 <span className="mr-2">{skill}</span>
                 <button

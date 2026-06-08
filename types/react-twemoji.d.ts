@@ -9,7 +9,11 @@ declare module 'react-twemoji' {
       ext?: string;
       base?: string;
       size?: string | number;
-      callback?: (icon: string, options: any, variant: string) => string | false;
+      callback?: (
+        icon: string,
+        options: any,
+        variant: string,
+      ) => string | false;
     };
     tag?: string;
     className?: string;

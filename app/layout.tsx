@@ -159,11 +159,7 @@ export default function RootLayout({
             </Script>
           </head>
           <body className="flex min-h-screen flex-col font-sans antialiased">
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-            >
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               <main className="flex flex-1 flex-col">
                 <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
                 <SpeedInsights />

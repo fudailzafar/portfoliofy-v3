@@ -20,7 +20,7 @@ export function LiveResumeWrapper({
 
   // If the user is actively editing (storeResume exists) AND they own the profile, display it instantly!
   // Otherwise, fallback to the server-fetched initial resume.
-  const displayResume = (isOwner && storeResume) ? storeResume : initialResume;
+  const displayResume = isOwner && storeResume ? storeResume : initialResume;
 
   const typography = displayResume?.design?.typography || 'sans';
   const theme = displayResume?.design?.theme || 'default';
@@ -36,9 +36,9 @@ export function LiveResumeWrapper({
     <div
       className={`flex flex-1 flex-col bg-theme-bg ${fontClass} ${themeClass}`}
     >
-      <FullResume 
-        resume={displayResume} 
-        profilePicture={profilePicture} 
+      <FullResume
+        resume={displayResume}
+        profilePicture={profilePicture}
         isOwner={isOwner}
         userProfile={userProfile}
       />

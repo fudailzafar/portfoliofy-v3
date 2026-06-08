@@ -8,7 +8,12 @@ interface TabHeaderProps {
   addButtonText?: string;
 }
 
-export function TabHeader({ title, showAddButton, onAdd, addButtonText = "Add item" }: TabHeaderProps) {
+export function TabHeader({
+  title,
+  showAddButton,
+  onAdd,
+  addButtonText = 'Add item',
+}: TabHeaderProps) {
   return (
     <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
       <h2 className="text-2xl font-bold text-content-primary">{title}</h2>

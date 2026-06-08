@@ -9,7 +9,9 @@ import { useResumeStore } from '@/store/useResumeStore';
 export function PersonalDomainTab({ username }: { username: string }) {
   const resume = useResumeStore((state) => state.resume);
   const updateDesign = useResumeStore((state) => state.updateDesign);
-  const setHasUnsavedChanges = useResumeStore((state) => state.setHasUnsavedChanges);
+  const setHasUnsavedChanges = useResumeStore(
+    (state) => state.setHasUnsavedChanges,
+  );
 
   const typography = resume?.design?.typography ?? 'sans';
   const theme = resume?.design?.theme ?? 'default';
@@ -93,7 +95,9 @@ export function PersonalDomainTab({ username }: { username: string }) {
   return (
     <div className="mx-auto flex h-full max-w-2xl flex-col">
       <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-2xl font-bold text-content-primary">Personal Domain</h2>
+        <h2 className="text-2xl font-bold text-content-primary">
+          Personal Domain
+        </h2>
         <a
           href={
             domainStatus?.verified && customDomain
@@ -113,7 +117,9 @@ export function PersonalDomainTab({ username }: { username: string }) {
         <div className="space-y-6">
           <div className="flex flex-col gap-4">
             <div className="space-y-1">
-              <h4 className="text-[14px] text-content-primary">Custom domain</h4>
+              <h4 className="text-[14px] text-content-primary">
+                Custom domain
+              </h4>
               <p className="text-[13px] text-[#888888]">
                 Optionally set a domain other than{' '}
                 <a
@@ -159,7 +165,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                     setCustomDomain(e.target.value.toLowerCase())
                   }
                   placeholder="yourname.com"
-                  className={`h-9 w-full border-0 bg-[#f2f2f2] text-[13px] shadow-none focus-visible:ring-0   ${domainStatus ? 'pl-9 text-content-secondary' : ''}`}
+                  className={`h-9 w-full border-0 bg-[#f2f2f2] text-[13px] shadow-none focus-visible:ring-0 ${domainStatus ? 'pl-9 text-content-secondary' : ''}`}
                   disabled={!!domainStatus}
                 />
               </div>
@@ -247,7 +253,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                             {dnsValue}
                           </div>
                           <button
-                            className="text-[12px] font-medium opacity-60 transition-opacity active:opacity-100 hover:underline-offset-4 hover:underline"
+                            className="text-[12px] font-medium opacity-60 transition-opacity hover:underline hover:underline-offset-4 active:opacity-100"
                             onClick={() => copyValue(dnsValue)}
                             aria-label="Copy DNS value"
                           >
@@ -259,12 +265,12 @@ export function PersonalDomainTab({ username }: { username: string }) {
 
                     <div className="mt-3 text-[12px] leading-relaxed text-[#a0a0a0]">
                       Please note that changing DNS settings can take several
-                      minutes to take effect. If you&apos;ve already updated your DNS
-                      settings{' '}
+                      minutes to take effect. If you&apos;ve already updated
+                      your DNS settings{' '}
                       <button
                         onClick={fetchDomain}
                         disabled={isVerifyingDomain}
-                        className="font-medium text-content-secondary underline decoration-border-strong underline-offset-2 hover:text-content-primary disabled:opacity-50  dark:hover:text-surface-1"
+                        className="font-medium text-content-secondary underline decoration-border-strong underline-offset-2 hover:text-content-primary disabled:opacity-50 dark:hover:text-surface-1"
                       >
                         click here to manually refresh
                       </button>
@@ -322,12 +328,12 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 <div
                   className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${
                     typography === value
-                      ? 'border-[2.5px] border-[#3b82f6] bg-surface-1 '
-                      : 'border border-border-strong bg-surface-card group-hover:border-border-strong   dark:group-hover:border-border-strong'
+                      ? 'border-[2.5px] border-[#3b82f6] bg-surface-1'
+                      : 'border border-border-strong bg-surface-card group-hover:border-border-strong dark:group-hover:border-border-strong'
                   }`}
                 >
                   <span
-                    className={`text-[22px] font-medium tracking-tight text-content-primary  ${fontClass}`}
+                    className={`text-[22px] font-medium tracking-tight text-content-primary ${fontClass}`}
                   >
                     Aa
                   </span>

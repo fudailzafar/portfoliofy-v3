@@ -69,7 +69,10 @@ export function VolunteeringTab({
     }
   };
 
-  const sortedVolunteering = useMemo(() => sortByDateDesc(volunteering), [volunteering]);
+  const sortedVolunteering = useMemo(
+    () => sortByDateDesc(volunteering),
+    [volunteering],
+  );
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
@@ -305,7 +308,7 @@ export function VolunteeringTab({
             onCancel={() => setVolunteeringView('list')}
             onSave={handleSave}
             isSaveDisabled={
-                !currentVolunteering?.role || !currentVolunteering?.organization
+              !currentVolunteering?.role || !currentVolunteering?.organization
             }
           />
         </div>
