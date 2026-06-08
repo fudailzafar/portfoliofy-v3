@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
@@ -8,7 +8,6 @@ import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
   () =>
@@ -19,9 +18,6 @@ const RichTextEditor = dynamic(
 );
 import {
   FolderCode,
-  Upload,
-  Download,
-  Sparkles,
   ArrowUpRight,
 } from 'lucide-react';
 import {
