@@ -49,7 +49,7 @@ export default function Home() {
                 Side Projects
               </div>
 
-              <div className="animate-drag relative z-10 mx-auto flex w-full max-w-[400px] items-center justify-between rounded-[18px] border border-border-strong bg-surface-1 p-3 shadow-xl sm:p-4 dark:shadow-none">
+              <div className="animate-drag relative z-10 mx-auto flex w-full max-w-[400px] items-center justify-between rounded-[18px] border border-border-strong bg-surface-1 p-3 shadow-xl dark:shadow-none sm:p-4">
                 <span className="truncate pr-2 text-[16px] font-medium tracking-tight text-content-primary sm:text-[20px]">
                   Work Experience
                 </span>
@@ -101,7 +101,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="h-[180px] rounded-t-[16px] border border-b-0 border-border-strong bg-surface-1 p-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] sm:p-6 dark:shadow-none">
+            <div className="h-[180px] rounded-t-[16px] border border-b-0 border-border-strong bg-surface-1 p-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] dark:shadow-none sm:p-6">
               <div className="flex gap-3 sm:gap-4">
                 <div className="w-1/3 space-y-2">
                   <div className="h-2 w-16 rounded bg-border-strong"></div>
@@ -145,7 +145,7 @@ export default function Home() {
             </div>
 
             <div className="h-[180px] w-full">
-              <div className="mb-6 flex max-w-[95%] items-center rounded-full border bg-surface-1 px-3 py-2 shadow-sm sm:px-5 sm:py-3 dark:shadow-none">
+              <div className="mb-6 flex max-w-[95%] items-center rounded-full border bg-surface-1 px-3 py-2 shadow-sm dark:shadow-none sm:px-5 sm:py-3">
                 <span className="flex items-center text-[15px] font-medium tracking-tight text-content-primary sm:text-[18px]">
                   Art director
                   <span className="animate-blink ml-0.5 inline-block h-[1.1em] w-[2px] bg-blue-500"></span>
@@ -154,7 +154,7 @@ export default function Home() {
 
               <div className="space-y-4 px-1 sm:px-2">
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-12 ">
+                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-12">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lauren"
@@ -163,17 +163,19 @@ export default function Home() {
                     />
                   </div>
                   <div className="leading-tight">
-                    <div className="text-[14px] text-content-muted sm:text-[16px] dark:text-content-muted">
+                    <div className="text-[14px] text-content-muted dark:text-content-muted sm:text-[16px]">
                       Lauren Jochum
                     </div>
-                    <div className="text-[13px] text-content-muted sm:text-[15px] dark:text-content-muted">
-                      <strong className="text-content-muted">Art director</strong> in
-                      Berkeley
+                    <div className="text-[13px] text-content-muted dark:text-content-muted sm:text-[15px]">
+                      <strong className="text-content-muted">
+                        Art director
+                      </strong>{' '}
+                      in Berkeley
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 opacity-30 sm:gap-4">
-                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-12 ">
+                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-12">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="https://api.dicebear.com/7.x/avataaars/svg?seed=Skip"
@@ -182,12 +184,14 @@ export default function Home() {
                     />
                   </div>
                   <div className="leading-tight">
-                    <div className="text-[14px] text-content-muted sm:text-[16px] dark:text-content-muted">
+                    <div className="text-[14px] text-content-muted dark:text-content-muted sm:text-[16px]">
                       Skip Hursh
                     </div>
-                    <div className="text-[13px] text-content-muted sm:text-[15px] dark:text-content-muted">
-                      <strong className="text-content-muted">Art director</strong> in
-                      NYC
+                    <div className="text-[13px] text-content-muted dark:text-content-muted sm:text-[15px]">
+                      <strong className="text-content-muted">
+                        Art director
+                      </strong>{' '}
+                      in NYC
                     </div>
                   </div>
                 </div>
@@ -206,7 +210,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="h-auto rounded-t-[16px] border border-b-0 border-border-strong bg-surface-1 p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] sm:h-[220px] sm:p-8 dark:shadow-none">
+            <div className="h-auto rounded-t-[16px] border border-b-0 border-border-strong bg-surface-1 p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] dark:shadow-none sm:h-[220px] sm:p-8">
               <div className="mb-4 flex items-center gap-4 sm:gap-8">
                 <div className="size-[64px] shrink-0 rounded-full bg-gradient-to-tr from-[#feda75] via-[#fa7e1e] to-[#d62976] p-[2px] sm:size-[84px] sm:p-[3px]">
                   <div className="h-full w-full rounded-full bg-surface-1 p-0.5">

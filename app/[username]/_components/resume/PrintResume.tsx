@@ -31,11 +31,20 @@ export const PrintResume = ({
 
   const order = sectionOrder || DEFAULT_SECTION_ORDER;
 
-  const sortedWork = useMemo(() => sortByDateDesc(workExperience), [workExperience]);
+  const sortedWork = useMemo(
+    () => sortByDateDesc(workExperience),
+    [workExperience],
+  );
   const sortedProjects = useMemo(() => sortByDateDesc(projects), [projects]);
-  const sortedSideProjects = useMemo(() => sortByDateDesc(sideProjects), [sideProjects]);
+  const sortedSideProjects = useMemo(
+    () => sortByDateDesc(sideProjects),
+    [sideProjects],
+  );
   const sortedFeatures = useMemo(() => sortByDateDesc(features), [features]);
-  const sortedVolunteering = useMemo(() => sortByDateDesc(volunteering), [volunteering]);
+  const sortedVolunteering = useMemo(
+    () => sortByDateDesc(volunteering),
+    [volunteering],
+  );
   const sortedSpeaking = useMemo(() => sortByDateDesc(speaking), [speaking]);
   const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
 
@@ -49,7 +58,9 @@ export const PrintResume = ({
 
     return (
       <div className="page-break-inside-avoid mb-12 grid grid-cols-12 gap-8">
-        <div className="col-span-4 pt-1 text-sm text-content-primary">{title}</div>
+        <div className="col-span-4 pt-1 text-sm text-content-primary">
+          {title}
+        </div>
         <div className="col-span-8 flex flex-col gap-6">{content}</div>
       </div>
     );
@@ -66,7 +77,9 @@ export const PrintResume = ({
       <div className="mb-16 grid grid-cols-12 gap-8">
         <div className="col-span-4 flex flex-col justify-start">
           <h1 className="text-xl text-content-primary">{header?.name}</h1>
-          <p className="mt-1 text-sm text-content-secondary">{header?.shortAbout}</p>
+          <p className="mt-1 text-sm text-content-secondary">
+            {header?.shortAbout}
+          </p>
         </div>
         <div className="col-span-8">
           {/* About section is rendered here if not hidden */}
@@ -290,7 +303,10 @@ export const PrintResume = ({
                   'Skills',
                   <div className="flex flex-wrap gap-2">
                     {skillsList.map((skill: string) => (
-                      <span key={skill} className="text-sm text-content-primary">
+                      <span
+                        key={skill}
+                        className="text-sm text-content-primary"
+                      >
                         {skill}
                       </span>
                     ))}

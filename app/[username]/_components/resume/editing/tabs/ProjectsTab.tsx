@@ -247,7 +247,9 @@ export function ProjectsTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Company or client</Label>
+              <Label className="text-xs text-content-secondary">
+                Company or client
+              </Label>
               <Input
                 value={currentProject.company || ''}
                 onChange={(e) =>
@@ -260,7 +262,9 @@ export function ProjectsTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Link to project</Label>
+              <Label className="text-xs text-content-secondary">
+                Link to project
+              </Label>
               <Input
                 value={currentProject.link || ''}
                 onChange={(e) =>
@@ -275,7 +279,9 @@ export function ProjectsTab({
           </div>
 
           <div className="space-y-2 pt-2">
-            <Label className="text-xs text-content-secondary">Description</Label>
+            <Label className="text-xs text-content-secondary">
+              Description
+            </Label>
             <RichTextEditor
               content={currentProject.description || ''}
               onChange={(val) =>

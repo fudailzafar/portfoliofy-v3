@@ -99,7 +99,9 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="username" className="">Username</Label>
+              <Label htmlFor="username" className="">
+                Username
+              </Label>
               {status === 'taken' && (
                 <span className="text-xs font-medium text-red-500">
                   Username is taken
@@ -116,7 +118,7 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
                   )
                 }
                 className={cn(
-                  'pr-10   ',
+                  'pr-10',
                   status === 'taken' &&
                     'border-red-500 focus-visible:ring-red-500',
                 )}
@@ -139,7 +141,9 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="displayName" className="">Display Name</Label>
+              <Label htmlFor="displayName" className="">
+                Display Name
+              </Label>
               <span className="text-xs text-content-muted">
                 {displayName.length} of 48
               </span>

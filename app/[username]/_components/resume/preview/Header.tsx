@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ResumeDataSchemaType } from '@/lib/resume';
 import { UserProfile } from '@/lib/server/cachedFunctions';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import Twemoji from 'react-twemoji';
 import { StatusEditor } from './StatusEditor';
 import { AnimatePresence } from 'framer-motion';
@@ -14,20 +19,20 @@ function getRelativeTime(dateInput: Date | string | null | undefined): string {
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
   if (diffInSeconds < 60) return 'A few seconds ago';
-  
+
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
   const diffInMinutes = Math.floor(diffInSeconds / 60);
   if (diffInMinutes < 60) return rtf.format(-diffInMinutes, 'minute');
-  
+
   const diffInHours = Math.floor(diffInMinutes / 60);
   if (diffInHours < 24) return rtf.format(-diffInHours, 'hour');
-  
+
   const diffInDays = Math.floor(diffInHours / 24);
   if (diffInDays < 30) return rtf.format(-diffInDays, 'day');
-  
+
   const diffInMonths = Math.floor(diffInDays / 30);
   if (diffInMonths < 12) return rtf.format(-diffInMonths, 'month');
-  
+
   const diffInYears = Math.floor(diffInMonths / 12);
   return rtf.format(-diffInYears, 'year');
 }
@@ -58,7 +63,10 @@ export function Header({
       <header className="flex items-center gap-4 md:gap-6">
         <div className="relative">
           <Avatar className="size-20 shrink-0 md:size-24" aria-hidden="true">
-            <AvatarImage src={picture} alt={`${header.name}'s profile picture`} />
+            <AvatarImage
+              src={picture}
+              alt={`${header.name}'s profile picture`}
+            />
             <AvatarFallback>
               {header.name
                 .split(' ')
@@ -66,7 +74,7 @@ export function Header({
                 .join('')}
             </AvatarFallback>
           </Avatar>
-          
+
           {isOwner && (
             <TooltipProvider>
               <Tooltip>
@@ -74,11 +82,11 @@ export function Header({
                   <button
                     id="status-toggle-btn"
                     onClick={() => setIsEditingStatus((prev) => !prev)}
-                    className="absolute -bottom-1 -right-2 flex h-7 w-10 items-center justify-center rounded-full border-[1px] border-border-strong bg-surface-1 text-sm shadow-md transition-transform"
+                    className="absolute -bottom-1 -right-2 flex h-7 w-10 items-center justify-center rounded-full border-[0.5px] border-border-strong bg-surface-1 text-sm shadow-sm transition-transform"
                   >
-                    <Twemoji 
-                      tag="span" 
-                      className="flex items-center justify-center leading-none" 
+                    <Twemoji
+                      tag="span"
+                      className="flex items-center justify-center leading-none"
                       options={{ className: 'h-[1.2em] w-[1.2em]' }}
                     >
                       {currentStatus.emoji || '⊕'}
@@ -93,9 +101,9 @@ export function Header({
           )}
           {!isOwner && currentStatus.emoji && (
             <div className="absolute -bottom-1 -right-2 flex h-7 w-9 items-center justify-center rounded-full border-2 border-surface-1 bg-surface-2 text-sm shadow-sm">
-              <Twemoji 
-                tag="span" 
-                className="flex items-center justify-center leading-none" 
+              <Twemoji
+                tag="span"
+                className="flex items-center justify-center leading-none"
                 options={{ className: 'h-[1.2em] w-[1.2em]' }}
               >
                 {currentStatus.emoji}
@@ -105,42 +113,45 @@ export function Header({
         </div>
 
         <div className="flex-1 space-y-1">
-        <h1
-          className="text-xl font-semibold text-theme-primary"
-          id="resume-name"
-        >
-          {header.name}
-        </h1>
-
-        {/* Subtitle: {Role} in {Location}, {Pronouns} */}
-        {(header.shortAbout || header.location || header.pronouns) && (
-          <p
-            className="text-pretty text-sm text-theme-secondary"
-            aria-labelledby="resume-name"
+          <h1
+            className="text-xl font-semibold text-theme-primary"
+            id="resume-name"
           >
-            {[header.shortAbout, header.location ? `in ${header.location}` : '']
-              .filter(Boolean)
-              .join(' ')}
-            {header.pronouns ? `, ${header.pronouns}` : ''}
-          </p>
-        )}
+            {header.name}
+          </h1>
 
-        {/* Website Link */}
-        {header.website && (
-          <a
-            href={
-              header.website.startsWith('http')
-                ? header.website
-                : `https://${header.website}`
-            }
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-1 block text-sm text-theme-secondary transition-colors hover:text-theme-primary"
-          >
-            {header.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-          </a>
-        )}
-      </div>
+          {/* Subtitle: {Role} in {Location}, {Pronouns} */}
+          {(header.shortAbout || header.location || header.pronouns) && (
+            <p
+              className="text-pretty text-sm text-theme-secondary"
+              aria-labelledby="resume-name"
+            >
+              {[
+                header.shortAbout,
+                header.location ? `in ${header.location}` : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              {header.pronouns ? `, ${header.pronouns}` : ''}
+            </p>
+          )}
+
+          {/* Website Link */}
+          {header.website && (
+            <a
+              href={
+                header.website.startsWith('http')
+                  ? header.website
+                  : `https://${header.website}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 block text-sm text-theme-secondary transition-colors hover:text-theme-primary"
+            >
+              {header.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+            </a>
+          )}
+        </div>
       </header>
 
       {/* Status Editor Dialog */}
@@ -150,17 +161,21 @@ export function Header({
             initialEmoji={currentStatus.emoji}
             initialText={currentStatus.text}
             onClose={() => setIsEditingStatus(false)}
-            onSave={(emoji, text, date) => setCurrentStatus({ emoji, text, updatedAt: date })}
+            onSave={(emoji, text, date) =>
+              setCurrentStatus({ emoji, text, updatedAt: date })
+            }
           />
         )}
       </AnimatePresence>
 
       {/* Status Display Bubble */}
       {!isEditingStatus && currentStatus.text && (
-        <div className="mt-4 flex w-full flex-col gap-1 rounded-3xl border border-border-strong bg-surface-1 p-4 shadow-sm relative">
+        <div className="relative mt-4 flex w-full flex-col gap-1 rounded-3xl border border-border-strong bg-surface-1 p-4 shadow-sm">
           {/* Speech Bubble Tail */}
-          <div className="absolute -top-[6px] left-[64px] md:left-[80px] h-3 w-3 rotate-45 rounded-tl-sm border-l border-t border-border-strong bg-surface-1" />
-          <span className="text-[15px] text-content-primary">{currentStatus.text}</span>
+          <div className="absolute -top-[6px] left-[64px] h-3 w-3 rotate-45 rounded-tl-sm border-l border-t border-border-strong bg-surface-1 md:left-[80px]" />
+          <span className="text-[15px] text-content-primary">
+            {currentStatus.text}
+          </span>
           <span className="text-xs text-content-muted">
             {getRelativeTime(currentStatus.updatedAt)}
           </span>

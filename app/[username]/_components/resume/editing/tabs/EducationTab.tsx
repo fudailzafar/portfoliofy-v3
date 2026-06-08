@@ -196,7 +196,9 @@ export function EducationTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Start Year</Label>
+              <Label className="text-xs text-content-secondary">
+                Start Year
+              </Label>
               <Select
                 value={currentEdu.start || ''}
                 onValueChange={(val) =>
@@ -220,7 +222,9 @@ export function EducationTab({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">End Year*</Label>
+              <Label className="text-xs text-content-secondary">
+                End Year*
+              </Label>
               <Select
                 value={currentEdu.end || ''}
                 onValueChange={(val) =>
@@ -256,7 +260,9 @@ export function EducationTab({
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs text-content-secondary">Description</Label>
+            <Label className="text-xs text-content-secondary">
+              Description
+            </Label>
             <RichTextEditor
               content={currentEdu.description || ''}
               onChange={(val) =>
@@ -271,7 +277,9 @@ export function EducationTab({
           <TabFormActions
             onCancel={() => setEduView('list')}
             onSave={handleSave}
-            isSaveDisabled={!currentEdu?.school || !currentEdu?.degree || !currentEdu?.end}
+            isSaveDisabled={
+              !currentEdu?.school || !currentEdu?.degree || !currentEdu?.end
+            }
           />
         </div>
       )}

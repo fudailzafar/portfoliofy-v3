@@ -5,7 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import EmojiPicker, { EmojiStyle } from 'emoji-picker-react';
 import Twemoji from 'react-twemoji';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 
 export function StatusEditor({
@@ -17,7 +22,11 @@ export function StatusEditor({
   initialEmoji?: string | null;
   initialText?: string | null;
   onClose: () => void;
-  onSave: (emoji: string | null, text: string | null, date: Date | null) => void;
+  onSave: (
+    emoji: string | null,
+    text: string | null,
+    date: Date | null,
+  ) => void;
 }) {
   const [emoji, setEmoji] = useState(initialEmoji || '😐');
   const [text, setText] = useState(initialText || '');
@@ -92,12 +101,12 @@ export function StatusEditor({
       transition={{ duration: 0.3, ease: 'easeInOut' }}
       className="overflow-visible"
     >
-      <div 
+      <div
         ref={containerRef}
         className="relative w-full max-w-lg rounded-3xl border border-border-strong bg-surface-1 p-4 shadow-sm"
       >
         {/* Speech Bubble Tail */}
-        <div className="absolute -top-[9px] left-[62px] md:left-[78px] h-4 w-4 rotate-45 rounded-tl-sm border-l border-t border-border-strong bg-surface-1" />
+        <div className="absolute -top-[9px] left-[62px] h-4 w-4 rotate-45 rounded-tl-sm border-l border-t border-border-strong bg-surface-1 md:left-[78px]" />
 
         <div className="flex items-start gap-3">
           <div className="relative">
@@ -108,9 +117,9 @@ export function StatusEditor({
                     onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                     className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface-2 text-xl transition-colors hover:bg-surface-3"
                   >
-                    <Twemoji 
-                      tag="span" 
-                      className="flex items-center justify-center leading-none" 
+                    <Twemoji
+                      tag="span"
+                      className="flex items-center justify-center leading-none"
                       options={{ className: 'h-[1em] w-[1em]' }}
                     >
                       {emoji}

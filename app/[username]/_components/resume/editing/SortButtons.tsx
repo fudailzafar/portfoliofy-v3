@@ -37,7 +37,7 @@ export function SortButtons({
             </TooltipTrigger>
             <TooltipContent
               side="top"
-              className="mb-1 rounded-md border-none bg-action-primary px-2.5 py-1.5 text-xs font-medium text-surface-1 dark:border -[#333]"
+              className="-[#333] mb-1 rounded-md border-none bg-action-primary px-2.5 py-1.5 text-xs font-medium text-surface-1 dark:border"
             >
               Move up
             </TooltipContent>
@@ -58,7 +58,7 @@ export function SortButtons({
             </TooltipTrigger>
             <TooltipContent
               side="top"
-              className="mb-1 rounded-md border-none bg-action-primary px-2.5 py-1.5 text-xs font-medium text-surface-1 dark:border -[#333]"
+              className="-[#333] mb-1 rounded-md border-none bg-action-primary px-2.5 py-1.5 text-xs font-medium text-surface-1 dark:border"
             >
               Move down
             </TooltipContent>

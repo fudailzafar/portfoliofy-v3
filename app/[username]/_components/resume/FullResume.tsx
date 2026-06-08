@@ -34,23 +34,47 @@ export const FullResume = ({
 
   const order = resume.sectionOrder || DEFAULT_SECTION_ORDER;
 
-  const sortedWork = useMemo(() => sortByDateDesc(resume?.workExperience), [resume?.workExperience]);
-  const sortedSideProjects = useMemo(() => sortByDateDesc(resume?.sideProjects), [resume?.sideProjects]);
-  const sortedSpeaking = useMemo(() => sortByDateDesc(resume?.speaking), [resume?.speaking]);
-  const sortedFeatures = useMemo(() => sortByDateDesc(resume?.features), [resume?.features]);
-  const sortedVolunteering = useMemo(() => sortByDateDesc(resume?.volunteering), [resume?.volunteering]);
-  const sortedProjects = useMemo(() => sortByDateDesc(resume?.projects), [resume?.projects]);
-  const sortedEducation = useMemo(() => sortByDateDesc(resume?.education), [resume?.education]);
-  const sortedAwards = useMemo(() => sortByDateDesc(resume?.awards), [resume?.awards]);
+  const sortedWork = useMemo(
+    () => sortByDateDesc(resume?.workExperience),
+    [resume?.workExperience],
+  );
+  const sortedSideProjects = useMemo(
+    () => sortByDateDesc(resume?.sideProjects),
+    [resume?.sideProjects],
+  );
+  const sortedSpeaking = useMemo(
+    () => sortByDateDesc(resume?.speaking),
+    [resume?.speaking],
+  );
+  const sortedFeatures = useMemo(
+    () => sortByDateDesc(resume?.features),
+    [resume?.features],
+  );
+  const sortedVolunteering = useMemo(
+    () => sortByDateDesc(resume?.volunteering),
+    [resume?.volunteering],
+  );
+  const sortedProjects = useMemo(
+    () => sortByDateDesc(resume?.projects),
+    [resume?.projects],
+  );
+  const sortedEducation = useMemo(
+    () => sortByDateDesc(resume?.education),
+    [resume?.education],
+  );
+  const sortedAwards = useMemo(
+    () => sortByDateDesc(resume?.awards),
+    [resume?.awards],
+  );
 
   return (
     <section
       className="mx-auto my-8 w-full max-w-xl space-y-8 bg-theme-bg px-6 md:px-4 print:space-y-4"
       aria-label="Resume Content"
     >
-      <Header 
-        header={resume?.header} 
-        picture={profilePicture} 
+      <Header
+        header={resume?.header}
+        picture={profilePicture}
         isOwner={isOwner}
         userProfile={userProfile}
       />
@@ -61,12 +85,7 @@ export const FullResume = ({
         {order.map((sectionId) => {
           switch (sectionId) {
             case 'work':
-              return (
-                <WorkExperience
-                  key={sectionId}
-                  work={sortedWork}
-                />
-              );
+              return <WorkExperience key={sectionId} work={sortedWork} />;
             case 'side_projects':
               return (
                 <SideProjects
@@ -75,19 +94,9 @@ export const FullResume = ({
                 />
               );
             case 'speaking':
-              return (
-                <Speaking
-                  key={sectionId}
-                  speaking={sortedSpeaking}
-                />
-              );
+              return <Speaking key={sectionId} speaking={sortedSpeaking} />;
             case 'features':
-              return (
-                <Features
-                  key={sectionId}
-                  features={sortedFeatures}
-                />
-              );
+              return <Features key={sectionId} features={sortedFeatures} />;
             case 'volunteering':
               return (
                 <Volunteering
@@ -96,26 +105,11 @@ export const FullResume = ({
                 />
               );
             case 'awards':
-              return (
-                <Awards
-                  key={sectionId}
-                  awards={sortedAwards}
-                />
-              );
+              return <Awards key={sectionId} awards={sortedAwards} />;
             case 'projects':
-              return (
-                <Projects
-                  key={sectionId}
-                  projects={sortedProjects}
-                />
-              );
+              return <Projects key={sectionId} projects={sortedProjects} />;
             case 'education':
-              return (
-                <Education
-                  key={sectionId}
-                  educations={sortedEducation}
-                />
-              );
+              return <Education key={sectionId} educations={sortedEducation} />;
             case 'contact':
               return <Contact key={sectionId} contacts={resume?.contacts} />;
             case 'skills':

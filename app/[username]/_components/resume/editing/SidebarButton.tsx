@@ -19,8 +19,11 @@ export function SidebarButton({
       disabled={disabled}
       className={cn(
         'py-2.5 pl-10 pr-6 text-left text-sm transition-colors',
-        isActive ? 'bg-surface-2 text-content-primary  ' : 'text-content-muted hover:text-content-primary hover:bg-surface-2  dark:hover:bg-surface-card ',
-        disabled && 'cursor-not-allowed opacity-50 hover:bg-transparent dark:hover:bg-transparent',
+        isActive
+          ? 'bg-surface-2 text-content-primary'
+          : 'text-content-muted hover:bg-surface-2 hover:text-content-primary dark:hover:bg-surface-card',
+        disabled &&
+          'cursor-not-allowed opacity-50 hover:bg-transparent dark:hover:bg-transparent',
       )}
     >
       {label}

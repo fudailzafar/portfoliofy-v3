@@ -204,7 +204,9 @@ export function ContactsTab({
             {current.type === 'Custom' ? (
               <>
                 <div className="space-y-2">
-                  <Label className="text-[13px] text-content-muted">Username*</Label>
+                  <Label className="text-[13px] text-content-muted">
+                    Username*
+                  </Label>
                   <Input
                     value={current.username || ''}
                     onChange={(e) => {

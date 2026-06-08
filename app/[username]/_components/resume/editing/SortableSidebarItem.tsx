@@ -40,9 +40,10 @@ export function SortableSidebarItem({
       className={cn(
         'flex cursor-pointer items-center justify-between py-2.5 pl-10 pr-6 text-sm transition-colors',
         isActive
-          ? 'bg-surface-2 text-content-primary  '
-          : 'text-content-muted hover:bg-surface-2 hover:text-content-primary  dark:hover:bg-surface-card ',
-        disabled && 'opacity-50 hover:bg-transparent hover:text-content-muted dark:hover:bg-transparent dark:hover:text-content-muted',
+          ? 'bg-surface-2 text-content-primary'
+          : 'text-content-muted hover:bg-surface-2 hover:text-content-primary dark:hover:bg-surface-card',
+        disabled &&
+          'opacity-50 hover:bg-transparent hover:text-content-muted dark:hover:bg-transparent dark:hover:text-content-muted',
         isDragging && 'bg-surface-3 opacity-50 dark:bg-[#333]',
       )}
       onClick={() => {
