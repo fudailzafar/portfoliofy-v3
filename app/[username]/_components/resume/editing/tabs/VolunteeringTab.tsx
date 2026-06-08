@@ -35,8 +35,16 @@ export function VolunteeringTab({
     setCurrent: setCurrentVolunteering,
   } = useTabEditor<any>();
 
+  const volunteering = useMemo(
+    () => resume?.volunteering || [],
+    [resume?.volunteering],
+  );
+  const sortedVolunteering = useMemo(
+    () => sortByDateDesc(volunteering),
+    [volunteering],
+  );
+
   if (!resume) return null;
-  const volunteering = resume.volunteering || [];
 
   const handleSave = () => {
     if (!currentVolunteering?.role || !currentVolunteering?.organization)
@@ -68,12 +76,6 @@ export function VolunteeringTab({
       updateResume({ volunteering: newItems });
     }
   };
-
-  const sortedVolunteering = useMemo(
-    () => sortByDateDesc(volunteering),
-    [volunteering],
-  );
-
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
       <TabHeader

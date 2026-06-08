@@ -44,8 +44,10 @@ export function ProjectsTab({
     setCurrent: setCurrentProject,
   } = useTabEditor<any>();
 
+  const projects = useMemo(() => resume?.projects || [], [resume?.projects]);
+  const sortedProjects = useMemo(() => sortByDateDesc(projects), [projects]);
+
   if (!resume) return null;
-  const projects = resume.projects || [];
 
   const handleSave = () => {
     if (!currentProject?.title || !currentProject?.year) return;
@@ -76,7 +78,6 @@ export function ProjectsTab({
   };
 
   const currentYear = new Date().getFullYear();
-  const sortedProjects = useMemo(() => sortByDateDesc(projects), [projects]);
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">

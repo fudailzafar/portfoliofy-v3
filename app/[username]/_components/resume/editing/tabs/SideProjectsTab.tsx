@@ -49,8 +49,16 @@ export function SideProjectsTab({
     setCurrent: setCurrentSideProject,
   } = useTabEditor<any>();
 
+  const sideProjects = useMemo(
+    () => resume?.sideProjects || [],
+    [resume?.sideProjects],
+  );
+  const sortedSideProjects = useMemo(
+    () => sortByDateDesc(sideProjects),
+    [sideProjects],
+  );
+
   if (!resume) return null;
-  const sideProjects = resume.sideProjects || [];
 
   const handleSave = () => {
     if (!currentSideProject?.title || !currentSideProject?.year) return;
@@ -83,10 +91,6 @@ export function SideProjectsTab({
   };
 
   const currentYear = new Date().getFullYear();
-  const sortedSideProjects = useMemo(
-    () => sortByDateDesc(sideProjects),
-    [sideProjects],
-  );
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">

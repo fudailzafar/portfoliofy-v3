@@ -38,8 +38,10 @@ export function EducationTab({
     setCurrent: setCurrentEdu,
   } = useTabEditor<any>();
 
+  const education = useMemo(() => resume?.education || [], [resume?.education]);
+  const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
+
   if (!resume) return null;
-  const education = resume.education || [];
 
   const handleSave = () => {
     if (!currentEdu?.school || !currentEdu?.degree) return;
@@ -70,7 +72,6 @@ export function EducationTab({
   };
 
   const currentYear = new Date().getFullYear();
-  const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
