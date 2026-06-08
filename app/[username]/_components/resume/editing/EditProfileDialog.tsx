@@ -28,6 +28,7 @@ import {
   DEFAULT_SECTION_ORDER,
   normalizeSectionOrder,
 } from '@/lib/resume';
+import { getOptimizedImageUrl } from '@/lib/utils';
 import { useS3Upload } from 'next-s3-upload';
 import { toast } from 'sonner';
 import { ProfileSidebar } from './ProfileSidebar';
@@ -501,7 +502,7 @@ export function EditProfileDialog({
             showMobileMenu={showMobileMenu}
             setShowMobileMenu={setShowMobileMenu}
             username={username}
-            localPicture={localPicture}
+            localPicture={getOptimizedImageUrl(localPicture) || localPicture}
             isUploadingPicture={isUploadingPicture}
             isEditingTab={isEditingTab}
             isSaving={isSaving}
