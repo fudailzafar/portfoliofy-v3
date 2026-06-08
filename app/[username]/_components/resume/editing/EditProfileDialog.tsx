@@ -41,7 +41,7 @@ const TAB_DEFINITIONS: Record<string, { label: string; disabled: boolean }> = {
   skills: { label: 'Skills', disabled: false },
   education: { label: 'Education', disabled: false },
   contact: { label: 'Contact', disabled: false },
-  awards: { label: 'Awards', disabled: true },
+  awards: { label: 'Awards', disabled: false },
   volunteering: { label: 'Volunteering', disabled: false },
   features: { label: 'Features', disabled: false },
   print: { label: 'Print', disabled: false },
@@ -55,6 +55,7 @@ type DeleteTarget =
   | { type: 'feature'; id: string }
   | { type: 'education'; id: string }
   | { type: 'work'; id: string }
+  | { type: 'award'; id: string }
   | { type: 'contact'; id: string };
 
 const DELETE_DESCRIPTIONS: Record<DeleteTarget['type'], string> = {
@@ -71,6 +72,8 @@ const DELETE_DESCRIPTIONS: Record<DeleteTarget['type'], string> = {
     'This will permanently delete this volunteering entry. This action cannot be undone.',
   feature:
     'This will permanently delete this feature. This action cannot be undone.',
+  award:
+    'This will permanently delete this award. This action cannot be undone.',
   education:
     'This will permanently delete this education entry. This action cannot be undone.',
 };
@@ -194,6 +197,10 @@ export function EditProfileDialog({
     () => makeDeleteSetter('feature'),
     [makeDeleteSetter],
   );
+  const setDeleteAward = useMemo(
+    () => makeDeleteSetter('award'),
+    [makeDeleteSetter],
+  );
   const setDeleteContact = useMemo(
     () => makeDeleteSetter('contact'),
     [makeDeleteSetter],
@@ -248,6 +255,12 @@ export function EditProfileDialog({
         const s = useResumeStore.getState();
         s.updateResume({
           features: s.resume?.features?.filter((p: any) => p.id !== id),
+        });
+      },
+      award: (id) => {
+        const s = useResumeStore.getState();
+        s.updateResume({
+          awards: s.resume?.awards?.filter((p: any) => p.id !== id),
         });
       },
       education: (id) => {
@@ -486,6 +499,7 @@ export function EditProfileDialog({
                 education: setDeleteEducation,
                 volunteering: setDeleteVolunteering,
                 feature: setDeleteFeature,
+                award: setDeleteAward,
                 contact: setDeleteContact,
               };
               return handlers[type]?.(id);
