@@ -33,7 +33,7 @@ export async function PUT(req: Request) {
     console.error('Error updating status:', error);
     return NextResponse.json(
       { error: 'Failed to update status' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

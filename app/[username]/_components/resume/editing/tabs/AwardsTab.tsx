@@ -47,7 +47,8 @@ export function AwardsTab({
   const awards = resume.awards || [];
 
   const handleSave = () => {
-    if (!currentAward?.title || !currentAward?.year || !currentAward?.issuer) return;
+    if (!currentAward?.title || !currentAward?.year || !currentAward?.issuer)
+      return;
 
     const isEdit = !!currentAward.id;
     const newItem = isEdit
@@ -55,9 +56,7 @@ export function AwardsTab({
       : { ...currentAward, id: Date.now().toString() };
 
     const newItems = isEdit
-      ? awards.map((p: any) =>
-          p.id === currentAward.id ? newItem : p,
-        )
+      ? awards.map((p: any) => (p.id === currentAward.id ? newItem : p))
       : [...awards, newItem];
 
     updateResume({ awards: newItems });
@@ -116,80 +115,75 @@ export function AwardsTab({
 
       {awardsView === 'list' && awards.length > 0 && (
         <div className="space-y-8">
-          {sortedAwards.map(
-            (award: any, index: number, sortedArray: any[]) => {
-              const prevItem = index > 0 ? sortedArray[index - 1] : null;
-              const canMoveUp =
-                prevItem &&
-                parseInt(award.year || '0') ===
-                  parseInt(prevItem.year || '0');
-              const nextItem =
-                index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
-              const canMoveDown =
-                nextItem &&
-                parseInt(award.year || '0') ===
-                  parseInt(nextItem.year || '0');
-              return (
-                <div
-                  key={award.id}
-                  className="flex flex-col gap-4 sm:flex-row sm:gap-12"
-                >
-                  <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-16">
-                    {award.year}
-                  </div>
-
-                  <div className="flex flex-1 flex-col items-start justify-start">
-                    {award.link ? (
-                      <a
-                        href={
-                          award.link.startsWith('http')
-                            ? award.link
-                            : `https://${award.link}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block hover:underline"
-                      >
-                        <span className="text-sm font-semibold text-content-primary">
-                          {award.title} from {award.issuer}
-                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                        </span>
-                      </a>
-                    ) : (
-                      <p className="text-sm font-semibold text-content-primary">
-                        {award.title} from {award.issuer}
-                      </p>
-                    )}
-
-                    {award.description &&
-                      award.description !== '<p></p>' && (
-                        <div
-                          className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
-                          dangerouslySetInnerHTML={{
-                            __html: award.description,
-                          }}
-                        />
-                      )}
-
-                    <EditDeleteButtons
-                      onEdit={() => {
-                        setCurrentAward(award);
-                        setAwardsView('form');
-                      }}
-                      onDelete={() => setProjectToDelete(award.id)}
-                    >
-                      <SortButtons
-                        canMoveUp={canMoveUp}
-                        canMoveDown={canMoveDown}
-                        onMoveUp={() => handleMoveUp(award, prevItem)}
-                        onMoveDown={() => handleMoveUp(award, nextItem)}
-                      />
-                    </EditDeleteButtons>
-                  </div>
+          {sortedAwards.map((award: any, index: number, sortedArray: any[]) => {
+            const prevItem = index > 0 ? sortedArray[index - 1] : null;
+            const canMoveUp =
+              prevItem &&
+              parseInt(award.year || '0') === parseInt(prevItem.year || '0');
+            const nextItem =
+              index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
+            const canMoveDown =
+              nextItem &&
+              parseInt(award.year || '0') === parseInt(nextItem.year || '0');
+            return (
+              <div
+                key={award.id}
+                className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+              >
+                <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-16">
+                  {award.year}
                 </div>
-              );
-            },
-          )}
+
+                <div className="flex flex-1 flex-col items-start justify-start">
+                  {award.link ? (
+                    <a
+                      href={
+                        award.link.startsWith('http')
+                          ? award.link
+                          : `https://${award.link}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block hover:underline"
+                    >
+                      <span className="text-sm font-semibold text-content-primary">
+                        {award.title} from {award.issuer}
+                        <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                      </span>
+                    </a>
+                  ) : (
+                    <p className="text-sm font-semibold text-content-primary">
+                      {award.title} from {award.issuer}
+                    </p>
+                  )}
+
+                  {award.description && award.description !== '<p></p>' && (
+                    <div
+                      className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
+                      dangerouslySetInnerHTML={{
+                        __html: award.description,
+                      }}
+                    />
+                  )}
+
+                  <EditDeleteButtons
+                    onEdit={() => {
+                      setCurrentAward(award);
+                      setAwardsView('form');
+                    }}
+                    onDelete={() => setProjectToDelete(award.id)}
+                  >
+                    <SortButtons
+                      canMoveUp={canMoveUp}
+                      canMoveDown={canMoveDown}
+                      onMoveUp={() => handleMoveUp(award, prevItem)}
+                      onMoveDown={() => handleMoveUp(award, nextItem)}
+                    />
+                  </EditDeleteButtons>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -266,7 +260,9 @@ export function AwardsTab({
           </div>
 
           <div className="space-y-2 pt-2">
-            <Label className="text-xs text-content-secondary">Description</Label>
+            <Label className="text-xs text-content-secondary">
+              Description
+            </Label>
             <RichTextEditor
               content={currentAward.description || ''}
               onChange={(val) =>
@@ -281,7 +277,11 @@ export function AwardsTab({
           <TabFormActions
             onCancel={() => setAwardsView('list')}
             onSave={handleSave}
-            isSaveDisabled={!currentAward?.title || !currentAward?.year || !currentAward?.issuer}
+            isSaveDisabled={
+              !currentAward?.title ||
+              !currentAward?.year ||
+              !currentAward?.issuer
+            }
           />
         </div>
       )}

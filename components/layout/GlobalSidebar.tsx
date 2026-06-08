@@ -41,7 +41,7 @@ export function GlobalSidebar() {
 
   return (
     <>
-      <div className="flex h-full w-[330px] flex-col border-r border-border-strong px-4 py-6 bg-surface-1">
+      <div className="flex h-full w-[330px] flex-col border-r border-border-strong bg-surface-1 px-4 py-6">
         <div className="mt-2 flex-1">
           <div
             onClick={() => setIsExploreMode(true)}
@@ -59,7 +59,9 @@ export function GlobalSidebar() {
             <div className="flex flex-col gap-4 pl-1">
               {/* User Info & Logout */}
               <div className="mb-3 pl-4">
-                <div className="text-[14px] text-content-primary">{displayName}</div>
+                <div className="text-[14px] text-content-primary">
+                  {displayName}
+                </div>
                 <div className="mt-1 text-[13px] text-content-muted">
                   Not you?{' '}
                   <button
@@ -112,7 +114,6 @@ export function GlobalSidebar() {
                   </button>
                 </div>
               )}
-
             </div>
           ) : (
             <div className="flex flex-col gap-3">

@@ -139,80 +139,78 @@ export function WorkExperienceTab({
 
       {workView === 'list' && work.length > 0 && (
         <div className="space-y-8">
-          {sortedWork.map(
-            (w: any, index: number, sortedArray: any[]) => {
-              const prevItem = index > 0 ? sortedArray[index - 1] : null;
-              const canMoveUp =
-                prevItem &&
-                parseInt(w.start || '0') === parseInt(prevItem.start || '0');
-              const nextItem =
-                index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
-              const canMoveDown =
-                nextItem &&
-                parseInt(w.start || '0') === parseInt(nextItem.start || '0');
-              return (
-                <div
-                  key={w.id || w.company}
-                  className="flex flex-col gap-4 sm:flex-row sm:gap-12"
-                >
-                  <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-32">
-                    {w.start} — {w.end}
-                  </div>
-
-                  <div className="flex flex-1 flex-col items-start justify-start">
-                    {w.link ? (
-                      <a
-                        href={
-                          w.link.startsWith('http')
-                            ? w.link
-                            : `https://${w.link}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block hover:underline"
-                      >
-                        <span className="text-sm font-semibold text-content-primary">
-                          {w.title} at {w.company}
-                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                        </span>
-                      </a>
-                    ) : (
-                      <p className="text-sm font-semibold text-content-primary">
-                        {w.title} at {w.company}
-                      </p>
-                    )}
-                    {w.location && (
-                      <p className="mt-1 text-sm text-content-muted">{w.location}</p>
-                    )}
-
-                    {w.description && w.description !== '<p></p>' && (
-                      <div
-                        className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
-                        dangerouslySetInnerHTML={{
-                          __html: w.description,
-                        }}
-                      />
-                    )}
-
-                    <EditDeleteButtons
-                      onEdit={() => {
-                        setCurrentWork(w);
-                        setWorkView('form');
-                      }}
-                      onDelete={() => setProjectToDelete(w.id)}
-                    >
-                      <SortButtons
-                        canMoveUp={canMoveUp}
-                        canMoveDown={canMoveDown}
-                        onMoveUp={() => handleMoveUp(w, prevItem)}
-                        onMoveDown={() => handleMoveUp(w, nextItem)}
-                      />
-                    </EditDeleteButtons>
-                  </div>
+          {sortedWork.map((w: any, index: number, sortedArray: any[]) => {
+            const prevItem = index > 0 ? sortedArray[index - 1] : null;
+            const canMoveUp =
+              prevItem &&
+              parseInt(w.start || '0') === parseInt(prevItem.start || '0');
+            const nextItem =
+              index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
+            const canMoveDown =
+              nextItem &&
+              parseInt(w.start || '0') === parseInt(nextItem.start || '0');
+            return (
+              <div
+                key={w.id || w.company}
+                className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+              >
+                <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-32">
+                  {w.start} — {w.end}
                 </div>
-              );
-            },
-          )}
+
+                <div className="flex flex-1 flex-col items-start justify-start">
+                  {w.link ? (
+                    <a
+                      href={
+                        w.link.startsWith('http') ? w.link : `https://${w.link}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block hover:underline"
+                    >
+                      <span className="text-sm font-semibold text-content-primary">
+                        {w.title} at {w.company}
+                        <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                      </span>
+                    </a>
+                  ) : (
+                    <p className="text-sm font-semibold text-content-primary">
+                      {w.title} at {w.company}
+                    </p>
+                  )}
+                  {w.location && (
+                    <p className="mt-1 text-sm text-content-muted">
+                      {w.location}
+                    </p>
+                  )}
+
+                  {w.description && w.description !== '<p></p>' && (
+                    <div
+                      className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
+                      dangerouslySetInnerHTML={{
+                        __html: w.description,
+                      }}
+                    />
+                  )}
+
+                  <EditDeleteButtons
+                    onEdit={() => {
+                      setCurrentWork(w);
+                      setWorkView('form');
+                    }}
+                    onDelete={() => setProjectToDelete(w.id)}
+                  >
+                    <SortButtons
+                      canMoveUp={canMoveUp}
+                      canMoveDown={canMoveDown}
+                      onMoveUp={() => handleMoveUp(w, prevItem)}
+                      onMoveDown={() => handleMoveUp(w, nextItem)}
+                    />
+                  </EditDeleteButtons>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -233,7 +231,9 @@ export function WorkExperienceTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Position*</Label>
+              <Label className="text-xs text-content-secondary">
+                Position*
+              </Label>
               <Input
                 value={currentWork.title}
                 onChange={(e) =>
@@ -249,7 +249,9 @@ export function WorkExperienceTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Start Date*</Label>
+              <Label className="text-xs text-content-secondary">
+                Start Date*
+              </Label>
               <div className="flex gap-2">
                 <Select
                   value={currentWork.startMonth || ''}
@@ -292,7 +294,9 @@ export function WorkExperienceTab({
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">End Date*</Label>
+              <Label className="text-xs text-content-secondary">
+                End Date*
+              </Label>
               <div className="flex gap-2">
                 {currentWork.end !== 'Now' && (
                   <Select
@@ -368,7 +372,9 @@ export function WorkExperienceTab({
           </div>
 
           <div className="space-y-2 pt-2">
-            <Label className="text-xs text-content-secondary">Description</Label>
+            <Label className="text-xs text-content-secondary">
+              Description
+            </Label>
             <RichTextEditor
               content={currentWork.description || ''}
               onChange={(val) =>
