@@ -7,6 +7,9 @@ export type ExploreUser = {
   customImage: string | null;
   name: string | null;
   shortAbout: string | null;
+  statusEmoji: string | null;
+  statusText: string | null;
+  statusUpdatedAt: string | null;
   updatedAt: string;
   createdAt: string;
 };

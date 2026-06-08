@@ -199,6 +199,7 @@ export default async function ProfilePage({
           initialResume={resume?.resumeData}
           profilePicture={profilePicture}
           isOwner={userId === user_id}
+          userProfile={userProfile || undefined}
         />
       </div>
 

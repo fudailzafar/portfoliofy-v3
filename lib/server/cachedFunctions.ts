@@ -9,6 +9,9 @@ export interface UserProfile {
   image: string | null; // Google OAuth photo (fallback)
   customImage?: string | null; // User-uploaded S3 photo (takes priority)
   avatarUrl?: string | null;
+  statusEmoji?: string | null;
+  statusText?: string | null;
+  statusUpdatedAt?: Date | null;
 }
 
 export const getCachedUserProfile = cache(async (
@@ -18,7 +21,7 @@ export const getCachedUserProfile = cache(async (
     async () => {
       try {
         const [row] =
-          await sql`SELECT name, email, image, custom_image FROM users WHERE id = ${userId}`;
+          await sql`SELECT name, email, image, custom_image, status_emoji, status_text, status_updated_at FROM users WHERE id = ${userId}`;
         if (!row) return null;
 
         const profile: UserProfile = {
@@ -26,6 +29,9 @@ export const getCachedUserProfile = cache(async (
           email: row.email,
           image: row.image,
           customImage: row.customImage,
+          statusEmoji: row.statusEmoji,
+          statusText: row.statusText,
+          statusUpdatedAt: row.statusUpdatedAt,
         };
 
         profile.avatarUrl = profile.customImage ?? profile.image ?? undefined;
