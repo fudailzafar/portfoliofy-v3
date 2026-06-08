@@ -5,12 +5,11 @@ import { EditDeleteButtons } from '../EditDeleteButtons';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
-import React, { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { GraduationCap } from 'lucide-react';
 import {
   Select,

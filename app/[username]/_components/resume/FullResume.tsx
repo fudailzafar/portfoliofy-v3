@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import LoadingFallback from '@/components/common/LoadingFallback';
 import { ResumeData } from '@/lib/server/dbActions';
 import { UserProfile } from '@/lib/server/cachedFunctions';

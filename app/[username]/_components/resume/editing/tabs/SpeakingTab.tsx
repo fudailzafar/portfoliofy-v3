@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Mic } from 'lucide-react';
 import { ArrowUpRight } from 'lucide-react';
 import {
@@ -13,12 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+
+
 import { sortByDateDesc } from '@/lib/resume';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';

@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { PrintResume } from './PrintResume';
 import { useResumeStore } from '@/store/useResumeStore';
 import { ResumeData } from '@/lib/server/dbActions';

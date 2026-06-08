@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import sql from '@/lib/server/db';
-import { revalidateTag, revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 
 export async function PUT(req: Request) {
   try {
