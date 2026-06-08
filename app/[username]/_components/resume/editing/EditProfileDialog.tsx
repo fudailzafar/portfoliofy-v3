@@ -22,8 +22,13 @@ import { arrayMove } from '@dnd-kit/sortable';
 import { DragEndEvent } from '@dnd-kit/core';
 import { ResumeData } from '@/lib/server/dbActions';
 import { useUserActions } from '@/hooks/useUserActions';
+import {
+  ResumeDataSchemaType,
+  sortByDateDesc,
+  DEFAULT_SECTION_ORDER,
+  normalizeSectionOrder,
+} from '@/lib/resume';
 import { useS3Upload } from 'next-s3-upload';
-import { DEFAULT_SECTION_ORDER } from '@/lib/resume';
 import { toast } from 'sonner';
 import { ProfileSidebar } from './ProfileSidebar';
 import { ProfileContent } from './ProfileContent';
@@ -149,14 +154,9 @@ export function EditProfileDialog({
     };
   }, [uname, isInitialUsername, checkUsernameMutation]);
 
-  const [sectionOrder, setSectionOrder] = useState<string[]>(() => {
-    const existingOrder = resume.sectionOrder || DEFAULT_SECTION_ORDER;
-    // Ensure any newly added sections (like certifications) are appended to legacy users' arrays
-    const missingSections = DEFAULT_SECTION_ORDER.filter(
-      (section) => !existingOrder.includes(section),
-    );
-    return [...existingOrder, ...missingSections];
-  });
+  const [sectionOrder, setSectionOrder] = useState<string[]>(() =>
+    normalizeSectionOrder(resume.sectionOrder),
+  );
 
   // Years list — stable; only computed once
   const years = useMemo(() => {

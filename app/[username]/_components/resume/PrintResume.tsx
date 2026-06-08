@@ -1,9 +1,7 @@
 import React, { useMemo } from 'react';
 import { ResumeData } from '@/lib/server/dbActions';
-import { sortByDateDesc, DEFAULT_SECTION_ORDER } from '@/lib/resume';
+import { sortByDateDesc, DEFAULT_SECTION_ORDER, normalizeSectionOrder } from '@/lib/resume';
 import { cn } from '@/lib/utils';
-import { Awards } from './preview/Awards';
-import { Certifications } from './preview/Certifications';
 
 export const PrintResume = ({
   resume,
@@ -31,13 +29,10 @@ export const PrintResume = ({
   } = resume || {};
 
   const skillsList: string[] = (resume as any)?.skills || header?.skills || [];
-  const order = useMemo(() => {
-    const existingOrder = sectionOrder || DEFAULT_SECTION_ORDER;
-    const missingSections = DEFAULT_SECTION_ORDER.filter(
-      (section) => !existingOrder.includes(section),
-    );
-    return [...existingOrder, ...missingSections];
-  }, [sectionOrder]);
+  const order = useMemo(
+    () => normalizeSectionOrder(sectionOrder),
+    [sectionOrder],
+  );
 
   const sortedWork = useMemo(
     () => sortByDateDesc(workExperience),
@@ -110,9 +105,61 @@ export const PrintResume = ({
       {order.map((sectionId) => {
         switch (sectionId) {
           case 'awards':
-            return <Awards key={sectionId} awards={sortedAwards} />;
+            if (!awards?.length) return null;
+            return (
+              <div key="awards">
+                {renderSection(
+                  'awards',
+                  'Awards',
+                  sortedAwards.map((award: any) => (
+                    <div key={award.id || award.title} className="flex gap-4">
+                      <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
+                        {award.year}
+                      </div>
+                      <div>
+                        <p className="text-sm">
+                          {award.title} from {award.issuer}
+                        </p>
+                        {award.description && award.description !== '<p></p>' && (
+                          <div
+                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
+                            dangerouslySetInnerHTML={{ __html: award.description }}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )),
+                )}
+              </div>
+            );
           case 'certifications':
-            return <Certifications key={sectionId} certifications={sortedCertifications} />;
+            if (!certifications?.length) return null;
+            return (
+              <div key="certifications">
+                {renderSection(
+                  'certifications',
+                  'Certifications',
+                  sortedCertifications.map((cert: any) => (
+                    <div key={cert.id || cert.title} className="flex gap-4">
+                      <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
+                        {cert.year}
+                      </div>
+                      <div>
+                        <p className="text-sm">
+                          {cert.title} from {cert.issuer}
+                        </p>
+                        {cert.description && cert.description !== '<p></p>' && (
+                          <div
+                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
+                            dangerouslySetInnerHTML={{ __html: cert.description }}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )),
+                )}
+              </div>
+            );
           case 'work':
             if (!workExperience?.length) return null;
             return (
