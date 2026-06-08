@@ -5,6 +5,8 @@ import { UserProfile } from '@/lib/server/cachedFunctions';
 import { sortByDateDesc } from '@/lib/resume';
 import { Education } from './preview/Education';
 import { Header } from './preview/Header';
+import { Awards } from './preview/Awards';
+import { Certifications } from './preview/Certifications';
 import { Skills } from './preview/Skills';
 import { Summary } from './preview/Summary';
 import { WorkExperience } from './preview/WorkExperience';
@@ -14,7 +16,6 @@ import { Projects } from './preview/Projects';
 import { Contact } from './preview/Contact';
 import { Features } from './preview/Features';
 import { Volunteering } from './preview/Volunteering';
-import { Awards } from './preview/Awards';
 import { DEFAULT_SECTION_ORDER } from '@/lib/resume';
 
 export const FullResume = ({
@@ -28,7 +29,13 @@ export const FullResume = ({
   isOwner?: boolean;
   userProfile?: UserProfile;
 }) => {
-  const order = resume?.sectionOrder || DEFAULT_SECTION_ORDER;
+  const order = useMemo(() => {
+    const existingOrder = resume?.sectionOrder || DEFAULT_SECTION_ORDER;
+    const missingSections = DEFAULT_SECTION_ORDER.filter(
+      (section) => !existingOrder.includes(section),
+    );
+    return [...existingOrder, ...missingSections];
+  }, [resume?.sectionOrder]);
 
   const sortedWork = useMemo(
     () => sortByDateDesc(resume?.workExperience),
@@ -61,6 +68,11 @@ export const FullResume = ({
   const sortedAwards = useMemo(
     () => sortByDateDesc(resume?.awards),
     [resume?.awards],
+  );
+
+  const sortedCertifications = useMemo(
+    () => sortByDateDesc(resume?.certifications),
+    [resume?.certifications],
   );
 
   if (!resume) {
@@ -106,6 +118,8 @@ export const FullResume = ({
               );
             case 'awards':
               return <Awards key={sectionId} awards={sortedAwards} />;
+            case 'certifications':
+              return <Certifications key={sectionId} certifications={sortedCertifications} />;
             case 'projects':
               return <Projects key={sectionId} projects={sortedProjects} />;
             case 'education':

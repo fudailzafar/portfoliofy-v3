@@ -11,7 +11,16 @@ export const DEFAULT_SECTION_ORDER = [
   'education',
   'contact',
   'awards',
+  'certifications',
 ];
+
+export const normalizeSectionOrder = (order?: string[] | null) => {
+  const existingOrder = order || DEFAULT_SECTION_ORDER;
+  const missingSections = DEFAULT_SECTION_ORDER.filter(
+    (section) => !existingOrder.includes(section),
+  );
+  return [...existingOrder, ...missingSections];
+};
 
 export const sortByDateDesc = <
   T extends {
@@ -214,6 +223,17 @@ const AwardsSection = z.array(
   }),
 );
 
+const CertificationsSection = z.array(
+  z.object({
+    id: z.string().optional().describe('Unique identifier for the certification'),
+    title: z.string().describe('Certification title'),
+    issuer: z.string().describe('Issuing organization'),
+    year: z.string().describe('Year the certification was received'),
+    link: z.string().optional().describe('Link to the certification'),
+    description: z.string().optional().describe('Description of the certification'),
+  }),
+);
+
 export const ResumeDataSchema = z.object({
   header: HeaderSection,
   summary: SummarySection,
@@ -225,6 +245,7 @@ export const ResumeDataSchema = z.object({
   features: FeaturesSection.optional().default([]),
   volunteering: VolunteeringSection.optional().default([]),
   awards: AwardsSection.optional().default([]),
+  certifications: CertificationsSection.optional().default([]),
   contacts: ContactSection.optional().default([]),
   sectionOrder: z.array(z.string()).optional().default(DEFAULT_SECTION_ORDER),
   design: z

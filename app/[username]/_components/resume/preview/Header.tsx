@@ -16,6 +16,7 @@ const StatusEditor = dynamic(
   { ssr: false }
 );
 import { AnimatePresence } from 'framer-motion';
+import { SmilePlus } from 'lucide-react';
 
 function getRelativeTime(dateInput: Date | string | null | undefined): string {
   if (!dateInput) return '';
@@ -94,7 +95,7 @@ export function Header({
                       className="flex items-center justify-center leading-none"
                       options={{ className: 'h-[1.2em] w-[1.2em]' }}
                     >
-                      {currentStatus.emoji || '⊕'}
+                      {currentStatus.emoji || <SmilePlus size={16}/>}
                     </Twemoji>
                   </button>
                 </TooltipTrigger>
