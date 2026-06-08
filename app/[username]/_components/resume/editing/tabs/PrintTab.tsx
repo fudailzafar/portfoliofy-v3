@@ -29,6 +29,8 @@ export function PrintTab() {
     { id: 'speaking', label: 'Speaking' },
     { id: 'education', label: 'Education' },
     { id: 'skills', label: 'Skills' },
+    { id: 'awards', label: 'Awards' },
+    { id: 'certifications', label: 'Certifications' },
   ];
 
   return (
