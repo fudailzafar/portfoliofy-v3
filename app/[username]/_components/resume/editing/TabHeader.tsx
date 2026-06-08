@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 
 interface TabHeaderProps {
   title: string;
@@ -17,12 +16,12 @@ export function TabHeader({
     <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
       <h2 className="text-2xl font-bold text-content-primary">{title}</h2>
       {showAddButton && (
-        <Button
+        <button
           onClick={onAdd}
-          className="h-8 rounded-md border-none bg-surface-2 px-4 text-xs text-content-primary hover:bg-surface-3"
+          className="inline-flex h-8 items-center justify-center rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-colors active:bg-surface-3"
         >
           {addButtonText}
-        </Button>
+        </button>
       )}
     </div>
   );

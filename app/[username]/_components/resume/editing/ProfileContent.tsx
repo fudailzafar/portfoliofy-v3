@@ -176,7 +176,8 @@ export function ProfileContent({
               disabled={
                 isSaving || !isValidUname || checkUsernameMutationIsPending
               }
-              className="h-9 rounded-md border-none bg-[#2A2A2A] px-6 font-medium text-surface-1 shadow-sm hover:bg-[#1A1A1A]"
+              variant="outline"
+              className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
             >
               {isSaving ? 'Saving…' : 'Done'}
             </Button>
