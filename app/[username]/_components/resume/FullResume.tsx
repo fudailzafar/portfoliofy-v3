@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import LoadingFallback from '@/components/common/LoadingFallback';
 import { ResumeData } from '@/lib/server/dbActions';
+import { UserProfile } from '@/lib/server/cachedFunctions';
 import { sortByDateDesc } from '@/lib/resume';
 import { Education } from './preview/Education';
 import { Header } from './preview/Header';
@@ -18,9 +19,13 @@ import { DEFAULT_SECTION_ORDER } from '@/lib/resume';
 export const FullResume = ({
   resume,
   profilePicture,
+  isOwner,
+  userProfile,
 }: {
   resume?: ResumeData | null;
   profilePicture?: string;
+  isOwner?: boolean;
+  userProfile?: UserProfile;
 }) => {
   if (!resume) {
     return <LoadingFallback message="Loading Resume..." />;
@@ -41,7 +46,12 @@ export const FullResume = ({
       className="mx-auto my-8 w-full max-w-xl space-y-8 bg-theme-bg px-6 md:px-4 print:space-y-4"
       aria-label="Resume Content"
     >
-      <Header header={resume?.header} picture={profilePicture} />
+      <Header 
+        header={resume?.header} 
+        picture={profilePicture} 
+        isOwner={isOwner}
+        userProfile={userProfile}
+      />
 
       <div className="flex flex-col gap-6">
         <Summary summary={resume?.summary} />
