@@ -6,10 +6,10 @@
 
   <!-- Badges -->
   <p>
-    <a href="https://github.com/yourusername/portfoliofy/stargazers"><img src="https://img.shields.io/github/stars/yourusername/portfoliofy?style=flat-square" alt="Stars Badge"/></a>
-    <a href="https://github.com/yourusername/portfoliofy/network/members"><img src="https://img.shields.io/github/forks/yourusername/portfoliofy?style=flat-square" alt="Forks Badge"/></a>
-    <a href="https://github.com/yourusername/portfoliofy/pulls"><img src="https://img.shields.io/github/issues-pr/yourusername/portfoliofy?style=flat-square" alt="Pull Requests Badge"/></a>
-    <a href="https://github.com/yourusername/portfoliofy/issues"><img src="https://img.shields.io/github/issues/yourusername/portfoliofy?style=flat-square" alt="Issues Badge"/></a>
+    <a href="https://github.com/fudailzafar/portfoliofy-v3/stargazers"><img src="https://img.shields.io/github/stars/fudailzafar/portfoliofy-v3?style=flat-square" alt="Stars Badge"/></a>
+    <a href="https://github.com/fudailzafar/portfoliofy-v3/network/members"><img src="https://img.shields.io/github/forks/fudailzafar/portfoliofy-v3?style=flat-square" alt="Forks Badge"/></a>
+    <a href="https://github.com/fudailzafar/portfoliofy-v3/pulls"><img src="https://img.shields.io/github/issues-pr/fudailzafar/portfoliofy-v3?style=flat-square" alt="Pull Requests Badge"/></a>
+    <a href="https://github.com/fudailzafar/portfoliofy-v3/issues"><img src="https://img.shields.io/github/issues/fudailzafar/portfoliofy-v3?style=flat-square" alt="Issues Badge"/></a>
   </p>
 </div>
 
