@@ -43,8 +43,10 @@ export function AwardsTab({
     setCurrent: setCurrentAward,
   } = useTabEditor<any>();
 
+  const awards = useMemo(() => resume?.awards || [], [resume?.awards]);
+  const sortedAwards = useMemo(() => sortByDateDesc(awards), [awards]);
+
   if (!resume) return null;
-  const awards = resume.awards || [];
 
   const handleSave = () => {
     if (!currentAward?.title || !currentAward?.year || !currentAward?.issuer)
@@ -76,7 +78,6 @@ export function AwardsTab({
   };
 
   const currentYear = new Date().getFullYear();
-  const sortedAwards = useMemo(() => sortByDateDesc(awards), [awards]);
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">

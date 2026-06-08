@@ -12,8 +12,6 @@ export const PrintResume = ({
   printHiddenSections: string[];
   className?: string;
 }) => {
-  if (!resume) return null;
-
   const {
     header,
     summary,
@@ -26,9 +24,9 @@ export const PrintResume = ({
     volunteering,
     contacts,
     sectionOrder,
-  } = resume;
-  const skillsList: string[] = (resume as any).skills || header?.skills || [];
+  } = resume || {};
 
+  const skillsList: string[] = (resume as any)?.skills || header?.skills || [];
   const order = sectionOrder || DEFAULT_SECTION_ORDER;
 
   const sortedWork = useMemo(
@@ -47,6 +45,8 @@ export const PrintResume = ({
   );
   const sortedSpeaking = useMemo(() => sortByDateDesc(speaking), [speaking]);
   const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
+
+  if (!resume) return null;
 
   const renderSection = (
     id: string,

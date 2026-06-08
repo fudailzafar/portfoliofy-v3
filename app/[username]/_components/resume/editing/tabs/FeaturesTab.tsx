@@ -43,8 +43,10 @@ export function FeaturesTab({
     setCurrent: setCurrentFeature,
   } = useTabEditor<any>();
 
+  const features = useMemo(() => resume?.features || [], [resume?.features]);
+  const sortedFeatures = useMemo(() => sortByDateDesc(features), [features]);
+
   if (!resume) return null;
-  const features = resume.features || [];
 
   const handleSave = () => {
     if (!currentFeature?.title || !currentFeature?.year) return;
@@ -75,7 +77,6 @@ export function FeaturesTab({
   };
 
   const currentYear = new Date().getFullYear();
-  const sortedFeatures = useMemo(() => sortByDateDesc(features), [features]);
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
