@@ -2,6 +2,8 @@ import React, { useMemo } from 'react';
 import { ResumeData } from '@/lib/server/dbActions';
 import { sortByDateDesc, DEFAULT_SECTION_ORDER } from '@/lib/resume';
 import { cn } from '@/lib/utils';
+import { Awards } from './preview/Awards';
+import { Certifications } from './preview/Certifications';
 
 export const PrintResume = ({
   resume,
@@ -24,15 +26,25 @@ export const PrintResume = ({
     volunteering,
     contacts,
     sectionOrder,
+    awards,
+    certifications,
   } = resume || {};
 
   const skillsList: string[] = (resume as any)?.skills || header?.skills || [];
-  const order = sectionOrder || DEFAULT_SECTION_ORDER;
+  const order = useMemo(() => {
+    const existingOrder = sectionOrder || DEFAULT_SECTION_ORDER;
+    const missingSections = DEFAULT_SECTION_ORDER.filter(
+      (section) => !existingOrder.includes(section),
+    );
+    return [...existingOrder, ...missingSections];
+  }, [sectionOrder]);
 
   const sortedWork = useMemo(
     () => sortByDateDesc(workExperience),
     [workExperience],
   );
+  const sortedAwards = sortByDateDesc(awards);
+  const sortedCertifications = sortByDateDesc(certifications);
   const sortedProjects = useMemo(() => sortByDateDesc(projects), [projects]);
   const sortedSideProjects = useMemo(
     () => sortByDateDesc(sideProjects),
@@ -97,6 +109,10 @@ export const PrintResume = ({
       {/* Sections */}
       {order.map((sectionId) => {
         switch (sectionId) {
+          case 'awards':
+            return <Awards key={sectionId} awards={sortedAwards} />;
+          case 'certifications':
+            return <Certifications key={sectionId} certifications={sortedCertifications} />;
           case 'work':
             if (!workExperience?.length) return null;
             return (
