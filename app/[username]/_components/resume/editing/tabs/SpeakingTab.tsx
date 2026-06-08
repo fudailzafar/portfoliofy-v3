@@ -42,8 +42,10 @@ export function SpeakingTab({
     setCurrent: setCurrentSpeaking,
   } = useTabEditor<any>();
 
+  const speaking = useMemo(() => resume?.speaking || [], [resume?.speaking]);
+  const sortedSpeaking = useMemo(() => sortByDateDesc(speaking), [speaking]);
+
   if (!resume) return null;
-  const speaking = resume.speaking || [];
 
   const handleSave = () => {
     if (!currentSpeaking?.title || !currentSpeaking?.year) return;
@@ -74,7 +76,6 @@ export function SpeakingTab({
   };
 
   const currentYear = new Date().getFullYear();
-  const sortedSpeaking = useMemo(() => sortByDateDesc(speaking), [speaking]);
 
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
