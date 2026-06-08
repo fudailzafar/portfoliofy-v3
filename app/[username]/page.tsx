@@ -204,7 +204,10 @@ export default async function ProfilePage({
       </div>
 
       {/* Print-only layout */}
-      <PrintResumeWrapper resume={resume?.resumeData} />
+      <PrintResumeWrapper
+        resume={resume?.resumeData}
+        isOwner={userId === user_id}
+      />
     </div>
   );
 }

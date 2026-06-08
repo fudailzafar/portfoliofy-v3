@@ -16,7 +16,7 @@ import { Projects } from './preview/Projects';
 import { Contact } from './preview/Contact';
 import { Features } from './preview/Features';
 import { Volunteering } from './preview/Volunteering';
-import { DEFAULT_SECTION_ORDER } from '@/lib/resume';
+import { DEFAULT_SECTION_ORDER, normalizeSectionOrder } from '@/lib/resume';
 
 export const FullResume = ({
   resume,
@@ -29,13 +29,10 @@ export const FullResume = ({
   isOwner?: boolean;
   userProfile?: UserProfile;
 }) => {
-  const order = useMemo(() => {
-    const existingOrder = resume?.sectionOrder || DEFAULT_SECTION_ORDER;
-    const missingSections = DEFAULT_SECTION_ORDER.filter(
-      (section) => !existingOrder.includes(section),
-    );
-    return [...existingOrder, ...missingSections];
-  }, [resume?.sectionOrder]);
+  const order = useMemo(
+    () => normalizeSectionOrder(resume?.sectionOrder),
+    [resume?.sectionOrder],
+  );
 
   const sortedWork = useMemo(
     () => sortByDateDesc(resume?.workExperience),
