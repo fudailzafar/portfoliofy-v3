@@ -9,7 +9,12 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import Twemoji from 'react-twemoji';
-import { StatusEditor } from './StatusEditor';
+import dynamic from 'next/dynamic';
+
+const StatusEditor = dynamic(
+  () => import('./StatusEditor').then((mod) => mod.StatusEditor),
+  { ssr: false }
+);
 import { AnimatePresence } from 'framer-motion';
 
 function getRelativeTime(dateInput: Date | string | null | undefined): string {
