@@ -1,6 +1,7 @@
 import { useState, UIEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { ExploreSort, useExplore } from '@/hooks/useExplore';
+import { getOptimizedImageUrl } from '@/lib/utils';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
@@ -150,7 +151,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                     <div className="relative h-full w-full overflow-hidden rounded-full bg-surface-3">
                       {user.customImage || user.userImage ? (
                         <Image
-                          src={user.customImage || user.userImage!}
+                          src={getOptimizedImageUrl(user.customImage || user.userImage) || ''}
                           alt={user.name || user.username}
                           fill
                           sizes="40px"

@@ -4,6 +4,7 @@ import { LiveResumeWrapper } from '@/app/[username]/_components/resume/LiveResum
 import { PrintResumeWrapper } from '@/app/[username]/_components/resume/PrintResumeWrapper';
 import { Metadata } from 'next';
 import { getUserData } from './utils';
+import { getOptimizedImageUrl } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { auth } from '@/auth';
 import { EditProfileDialog } from '@/app/[username]/_components/resume/editing/EditProfileDialog';
@@ -160,7 +161,8 @@ export default async function ProfilePage({
   if (!resume?.resumeData || resume.status !== 'live')
     redirect(`/?idNotFound=${user_id}`);
 
-  const profilePicture = userProfile?.avatarUrl ?? undefined;
+  const rawProfilePicture = userProfile?.avatarUrl || userProfile?.image;
+  const profilePicture = getOptimizedImageUrl(rawProfilePicture) || '';
 
   const stripHtml = (html: string) =>
     html ? html.replace(/<[^>]*>?/gm, '') : '';
