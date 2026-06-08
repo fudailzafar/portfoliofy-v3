@@ -1,6 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 import { getUserData } from '../utils';
+import { getOptimizedImageUrl } from '@/lib/utils';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -30,9 +31,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Use profile image from Postgres users table
+    const rawProfileImage = userProfile?.customImage || userProfile?.image;
     const profileImageUrl =
-      userProfile?.customImage ||
-      userProfile?.image ||
+      getOptimizedImageUrl(rawProfileImage) ||
       `${request.nextUrl.origin}/placeholder.svg`;
 
     // 40x40 subtle grid pattern
