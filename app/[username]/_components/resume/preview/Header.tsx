@@ -1,5 +1,36 @@
+import React, { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ResumeDataSchemaType } from '@/lib/resume';
+import { UserProfile } from '@/lib/server/cachedFunctions';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import Twemoji from 'react-twemoji';
+import { StatusEditor } from './StatusEditor';
+import { AnimatePresence } from 'framer-motion';
+
+function getRelativeTime(dateInput: Date | string | null | undefined): string {
+  if (!dateInput) return '';
+  const date = new Date(dateInput);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (diffInSeconds < 60) return 'A few seconds ago';
+  
+  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) return rtf.format(-diffInMinutes, 'minute');
+  
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return rtf.format(-diffInHours, 'hour');
+  
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) return rtf.format(-diffInDays, 'day');
+  
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) return rtf.format(-diffInMonths, 'month');
+  
+  const diffInYears = Math.floor(diffInMonths / 12);
+  return rtf.format(-diffInYears, 'year');
+}
 
 /**
  * Header component displaying personal information and contact details
@@ -7,23 +38,72 @@ import { ResumeDataSchemaType } from '@/lib/resume';
 export function Header({
   header,
   picture,
+  isOwner,
+  userProfile,
 }: {
   header: ResumeDataSchemaType['header'];
   picture?: string;
+  isOwner?: boolean;
+  userProfile?: UserProfile;
 }) {
-  return (
-    <header className="mb-8 flex items-center gap-4 md:gap-6">
-      <Avatar className="size-20 shrink-0 md:size-24" aria-hidden="true">
-        <AvatarImage src={picture} alt={`${header.name}'s profile picture`} />
-        <AvatarFallback>
-          {header.name
-            .split(' ')
-            .map((n) => n[0])
-            .join('')}
-        </AvatarFallback>
-      </Avatar>
+  const [isEditingStatus, setIsEditingStatus] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState({
+    emoji: userProfile?.statusEmoji || null,
+    text: userProfile?.statusText || null,
+    updatedAt: userProfile?.statusUpdatedAt || null,
+  });
 
-      <div className="flex-1 space-y-1">
+  return (
+    <div className="mb-8">
+      <header className="flex items-center gap-4 md:gap-6">
+        <div className="relative">
+          <Avatar className="size-20 shrink-0 md:size-24" aria-hidden="true">
+            <AvatarImage src={picture} alt={`${header.name}'s profile picture`} />
+            <AvatarFallback>
+              {header.name
+                .split(' ')
+                .map((n) => n[0])
+                .join('')}
+            </AvatarFallback>
+          </Avatar>
+          
+          {isOwner && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setIsEditingStatus(true)}
+                    className="absolute -bottom-1 -right-2 flex h-7 w-9 items-center justify-center rounded-full border-2 border-surface-1 bg-surface-2 text-sm shadow-sm transition-transform hover:scale-110 hover:bg-surface-3"
+                  >
+                    <Twemoji 
+                      tag="span" 
+                      className="flex items-center justify-center leading-none" 
+                      options={{ className: 'h-[1.2em] w-[1.2em]' }}
+                    >
+                      {currentStatus.emoji || '⊕'}
+                    </Twemoji>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Set status</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+          {!isOwner && currentStatus.emoji && (
+            <div className="absolute -bottom-1 -right-2 flex h-7 w-9 items-center justify-center rounded-full border-2 border-surface-1 bg-surface-2 text-sm shadow-sm">
+              <Twemoji 
+                tag="span" 
+                className="flex items-center justify-center leading-none" 
+                options={{ className: 'h-[1.2em] w-[1.2em]' }}
+              >
+                {currentStatus.emoji}
+              </Twemoji>
+            </div>
+          )}
+        </div>
+
+        <div className="flex-1 space-y-1">
         <h1
           className="text-xl font-semibold text-theme-primary"
           id="resume-name"
@@ -60,6 +140,31 @@ export function Header({
           </a>
         )}
       </div>
-    </header>
+      </header>
+
+      {/* Status Editor Dialog */}
+      <AnimatePresence>
+        {isEditingStatus && (
+          <StatusEditor
+            initialEmoji={currentStatus.emoji}
+            initialText={currentStatus.text}
+            onClose={() => setIsEditingStatus(false)}
+            onSave={(emoji, text, date) => setCurrentStatus({ emoji, text, updatedAt: date })}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Status Display Bubble */}
+      {!isEditingStatus && currentStatus.text && (
+        <div className="mt-4 flex w-full flex-col gap-1 rounded-3xl border border-border-strong bg-surface-1 p-4 shadow-sm relative">
+          {/* Speech Bubble Tail */}
+          <div className="absolute -top-[6px] left-[64px] md:left-[80px] h-3 w-3 rotate-45 rounded-tl-sm border-l border-t border-border-strong bg-surface-1" />
+          <span className="text-[15px] text-content-primary">{currentStatus.text}</span>
+          <span className="text-xs text-content-muted">
+            {getRelativeTime(currentStatus.updatedAt)}
+          </span>
+        </div>
+      )}
+    </div>
   );
 }

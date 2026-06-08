@@ -3,15 +3,18 @@
 import { useResumeStore } from '@/store/useResumeStore';
 import { FullResume } from './FullResume';
 import { ResumeData } from '@/lib/server/dbActions';
+import { UserProfile } from '@/lib/server/cachedFunctions';
 
 export function LiveResumeWrapper({
   initialResume,
   profilePicture,
   isOwner,
+  userProfile,
 }: {
   initialResume?: ResumeData | null;
   profilePicture?: string;
   isOwner?: boolean;
+  userProfile?: UserProfile;
 }) {
   const storeResume = useResumeStore((state) => state.resume);
 
@@ -33,7 +36,12 @@ export function LiveResumeWrapper({
     <div
       className={`flex flex-1 flex-col bg-theme-bg ${fontClass} ${themeClass}`}
     >
-      <FullResume resume={displayResume} profilePicture={profilePicture} />
+      <FullResume 
+        resume={displayResume} 
+        profilePicture={profilePicture} 
+        isOwner={isOwner}
+        userProfile={userProfile}
+      />
     </div>
   );
 }

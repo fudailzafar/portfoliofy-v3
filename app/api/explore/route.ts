@@ -8,23 +8,26 @@ export async function GET(request: Request) {
     const sort = searchParams.get('sort') || 'activity';
     const cursor = searchParams.get('cursor');
 
-    let orderBy = sql`r.updated_at DESC`;
+    let orderBy = sql`u.status_updated_at DESC`;
     let cursorCondition = sql``;
+    let extraFilter = sql`AND u.status_text IS NOT NULL`;
 
     if (sort === 'new') {
       orderBy = sql`u.created_at DESC`;
+      extraFilter = sql``;
       if (cursor) {
         cursorCondition = sql`AND u.created_at < ${cursor}`;
       }
     } else if (sort === 'a-z') {
       orderBy = sql`LOWER(((r.resume_data#>>'{}')::jsonb)->'header'->>'name') ASC`;
+      extraFilter = sql``;
       if (cursor) {
         cursorCondition = sql`AND LOWER(((r.resume_data#>>'{}')::jsonb)->'header'->>'name') > ${cursor}`;
       }
     } else {
       // default 'activity'
       if (cursor) {
-        cursorCondition = sql`AND r.updated_at < ${cursor}`;
+        cursorCondition = sql`AND u.status_updated_at < ${cursor}`;
       }
     }
 
@@ -38,6 +41,9 @@ export async function GET(request: Request) {
         u.custom_image,
         ((r.resume_data#>>'{}')::jsonb)->'header'->>'name' as name,
         ((r.resume_data#>>'{}')::jsonb)->'header'->>'shortAbout' as short_about,
+        u.status_emoji as status_emoji,
+        u.status_text as status_text,
+        u.status_updated_at as status_updated_at,
         r.updated_at,
         u.created_at
       FROM users u
@@ -48,6 +54,7 @@ export async function GET(request: Request) {
           OR (((r.resume_data#>>'{}')::jsonb)->'header'->>'name') ILIKE ${searchQuery}
           OR (((r.resume_data#>>'{}')::jsonb)->'header'->>'shortAbout') ILIKE ${searchQuery}
         )
+        ${extraFilter}
         ${cursorCondition}
       ORDER BY ${orderBy}
       LIMIT ${limit + 1}
@@ -64,7 +71,7 @@ export async function GET(request: Request) {
       } else if (sort === 'a-z') {
         nextCursor = lastItem.name?.toLowerCase();
       } else {
-        nextCursor = lastItem.updatedAt;
+        nextCursor = lastItem.statusUpdatedAt;
       }
     }
 
