@@ -24,57 +24,53 @@ export const FullResume = ({
   isOwner,
   userProfile,
 }: {
-  resume?: ResumeData | null;
+  resume: ResumeData;
   profilePicture?: string;
   isOwner?: boolean;
   userProfile?: UserProfile;
 }) => {
   const order = useMemo(
-    () => normalizeSectionOrder(resume?.sectionOrder),
-    [resume?.sectionOrder],
+    () => normalizeSectionOrder(resume.sectionOrder),
+    [resume.sectionOrder],
   );
 
   const sortedWork = useMemo(
-    () => sortByDateDesc(resume?.workExperience),
-    [resume?.workExperience],
+    () => sortByDateDesc(resume.workExperience),
+    [resume.workExperience],
   );
   const sortedSideProjects = useMemo(
-    () => sortByDateDesc(resume?.sideProjects),
-    [resume?.sideProjects],
+    () => sortByDateDesc(resume.sideProjects),
+    [resume.sideProjects],
   );
   const sortedSpeaking = useMemo(
-    () => sortByDateDesc(resume?.speaking),
-    [resume?.speaking],
+    () => sortByDateDesc(resume.speaking),
+    [resume.speaking],
   );
   const sortedFeatures = useMemo(
-    () => sortByDateDesc(resume?.features),
-    [resume?.features],
+    () => sortByDateDesc(resume.features),
+    [resume.features],
   );
   const sortedVolunteering = useMemo(
-    () => sortByDateDesc(resume?.volunteering),
-    [resume?.volunteering],
+    () => sortByDateDesc(resume.volunteering),
+    [resume.volunteering],
   );
   const sortedProjects = useMemo(
-    () => sortByDateDesc(resume?.projects),
-    [resume?.projects],
+    () => sortByDateDesc(resume.projects),
+    [resume.projects],
   );
   const sortedEducation = useMemo(
-    () => sortByDateDesc(resume?.education),
-    [resume?.education],
+    () => sortByDateDesc(resume.education),
+    [resume.education],
   );
   const sortedAwards = useMemo(
-    () => sortByDateDesc(resume?.awards),
-    [resume?.awards],
+    () => sortByDateDesc(resume.awards),
+    [resume.awards],
   );
 
   const sortedCertifications = useMemo(
-    () => sortByDateDesc(resume?.certifications),
-    [resume?.certifications],
+    () => sortByDateDesc(resume.certifications),
+    [resume.certifications],
   );
-
-  if (!resume) {
-    return <LoadingFallback message="Loading Resume..." />;
-  }
 
   return (
     <section
@@ -82,14 +78,14 @@ export const FullResume = ({
       aria-label="Resume Content"
     >
       <Header
-        header={resume?.header}
+        header={resume.header}
         picture={profilePicture}
         isOwner={isOwner}
         userProfile={userProfile}
       />
 
       <div className="flex flex-col gap-6">
-        <Summary summary={resume?.summary} />
+        <Summary summary={resume.summary} />
 
         {order.map((sectionId) => {
           switch (sectionId) {
