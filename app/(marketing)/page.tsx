@@ -63,7 +63,7 @@ export default function Home() {
                       viewBox="0 0 24 24"
                       fill="currentColor"
                       stroke="currentColor"
-                      className="text-surface-1  dark:stroke-white"
+                      className="stroke-black dark:stroke-white"
                       strokeWidth="1.5"
                       strokeLinecap="round"
                       strokeLinejoin="round"
