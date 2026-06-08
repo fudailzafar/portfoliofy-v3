@@ -28,12 +28,12 @@ export const sortByDateDesc = <
   return [...items].sort((a, b) => {
     const getEndYear = (item: any) => {
       const y = item.endYear || item.end;
-      if (y === 'Now' || y === 'Present' || y === 'Current' || !y) return 9999;
+      if (y === 'Now' || y === 'Ongoing' || !y) return 9999;
       return parseInt(y) || 0;
     };
     const getStartYear = (item: any) => {
       const y = item.startYear || item.start || item.year;
-      if (y === 'Now' || y === 'Present' || y === 'Current') return 9999;
+      if (y === 'Now' || y === 'Ongoing') return 9999;
       return parseInt(y) || 0;
     };
 
