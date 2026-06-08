@@ -14,6 +14,7 @@ import { Projects } from './preview/Projects';
 import { Contact } from './preview/Contact';
 import { Features } from './preview/Features';
 import { Volunteering } from './preview/Volunteering';
+import { Awards } from './preview/Awards';
 import { DEFAULT_SECTION_ORDER } from '@/lib/resume';
 
 export const FullResume = ({
@@ -40,6 +41,7 @@ export const FullResume = ({
   const sortedVolunteering = useMemo(() => sortByDateDesc(resume?.volunteering), [resume?.volunteering]);
   const sortedProjects = useMemo(() => sortByDateDesc(resume?.projects), [resume?.projects]);
   const sortedEducation = useMemo(() => sortByDateDesc(resume?.education), [resume?.education]);
+  const sortedAwards = useMemo(() => sortByDateDesc(resume?.awards), [resume?.awards]);
 
   return (
     <section
@@ -91,6 +93,13 @@ export const FullResume = ({
                 <Volunteering
                   key={sectionId}
                   volunteering={sortedVolunteering}
+                />
+              );
+            case 'awards':
+              return (
+                <Awards
+                  key={sectionId}
+                  awards={sortedAwards}
                 />
               );
             case 'projects':

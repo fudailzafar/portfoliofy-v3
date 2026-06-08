@@ -195,6 +195,17 @@ const VolunteeringSection = z.array(
   }),
 );
 
+const AwardsSection = z.array(
+  z.object({
+    id: z.string().optional().describe('Unique identifier for the award'),
+    title: z.string().describe('Award title'),
+    issuer: z.string().describe('Issuer of the award'),
+    year: z.string().describe('Year the award was received'),
+    link: z.string().optional().describe('Link to the award'),
+    description: z.string().optional().describe('Description of the award'),
+  }),
+);
+
 export const ResumeDataSchema = z.object({
   header: HeaderSection,
   summary: SummarySection,
@@ -205,6 +216,7 @@ export const ResumeDataSchema = z.object({
   speaking: SpeakingSection.optional().default([]),
   features: FeaturesSection.optional().default([]),
   volunteering: VolunteeringSection.optional().default([]),
+  awards: AwardsSection.optional().default([]),
   contacts: ContactSection.optional().default([]),
   sectionOrder: z.array(z.string()).optional().default(DEFAULT_SECTION_ORDER),
   design: z

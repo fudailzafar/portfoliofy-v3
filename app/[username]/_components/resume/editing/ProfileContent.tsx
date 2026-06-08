@@ -14,6 +14,7 @@ import {
   PersonalDomainTab,
   PrintTab,
   SettingsTab,
+  AwardsTab,
 } from './tabs';
 
 interface ProfileContentProps {
@@ -137,6 +138,12 @@ export function ProfileContent({
           <FeaturesTab
             years={years}
             setProjectToDelete={setProjectToDelete('feature')}
+          />
+        )}
+        {activeTab === 'awards' && (
+          <AwardsTab
+            years={years}
+            setProjectToDelete={setProjectToDelete('award')}
           />
         )}
         {activeTab === 'contact' && (

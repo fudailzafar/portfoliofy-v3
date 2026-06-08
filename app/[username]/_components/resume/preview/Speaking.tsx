@@ -1,4 +1,5 @@
 import { ResumeDataSchemaType } from '@/lib/resume';
+import { ArrowUpRight } from 'lucide-react';
 
 export function Speaking({
   speaking,
@@ -46,20 +47,7 @@ export function Speaking({
                   >
                     <span className="text-sm font-semibold">
                       {engagement.title}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="relative -top-0.5 ml-1 inline-block h-4 w-4"
-                      >
-                        <path d="M7 17L17 7M7 7h10v10" />
-                      </svg>
+                      <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
                     </span>
                   </a>
                 ) : (
