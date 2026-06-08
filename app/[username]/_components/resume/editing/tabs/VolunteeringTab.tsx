@@ -6,6 +6,15 @@ import { EditDeleteButtons } from '../EditDeleteButtons';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
+import dynamic from 'next/dynamic';
+
+const RichTextEditor = dynamic(
+  () =>
+    import('@/components/composite/RichTextEditor').then(
+      (mod) => mod.RichTextEditor,
+    ),
+  { ssr: false },
+);
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import {
@@ -188,7 +197,7 @@ export function VolunteeringTab({
       )}
 
       {volunteeringView === 'form' && currentVolunteering && (
-        <div className="space-y-6">
+        <div className="space-y-6 pb-24">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Role *</Label>
@@ -303,6 +312,21 @@ export function VolunteeringTab({
                 placeholder="https://..."
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-content-secondary">
+              Description
+            </Label>
+            <RichTextEditor
+              content={currentVolunteering.description || ''}
+              onChange={(val) =>
+                setCurrentVolunteering({
+                  ...currentVolunteering,
+                  description: val,
+                })
+              }
+            />
           </div>
 
           <TabFormActions

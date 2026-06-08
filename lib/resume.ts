@@ -160,6 +160,10 @@ const SpeakingSection = z.array(
     year: z.string().describe('Year of the engagement'),
     link: z.string().optional().describe('Link to recording or slides'),
     location: z.string().optional().describe('Location or venue name'),
+    description: z
+      .string()
+      .optional()
+      .describe('Rich text description of the speaking engagement'),
   }),
 );
 
@@ -192,6 +196,10 @@ const VolunteeringSection = z.array(
     endYear: z.string().describe('End year'),
     location: z.string().optional().describe('Location'),
     link: z.string().optional().describe('Link to organization or role'),
+    description: z
+      .string()
+      .optional()
+      .describe('Rich text description of the volunteering engagement'),
   }),
 );
 
