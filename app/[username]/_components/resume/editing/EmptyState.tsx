@@ -8,7 +8,11 @@ interface EmptyStateProps {
   onClick: () => void;
 }
 
-export function EmptyState({ icon: Icon, buttonText, onClick }: EmptyStateProps) {
+export function EmptyState({
+  icon: Icon,
+  buttonText,
+  onClick,
+}: EmptyStateProps) {
   return (
     <div className="mt-12 flex flex-1 flex-col items-center justify-center space-y-6 text-center opacity-80">
       <div className="rounded-full bg-surface-2 p-8">

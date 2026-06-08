@@ -6,10 +6,16 @@ export function Footer() {
       <div className="mx-auto flex w-full max-w-4xl items-center justify-center">
         {/* Navigation Links */}
         <div className="flex flex-wrap justify-center gap-8 text-[15px] text-content-muted">
-          <Link href="/" className="transition-colors hover:text-content-primary">
+          <Link
+            href="/"
+            className="transition-colors hover:text-content-primary"
+          >
             About
           </Link>
-          <Link href="/terms" className="transition-colors hover:text-content-primary">
+          <Link
+            href="/terms"
+            className="transition-colors hover:text-content-primary"
+          >
             Terms
           </Link>
           <Link
@@ -18,7 +24,10 @@ export function Footer() {
           >
             Privacy
           </Link>
-          <Link href="/faq" className="transition-colors hover:text-content-primary">
+          <Link
+            href="/faq"
+            className="transition-colors hover:text-content-primary"
+          >
             FAQ
           </Link>
         </div>

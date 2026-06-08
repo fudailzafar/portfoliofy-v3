@@ -120,13 +120,13 @@ export function FeaturesTab({
               const canMoveUp =
                 prevItem &&
                 parseInt(feature.year || '0') ===
-                parseInt(prevItem.year || '0');
+                  parseInt(prevItem.year || '0');
               const nextItem =
                 index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
               const canMoveDown =
                 nextItem &&
                 parseInt(feature.year || '0') ===
-                parseInt(nextItem.year || '0');
+                  parseInt(nextItem.year || '0');
               return (
                 <div
                   key={feature.id}
@@ -197,7 +197,9 @@ export function FeaturesTab({
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Thing done*</Label>
+              <Label className="text-xs text-content-secondary">
+                Thing done*
+              </Label>
               <Input
                 value={currentFeature.title}
                 onChange={(e) =>
@@ -222,12 +224,13 @@ export function FeaturesTab({
                 placeholder="New York Times, Awwwards, ProductHunt, etc"
               />
             </div>
-
           </div>
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Link to feature</Label>
+              <Label className="text-xs text-content-secondary">
+                Link to feature
+              </Label>
               <Input
                 value={currentFeature.link || ''}
                 onChange={(e) =>
@@ -265,7 +268,9 @@ export function FeaturesTab({
           </div>
 
           <div className="space-y-2 pt-2">
-            <Label className="text-xs text-content-secondary">Description</Label>
+            <Label className="text-xs text-content-secondary">
+              Description
+            </Label>
             <RichTextEditor
               content={currentFeature.description || ''}
               onChange={(val) =>

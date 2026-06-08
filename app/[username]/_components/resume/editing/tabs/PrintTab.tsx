@@ -6,8 +6,12 @@ import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 
 export function PrintTab() {
-  const printHiddenSections = useResumeStore((state) => state.printHiddenSections);
-  const togglePrintSection = useResumeStore((state) => state.togglePrintSection);
+  const printHiddenSections = useResumeStore(
+    (state) => state.printHiddenSections,
+  );
+  const togglePrintSection = useResumeStore(
+    (state) => state.togglePrintSection,
+  );
   const setIsEditingTab = useResumeStore((state) => state.setIsEditingTab);
 
   React.useEffect(() => {

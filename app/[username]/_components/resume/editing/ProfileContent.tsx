@@ -61,7 +61,7 @@ export function ProfileContent({
   return (
     <div
       className={cn(
-        'relative h-full flex-1 flex-col bg-surface-1 ',
+        'relative h-full flex-1 flex-col bg-surface-1',
         !showMobileMenu ? 'flex' : 'hidden sm:flex',
       )}
     >

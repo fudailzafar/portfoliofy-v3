@@ -15,8 +15,8 @@ export default function FAQPage() {
               What do you call this platform?
             </h3>
             <p className="text-content-secondary">
-              It&apos;s simply referred to as Portfoliofy. For example you could say,
-              &quot;I just created my Portfoliofy account!&quot;.
+              It&apos;s simply referred to as Portfoliofy. For example you could
+              say, &quot;I just created my Portfoliofy account!&quot;.
             </p>
           </div>
 
@@ -26,7 +26,10 @@ export default function FAQPage() {
             </h3>
             <p className="text-content-secondary">
               Just me,{' '}
-              <Link href="/fudail" className="text-content-primary hover:underline">
+              <Link
+                href="/fudail"
+                className="text-content-primary hover:underline"
+              >
                 Fudail
               </Link>
               .
@@ -42,14 +45,14 @@ export default function FAQPage() {
               some projects, work history, and other bits that might make me
               sound competent. Something easy to share, less garish than
               LinkedIn, and more dynamic than a static PDF. Non-visual, more
-              akin to a text oriented personal website. Something that wasn&apos;t
-              just a one off page, where I could bring in friends and
-              collaborators, and profiles could be navigated from one to the
+              akin to a text oriented personal website. Something that
+              wasn&apos;t just a one off page, where I could bring in friends
+              and collaborators, and profiles could be navigated from one to the
               other like a blogroll.
             </p>
             <p className="pt-2 text-content-secondary">
-              I thought this might be useful, so I&apos;m putting it out there to see
-              if it is.
+              I thought this might be useful, so I&apos;m putting it out there
+              to see if it is.
             </p>
           </div>
 
@@ -87,7 +90,9 @@ export default function FAQPage() {
             <h3 className="text-lg font-bold text-content-primary">
               I have more questions, who should I call?
             </h3>
-            <p className="text-content-secondary">Email me, fudail.zafar@gmail.com.</p>
+            <p className="text-content-secondary">
+              Email me, fudail.zafar@gmail.com.
+            </p>
           </div>
         </div>
       </main>

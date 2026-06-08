@@ -65,12 +65,12 @@ export default async function ProfilePage({
 
   if (!user_id) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-white to-surface-2 px-4 py-8 md:py-12 dark:from-[#121212] dark:to-[#1a1a1a]">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-white to-surface-2 px-4 py-8 dark:from-[#121212] dark:to-[#1a1a1a] md:py-12">
         <div className="w-full max-w-4xl space-y-6 text-center md:space-y-8">
           {/* Header */}
           <div className="space-y-3 md:space-y-4">
             <div className="inline-block">
-              <div className="rounded-lg bg-green-100 px-3 py-1.5 text-xs font-medium text-green-800 md:px-4 md:py-2 md:text-sm dark:bg-green-900 dark:text-green-100">
+              <div className="rounded-lg bg-green-100 px-3 py-1.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-100 md:px-4 md:py-2 md:text-sm">
                 Available
               </div>
             </div>
@@ -124,7 +124,7 @@ export default async function ProfilePage({
             <Link href={'/claim'} className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="w-full bg-design-black px-6 py-5 text-base text-surface-1 hover:bg-design-black/95 sm:w-auto md:px-8 md:py-6 md:text-lg dark:bg-surface-1 dark:text-content-primary dark:hover:bg-surface-3"
+                className="w-full bg-design-black px-6 py-5 text-base text-surface-1 hover:bg-design-black/95 dark:bg-surface-1 dark:text-content-primary dark:hover:bg-surface-3 sm:w-auto md:px-8 md:py-6 md:text-lg"
               >
                 Claim Handle Now
               </Button>
@@ -133,7 +133,7 @@ export default async function ProfilePage({
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full px-6 py-5 text-base sm:w-auto md:px-8 md:py-6 md:text-lg dark:hover:bg-surface-card"
+                className="w-full px-6 py-5 text-base dark:hover:bg-surface-card sm:w-auto md:px-8 md:py-6 md:text-lg"
               >
                 Sign in
               </Button>

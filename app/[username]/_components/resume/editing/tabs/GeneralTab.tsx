@@ -81,7 +81,7 @@ export function GeneralTab({
           /* ── Has image: static avatar (not clickable) ── */
           <div className="relative size-20 shrink-0 overflow-hidden rounded-full">
             {isUploadingPicture && (
-              <div className="absolute inset-0 z-10 flex items-center justify-center rounded-full bg-action-primary/40">
+              <div className="bg-action-primary/40 absolute inset-0 z-10 flex items-center justify-center rounded-full">
                 <svg
                   className="size-5 animate-spin text-surface-1"
                   fill="none"
@@ -241,7 +241,10 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="displayName" className="text-xs text-content-secondary">
+            <Label
+              htmlFor="displayName"
+              className="text-xs text-content-secondary"
+            >
               Display name*
             </Label>
             <span className="text-xs text-content-muted">
@@ -259,7 +262,10 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="shortAbout" className="text-xs text-content-secondary">
+            <Label
+              htmlFor="shortAbout"
+              className="text-xs text-content-secondary"
+            >
               What do you do?
             </Label>
             <span className="text-xs text-content-muted">
@@ -277,7 +283,10 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="location" className="text-xs text-content-secondary">
+            <Label
+              htmlFor="location"
+              className="text-xs text-content-secondary"
+            >
               Location
             </Label>
             <span className="text-xs text-content-muted">
@@ -295,7 +304,10 @@ export function GeneralTab({
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <Label htmlFor="pronouns" className="text-xs text-content-secondary">
+            <Label
+              htmlFor="pronouns"
+              className="text-xs text-content-secondary"
+            >
               Pronouns
             </Label>
             <span className="text-xs text-content-muted">

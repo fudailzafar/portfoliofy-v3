@@ -15,7 +15,8 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<ExploreSort>('activity');
 
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useExplore(query, sort);
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useExplore(query, sort);
 
   const users = data?.pages.flatMap((page) => page.users) || [];
 
@@ -30,7 +31,9 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
 
   const formatRelativeTime = (dateString: string) => {
     const date = new Date(dateString);
-    const diffInSeconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+    const diffInSeconds = Math.floor(
+      (new Date().getTime() - date.getTime()) / 1000,
+    );
     const diffInMinutes = Math.floor(diffInSeconds / 60);
     const diffInHours = Math.floor(diffInMinutes / 60);
     const diffInDays = Math.floor(diffInHours / 24);
@@ -99,7 +102,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
               key={tab.id}
               onClick={() => setSort(tab.id)}
               className={`relative cursor-default pb-3 text-[13px] transition-all ${
-                sort === tab.id ? 'text-content-primary ' : 'text-content-muted'
+                sort === tab.id ? 'text-content-primary' : 'text-content-muted'
               }`}
             >
               {tab.label}
@@ -114,10 +117,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
         </div>
       </div>
 
-      <div 
-        className="flex-1 overflow-y-auto px-2 py-2"
-        onScroll={handleScroll}
-      >
+      <div className="flex-1 overflow-y-auto px-2 py-2" onScroll={handleScroll}>
         {isLoading ? (
           <div className="p-4 text-center text-[13px] text-content-muted">
             Loading...
@@ -127,80 +127,82 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
             No results found
           </div>
         ) : (
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={sort}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.30 }}
-                  className="flex flex-col"
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={sort}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col"
+            >
+              {users?.map((user) => (
+                <button
+                  key={user.username}
+                  onClick={() => router.push(`/${user.username}`)}
+                  className={`hover:bg-surface-3/50 mx-2 flex items-start gap-3 px-3 text-left transition-colors ${
+                    sort === 'activity'
+                      ? 'mb-3 border-b border-border-subtle pb-4 pt-3'
+                      : 'rounded-[10px] py-3'
+                  }`}
                 >
-                  {users?.map((user) => (
-                    <button
-                      key={user.username}
-                      onClick={() => router.push(`/${user.username}`)}
-                      className={`flex items-start gap-3 px-3 mx-2 text-left transition-colors hover:bg-surface-3/50 ${
-                        sort === 'activity'
-                          ? 'mb-3 border-b border-border-subtle pb-4 pt-3'
-                          : 'rounded-[10px] py-3'
-                      }`}
-                    >
-                <div className="relative h-10 w-10 shrink-0">
-                  <div className="relative h-full w-full overflow-hidden rounded-full bg-surface-3">
-                    {user.customImage || user.userImage ? (
-                      <Image
-                        src={user.customImage || user.userImage!}
-                        alt={user.name || user.username}
-                        fill
-                        sizes="40px"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-surface-3 text-[14px] font-medium text-content-secondary">
-                        {(user.name || user.username).charAt(0).toUpperCase()}
+                  <div className="relative h-10 w-10 shrink-0">
+                    <div className="relative h-full w-full overflow-hidden rounded-full bg-surface-3">
+                      {user.customImage || user.userImage ? (
+                        <Image
+                          src={user.customImage || user.userImage!}
+                          alt={user.name || user.username}
+                          fill
+                          sizes="40px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-surface-3 text-[14px] font-medium text-content-secondary">
+                          {(user.name || user.username).charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                    {sort === 'activity' && user.statusEmoji && (
+                      <div className="absolute -bottom-1 -right-2 z-10 flex h-[18px] w-6 items-center justify-center rounded-full border-[0.5px] border-border-strong bg-surface-1 shadow-sm">
+                        <Twemoji
+                          tag="span"
+                          className="flex items-center justify-center text-[9px] leading-none"
+                          options={{ className: 'h-[1.2em] w-[1.2em]' }}
+                        >
+                          {user.statusEmoji}
+                        </Twemoji>
                       </div>
                     )}
                   </div>
-                  {sort === 'activity' && user.statusEmoji && (
-                    <div className="absolute -bottom-1 -right-2 z-10 flex h-[18px] w-6 items-center justify-center rounded-full border-[1px] border-border-strong bg-surface-1 shadow-sm">
-                      <Twemoji 
-                        tag="span" 
-                        className="flex items-center justify-center leading-none text-[9px]" 
-                        options={{ className: 'h-[1.2em] w-[1.2em]' }}
-                      >
-                        {user.statusEmoji}
-                      </Twemoji>
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[14px] font-medium text-content-primary">
-                    {user.name || user.username}
-                  </span>
-                  {sort === 'new' ? (
-                    <span className="mt-0.5 line-clamp-1 text-[13px] leading-tight text-content-muted">
-                      Joined {formatRelativeTime(user.createdAt)}
+                  <div className="flex flex-col">
+                    <span className="text-[14px] font-medium text-content-primary">
+                      {user.name || user.username}
                     </span>
-                  ) : sort === 'activity' ? (
-                    <>
-                      {user.statusText && (
-                        <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
-                          {user.statusText}
+                    {sort === 'new' ? (
+                      <span className="mt-0.5 line-clamp-1 text-[13px] leading-tight text-content-muted">
+                        Joined {formatRelativeTime(user.createdAt)}
+                      </span>
+                    ) : sort === 'activity' ? (
+                      <>
+                        {user.statusText && (
+                          <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
+                            {user.statusText}
+                          </span>
+                        )}
+                        <span className="text-content-muted/60 mt-1.5 text-[12px]">
+                          {user.statusUpdatedAt
+                            ? formatRelativeTime(user.statusUpdatedAt)
+                            : formatRelativeTime(user.updatedAt)}
                         </span>
-                      )}
-                      <span className="mt-1.5 text-[12px] text-content-muted/60">
-                        {user.statusUpdatedAt ? formatRelativeTime(user.statusUpdatedAt) : formatRelativeTime(user.updatedAt)}
-                      </span>
-                    </>
-                  ) : (
-                    user.shortAbout && (
-                      <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
-                        {user.shortAbout}
-                      </span>
-                    )
-                  )}
-                </div>
+                      </>
+                    ) : (
+                      user.shortAbout && (
+                        <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
+                          {user.shortAbout}
+                        </span>
+                      )
+                    )}
+                  </div>
                 </button>
               ))}
             </motion.div>
