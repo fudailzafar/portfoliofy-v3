@@ -140,7 +140,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                     <button
                       key={user.username}
                       onClick={() => router.push(`/${user.username}`)}
-                      className={`flex items-start gap-3 px-3 text-left transition-colors hover:bg-surface-3/50 ${
+                      className={`flex items-start gap-3 px-3 mx-2 text-left transition-colors hover:bg-surface-3/50 ${
                         sort === 'activity'
                           ? 'mb-3 border-b border-border-subtle pb-4 pt-3'
                           : 'rounded-[10px] py-3'
