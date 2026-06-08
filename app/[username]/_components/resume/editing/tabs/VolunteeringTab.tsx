@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
@@ -8,7 +8,6 @@ import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -16,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Upload, Download, HeartHandshake, ArrowUpRight } from 'lucide-react';
+import { HeartHandshake, ArrowUpRight } from 'lucide-react';
 import { sortByDateDesc } from '@/lib/resume';
 
 export function VolunteeringTab({
