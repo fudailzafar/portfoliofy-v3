@@ -20,6 +20,15 @@ import { EditDeleteButtons } from '../EditDeleteButtons';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
+import dynamic from 'next/dynamic';
+
+const RichTextEditor = dynamic(
+  () =>
+    import('@/components/composite/RichTextEditor').then(
+      (mod) => mod.RichTextEditor,
+    ),
+  { ssr: false },
+);
 
 export function SpeakingTab({
   years,
@@ -182,7 +191,7 @@ export function SpeakingTab({
       )}
 
       {speakingView === 'form' && currentSpeaking && (
-        <div className="space-y-6">
+        <div className="space-y-6 pb-24">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">Title*</Label>
@@ -249,6 +258,21 @@ export function SpeakingTab({
                 placeholder="https://example.com"
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-content-secondary">
+              Description
+            </Label>
+            <RichTextEditor
+              content={currentSpeaking.description || ''}
+              onChange={(val) =>
+                setCurrentSpeaking({
+                  ...currentSpeaking,
+                  description: val,
+                })
+              }
+            />
           </div>
 
           <TabFormActions
