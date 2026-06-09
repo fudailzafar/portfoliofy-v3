@@ -61,10 +61,15 @@ export function ClientLayoutWrapper({
   return (
     <TooltipProvider delayDuration={0}>
       <div className="relative flex min-h-screen w-full overflow-x-hidden bg-surface-1 font-sans">
-        {/* Fixed Sidebar Underneath */}
-        <div className="fixed left-0 top-0 z-0 h-full w-[330px] print:hidden">
+        {/* Sliding Sidebar */}
+        <motion.div
+          className="fixed left-0 top-0 z-40 h-full w-[330px] print:hidden"
+          initial={{ x: -330 }}
+          animate={{ x: isOpen ? 0 : -330 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        >
           <GlobalSidebar />
-        </div>
+        </motion.div>
 
         {/* Main Content Layer */}
         <motion.div
