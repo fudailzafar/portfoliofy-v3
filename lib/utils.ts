@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function getOptimizedImageUrl(url?: string | null): string | undefined {
   if (!url) return undefined;
-  
+
   const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL;
   if (!cdnUrl) return url;
 

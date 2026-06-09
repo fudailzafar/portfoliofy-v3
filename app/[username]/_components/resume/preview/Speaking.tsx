@@ -63,12 +63,13 @@ export function Speaking({
                 </div>
               )}
 
-              {engagement.description && engagement.description !== '<p></p>' && (
-                <div
-                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-2 max-w-none text-sm text-theme-secondary"
-                  dangerouslySetInnerHTML={{ __html: engagement.description }}
-                />
-              )}
+              {engagement.description &&
+                engagement.description !== '<p></p>' && (
+                  <div
+                    className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-2 max-w-none text-sm text-theme-secondary"
+                    dangerouslySetInnerHTML={{ __html: engagement.description }}
+                  />
+                )}
             </div>
           </div>
         ))}

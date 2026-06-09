@@ -1,4 +1,3 @@
-
 interface TabHeaderProps {
   title: string;
   showAddButton: boolean;

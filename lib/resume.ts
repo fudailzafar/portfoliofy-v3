@@ -225,12 +225,18 @@ const AwardsSection = z.array(
 
 const CertificationsSection = z.array(
   z.object({
-    id: z.string().optional().describe('Unique identifier for the certification'),
+    id: z
+      .string()
+      .optional()
+      .describe('Unique identifier for the certification'),
     title: z.string().describe('Certification title'),
     issuer: z.string().describe('Issuing organization'),
     year: z.string().describe('Year the certification was received'),
     link: z.string().optional().describe('Link to the certification'),
-    description: z.string().optional().describe('Description of the certification'),
+    description: z
+      .string()
+      .optional()
+      .describe('Description of the certification'),
   }),
 );
 
