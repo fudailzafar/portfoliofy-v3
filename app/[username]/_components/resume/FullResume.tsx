@@ -112,7 +112,12 @@ export const FullResume = ({
             case 'awards':
               return <Awards key={sectionId} awards={sortedAwards} />;
             case 'certifications':
-              return <Certifications key={sectionId} certifications={sortedCertifications} />;
+              return (
+                <Certifications
+                  key={sectionId}
+                  certifications={sortedCertifications}
+                />
+              );
             case 'projects':
               return <Projects key={sectionId} projects={sortedProjects} />;
             case 'education':

@@ -1,6 +1,10 @@
 import React, { useMemo } from 'react';
 import { ResumeData } from '@/lib/server/dbActions';
-import { sortByDateDesc, DEFAULT_SECTION_ORDER, normalizeSectionOrder } from '@/lib/resume';
+import {
+  sortByDateDesc,
+  DEFAULT_SECTION_ORDER,
+  normalizeSectionOrder,
+} from '@/lib/resume';
 import { cn } from '@/lib/utils';
 
 export const PrintResume = ({
@@ -120,12 +124,15 @@ export const PrintResume = ({
                         <p className="text-sm">
                           {award.title} from {award.issuer}
                         </p>
-                        {award.description && award.description !== '<p></p>' && (
-                          <div
-                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
-                            dangerouslySetInnerHTML={{ __html: award.description }}
-                          />
-                        )}
+                        {award.description &&
+                          award.description !== '<p></p>' && (
+                            <div
+                              className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
+                              dangerouslySetInnerHTML={{
+                                __html: award.description,
+                              }}
+                            />
+                          )}
                       </div>
                     </div>
                   )),
@@ -151,7 +158,9 @@ export const PrintResume = ({
                         {cert.description && cert.description !== '<p></p>' && (
                           <div
                             className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
-                            dangerouslySetInnerHTML={{ __html: cert.description }}
+                            dangerouslySetInnerHTML={{
+                              __html: cert.description,
+                            }}
                           />
                         )}
                       </div>

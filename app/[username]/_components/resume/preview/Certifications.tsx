@@ -57,12 +57,15 @@ export function Certifications({
                 )}
               </div>
 
-              {certification.description && certification.description !== '<p></p>' && (
-                <div
-                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-2 max-w-none text-sm text-theme-secondary"
-                  dangerouslySetInnerHTML={{ __html: certification.description }}
-                />
-              )}
+              {certification.description &&
+                certification.description !== '<p></p>' && (
+                  <div
+                    className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-2 max-w-none text-sm text-theme-secondary"
+                    dangerouslySetInnerHTML={{
+                      __html: certification.description,
+                    }}
+                  />
+                )}
             </div>
           </div>
         ))}
