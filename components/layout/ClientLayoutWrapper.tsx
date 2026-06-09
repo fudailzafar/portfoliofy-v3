@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { GlobalSidebar } from './GlobalSidebar';
@@ -10,13 +10,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useSidebarStore } from '@/store/useSidebarStore';
 
 export function ClientLayoutWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen } = useSidebarStore();
   const pathname = usePathname();
 
   useEffect(() => {
