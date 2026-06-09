@@ -184,8 +184,12 @@ export function StatusEditor({
                   Clear status
                 </Button>
               ) : (
-                <Button size="sm" onClick={handleSave} variant="outline"
-                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm">
+                <Button
+                  size="sm"
+                  onClick={handleSave}
+                  variant="outline"
+                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
+                >
                   Set status
                 </Button>
               )}

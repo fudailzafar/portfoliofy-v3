@@ -1,6 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo, useCallback, useContext } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+  useContext,
+} from 'react';
 import { motion } from 'framer-motion';
 import {
   Dialog,
@@ -289,7 +296,9 @@ export function EditProfileDialog({
       certification: (id) => {
         const s = useResumeStore.getState();
         s.updateResume({
-          certifications: s.resume?.certifications?.filter((p: any) => p.id !== id),
+          certifications: s.resume?.certifications?.filter(
+            (p: any) => p.id !== id,
+          ),
         });
       },
       education: (id) => {
@@ -447,42 +456,44 @@ export function EditProfileDialog({
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
-  const editButton = mounted ? createPortal(
-    <TooltipProvider delayDuration={0}>
-      <Tooltip>
-        <DialogTrigger asChild>
-          <TooltipTrigger asChild>
-            <motion.button
-              animate={{ x: isSidebarOpen ? 330 : 0 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              whileTap={{ scale: 0.9 }}
-              aria-label="Edit Profile"
-              style={{
-                position: 'fixed',
-                bottom: '24px',
-                left: '80px',
-                zIndex: 50,
-              }}
-              className="flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm outline-none transition-colors print:hidden"
+  const editButton = mounted
+    ? createPortal(
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <DialogTrigger asChild>
+              <TooltipTrigger asChild>
+                <motion.button
+                  animate={{ x: isSidebarOpen ? 330 : 0 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  whileTap={{ scale: 0.9 }}
+                  aria-label="Edit Profile"
+                  style={{
+                    position: 'fixed',
+                    bottom: '24px',
+                    left: '80px',
+                    zIndex: 50,
+                  }}
+                  className="flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm outline-none transition-colors print:hidden"
+                >
+                  <Pencil
+                    className="h-[18px] w-[18px] text-content-primary"
+                    strokeWidth={1.5}
+                  />
+                </motion.button>
+              </TooltipTrigger>
+            </DialogTrigger>
+            <TooltipContent
+              side="top"
+              sideOffset={12}
+              className="flex items-center gap-1.5 rounded-lg border-none bg-action-primary px-3 py-1.5 text-[13px] font-medium text-surface-1 shadow-md"
             >
-              <Pencil
-                className="h-[18px] w-[18px] text-content-primary"
-                strokeWidth={1.5}
-              />
-            </motion.button>
-          </TooltipTrigger>
-        </DialogTrigger>
-        <TooltipContent
-          side="top"
-          sideOffset={12}
-          className="flex items-center gap-1.5 rounded-lg border-none bg-action-primary px-3 py-1.5 text-[13px] font-medium text-surface-1 shadow-md"
-        >
-          <span>Edit profile</span>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>,
-    document.body
-  ) : null;
+              <span>Edit profile</span>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>,
+        document.body,
+      )
+    : null;
 
   return (
     <>

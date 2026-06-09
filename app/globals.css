@@ -116,7 +116,8 @@
   * {
     @apply border-border;
   }
-  html, body {
+  html,
+  body {
     @apply bg-surface-1 text-content-primary;
   }
 }

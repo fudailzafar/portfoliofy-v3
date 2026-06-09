@@ -5,13 +5,20 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { claimUsernameAndInitProfile } from './actions';
+import { claimUsernameAndInitProfile } from '@/app/actions/claim';
 import { toast } from 'sonner';
 import { Check, Loader2 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { cn } from '@/lib/utils';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
-export default function ClaimPageClient({ userId }: { userId: string }) {
+export function ClaimDialog() {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [displayName, setDisplayName] = useState('');
@@ -86,22 +93,22 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
   };
 
   return (
-    <div className="flex min-h-[70vh] flex-1 flex-col items-center justify-center gap-6 px-4 py-12">
-      <div className="w-full max-w-md rounded-xl border border-border-strong bg-surface-1 p-8 shadow-sm">
-        <h1 className="mb-2 text-left text-2xl font-bold">
-          Welcome to Portfoliofy👋🏻
-        </h1>
-        <p className="mb-8 text-left text-sm text-content-muted">
-          We just need a few details to finish creating your account. You can
-          always change this later.
-        </p>
+    <Dialog open={true} onOpenChange={() => {}}>
+      <DialogContent className="sm:max-w-md [&>button]:hidden">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold">
+            Welcome to Portfoliofy👋🏻
+          </DialogTitle>
+          <DialogDescription>
+            We just need a few details to finish creating your account. You can
+            always change this later.
+          </DialogDescription>
+        </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="mt-4 space-y-6">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="username" className="">
-                Username
-              </Label>
+              <Label htmlFor="username">Username</Label>
               {status === 'taken' && (
                 <span className="text-xs font-medium text-red-500">
                   Username is taken
@@ -141,9 +148,7 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="displayName" className="">
-                Display Name
-              </Label>
+              <Label htmlFor="displayName">Display Name</Label>
               <span className="text-xs text-content-muted">
                 {displayName.length} of 48
               </span>
@@ -191,7 +196,7 @@ export default function ClaimPageClient({ userId }: { userId: string }) {
             </Button>
           </div>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -165,7 +165,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                     setCustomDomain(e.target.value.toLowerCase())
                   }
                   placeholder="yourname.com"
-                  className={`h-9 w-full border-0 bg-[#f2f2f2] text-[13px] shadow-none focus-visible:ring-0 ${domainStatus ? 'pl-9 text-content-secondary' : ''}`}
+                  className={`h-9 w-full border-0 bg-surface-3 text-[13px] shadow-none focus-visible:ring-0 ${domainStatus ? 'pl-9 text-content-secondary' : ''}`}
                   disabled={!!domainStatus}
                 />
               </div>

@@ -151,7 +151,11 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                     <div className="relative h-full w-full overflow-hidden rounded-full bg-surface-3">
                       {user.customImage || user.userImage ? (
                         <Image
-                          src={getOptimizedImageUrl(user.customImage || user.userImage) || ''}
+                          src={
+                            getOptimizedImageUrl(
+                              user.customImage || user.userImage,
+                            ) || ''
+                          }
                           alt={user.name || user.username}
                           fill
                           sizes="40px"

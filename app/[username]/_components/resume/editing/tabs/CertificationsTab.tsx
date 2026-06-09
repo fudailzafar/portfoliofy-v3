@@ -42,13 +42,23 @@ export function CertificationsTab({
     setCurrent: setCurrentCertification,
   } = useTabEditor<any>();
 
-  const certifications = useMemo(() => resume?.certifications || [], [resume?.certifications]);
-  const sortedCertifications = useMemo(() => sortByDateDesc(certifications), [certifications]);
+  const certifications = useMemo(
+    () => resume?.certifications || [],
+    [resume?.certifications],
+  );
+  const sortedCertifications = useMemo(
+    () => sortByDateDesc(certifications),
+    [certifications],
+  );
 
   if (!resume) return null;
 
   const handleSave = () => {
-    if (!currentCertification?.title || !currentCertification?.year || !currentCertification?.issuer)
+    if (
+      !currentCertification?.title ||
+      !currentCertification?.year ||
+      !currentCertification?.issuer
+    )
       return;
 
     const isEdit = !!currentCertification.id;
@@ -57,7 +67,9 @@ export function CertificationsTab({
       : { ...currentCertification, id: Date.now().toString() };
 
     const newItems = isEdit
-      ? certifications.map((p: any) => (p.id === currentCertification.id ? newItem : p))
+      ? certifications.map((p: any) =>
+          p.id === currentCertification.id ? newItem : p,
+        )
       : [...certifications, newItem];
 
     updateResume({ certifications: newItems });
@@ -115,75 +127,80 @@ export function CertificationsTab({
 
       {certificationsView === 'list' && certifications.length > 0 && (
         <div className="space-y-8">
-          {sortedCertifications.map((certification: any, index: number, sortedArray: any[]) => {
-            const prevItem = index > 0 ? sortedArray[index - 1] : null;
-            const canMoveUp =
-              prevItem &&
-              parseInt(certification.year || '0') === parseInt(prevItem.year || '0');
-            const nextItem =
-              index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
-            const canMoveDown =
-              nextItem &&
-              parseInt(certification.year || '0') === parseInt(nextItem.year || '0');
-            return (
-              <div
-                key={certification.id}
-                className="flex flex-col gap-4 sm:flex-row sm:gap-12"
-              >
-                <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-16">
-                  {certification.year}
-                </div>
+          {sortedCertifications.map(
+            (certification: any, index: number, sortedArray: any[]) => {
+              const prevItem = index > 0 ? sortedArray[index - 1] : null;
+              const canMoveUp =
+                prevItem &&
+                parseInt(certification.year || '0') ===
+                  parseInt(prevItem.year || '0');
+              const nextItem =
+                index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
+              const canMoveDown =
+                nextItem &&
+                parseInt(certification.year || '0') ===
+                  parseInt(nextItem.year || '0');
+              return (
+                <div
+                  key={certification.id}
+                  className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+                >
+                  <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-16">
+                    {certification.year}
+                  </div>
 
-                <div className="flex flex-1 flex-col items-start justify-start">
-                  {certification.link ? (
-                    <a
-                      href={
-                        certification.link.startsWith('http')
-                          ? certification.link
-                          : `https://${certification.link}`
-                      }
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block hover:underline"
-                    >
-                      <span className="text-sm font-semibold text-content-primary">
+                  <div className="flex flex-1 flex-col items-start justify-start">
+                    {certification.link ? (
+                      <a
+                        href={
+                          certification.link.startsWith('http')
+                            ? certification.link
+                            : `https://${certification.link}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block hover:underline"
+                      >
+                        <span className="text-sm font-semibold text-content-primary">
+                          {certification.title} from {certification.issuer}
+                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                        </span>
+                      </a>
+                    ) : (
+                      <p className="text-sm font-semibold text-content-primary">
                         {certification.title} from {certification.issuer}
-                        <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                      </span>
-                    </a>
-                  ) : (
-                    <p className="text-sm font-semibold text-content-primary">
-                      {certification.title} from {certification.issuer}
-                    </p>
-                  )}
+                      </p>
+                    )}
 
-                  {certification.description && certification.description !== '<p></p>' && (
-                    <div
-                      className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
-                      dangerouslySetInnerHTML={{
-                        __html: certification.description,
+                    {certification.description &&
+                      certification.description !== '<p></p>' && (
+                        <div
+                          className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
+                          dangerouslySetInnerHTML={{
+                            __html: certification.description,
+                          }}
+                        />
+                      )}
+
+                    <EditDeleteButtons
+                      onEdit={() => {
+                        setCurrentCertification(certification);
+                        setCertificationsView('form');
                       }}
-                    />
-                  )}
-
-                  <EditDeleteButtons
-                    onEdit={() => {
-                      setCurrentCertification(certification);
-                      setCertificationsView('form');
-                    }}
-                    onDelete={() => setProjectToDelete(certification.id)}
-                  >
-                    <SortButtons
-                      canMoveUp={canMoveUp}
-                      canMoveDown={canMoveDown}
-                      onMoveUp={() => handleMoveUp(certification, prevItem)}
-                      onMoveDown={() => handleMoveUp(certification, nextItem)}
-                    />
-                  </EditDeleteButtons>
+                      onDelete={() => setProjectToDelete(certification.id)}
+                    >
+                      <SortButtons
+                        canMoveUp={canMoveUp}
+                        canMoveDown={canMoveDown}
+                        onMoveUp={() => handleMoveUp(certification, prevItem)}
+                        onMoveDown={() => handleMoveUp(certification, nextItem)}
+                      />
+                    </EditDeleteButtons>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            },
+          )}
         </div>
       )}
 

@@ -81,6 +81,7 @@ cd portfoliofy
 ### 2. Install dependencies
 
 We use `pnpm` as our package manager.
+
 ```bash
 npm install -g pnpm
 pnpm install
