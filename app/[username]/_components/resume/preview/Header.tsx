@@ -13,7 +13,7 @@ import dynamic from 'next/dynamic';
 
 const StatusEditor = dynamic(
   () => import('./StatusEditor').then((mod) => mod.StatusEditor),
-  { ssr: false }
+  { ssr: false },
 );
 import { AnimatePresence } from 'framer-motion';
 import { SmilePlus } from 'lucide-react';
@@ -95,7 +95,7 @@ export function Header({
                       className="flex items-center justify-center leading-none"
                       options={{ className: 'h-[1.2em] w-[1.2em]' }}
                     >
-                      {currentStatus.emoji || <SmilePlus size={16}/>}
+                      {currentStatus.emoji || <SmilePlus size={16} />}
                     </Twemoji>
                   </button>
                 </TooltipTrigger>

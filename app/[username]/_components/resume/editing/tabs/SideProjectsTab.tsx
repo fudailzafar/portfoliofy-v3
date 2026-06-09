@@ -16,10 +16,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import {
-  FolderCode,
-  ArrowUpRight,
-} from 'lucide-react';
+import { FolderCode, ArrowUpRight } from 'lucide-react';
 import {
   Select,
   SelectContent,

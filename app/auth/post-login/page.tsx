@@ -19,6 +19,6 @@ export default async function PostLoginPage() {
   if (username) {
     redirect(`/${username}`);
   } else {
-    redirect('/claim');
+    redirect('/');
   }
 }

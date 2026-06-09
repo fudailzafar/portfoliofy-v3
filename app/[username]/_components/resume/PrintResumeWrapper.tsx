@@ -14,7 +14,7 @@ export function PrintResumeWrapper({
 }) {
   const storeResume = useResumeStore((state) => state.resume);
   const { printHiddenSections } = useResumeStore();
-  
+
   const displayResume = isOwner && storeResume ? storeResume : resume;
   const typography = displayResume?.design?.typography || 'sans';
   const fontClass =

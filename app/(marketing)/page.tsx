@@ -1,10 +1,26 @@
 import { HomeHero } from '@/components/layout/HomeHero';
 import { Footer } from '@/components/layout/Footer';
 import Link from 'next/link';
+import { auth } from '@/auth';
+import { getUsernameById } from '@/lib/server/dbActions';
+import { ClaimDialog } from '@/components/auth/ClaimDialog';
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  let needsClaim = false; // CHANGE THIS TO TRUE AND COMMENT
+  // THE BELOW CODE FOR ENTERING CLAIM DIALOG
+  if (userId) {
+    const existingUsername = await getUsernameById(userId);
+    if (!existingUsername) {
+      needsClaim = true;
+    }
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-surface-1">
+      {needsClaim && <ClaimDialog />}
       <main className="flex flex-1 flex-col items-center font-sans text-content-primary">
         <div className="flex w-full max-w-[500px] flex-col gap-6 px-6 pb-32 pt-24">
           {/* Hero Section */}

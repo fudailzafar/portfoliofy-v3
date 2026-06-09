@@ -43,14 +43,14 @@ export function ClientLayoutWrapper({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [setIsOpen]);
 
   // Auto-close sidebar on mobile when navigating
   useEffect(() => {
     if (window.innerWidth < 768) {
       setIsOpen(false);
     }
-  }, [pathname]);
+  }, [pathname, setIsOpen]);
 
   // Expose sidebar state via CSS variable so other fixed elements (like edit button) can follow
   useEffect(() => {
