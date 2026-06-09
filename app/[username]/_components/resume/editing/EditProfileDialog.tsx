@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback, useContext } from 'react';
 import { motion } from 'framer-motion';
 import {
   Dialog,
@@ -14,8 +14,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
+import { Pencil, Trash2 } from 'lucide-react';
+import { useSidebarStore } from '@/store/useSidebarStore';
+import { createPortal } from 'react-dom';
 import { useResumeStore } from '@/store/useResumeStore';
-import { Pencil } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { arrayMove } from '@dnd-kit/sortable';
@@ -133,6 +136,13 @@ export function EditProfileDialog({
   const [showDeleteAccountWarning, setShowDeleteAccountWarning] =
     useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const { isOpen: isSidebarOpen } = useSidebarStore();
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isInitialUsername = uname === username;
@@ -437,6 +447,43 @@ export function EditProfileDialog({
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
+  const editButton = mounted ? createPortal(
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <DialogTrigger asChild>
+          <TooltipTrigger asChild>
+            <motion.button
+              animate={{ x: isSidebarOpen ? 330 : 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              whileTap={{ scale: 0.9 }}
+              aria-label="Edit Profile"
+              style={{
+                position: 'fixed',
+                bottom: '24px',
+                left: '80px',
+                zIndex: 50,
+              }}
+              className="flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm outline-none transition-colors print:hidden"
+            >
+              <Pencil
+                className="h-[18px] w-[18px] text-content-primary"
+                strokeWidth={1.5}
+              />
+            </motion.button>
+          </TooltipTrigger>
+        </DialogTrigger>
+        <TooltipContent
+          side="top"
+          sideOffset={12}
+          className="flex items-center gap-1.5 rounded-lg border-none bg-action-primary px-3 py-1.5 text-[13px] font-medium text-surface-1 shadow-md"
+        >
+          <span>Edit profile</span>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>,
+    document.body
+  ) : null;
+
   return (
     <>
       <Dialog
@@ -449,37 +496,7 @@ export function EditProfileDialog({
           setOpen(val);
         }}
       >
-        <TooltipProvider delayDuration={0}>
-          <Tooltip>
-            <DialogTrigger asChild>
-              <TooltipTrigger asChild>
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  aria-label="Edit Profile"
-                  style={{
-                    position: 'fixed',
-                    bottom: '24px',
-                    left: '80px',
-                    zIndex: 50,
-                  }}
-                  className="flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm outline-none transition-colors"
-                >
-                  <Pencil
-                    className="h-[18px] w-[18px] text-content-primary"
-                    strokeWidth={1.5}
-                  />
-                </motion.button>
-              </TooltipTrigger>
-            </DialogTrigger>
-            <TooltipContent
-              side="top"
-              sideOffset={12}
-              className="flex items-center gap-1.5 rounded-lg border-none bg-action-primary px-3 py-1.5 text-[13px] font-medium text-surface-1 shadow-md"
-            >
-              <span>Edit profile</span>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        {editButton}
 
         <DialogContent className="flex h-[85vh] max-w-5xl flex-col gap-0 overflow-hidden overscroll-contain bg-surface-1 p-0 sm:flex-row">
           <DialogTitle className="sr-only">Edit Profile</DialogTitle>
