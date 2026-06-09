@@ -19,6 +19,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
   const [customDomain, setCustomDomain] = useState('');
   const [domainStatus, setDomainStatus] = useState<any>(null);
   const [isVerifyingDomain, setIsVerifyingDomain] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   const fetchDomain = async () => {
     setIsVerifyingDomain(true);
@@ -85,6 +86,8 @@ export function PersonalDomainTab({ username }: { username: string }) {
   const copyValue = (value: string) => {
     navigator.clipboard.writeText(value);
     toast.success('Copied to clipboard');
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
   const dnsValue =
@@ -257,7 +260,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                             onClick={() => copyValue(dnsValue)}
                             aria-label="Copy DNS value"
                           >
-                            Copy
+                            {isCopied ? 'Copied!' : 'Copy'}
                           </button>
                         </div>
                       </div>
@@ -270,7 +273,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                       <button
                         onClick={fetchDomain}
                         disabled={isVerifyingDomain}
-                        className="font-medium text-content-secondary underline decoration-border-strong underline-offset-2 hover:text-content-primary disabled:opacity-50 dark:hover:text-surface-1"
+                        className="font-medium text-content-secondary underline decoration-border-strong underline-offset-2 hover:text-content-primary disabled:opacity-50 dark:hover:text-content-muted"
                       >
                         click here to manually refresh
                       </button>
@@ -289,7 +292,14 @@ export function PersonalDomainTab({ username }: { username: string }) {
             <h4 className="text-[14px] text-content-primary">Typography</h4>
             <p className="mt-1 text-[13px] text-[#888888]">
               Change the typography shown on{' '}
-              <span className="text-content-primary">{siteLabel}</span>
+              <a
+                href={`${username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium decoration-[#6b8949] underline-offset-2 hover:underline"
+              >
+                {siteLabel}
+              </a>
             </p>
           </div>
 
@@ -356,7 +366,15 @@ export function PersonalDomainTab({ username }: { username: string }) {
           <div>
             <h4 className="text-[14px] text-content-primary">Theme</h4>
             <p className="mt-1 text-[13px] text-[#888888]">
-              Change the theme shown on {siteLabel}
+              Change the theme shown on{' '}
+              <a
+                href={`/${username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium decoration-[#6b8949] underline-offset-2 hover:underline"
+              >
+                {siteLabel}
+              </a>
             </p>
           </div>
 

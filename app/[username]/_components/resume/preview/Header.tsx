@@ -176,13 +176,13 @@ export function Header({
 
       {/* Status Display Bubble */}
       {!isEditingStatus && currentStatus.text && (
-        <div className="relative mt-4 flex w-full flex-col gap-1 rounded-3xl border border-border-strong bg-surface-1 p-4 shadow-sm">
+        <div className="relative mt-4 flex w-full flex-col gap-1 rounded-3xl border border-theme-border bg-theme-bg p-4 shadow-sm">
           {/* Speech Bubble Tail */}
-          <div className="absolute -top-[6px] left-[64px] h-3 w-3 rotate-45 rounded-tl-sm border-l border-t border-border-strong bg-surface-1 md:left-[80px]" />
-          <span className="text-sm text-content-primary">
+          <div className="absolute -top-[6px] left-[64px] h-3 w-3 rotate-45 rounded-tl-sm border-l border-t border-theme-border bg-theme-bg md:left-[80px]" />
+          <span className="text-sm text-theme-primary">
             {currentStatus.text}
           </span>
-          <span className="text-xs text-content-muted">
+          <span className="text-xs text-theme-secondary">
             {getRelativeTime(currentStatus.updatedAt)}
           </span>
         </div>
