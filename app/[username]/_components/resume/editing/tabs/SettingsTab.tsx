@@ -28,7 +28,7 @@ export function SettingsTab({ onDeleteAccount }: SettingsTabProps) {
               <Button
                 variant="destructive"
                 onClick={onDeleteAccount}
-                className="w-full whitespace-nowrap rounded-md bg-red-600 px-6 text-surface-1 shadow-sm hover:bg-red-700 sm:w-auto"
+                className="w-full whitespace-nowrap rounded-md bg-red-600 px-6 text-surface-1 shadow-sm hover:bg-red-700 sm:w-auto dark:text-white"
               >
                 Delete Account
               </Button>
