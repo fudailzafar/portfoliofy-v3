@@ -27,10 +27,10 @@ export default function FAQPage() {
             <p className="text-content-secondary">
               Just me,{' '}
               <Link
-                href="/fudail"
+                href="/safwaan"
                 className="text-content-primary hover:underline"
               >
-                Fudail
+                Safwaan
               </Link>
               .
             </p>
