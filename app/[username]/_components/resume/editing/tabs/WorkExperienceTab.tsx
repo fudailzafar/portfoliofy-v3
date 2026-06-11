@@ -93,6 +93,13 @@ export function WorkExperienceTab({
     }
   };
 
+  const handleToggleVisibility = (item: any) => {
+    const newItems = work.map((w: any) =>
+      w.id === item.id ? { ...w, hidden: !w.hidden } : w,
+    );
+    updateResume({ workExperience: newItems });
+  };
+
   const currentYear = new Date().getFullYear();
 
   return (
@@ -155,48 +162,52 @@ export function WorkExperienceTab({
             return (
               <div
                 key={w.id || w.company}
-                className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+                className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
               >
                 <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-32">
                   {w.start} — {w.end}
                 </div>
 
                 <div className="flex flex-1 flex-col items-start justify-start">
-                  {w.link ? (
-                    <a
-                      href={
-                        w.link.startsWith('http') ? w.link : `https://${w.link}`
-                      }
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block hover:underline"
-                    >
-                      <span className="text-sm font-semibold text-content-primary">
+                  <div className={`w-full transition-all duration-200 ${w.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                    {w.link ? (
+                      <a
+                        href={
+                          w.link.startsWith('http') ? w.link : `https://${w.link}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block hover:underline"
+                      >
+                        <span className="text-sm font-semibold text-content-primary">
+                          {w.title} at {w.company}
+                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                        </span>
+                      </a>
+                    ) : (
+                      <p className="text-sm font-semibold text-content-primary">
                         {w.title} at {w.company}
-                        <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                      </span>
-                    </a>
-                  ) : (
-                    <p className="text-sm font-semibold text-content-primary">
-                      {w.title} at {w.company}
-                    </p>
-                  )}
-                  {w.location && (
-                    <p className="mt-1 text-sm text-content-muted">
-                      {w.location}
-                    </p>
-                  )}
+                      </p>
+                    )}
+                    {w.location && (
+                      <p className="mt-1 text-sm text-content-muted">
+                        {w.location}
+                      </p>
+                    )}
 
-                  {w.description && w.description !== '<p></p>' && (
-                    <div
-                      className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
-                      dangerouslySetInnerHTML={{
-                        __html: w.description,
-                      }}
-                    />
-                  )}
+                    {w.description && w.description !== '<p></p>' && (
+                      <div
+                        className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
+                        dangerouslySetInnerHTML={{
+                          __html: w.description,
+                        }}
+                      />
+                    )}
+                  </div>
 
                   <EditDeleteButtons
+                    isHidden={w.hidden}
+                    onToggleVisibility={() => handleToggleVisibility(w)}
                     onEdit={() => {
                       setCurrentWork(w);
                       setWorkView('form');

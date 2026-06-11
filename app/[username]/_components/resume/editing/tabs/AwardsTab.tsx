@@ -76,6 +76,13 @@ export function AwardsTab({
     }
   };
 
+  const handleToggleVisibility = (item: any) => {
+    const newItems = awards.map((a: any) =>
+      a.id === item.id ? { ...a, hidden: !a.hidden } : a,
+    );
+    updateResume({ awards: newItems });
+  };
+
   const currentYear = new Date().getFullYear();
 
   return (
@@ -128,45 +135,49 @@ export function AwardsTab({
             return (
               <div
                 key={award.id}
-                className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+                className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
               >
                 <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-16">
                   {award.year}
                 </div>
 
                 <div className="flex flex-1 flex-col items-start justify-start">
-                  {award.link ? (
-                    <a
-                      href={
-                        award.link.startsWith('http')
-                          ? award.link
-                          : `https://${award.link}`
-                      }
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block hover:underline"
-                    >
-                      <span className="text-sm font-semibold text-content-primary">
+                  <div className={`w-full transition-all duration-200 ${award.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                    {award.link ? (
+                      <a
+                        href={
+                          award.link.startsWith('http')
+                            ? award.link
+                            : `https://${award.link}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block hover:underline"
+                      >
+                        <span className="text-sm font-semibold text-content-primary">
+                          {award.title} from {award.issuer}
+                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                        </span>
+                      </a>
+                    ) : (
+                      <p className="text-sm font-semibold text-content-primary">
                         {award.title} from {award.issuer}
-                        <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                      </span>
-                    </a>
-                  ) : (
-                    <p className="text-sm font-semibold text-content-primary">
-                      {award.title} from {award.issuer}
-                    </p>
-                  )}
+                      </p>
+                    )}
 
-                  {award.description && award.description !== '<p></p>' && (
-                    <div
-                      className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
-                      dangerouslySetInnerHTML={{
-                        __html: award.description,
-                      }}
-                    />
-                  )}
+                    {award.description && award.description !== '<p></p>' && (
+                      <div
+                        className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
+                        dangerouslySetInnerHTML={{
+                          __html: award.description,
+                        }}
+                      />
+                    )}
+                  </div>
 
                   <EditDeleteButtons
+                    isHidden={award.hidden}
+                    onToggleVisibility={() => handleToggleVisibility(award)}
                     onEdit={() => {
                       setCurrentAward(award);
                       setAwardsView('form');

@@ -10,7 +10,7 @@ export function WorkExperience({
   // Filter out invalid work experiences
   const validWork = useMemo(() => {
     return (
-      work?.filter((item) => item.company && item.title && item.start) || []
+      work?.filter((item) => item.company && item.title && item.start && !item.hidden) || []
     );
   }, [work]);
 

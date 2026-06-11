@@ -6,7 +6,8 @@ export function Features({
 }: {
   features?: ResumeDataSchemaType['features'];
 }) {
-  if (!features || features.length === 0) return null;
+  const visibleFeatures = features?.filter((feature) => !feature.hidden);
+  if (!visibleFeatures || visibleFeatures.length === 0) return null;
 
   return (
     <section className="mb-12 print:mb-8">
@@ -21,7 +22,7 @@ export function Features({
         role="feed"
         aria-labelledby="features-section"
       >
-        {features.map((feature) => (
+        {visibleFeatures.map((feature) => (
           <div
             key={feature.id || feature.title}
             className="flex flex-col gap-1 sm:flex-row sm:gap-12 print:mb-6"

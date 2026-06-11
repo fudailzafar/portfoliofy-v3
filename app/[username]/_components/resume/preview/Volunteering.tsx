@@ -6,7 +6,8 @@ interface VolunteeringProps {
 }
 
 export function Volunteering({ volunteering }: VolunteeringProps) {
-  if (!volunteering || volunteering.length === 0) return null;
+  const visibleVolunteering = volunteering?.filter((v) => !v.hidden);
+  if (!visibleVolunteering || visibleVolunteering.length === 0) return null;
 
   return (
     <section className="mb-12 print:mb-8">
@@ -21,7 +22,7 @@ export function Volunteering({ volunteering }: VolunteeringProps) {
         role="feed"
         aria-labelledby="volunteering-section"
       >
-        {volunteering.map((v) => (
+        {visibleVolunteering.map((v) => (
           <div
             key={v.id}
             className="flex flex-col gap-1 sm:flex-row sm:gap-12 print:mb-6"

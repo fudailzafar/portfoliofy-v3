@@ -98,6 +98,7 @@ const WorkExperienceSection = z.array(
     endMonth: z.string().optional().describe('End month'),
     end: z.string().optional().nullable().describe("End year or 'Now'"),
     description: z.string().describe('Job description'),
+    hidden: z.boolean().optional().default(false),
   }),
 );
 
@@ -116,6 +117,7 @@ const EducationSection = z.array(
       .string()
       .optional()
       .describe('Rich text description of education'),
+    hidden: z.boolean().optional().default(false),
   }),
 );
 
@@ -130,6 +132,7 @@ const ProjectSection = z.array(
       .string()
       .optional()
       .describe('Rich text description of the project'),
+    hidden: z.boolean().optional().default(false),
   }),
 );
 
@@ -156,6 +159,7 @@ const SideProjectSection = z.array(
       .string()
       .optional()
       .describe('Rich text description of the side project'),
+    hidden: z.boolean().optional().default(false),
   }),
 );
 
@@ -173,6 +177,7 @@ const SpeakingSection = z.array(
       .string()
       .optional()
       .describe('Rich text description of the speaking engagement'),
+    hidden: z.boolean().optional().default(false),
   }),
 );
 
@@ -190,6 +195,7 @@ const FeaturesSection = z.array(
       .string()
       .optional()
       .describe('Rich text description of the feature'),
+    hidden: z.boolean().optional().default(false),
   }),
 );
 
@@ -209,6 +215,7 @@ const VolunteeringSection = z.array(
       .string()
       .optional()
       .describe('Rich text description of the volunteering engagement'),
+    hidden: z.boolean().optional().default(false),
   }),
 );
 
@@ -220,6 +227,7 @@ const AwardsSection = z.array(
     year: z.string().describe('Year the award was received'),
     link: z.string().optional().describe('Link to the award'),
     description: z.string().optional().describe('Description of the award'),
+    hidden: z.boolean().optional().default(false),
   }),
 );
 
@@ -237,6 +245,7 @@ const CertificationsSection = z.array(
       .string()
       .optional()
       .describe('Description of the certification'),
+    hidden: z.boolean().optional().default(false),
   }),
 );
 

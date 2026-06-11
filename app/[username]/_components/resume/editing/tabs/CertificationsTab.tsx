@@ -88,6 +88,13 @@ export function CertificationsTab({
     }
   };
 
+  const handleToggleVisibility = (item: any) => {
+    const newItems = certifications.map((c: any) =>
+      c.id === item.id ? { ...c, hidden: !c.hidden } : c,
+    );
+    updateResume({ certifications: newItems });
+  };
+
   const currentYear = new Date().getFullYear();
 
   return (
@@ -143,46 +150,50 @@ export function CertificationsTab({
               return (
                 <div
                   key={certification.id}
-                  className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+                  className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
                 >
                   <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-16">
                     {certification.year}
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    {certification.link ? (
-                      <a
-                        href={
-                          certification.link.startsWith('http')
-                            ? certification.link
-                            : `https://${certification.link}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block hover:underline"
-                      >
-                        <span className="text-sm font-semibold text-content-primary">
+                    <div className={`w-full transition-all duration-200 ${certification.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                      {certification.link ? (
+                        <a
+                          href={
+                            certification.link.startsWith('http')
+                              ? certification.link
+                              : `https://${certification.link}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block hover:underline"
+                        >
+                          <span className="text-sm font-semibold text-content-primary">
+                            {certification.title} from {certification.issuer}
+                            <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                          </span>
+                        </a>
+                      ) : (
+                        <p className="text-sm font-semibold text-content-primary">
                           {certification.title} from {certification.issuer}
-                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                        </span>
-                      </a>
-                    ) : (
-                      <p className="text-sm font-semibold text-content-primary">
-                        {certification.title} from {certification.issuer}
-                      </p>
-                    )}
-
-                    {certification.description &&
-                      certification.description !== '<p></p>' && (
-                        <div
-                          className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
-                          dangerouslySetInnerHTML={{
-                            __html: certification.description,
-                          }}
-                        />
+                        </p>
                       )}
 
+                      {certification.description &&
+                        certification.description !== '<p></p>' && (
+                          <div
+                            className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
+                            dangerouslySetInnerHTML={{
+                              __html: certification.description,
+                            }}
+                          />
+                        )}
+                    </div>
+
                     <EditDeleteButtons
+                      isHidden={certification.hidden}
+                      onToggleVisibility={() => handleToggleVisibility(certification)}
                       onEdit={() => {
                         setCurrentCertification(certification);
                         setCertificationsView('form');

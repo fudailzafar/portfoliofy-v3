@@ -6,7 +6,8 @@ export function Speaking({
 }: {
   speaking?: ResumeDataSchemaType['speaking'];
 }) {
-  if (!speaking || speaking.length === 0) return null;
+  const visibleSpeaking = speaking?.filter((engagement) => !engagement.hidden);
+  if (!visibleSpeaking || visibleSpeaking.length === 0) return null;
 
   return (
     <section className="mb-12 print:mb-8">
@@ -21,7 +22,7 @@ export function Speaking({
         role="feed"
         aria-labelledby="speaking-section"
       >
-        {speaking.map((engagement) => (
+        {visibleSpeaking.map((engagement) => (
           <div
             key={engagement.id || engagement.title}
             className="flex flex-col gap-1 sm:flex-row sm:gap-12 print:mb-6"

@@ -6,7 +6,8 @@ export function Awards({
 }: {
   awards?: ResumeDataSchemaType['awards'];
 }) {
-  if (!awards || awards.length === 0) return null;
+  const visibleAwards = awards?.filter((award) => !award.hidden);
+  if (!visibleAwards || visibleAwards.length === 0) return null;
 
   return (
     <section className="mb-12 print:mb-8">
@@ -21,7 +22,7 @@ export function Awards({
         role="feed"
         aria-labelledby="awards-section"
       >
-        {awards.map((award) => (
+        {visibleAwards.map((award) => (
           <div
             key={award.id || award.title}
             className="flex flex-col gap-1 sm:flex-row sm:gap-12 print:mb-6"
