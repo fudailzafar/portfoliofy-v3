@@ -78,6 +78,13 @@ export function EducationTab({
     }
   };
 
+  const handleToggleVisibility = (item: any) => {
+    const newItems = education.map((edu: any) =>
+      edu.id === item.id ? { ...edu, hidden: !edu.hidden } : edu,
+    );
+    updateResume({ education: newItems });
+  };
+
   const currentYear = new Date().getFullYear();
 
   return (
@@ -133,29 +140,33 @@ export function EducationTab({
               return (
                 <div
                   key={edu.id || edu.school}
-                  className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+                  className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
                 >
                   <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-32">
                     {edu.start ? `${edu.start} — ${edu.end}` : edu.end}
                   </div>
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <p className="text-sm font-semibold text-content-primary">
-                      {edu.degree} at {edu.school}
-                    </p>
-                    {edu.location && (
-                      <p className="mt-1 text-sm text-content-muted">
-                        {edu.location}
+                    <div className={`w-full transition-all duration-200 ${edu.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                      <p className="text-sm font-semibold text-content-primary">
+                        {edu.degree} at {edu.school}
                       </p>
-                    )}
-                    {edu.description && edu.description !== '<p></p>' && (
-                      <div
-                        className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
-                        dangerouslySetInnerHTML={{
-                          __html: edu.description,
-                        }}
-                      />
-                    )}
+                      {edu.location && (
+                        <p className="mt-1 text-sm text-content-muted">
+                          {edu.location}
+                        </p>
+                      )}
+                      {edu.description && edu.description !== '<p></p>' && (
+                        <div
+                          className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
+                          dangerouslySetInnerHTML={{
+                            __html: edu.description,
+                          }}
+                        />
+                      )}
+                    </div>
                     <EditDeleteButtons
+                      isHidden={edu.hidden}
+                      onToggleVisibility={() => handleToggleVisibility(edu)}
                       onEdit={() => {
                         setCurrentEdu(edu);
                         setEduView('form');

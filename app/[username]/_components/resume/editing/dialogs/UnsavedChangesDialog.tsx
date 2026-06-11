@@ -41,7 +41,7 @@ export function UnsavedChangesDialog({
             onClick={onLeaveAnyway}
             className="m-0 h-9 rounded-md border-none bg-action-primary px-5 text-sm font-medium text-surface-1 hover:bg-action-primary dark:text-action-primary-hover dark:hover:bg-surface-3"
           >
-            Leave anyway
+            Okay
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

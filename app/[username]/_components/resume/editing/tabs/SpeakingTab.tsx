@@ -78,6 +78,13 @@ export function SpeakingTab({
     }
   };
 
+  const handleToggleVisibility = (item: any) => {
+    const newItems = speaking.map((s: any) =>
+      s.id === item.id ? { ...s, hidden: !s.hidden } : s,
+    );
+    updateResume({ speaking: newItems });
+  };
+
   const currentYear = new Date().getFullYear();
 
   return (
@@ -132,42 +139,46 @@ export function SpeakingTab({
               return (
                 <div
                   key={engagement.id}
-                  className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+                  className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
                 >
                   <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-16">
                     {engagement.year}
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    {engagement.link ? (
-                      <a
-                        href={
-                          engagement.link.startsWith('http')
-                            ? engagement.link
-                            : `https://${engagement.link}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block hover:underline"
-                      >
-                        <span className="text-sm font-semibold text-content-primary">
+                    <div className={`w-full transition-all duration-200 ${engagement.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                      {engagement.link ? (
+                        <a
+                          href={
+                            engagement.link.startsWith('http')
+                              ? engagement.link
+                              : `https://${engagement.link}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block hover:underline"
+                        >
+                          <span className="text-sm font-semibold text-content-primary">
+                            {engagement.title}
+                            <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                          </span>
+                        </a>
+                      ) : (
+                        <p className="text-sm font-semibold text-content-primary">
                           {engagement.title}
-                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                        </span>
-                      </a>
-                    ) : (
-                      <p className="text-sm font-semibold text-content-primary">
-                        {engagement.title}
-                      </p>
-                    )}
+                        </p>
+                      )}
 
-                    {engagement.location && (
-                      <div className="mt-1 text-sm text-content-muted">
-                        {engagement.location}
-                      </div>
-                    )}
+                      {engagement.location && (
+                        <div className="mt-1 text-sm text-content-muted">
+                          {engagement.location}
+                        </div>
+                      )}
+                    </div>
 
                     <EditDeleteButtons
+                      isHidden={engagement.hidden}
+                      onToggleVisibility={() => handleToggleVisibility(engagement)}
                       onEdit={() => {
                         setCurrentSpeaking(engagement);
                         setSpeakingView('form');
