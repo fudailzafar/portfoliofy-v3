@@ -6,7 +6,8 @@ export function Projects({
 }: {
   projects?: ResumeDataSchemaType['projects'];
 }) {
-  if (!projects || projects.length === 0) {
+  const visibleProjects = projects?.filter((project) => !project.hidden);
+  if (!visibleProjects || visibleProjects.length === 0) {
     return null;
   }
 
@@ -23,7 +24,7 @@ export function Projects({
         role="feed"
         aria-labelledby="projects-section"
       >
-        {projects.map((project) => (
+        {visibleProjects.map((project) => (
           <div
             key={project.id || project.title}
             className="flex flex-col gap-1 sm:flex-row sm:gap-12 print:mb-6"
