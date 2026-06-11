@@ -84,6 +84,13 @@ export function VolunteeringTab({
       updateResume({ volunteering: newItems });
     }
   };
+
+  const handleToggleVisibility = (item: any) => {
+    const newItems = volunteering.map((v: any) =>
+      v.id === item.id ? { ...v, hidden: !v.hidden } : v,
+    );
+    updateResume({ volunteering: newItems });
+  };
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
       <TabHeader
@@ -140,41 +147,45 @@ export function VolunteeringTab({
               return (
                 <div
                   key={v.id}
-                  className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+                  className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
                 >
                   <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-24">
                     {v.startYear} — {v.endYear}
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    {v.link ? (
-                      <a
-                        href={
-                          v.link.startsWith('http')
-                            ? v.link
-                            : `https://${v.link}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block hover:underline"
-                      >
-                        <span className="text-sm font-semibold text-content-primary">
+                    <div className={`w-full transition-all duration-200 ${v.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                      {v.link ? (
+                        <a
+                          href={
+                            v.link.startsWith('http')
+                              ? v.link
+                              : `https://${v.link}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block hover:underline"
+                        >
+                          <span className="text-sm font-semibold text-content-primary">
+                            {v.role} at {v.organization}
+                            <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                          </span>
+                        </a>
+                      ) : (
+                        <p className="text-sm font-semibold text-content-primary">
                           {v.role} at {v.organization}
-                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                        </span>
-                      </a>
-                    ) : (
-                      <p className="text-sm font-semibold text-content-primary">
-                        {v.role} at {v.organization}
-                      </p>
-                    )}
-                    {v.location && (
-                      <p className="mt-1 text-sm text-content-muted">
-                        {v.location}
-                      </p>
-                    )}
+                        </p>
+                      )}
+                      {v.location && (
+                        <p className="mt-1 text-sm text-content-muted">
+                          {v.location}
+                        </p>
+                      )}
+                    </div>
 
                     <EditDeleteButtons
+                      isHidden={v.hidden}
+                      onToggleVisibility={() => handleToggleVisibility(v)}
                       onEdit={() => {
                         setCurrentVolunteering(v);
                         setVolunteeringView('form');

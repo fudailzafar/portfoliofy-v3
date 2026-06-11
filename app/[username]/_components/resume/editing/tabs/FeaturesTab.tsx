@@ -75,6 +75,13 @@ export function FeaturesTab({
     }
   };
 
+  const handleToggleVisibility = (item: any) => {
+    const newItems = features.map((f: any) =>
+      f.id === item.id ? { ...f, hidden: !f.hidden } : f,
+    );
+    updateResume({ features: newItems });
+  };
+
   const currentYear = new Date().getFullYear();
 
   return (
@@ -130,48 +137,52 @@ export function FeaturesTab({
               return (
                 <div
                   key={feature.id}
-                  className="flex flex-col gap-4 sm:flex-row sm:gap-12"
+                  className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
                 >
                   <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-16">
                     {feature.year}
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    {feature.link ? (
-                      <a
-                        href={
-                          feature.link.startsWith('http')
-                            ? feature.link
-                            : `https://${feature.link}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block hover:underline"
-                      >
-                        <span className="text-sm font-semibold text-content-primary">
+                    <div className={`w-full transition-all duration-200 ${feature.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                      {feature.link ? (
+                        <a
+                          href={
+                            feature.link.startsWith('http')
+                              ? feature.link
+                              : `https://${feature.link}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block hover:underline"
+                        >
+                          <span className="text-sm font-semibold text-content-primary">
+                            {feature.title}
+                            {feature.location ? ` on ${feature.location}` : ''}
+                            <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                          </span>
+                        </a>
+                      ) : (
+                        <p className="text-sm font-semibold text-content-primary">
                           {feature.title}
                           {feature.location ? ` on ${feature.location}` : ''}
-                          <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                        </span>
-                      </a>
-                    ) : (
-                      <p className="text-sm font-semibold text-content-primary">
-                        {feature.title}
-                        {feature.location ? ` on ${feature.location}` : ''}
-                      </p>
-                    )}
-
-                    {feature.description &&
-                      feature.description !== '<p></p>' && (
-                        <div
-                          className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
-                          dangerouslySetInnerHTML={{
-                            __html: feature.description,
-                          }}
-                        />
+                        </p>
                       )}
 
+                      {feature.description &&
+                        feature.description !== '<p></p>' && (
+                          <div
+                            className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
+                            dangerouslySetInnerHTML={{
+                              __html: feature.description,
+                            }}
+                          />
+                        )}
+                    </div>
+
                     <EditDeleteButtons
+                      isHidden={feature.hidden}
+                      onToggleVisibility={() => handleToggleVisibility(feature)}
                       onEdit={() => {
                         setCurrentFeature(feature);
                         setFeaturesView('form');

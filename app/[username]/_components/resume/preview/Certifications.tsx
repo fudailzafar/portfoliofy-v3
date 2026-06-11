@@ -6,7 +6,8 @@ export function Certifications({
 }: {
   certifications?: ResumeDataSchemaType['certifications'];
 }) {
-  if (!certifications || certifications.length === 0) return null;
+  const visibleCertifications = certifications?.filter((certification) => !certification.hidden);
+  if (!visibleCertifications || visibleCertifications.length === 0) return null;
 
   return (
     <section className="mb-12 print:mb-8">
@@ -21,7 +22,7 @@ export function Certifications({
         role="feed"
         aria-labelledby="certifications-section"
       >
-        {certifications.map((certification) => (
+        {visibleCertifications.map((certification) => (
           <div
             key={certification.id || certification.title}
             className="flex flex-col gap-1 sm:flex-row sm:gap-12 print:mb-6"
