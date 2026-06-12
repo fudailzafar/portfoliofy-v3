@@ -169,18 +169,28 @@ export function ProfileContent({
 
       {/* Bottom action bar */}
       {!isEditingTab && (
-        <div className="flex-none border-t border-border-subtle bg-surface-1 p-4 md:px-8">
-          <div className="flex justify-end">
-            <Button
-              onClick={onSave}
-              disabled={
-                isSaving || !isValidUname || checkUsernameMutationIsPending
-              }
-              variant="outline"
-              className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
-            >
-              {isSaving ? 'Saving…' : 'Done'}
-            </Button>
+        <div className="flex-none bg-surface-1 px-4 pb-4 sm:px-8 md:px-12 md:pb-6">
+          <div className="flex justify-end border-t border-border-subtle pt-4">
+            {activeTab === 'print' ? (
+              <Button
+                onClick={() => window.print()}
+                variant="outline"
+                className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
+              >
+                Print
+              </Button>
+            ) : (
+              <Button
+                onClick={onSave}
+                disabled={
+                  isSaving || !isValidUname || checkUsernameMutationIsPending
+                }
+                variant="outline"
+                className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
+              >
+                {isSaving ? 'Saving…' : 'Done'}
+              </Button>
+            )}
           </div>
         </div>
       )}
