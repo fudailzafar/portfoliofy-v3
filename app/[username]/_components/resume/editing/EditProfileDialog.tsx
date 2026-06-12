@@ -486,11 +486,7 @@ export function EditProfileDialog({
                 </motion.button>
               </TooltipTrigger>
             </DialogTrigger>
-            <TooltipContent
-              side="top"
-              sideOffset={12}
-              className="flex items-center gap-1.5 rounded-lg border-none bg-action-primary px-3 py-1.5 text-[13px] font-medium text-surface-1 shadow-md"
-            >
+            <TooltipContent side="top" sideOffset={12}>
               <span>Edit profile</span>
             </TooltipContent>
           </Tooltip>
