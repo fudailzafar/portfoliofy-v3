@@ -209,9 +209,9 @@ export function VolunteeringTab({
 
       {volunteeringView === 'form' && currentVolunteering && (
         <div className="space-y-6 pb-24">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label>Role *</Label>
+              <Label className="text-xs text-content-secondary">Role*</Label>
               <Input
                 required
                 value={currentVolunteering.role}
@@ -221,11 +221,11 @@ export function VolunteeringTab({
                     role: e.target.value,
                   })
                 }
-                placeholder="e.g. Contributor"
+                placeholder="Volunteer"
               />
             </div>
             <div className="space-y-2">
-              <Label>Organization *</Label>
+              <Label className="text-xs text-content-secondary">Organization*</Label>
               <Input
                 required
                 value={currentVolunteering.organization}
@@ -235,14 +235,14 @@ export function VolunteeringTab({
                     organization: e.target.value,
                   })
                 }
-                placeholder="e.g. The Internet Archive"
+                placeholder="Non-profit Org."
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label>Start Year *</Label>
+              <Label className="text-xs text-content-secondary">Start Year*</Label>
               <Select
                 value={currentVolunteering.startYear}
                 onValueChange={(val) =>
@@ -268,7 +268,7 @@ export function VolunteeringTab({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>End Year *</Label>
+              <Label className="text-xs text-content-secondary">End Year*</Label>
               <Select
                 value={currentVolunteering.endYear}
                 onValueChange={(val) =>
@@ -296,9 +296,9 @@ export function VolunteeringTab({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label>Location</Label>
+              <Label className="text-xs text-content-secondary">Location</Label>
               <Input
                 value={currentVolunteering.location}
                 onChange={(e) =>
@@ -307,11 +307,11 @@ export function VolunteeringTab({
                     location: e.target.value,
                   })
                 }
-                placeholder="e.g. San Francisco, CA"
+                placeholder="Paris"
               />
             </div>
             <div className="space-y-2">
-              <Label>Link to Volunteering</Label>
+              <Label className="text-xs text-content-secondary">Link to Volunteering</Label>
               <Input
                 value={currentVolunteering.link || ''}
                 onChange={(e) =>
@@ -320,7 +320,7 @@ export function VolunteeringTab({
                     link: e.target.value,
                   })
                 }
-                placeholder="https://..."
+                placeholder="https://example.com"
               />
             </div>
           </div>

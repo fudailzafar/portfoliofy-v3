@@ -228,25 +228,9 @@ export function CertificationsTab({
                     title: e.target.value,
                   })
                 }
-                placeholder="Excellence Certification"
+                placeholder="My certification"
               />
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Issuer*</Label>
-              <Input
-                value={currentCertification.issuer || ''}
-                onChange={(e) =>
-                  setCurrentCertification({
-                    ...currentCertification,
-                    issuer: e.target.value,
-                  })
-                }
-                placeholder="Google"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">Year*</Label>
               <Select
@@ -269,6 +253,21 @@ export function CertificationsTab({
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">Issuer*</Label>
+              <Input
+                value={currentCertification.issuer || ''}
+                onChange={(e) =>
+                  setCurrentCertification({
+                    ...currentCertification,
+                    issuer: e.target.value,
+                  })
+                }
+                placeholder="Issuing organization"
+              />
             </div>
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">
