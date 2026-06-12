@@ -147,6 +147,10 @@ export function EditProfileDialog({
 
   useEffect(() => {
     setMounted(true);
+
+    const handleOpenEditor = () => setOpen(true);
+    window.addEventListener('open-editor', handleOpenEditor);
+    return () => window.removeEventListener('open-editor', handleOpenEditor);
   }, []);
 
   const { isOpen: isSidebarOpen } = useSidebarStore();
