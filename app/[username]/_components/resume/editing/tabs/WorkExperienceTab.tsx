@@ -266,93 +266,47 @@ export function WorkExperienceTab({
               <Label className="text-xs text-content-secondary">
                 Start Date*
               </Label>
-              <div className="flex gap-2">
-                <Select
-                  value={currentWork.startMonth || ''}
-                  onValueChange={(val) =>
-                    setCurrentWork({
-                      ...currentWork,
-                      startMonth: val,
-                    })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Month" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {months.map((m) => (
-                      <SelectItem key={m} value={m}>
-                        {m}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select
-                  value={currentWork.start || ''}
-                  onValueChange={(val) =>
-                    setCurrentWork({ ...currentWork, start: val })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Year" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {years.map((y) => (
-                      <SelectItem key={y} value={y.toString()}>
-                        {y}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <Select
+                value={currentWork.start || ''}
+                onValueChange={(val) =>
+                  setCurrentWork({ ...currentWork, start: val })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Year" />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map((y) => (
+                    <SelectItem key={y} value={y.toString()}>
+                      {y}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">
                 End Date*
               </Label>
-              <div className="flex gap-2">
-                {currentWork.end !== 'Now' && (
-                  <Select
-                    value={currentWork.endMonth || ''}
-                    onValueChange={(val) =>
-                      setCurrentWork({
-                        ...currentWork,
-                        endMonth: val,
-                      })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Month" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {months.map((m) => (
-                        <SelectItem key={m} value={m}>
-                          {m}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-                <Select
-                  value={currentWork.end || ''}
-                  onValueChange={(val) =>
-                    setCurrentWork({ ...currentWork, end: val })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Year" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Now">Now</SelectItem>
-                    {years.map((y) => (
-                      <SelectItem key={y} value={y.toString()}>
-                        {y}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <Select
+                value={currentWork.end || ''}
+                onValueChange={(val) =>
+                  setCurrentWork({ ...currentWork, end: val })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Year" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Now">Now</SelectItem>
+                  {years.map((y) => (
+                    <SelectItem key={y} value={y.toString()}>
+                      {y}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

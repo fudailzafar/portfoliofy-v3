@@ -211,25 +211,9 @@ export function AwardsTab({
                     title: e.target.value,
                   })
                 }
-                placeholder="Excellence Award"
+                placeholder="My great award"
               />
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Issuer*</Label>
-              <Input
-                value={currentAward.issuer || ''}
-                onChange={(e) =>
-                  setCurrentAward({
-                    ...currentAward,
-                    issuer: e.target.value,
-                  })
-                }
-                placeholder="Google"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">Year*</Label>
               <Select
@@ -252,6 +236,22 @@ export function AwardsTab({
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">Issuer*</Label>
+              <Input
+                value={currentAward.issuer || ''}
+                onChange={(e) =>
+                  setCurrentAward({
+                    ...currentAward,
+                    issuer: e.target.value,
+                  })
+                }
+                placeholder="Apple"
+              />
             </div>
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">

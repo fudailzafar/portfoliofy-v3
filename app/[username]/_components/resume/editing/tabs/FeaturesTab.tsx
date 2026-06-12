@@ -219,38 +219,7 @@ export function FeaturesTab({
                     title: e.target.value,
                   })
                 }
-                placeholder="Podcast, interview, article, etc"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Where*</Label>
-              <Input
-                value={currentFeature.location || ''}
-                onChange={(e) =>
-                  setCurrentFeature({
-                    ...currentFeature,
-                    location: e.target.value,
-                  })
-                }
-                placeholder="New York Times, Awwwards, ProductHunt, etc"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Link to feature
-              </Label>
-              <Input
-                value={currentFeature.link || ''}
-                onChange={(e) =>
-                  setCurrentFeature({
-                    ...currentFeature,
-                    link: e.target.value,
-                  })
-                }
-                placeholder="https://example.com"
+                placeholder="My great feature"
               />
             </div>
             <div className="space-y-2">
@@ -275,6 +244,37 @@ export function FeaturesTab({
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">Where</Label>
+              <Input
+                value={currentFeature.location || ''}
+                onChange={(e) =>
+                  setCurrentFeature({
+                    ...currentFeature,
+                    location: e.target.value,
+                  })
+                }
+                placeholder="The Verge"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">
+                Link to feature
+              </Label>
+              <Input
+                value={currentFeature.link || ''}
+                onChange={(e) =>
+                  setCurrentFeature({
+                    ...currentFeature,
+                    link: e.target.value,
+                  })
+                }
+                placeholder="https://example.com"
+              />
             </div>
           </div>
 
