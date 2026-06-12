@@ -48,12 +48,24 @@ export function SideProjects({
                   >
                     <span className="text-sm font-semibold">
                       {project.title}
+                      {project.company && (
+                        <span className="font-normal">
+                          {' '}
+                          at {project.company}
+                        </span>
+                      )}
                       <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
                     </span>
                   </a>
                 ) : (
                   <p className="text-sm font-semibold text-theme-primary">
                     {project.title}
+                    {project.company && (
+                      <span className="font-normal text-theme-primary">
+                        {' '}
+                        at {project.company}
+                      </span>
+                    )}
                   </p>
                 )}
               </div>

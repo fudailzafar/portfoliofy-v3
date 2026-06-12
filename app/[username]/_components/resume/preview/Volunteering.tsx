@@ -48,31 +48,26 @@ export function Volunteering({ volunteering }: VolunteeringProps) {
                     className="text-theme-primary hover:underline"
                   >
                     <span className="text-sm font-semibold">
-                      {v.role}
-                      <span className="font-normal"> at {v.organization}</span>
+                      {v.role} at {v.organization}
                       <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
                     </span>
                   </a>
                 ) : (
                   <p className="text-sm font-semibold text-theme-primary">
-                    {v.role}
-                    <span className="font-normal text-theme-primary">
-                      {' '}
-                      at {v.organization}
-                    </span>
+                    {v.role} at {v.organization}
                   </p>
                 )}
               </div>
 
               {v.location && (
-                <div className="mt-2 text-sm text-theme-secondary">
+                <p className="mt-1 text-sm text-theme-secondary">
                   {v.location}
-                </div>
+                </p>
               )}
 
               {v.description && v.description !== '<p></p>' && (
                 <div
-                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-2 max-w-none text-sm text-theme-secondary"
+                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-4 max-w-none text-sm leading-relaxed text-theme-secondary"
                   dangerouslySetInnerHTML={{ __html: v.description }}
                 />
               )}

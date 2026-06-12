@@ -221,7 +221,7 @@ export function SideProjectsTab({
                     title: e.target.value,
                   })
                 }
-                placeholder="My Great Project"
+                placeholder="My Side-Project"
               />
             </div>
             <div className="space-y-2">
@@ -252,7 +252,22 @@ export function SideProjectsTab({
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">
-                Link to side project
+                Company or client
+              </Label>
+              <Input
+                value={currentSideProject.company || ''}
+                onChange={(e) =>
+                  setCurrentSideProject({
+                    ...currentSideProject,
+                    company: e.target.value,
+                  })
+                }
+                placeholder="Acme inc."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">
+                Link to side-project
               </Label>
               <Input
                 value={currentSideProject.link || ''}

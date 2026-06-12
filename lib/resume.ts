@@ -112,6 +112,7 @@ const EducationSection = z.array(
     degree: z.string().describe('Degree or certification obtained'),
     start: z.string().describe('Start year'),
     end: z.string().describe('End year'),
+    link: z.string().optional().describe('Link to the school or program'),
     location: z.string().optional().describe('Location of the school'),
     description: z
       .string()
@@ -154,6 +155,7 @@ const SideProjectSection = z.array(
       .describe('Unique identifier for the side project'),
     title: z.string().describe('Side project title'),
     year: z.string().describe('Year of the side project'),
+    company: z.string().optional().describe('Company or client name'),
     link: z.string().optional().describe('Link to side project'),
     description: z
       .string()

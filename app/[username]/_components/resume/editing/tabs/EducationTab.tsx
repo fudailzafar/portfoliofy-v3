@@ -198,7 +198,7 @@ export function EducationTab({
                 onChange={(e) =>
                   setCurrentEdu({ ...currentEdu, school: e.target.value })
                 }
-                placeholder="Rhode Island School of Design"
+                placeholder="Emily Carr University"
               />
             </div>
             <div className="space-y-2">
@@ -216,14 +216,14 @@ export function EducationTab({
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">
-                Start Year
+                Start Year*
               </Label>
               <Select
                 value={currentEdu.start || ''}
                 onValueChange={(val) =>
                   setCurrentEdu({
                     ...currentEdu,
-                    start: val === 'none' ? '' : val,
+                    start: val,
                   })
                 }
               >
@@ -231,7 +231,6 @@ export function EducationTab({
                   <SelectValue placeholder="Year" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
                   {years.map((y) => (
                     <SelectItem key={y} value={y.toString()}>
                       {y}
@@ -273,7 +272,17 @@ export function EducationTab({
                 onChange={(e) =>
                   setCurrentEdu({ ...currentEdu, location: e.target.value })
                 }
-                placeholder="Providence, RI"
+                placeholder="New York"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">Link</Label>
+              <Input
+                value={currentEdu.link || ''}
+                onChange={(e) =>
+                  setCurrentEdu({ ...currentEdu, link: e.target.value })
+                }
+                placeholder="https://example.com"
               />
             </div>
           </div>
