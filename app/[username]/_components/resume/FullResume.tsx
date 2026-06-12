@@ -16,6 +16,7 @@ import { Projects } from './preview/Projects';
 import { Contact } from './preview/Contact';
 import { Features } from './preview/Features';
 import { Volunteering } from './preview/Volunteering';
+import { EmptyProfileState } from './preview/EmptyProfileState';
 import { DEFAULT_SECTION_ORDER, normalizeSectionOrder } from '@/lib/resume';
 
 export const FullResume = ({
@@ -72,6 +73,21 @@ export const FullResume = ({
     [resume.certifications],
   );
 
+  // TEMPORARY OVERRIDE FOR TESTING: Change this to `true` to see the empty state always
+  const isEmptyProfile =
+    (!resume.summary || resume.summary.trim() === '') &&
+    resume.workExperience.length === 0 &&
+    resume.sideProjects.length === 0 &&
+    resume.projects.length === 0 &&
+    (!resume.header?.skills || resume.header.skills.length === 0) &&
+    resume.education.length === 0 &&
+    resume.volunteering.length === 0 &&
+    resume.speaking.length === 0 &&
+    resume.features.length === 0 &&
+    resume.awards.length === 0 &&
+    resume.certifications.length === 0 &&
+    (!resume.contacts || resume.contacts.length === 0);
+
   return (
     <section
       className="mx-auto my-8 w-full max-w-xl space-y-8 bg-theme-bg px-6 md:px-4 print:space-y-4"
@@ -86,6 +102,8 @@ export const FullResume = ({
 
       <div className="flex flex-col gap-6">
         <Summary summary={resume.summary} />
+
+        {isOwner && isEmptyProfile && <EmptyProfileState />}
 
         {order.map((sectionId) => {
           switch (sectionId) {
