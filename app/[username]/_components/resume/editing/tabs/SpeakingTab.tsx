@@ -213,7 +213,7 @@ export function SpeakingTab({
                     title: e.target.value,
                   })
                 }
-                placeholder="React Conf 2024"
+                placeholder="My great talk"
               />
             </div>
             <div className="space-y-2">
@@ -252,7 +252,7 @@ export function SpeakingTab({
                     location: e.target.value,
                   })
                 }
-                placeholder="Las Vegas, NV"
+                placeholder="Paris"
               />
             </div>
             <div className="space-y-2">

@@ -1,6 +1,8 @@
 import { ResumeDataSchemaType } from '@/lib/resume';
 import { useMemo } from 'react';
 
+import { ArrowUpRight } from 'lucide-react';
+
 /**
  * Main education section component
  * Renders a list of education experiences in a two-column layout
@@ -13,7 +15,7 @@ export function Education({
   // Filter out invalid education entries
   const validEducations = useMemo(
     () =>
-      educations?.filter((edu) => edu.school && edu.degree && edu.end && !edu.hidden) || [],
+      educations?.filter((edu) => edu.school && edu.degree && edu.start && edu.end && !edu.hidden) || [],
     [educations],
   );
 
@@ -46,9 +48,29 @@ export function Education({
 
             {/* Right column: Content */}
             <div className="flex flex-1 flex-col items-start justify-start">
-              <p className="text-sm font-semibold text-theme-primary">
-                {edu.degree} at {edu.school}
-              </p>
+              <div className="group flex items-center gap-1">
+                {edu.link ? (
+                  <a
+                    href={
+                      edu.link.startsWith('http')
+                        ? edu.link
+                        : `https://${edu.link}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-theme-primary hover:underline"
+                  >
+                    <span className="text-sm font-semibold">
+                      {edu.degree} at {edu.school}
+                      <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
+                    </span>
+                  </a>
+                ) : (
+                  <p className="text-sm font-semibold text-theme-primary">
+                    {edu.degree} at {edu.school}
+                  </p>
+                )}
+              </div>
 
               {edu.location && (
                 <p className="mt-1 text-sm text-theme-secondary">
