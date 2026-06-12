@@ -44,8 +44,8 @@ export function SkillsTab() {
           />
           <Button
             onClick={handleAddSkill}
-            variant="secondary"
-            className="border-none bg-surface-2 px-6 text-content-primary hover:bg-surface-3"
+            variant="outline"
+            className="h-10 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
           >
             Add
           </Button>
