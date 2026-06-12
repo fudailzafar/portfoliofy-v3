@@ -509,55 +509,75 @@ export function EditProfileDialog({
       >
         {editButton}
 
-        <DialogContent className="flex h-[85vh] max-w-5xl flex-col gap-0 overflow-hidden overscroll-contain bg-surface-1 p-0 sm:flex-row">
+        <DialogContent className="flex h-[85vh] max-w-4xl flex-col gap-0 overflow-hidden overscroll-contain bg-surface-1 p-0">
           <DialogTitle className="sr-only">Edit Profile</DialogTitle>
 
-          {/* Sidebar */}
-          <ProfileSidebar
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            setShowMobileMenu={setShowMobileMenu}
-            showMobileMenu={showMobileMenu}
-            sectionOrder={sectionOrder}
-            setSectionOrder={setSectionOrder}
-            tabDefinitions={TAB_DEFINITIONS}
-            onDragEnd={handleDragEnd}
-          />
+          <div className="flex flex-1 flex-col overflow-hidden sm:flex-row">
+            {/* Sidebar */}
+            <ProfileSidebar
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              setShowMobileMenu={setShowMobileMenu}
+              showMobileMenu={showMobileMenu}
+              sectionOrder={sectionOrder}
+              setSectionOrder={setSectionOrder}
+              tabDefinitions={TAB_DEFINITIONS}
+              onDragEnd={handleDragEnd}
+            />
 
-          {/* Content Area */}
-          <ProfileContent
-            activeTab={activeTab}
-            showMobileMenu={showMobileMenu}
-            setShowMobileMenu={setShowMobileMenu}
-            username={username}
-            localPicture={getOptimizedImageUrl(localPicture) || localPicture}
-            isUploadingPicture={isUploadingPicture}
-            isEditingTab={isEditingTab}
-            isSaving={isSaving}
-            isValidUname={isValidUname}
-            checkUsernameMutationIsPending={checkUsernameMutation.isPending}
-            years={years}
-            setProjectToDelete={(type) => (id) => {
-              const handlers: Record<string, (id: string) => void> = {
-                project: setDeleteProject,
-                sideProject: setDeleteSideProject,
-                speaking: setDeleteSpeaking,
-                work: setDeleteWork,
-                education: setDeleteEducation,
-                volunteering: setDeleteVolunteering,
-                feature: setDeleteFeature,
-                award: setDeleteAward,
-                certification: setDeleteCertification,
-                contact: setDeleteContact,
-              };
-              return handlers[type]?.(id);
-            }}
-            handlePictureUpload={handlePictureUpload}
-            removePicture={handleAvatarRemove}
-            onSave={handleGlobalSave}
-            onDeleteAccount={handleDeleteAccount}
-            setShowDeleteAccountWarning={setShowDeleteAccountWarning}
-          />
+            {/* Content Area */}
+            <ProfileContent
+              activeTab={activeTab}
+              showMobileMenu={showMobileMenu}
+              setShowMobileMenu={setShowMobileMenu}
+              username={username}
+              localPicture={getOptimizedImageUrl(localPicture) || localPicture}
+              isUploadingPicture={isUploadingPicture}
+              isEditingTab={isEditingTab}
+              isSaving={isSaving}
+              isValidUname={isValidUname}
+              checkUsernameMutationIsPending={checkUsernameMutation.isPending}
+              years={years}
+              setProjectToDelete={(type) => (id) => {
+                const handlers: Record<string, (id: string) => void> = {
+                  project: setDeleteProject,
+                  sideProject: setDeleteSideProject,
+                  speaking: setDeleteSpeaking,
+                  work: setDeleteWork,
+                  education: setDeleteEducation,
+                  volunteering: setDeleteVolunteering,
+                  feature: setDeleteFeature,
+                  award: setDeleteAward,
+                  certification: setDeleteCertification,
+                  contact: setDeleteContact,
+                };
+                return handlers[type]?.(id);
+              }}
+              handlePictureUpload={handlePictureUpload}
+              removePicture={handleAvatarRemove}
+              onSave={handleGlobalSave}
+              onDeleteAccount={handleDeleteAccount}
+              setShowDeleteAccountWarning={setShowDeleteAccountWarning}
+            />
+          </div>
+
+          {/* Mobile Sidebar Action Bar */}
+          {showMobileMenu && (
+            <div className="flex-none bg-surface-1 px-4 pb-4 sm:hidden">
+              <div className="flex w-full justify-end gap-3 border-t border-border-subtle pt-4">
+                <Button
+                  onClick={handleGlobalSave}
+                  disabled={
+                    isSaving || !isValidUname || checkUsernameMutation.isPending
+                  }
+                  variant="outline"
+                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
+                >
+                  {isSaving ? 'Saving…' : 'Done'}
+                </Button>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
 

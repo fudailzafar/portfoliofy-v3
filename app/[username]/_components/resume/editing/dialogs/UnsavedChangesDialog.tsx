@@ -39,7 +39,7 @@ export function UnsavedChangesDialog({
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onLeaveAnyway}
-            className="m-0 h-9 rounded-md border-none bg-action-primary px-5 text-sm font-medium text-surface-1 hover:bg-action-primary dark:text-action-primary-hover dark:hover:bg-surface-3"
+            className="m-0 h-9 rounded-md border-none bg-action-primary px-5 text-sm font-medium text-surface-1 hover:bg-action-primary hover:text-surface-2 dark:text-surface-1 dark:hover:bg-action-primary dark:hover:text-surface-2"
           >
             Okay
           </AlertDialogAction>
