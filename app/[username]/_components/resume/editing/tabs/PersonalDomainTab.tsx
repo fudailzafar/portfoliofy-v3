@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
+import { Loader2 } from 'lucide-react';
 
 export function PersonalDomainTab({ username }: { username: string }) {
   const resume = useResumeStore((state) => state.resume);
@@ -137,12 +138,15 @@ export function PersonalDomainTab({ username }: { username: string }) {
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="relative max-w-[320px] flex-1">
-                {domainStatus?.verified ? (
+              <div className="relative w-full sm:max-w-[320px] flex-1">
+                {isVerifyingDomain ? (
                   <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
-                    <div className="rounded-full bg-[#7cb44d] p-[2px]">
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-content-muted" />
+                  </div>
+                ) : domainStatus?.verified ? (
+                  <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
+                    <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#6b8949] text-surface-1">
                       <svg
-                        className="h-[10px] w-[10px] text-surface-1"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -150,6 +154,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         aria-hidden="true"
+                        className="h-2.5 w-2.5"
                       >
                         <path d="M20 6L9 17l-5-5" />
                       </svg>
@@ -183,11 +188,11 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   {isVerifyingDomain ? 'Saving…' : 'Save'}
                 </Button>
               ) : (
-                <>
+                <div className="flex gap-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-10 rounded-lg border-border-strong text-[13px] font-normal text-content-muted dark:text-content-muted"
+                    className="h-9 rounded-lg border-border-strong text-[13px] font-normal text-content-muted dark:text-content-muted"
                     disabled
                   >
                     Save
@@ -195,13 +200,13 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-10 rounded-lg border-border-strong text-[13px] font-normal text-content-muted hover:text-content-primary"
+                    className="h-9 rounded-lg border-border-strong text-[13px] font-normal text-content-muted hover:text-content-primary"
                     onClick={handleDomainRemove}
                     disabled={isVerifyingDomain}
                   >
                     Reset
                   </Button>
-                </>
+                </div>
               )}
             </div>
 
