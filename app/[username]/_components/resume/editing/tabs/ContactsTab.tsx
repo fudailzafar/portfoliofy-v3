@@ -156,7 +156,7 @@ export function ContactsTab({
                   });
                 }}
               >
-                <SelectTrigger className="h-10 border-0 bg-surface-2 text-[14px] shadow-none">
+                <SelectTrigger className="h-10 text-[14px]">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -194,7 +194,7 @@ export function ContactsTab({
                       platform: e.target.value,
                     })
                   }
-                  className="h-10 border-0 bg-surface-2 text-[14px] shadow-none"
+                  className="h-10 text-[14px]"
                 />
               </div>
             )}
@@ -214,7 +214,7 @@ export function ContactsTab({
                         username: newUsername,
                       });
                     }}
-                    className="h-10 border-0 bg-surface-2 text-[14px] shadow-none"
+                    className="h-10 text-[14px]"
                   />
                 </div>
                 <div className="space-y-2">
@@ -228,7 +228,7 @@ export function ContactsTab({
                         link: newUrl,
                       });
                     }}
-                    className="h-10 border-0 bg-surface-2 text-[14px] shadow-none"
+                    className="h-10 text-[14px]"
                   />
                 </div>
               </>
@@ -247,7 +247,7 @@ export function ContactsTab({
                       username: extractUsername(newUrl, current.platform || ''),
                     });
                   }}
-                  className="h-10 border-0 bg-surface-2 text-[14px] shadow-none"
+                  className="h-10 text-[14px]"
                 />
               </div>
             ) : (
@@ -268,7 +268,7 @@ export function ContactsTab({
                       ),
                     });
                   }}
-                  className="h-10 border-0 bg-surface-2 text-[14px] shadow-none"
+                  className="h-10 text-[14px]"
                 />
               </div>
             )}
