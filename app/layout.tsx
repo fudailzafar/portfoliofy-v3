@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     siteName: 'Portfoliofy',
     images: [
       {
-        url: '/opengraph-image.png',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
       },
