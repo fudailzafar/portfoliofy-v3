@@ -71,7 +71,7 @@ export default function FAQPage() {
               Where can I get updates on Portfoliofy?
             </h3>
             <p className="text-content-secondary">
-              Follow @fudailzafar on Twitter and on LinkedIn for updates.
+              Follow @hellosafwaan on Twitter and on LinkedIn for updates.
             </p>
           </div>
 
@@ -81,7 +81,7 @@ export default function FAQPage() {
               harassment, who can I reach out to?
             </h3>
             <p className="text-content-secondary">
-              Please reach out to fudail.zafar@gmail.com. We take all reports
+              Please reach out to hellosafwaan@gmail.com. We take all reports
               very seriously.
             </p>
           </div>
@@ -91,7 +91,7 @@ export default function FAQPage() {
               I have more questions, who should I call?
             </h3>
             <p className="text-content-secondary">
-              Email me, fudail.zafar@gmail.com.
+              Email me, hellosafwaan@gmail.com.
             </p>
           </div>
         </div>
