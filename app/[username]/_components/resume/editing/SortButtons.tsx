@@ -35,10 +35,7 @@ export function SortButtons({
                 <ArrowUpToLine className="h-[15px] w-[15px]" />
               </button>
             </TooltipTrigger>
-            <TooltipContent
-              side="top"
-              className="-[#333] mb-1 rounded-md border-none bg-action-primary px-2.5 py-1.5 text-xs font-medium text-surface-1 dark:border"
-            >
+            <TooltipContent side="top" sideOffset={8}>
               Move up
             </TooltipContent>
           </Tooltip>
@@ -56,10 +53,7 @@ export function SortButtons({
                 <ArrowDownToLine className="h-[15px] w-[15px]" />
               </button>
             </TooltipTrigger>
-            <TooltipContent
-              side="top"
-              className="-[#333] mb-1 rounded-md border-none bg-action-primary px-2.5 py-1.5 text-xs font-medium text-surface-1 dark:border"
-            >
+            <TooltipContent side="top" sideOffset={8}>
               Move down
             </TooltipContent>
           </Tooltip>
