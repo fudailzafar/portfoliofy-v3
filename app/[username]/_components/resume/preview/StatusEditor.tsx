@@ -53,8 +53,7 @@ export function StatusEditor({
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
-        // Close the entire editor if clicked outside of it and picker is closed
-        onClose();
+        // Do not close the editor if clicked outside
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -103,10 +102,10 @@ export function StatusEditor({
     >
       <div
         ref={containerRef}
-        className="relative w-full max-w-lg rounded-3xl border border-border-strong bg-surface-1 p-4 shadow-sm"
+        className="relative flex w-full flex-col gap-1 rounded-3xl border border-theme-border bg-theme-bg p-4 shadow-sm"
       >
         {/* Speech Bubble Tail */}
-        <div className="absolute -top-[9px] left-[62px] h-4 w-4 rotate-45 rounded-tl-sm border-l border-t border-border-strong bg-surface-1 md:left-[78px]" />
+        <div className="absolute -top-[9px] left-[62px] h-4 w-4 rotate-45 rounded-tl-sm border-l border-t border-theme-border bg-theme-bg md:left-[78px]" />
 
         <div className="flex items-start gap-3">
           <div className="relative">
@@ -115,7 +114,7 @@ export function StatusEditor({
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                    className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface-2 text-xl transition-colors hover:bg-surface-3"
+                    className="flex size-10 shrink-0 items-center justify-center rounded-full bg-theme-bg-hover text-xl transition-colors hover:opacity-80"
                   >
                     <Twemoji
                       tag="span"
@@ -160,7 +159,7 @@ export function StatusEditor({
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Looking to build something new..."
-              className="w-full bg-transparent pt-2 text-sm text-content-primary placeholder:text-content-muted focus:outline-none"
+              className="w-full bg-transparent pt-2 text-sm text-theme-primary placeholder:text-theme-secondary focus:outline-none"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleSave();
                 if (e.key === 'Escape') onClose();
@@ -170,7 +169,7 @@ export function StatusEditor({
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={onClose}
-                className="px-4 text-[14px] font-medium text-content-primary hover:underline hover:underline-offset-2"
+                className="px-4 text-[14px] font-medium text-theme-primary hover:underline hover:underline-offset-2"
               >
                 Cancel
               </button>
@@ -179,7 +178,7 @@ export function StatusEditor({
                   variant="outline"
                   size="sm"
                   onClick={handleClear}
-                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
+                  className="h-9 rounded-md border border-theme-border bg-theme-bg-hover px-6 font-medium text-theme-primary shadow-sm hover:bg-theme-bg-hover/80"
                 >
                   Clear status
                 </Button>
@@ -188,7 +187,7 @@ export function StatusEditor({
                   size="sm"
                   onClick={handleSave}
                   variant="outline"
-                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
+                  className="h-9 rounded-md border border-theme-border bg-theme-bg-hover px-6 font-medium text-theme-primary shadow-sm hover:bg-theme-bg-hover/80"
                 >
                   Set status
                 </Button>

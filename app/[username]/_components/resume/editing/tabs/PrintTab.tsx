@@ -24,6 +24,8 @@ export function PrintTab() {
     { id: 'features', label: 'Features' },
     { id: 'volunteering', label: 'Volunteering' },
     { id: 'speaking', label: 'Speaking' },
+    { id: 'writing', label: 'Writing' },
+    { id: 'exhibitions', label: 'Exhibitions' },
     { id: 'education', label: 'Education' },
     { id: 'skills', label: 'Skills' },
     { id: 'awards', label: 'Awards' },
