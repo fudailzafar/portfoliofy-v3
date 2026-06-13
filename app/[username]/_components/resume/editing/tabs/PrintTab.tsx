@@ -36,23 +36,23 @@ export function PrintTab() {
         <h2 className="text-2xl font-bold">Print</h2>
       </div>
 
-      <div className="mb-8 rounded-lg bg-surface-2 p-4 text-sm text-content-primary">
+      <div className="mb-4 rounded-lg bg-surface-2 p-4 text-sm text-content-primary">
         <span className="font-medium">Tip ✨</span> For best results we suggest
         turning off &quot;Headers and footers&quot; in your browser print
         settings.
       </div>
 
-      <h3 className="mb-6 border-b border-border-subtle pb-2 text-xs text-content-muted dark:text-content-muted">
+      <h3 className="border-b border-border-subtle pb-2 text-xs text-content-muted dark:text-content-muted">
         Toggle printed sections
       </h3>
 
-      <div className="flex-1 space-y-6">
+      <div className="flex-1 flex flex-col">
         {SECTIONS.map((section) => {
           const isHidden = printHiddenSections.includes(section.id);
           const isOn = !isHidden;
 
           return (
-            <div key={section.id} className="flex items-center justify-between">
+            <div key={section.id} className="flex items-center justify-between border-b border-border-subtle py-4">
               <div>
                 <p className="text-sm text-content-primary">{section.label}</p>
                 <p className="mt-0.5 text-xs text-content-muted dark:text-content-muted">
