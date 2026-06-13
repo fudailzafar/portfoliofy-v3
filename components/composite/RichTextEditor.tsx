@@ -41,7 +41,7 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          'min-h-[120px] w-full rounded-md border border-border-strong bg-surface-card px-3 py-2 text-sm shadow-sm placeholder:text-content-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black dark:focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-50 prose prose-sm dark:prose-invert max-w-none focus:outline-none',
+          'min-h-[120px] w-full bg-transparent px-3 py-3 text-sm placeholder:text-content-muted focus:outline-none prose prose-sm dark:prose-invert max-w-none',
       },
     },
     onUpdate: ({ editor }) => {
@@ -85,16 +85,16 @@ export function RichTextEditor({
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-1 rounded-md border border-border-strong bg-surface-2 p-1">
+    <div className="w-full overflow-hidden rounded-md border border-border-strong bg-surface-card shadow-sm focus-within:ring-1 focus-within:ring-black dark:focus-within:ring-white">
+      <div className="flex items-center border-b border-border-strong bg-surface-2/50">
         <Button
           type="button"
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={cn(
-            'h-8 w-8 p-0',
-            editor.isActive('bulletList') && 'bg-muted',
+            'h-10 w-12 rounded-none border-r border-border-strong p-0 text-content-secondary hover:text-content-primary',
+            editor.isActive('bulletList') && 'bg-surface-3 text-content-primary',
           )}
           aria-label="Toggle bullet list"
         >
@@ -106,20 +106,22 @@ export function RichTextEditor({
           size="sm"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={cn(
-            'h-8 w-8 p-0',
-            editor.isActive('orderedList') && 'bg-muted',
+            'h-10 w-12 rounded-none border-r border-border-strong p-0 text-content-secondary hover:text-content-primary',
+            editor.isActive('orderedList') && 'bg-surface-3 text-content-primary',
           )}
           aria-label="Toggle ordered list"
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
-        <div className="mx-1 h-4 w-px bg-border" />
         <Button
           type="button"
           variant="ghost"
           size="sm"
           onClick={setLink}
-          className={cn('h-8 w-8 p-0', editor.isActive('link') && 'bg-muted')}
+          className={cn(
+            'h-10 w-12 rounded-none border-r border-border-strong p-0 text-content-secondary hover:text-content-primary',
+            editor.isActive('link') && 'bg-surface-3 text-content-primary',
+          )}
           aria-label="Add or edit link"
         >
           <LinkIcon className="h-4 w-4" />
