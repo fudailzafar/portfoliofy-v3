@@ -211,37 +211,6 @@ export function VolunteeringTab({
         <div className="space-y-6 pb-24">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Role*</Label>
-              <Input
-                required
-                value={currentVolunteering.role}
-                onChange={(e) =>
-                  setCurrentVolunteering({
-                    ...currentVolunteering,
-                    role: e.target.value,
-                  })
-                }
-                placeholder="Volunteer"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Organization*</Label>
-              <Input
-                required
-                value={currentVolunteering.organization}
-                onChange={(e) =>
-                  setCurrentVolunteering({
-                    ...currentVolunteering,
-                    organization: e.target.value,
-                  })
-                }
-                placeholder="Non-profit Org."
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
               <Label className="text-xs text-content-secondary">Start Year*</Label>
               <Select
                 value={currentVolunteering.startYear}
@@ -298,6 +267,37 @@ export function VolunteeringTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">Role*</Label>
+              <Input
+                required
+                value={currentVolunteering.role}
+                onChange={(e) =>
+                  setCurrentVolunteering({
+                    ...currentVolunteering,
+                    role: e.target.value,
+                  })
+                }
+                placeholder="Volunteer"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">Organization*</Label>
+              <Input
+                required
+                value={currentVolunteering.organization}
+                onChange={(e) =>
+                  setCurrentVolunteering({
+                    ...currentVolunteering,
+                    organization: e.target.value,
+                  })
+                }
+                placeholder="Non-profit Org."
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
               <Label className="text-xs text-content-secondary">Location</Label>
               <Input
                 value={currentVolunteering.location}
@@ -311,7 +311,7 @@ export function VolunteeringTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Link to Volunteering</Label>
+              <Label className="text-xs text-content-secondary">URL</Label>
               <Input
                 value={currentVolunteering.link || ''}
                 onChange={(e) =>

@@ -16,7 +16,7 @@ export function EditDeleteButtons({
   children,
 }: EditDeleteButtonsProps) {
   return (
-    <div className="mt-3 flex items-center gap-4 text-xs font-medium text-content-muted transition-opacity duration-200">
+    <div className="mt-3 flex items-center gap-4 text-xs text-content-muted transition-opacity duration-200">
       {onToggleVisibility && (
         <button
           onClick={onToggleVisibility}
