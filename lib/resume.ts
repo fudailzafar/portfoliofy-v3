@@ -173,6 +173,7 @@ const SpeakingSection = z.array(
       .describe('Unique identifier for the speaking engagement'),
     title: z.string().describe('Speaking engagement title'),
     year: z.string().describe('Year of the engagement'),
+    organization: z.string().optional().describe('Organization or event name'),
     link: z.string().optional().describe('Link to recording or slides'),
     location: z.string().optional().describe('Location or venue name'),
     description: z

@@ -573,7 +573,7 @@ export function EditProfileDialog({
                   variant="outline"
                   className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
                 >
-                  {isSaving ? 'Saving…' : 'Done'}
+                  {isSaving ? 'Saving…' : 'Save'}
                 </Button>
               </div>
             </div>

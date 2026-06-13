@@ -17,6 +17,7 @@ import { EditDeleteButtons } from '../EditDeleteButtons';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
+import { SortButtons } from '../SortButtons';
 
 export function ContactsTab({
   setProjectToDelete,
@@ -85,7 +86,7 @@ export function ContactsTab({
 
       {view === 'list' && items.length > 0 && (
         <div className="space-y-8">
-          {items.map((c: any) => (
+          {items.map((c: any, index: number) => (
             <div
               key={c.id || c.platform}
               className="flex flex-col gap-4 sm:flex-row sm:gap-12"
@@ -130,7 +131,28 @@ export function ContactsTab({
                     setView('form');
                   }}
                   onDelete={() => setProjectToDelete(c.id)}
-                />
+                >
+                  <SortButtons
+                    canMoveUp={index > 0}
+                    canMoveDown={index < items.length - 1}
+                    onMoveUp={() => {
+                      const newItems = [...items];
+                      [newItems[index - 1], newItems[index]] = [
+                        newItems[index],
+                        newItems[index - 1],
+                      ];
+                      updateResume({ contacts: newItems });
+                    }}
+                    onMoveDown={() => {
+                      const newItems = [...items];
+                      [newItems[index], newItems[index + 1]] = [
+                        newItems[index + 1],
+                        newItems[index],
+                      ];
+                      updateResume({ contacts: newItems });
+                    }}
+                  />
+                </EditDeleteButtons>
               </div>
             </div>
           ))}

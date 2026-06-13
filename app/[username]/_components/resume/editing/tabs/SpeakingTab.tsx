@@ -96,6 +96,7 @@ export function SpeakingTab({
           setCurrentSpeaking({
             title: '',
             year: currentYear.toString(),
+            organization: '',
             link: '',
             location: '',
           });
@@ -112,6 +113,7 @@ export function SpeakingTab({
             setCurrentSpeaking({
               title: '',
               year: currentYear.toString(),
+              organization: '',
               link: '',
               location: '',
             });
@@ -160,12 +162,14 @@ export function SpeakingTab({
                         >
                           <span className="text-sm font-semibold text-content-primary">
                             {engagement.title}
+                            {engagement.organization ? ` at ${engagement.organization}` : ''}
                             <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                           </span>
                         </a>
                       ) : (
                         <p className="text-sm font-semibold text-content-primary">
                           {engagement.title}
+                          {engagement.organization ? ` at ${engagement.organization}` : ''}
                         </p>
                       )}
 
@@ -243,6 +247,19 @@ export function SpeakingTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">Organization</Label>
+              <Input
+                value={currentSpeaking.organization || ''}
+                onChange={(e) =>
+                  setCurrentSpeaking({
+                    ...currentSpeaking,
+                    organization: e.target.value,
+                  })
+                }
+                placeholder="SXSW"
+              />
+            </div>
+            <div className="space-y-2">
               <Label className="text-xs text-content-secondary">Location</Label>
               <Input
                 value={currentSpeaking.location || ''}
@@ -255,19 +272,20 @@ export function SpeakingTab({
                 placeholder="Paris"
               />
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Link</Label>
-              <Input
-                value={currentSpeaking.link || ''}
-                onChange={(e) =>
-                  setCurrentSpeaking({
-                    ...currentSpeaking,
-                    link: e.target.value,
-                  })
-                }
-                placeholder="https://example.com"
-              />
-            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-content-secondary">Link</Label>
+            <Input
+              value={currentSpeaking.link || ''}
+              onChange={(e) =>
+                setCurrentSpeaking({
+                  ...currentSpeaking,
+                  link: e.target.value,
+                })
+              }
+              placeholder="https://example.com"
+            />
           </div>
 
           <div className="space-y-2">

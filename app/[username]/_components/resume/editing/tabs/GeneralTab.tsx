@@ -341,7 +341,7 @@ export function GeneralTab({
           />
         </div>
 
-        <div className="space-y-2 border-t border-border-subtle pt-4">
+        <div className="space-y-2">
           <Label className="text-xs text-content-secondary">About</Label>
           <RichTextEditor
             content={summary || ''}
