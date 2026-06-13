@@ -48,12 +48,14 @@ export function Speaking({
                   >
                     <span className="text-sm font-semibold">
                       {engagement.title}
+                      {engagement.organization ? ` at ${engagement.organization}` : ''}
                       <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
                     </span>
                   </a>
                 ) : (
                   <p className="text-sm font-semibold text-theme-primary">
                     {engagement.title}
+                    {engagement.organization ? ` at ${engagement.organization}` : ''}
                   </p>
                 )}
               </div>
