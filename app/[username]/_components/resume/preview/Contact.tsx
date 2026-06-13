@@ -7,7 +7,9 @@ export function Contact({
 }: {
   contacts?: ResumeDataSchemaType['contacts'];
 }) {
-  if (!contacts || contacts.length === 0) {
+  const visibleContacts = contacts?.filter((contact) => !contact.hidden);
+
+  if (!visibleContacts || visibleContacts.length === 0) {
     return null;
   }
 
@@ -24,7 +26,7 @@ export function Contact({
         role="feed"
         aria-labelledby="contact-section"
       >
-        {contacts.map((contact) => (
+        {visibleContacts.map((contact) => (
           <div
             key={contact.id || contact.platform}
             className="flex flex-col gap-0 sm:flex-row sm:gap-12 print:mb-6"

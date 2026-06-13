@@ -24,6 +24,8 @@ export const PrintResume = ({
     projects,
     sideProjects,
     speaking,
+    writing,
+    exhibitions,
     features,
     volunteering,
     contacts,
@@ -55,6 +57,8 @@ export const PrintResume = ({
     [volunteering],
   );
   const sortedSpeaking = useMemo(() => sortByDateDesc(speaking), [speaking]);
+  const sortedWriting = useMemo(() => sortByDateDesc(writing), [writing]);
+  const sortedExhibitions = useMemo(() => sortByDateDesc(exhibitions), [exhibitions]);
   const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
 
   if (!resume) return null;
@@ -333,6 +337,69 @@ export const PrintResume = ({
                 )}
               </div>
             );
+          case 'writing':
+            if (!writing?.length) return null;
+            return (
+              <div key="writing">
+                {renderSection(
+                  'writing',
+                  'Writing',
+                  sortedWriting.map((s: any) => (
+                    <div key={s.id || s.title} className="flex gap-4">
+                      <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
+                        {s.year}
+                      </div>
+                      <div>
+                        <p className="text-sm">
+                          {s.title}
+                          {s.publication ? `, ${s.publication}` : ''}
+                        </p>
+                        {s.description && s.description !== '<p></p>' && (
+                          <div
+                            className="mt-1 text-xs text-content-muted"
+                            dangerouslySetInnerHTML={{ __html: s.description }}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )),
+                )}
+              </div>
+            );
+          case 'exhibitions':
+            if (!exhibitions?.length) return null;
+            return (
+              <div key="exhibitions">
+                {renderSection(
+                  'exhibitions',
+                  'Exhibitions',
+                  sortedExhibitions.map((s: any) => (
+                    <div key={s.id || s.title} className="flex gap-4">
+                      <div className="w-24 shrink-0 pt-0.5 text-xs text-content-muted">
+                        {s.year}
+                      </div>
+                      <div>
+                        <p className="text-sm">
+                          {s.title}
+                          {s.organization ? ` at ${s.organization}` : ''}
+                        </p>
+                        {s.location && (
+                          <p className="mt-0.5 text-xs text-content-muted">
+                            {s.location}
+                          </p>
+                        )}
+                        {s.description && s.description !== '<p></p>' && (
+                          <div
+                            className="mt-1 text-xs text-content-muted"
+                            dangerouslySetInnerHTML={{ __html: s.description }}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )),
+                )}
+              </div>
+            );
           case 'education':
             if (!education?.length) return null;
             return (
@@ -387,14 +454,15 @@ export const PrintResume = ({
               </div>
             );
           case 'contact':
-            if (!contacts?.length) return null;
+            const visibleContacts = contacts?.filter((c: any) => !c.hidden);
+            if (!visibleContacts?.length) return null;
             return (
               <div key="contact">
                 {renderSection(
                   'contact',
                   'Contact',
                   <div className="flex flex-col gap-3">
-                    {contacts.map((c: any) => (
+                    {visibleContacts.map((c: any) => (
                       <div
                         key={c.id || c.link}
                         className="flex items-start gap-4"
