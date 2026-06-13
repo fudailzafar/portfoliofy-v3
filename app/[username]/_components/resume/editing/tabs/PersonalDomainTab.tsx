@@ -296,15 +296,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
           <div>
             <h4 className="text-[14px] text-content-primary">Typography</h4>
             <p className="mt-1 text-[13px] text-[#888888]">
-              Change the typography shown on{' '}
-              <a
-                href={`${username}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium decoration-[#6b8949] underline-offset-2 hover:underline"
-              >
-                {siteLabel}
-              </a>
+              Change the typography shown on your personal domain.
             </p>
           </div>
 
@@ -348,13 +340,13 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   }`}
                 >
                   <span
-                    className={`text-[22px] font-medium tracking-tight text-content-primary ${fontClass}`}
+                    className={`text-[22px] tracking-tight text-content-primary ${fontClass}`}
                   >
                     Aa
                   </span>
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[14px] font-medium text-content-primary">
+                  <span className="text-[14px] text-content-primary">
                     {label}
                   </span>
                   <span className="text-[14px] text-[#737373]">
@@ -369,17 +361,9 @@ export function PersonalDomainTab({ username }: { username: string }) {
         {/* Theme */}
         <div className="mt-4 space-y-4 border-t border-border-subtle pt-8">
           <div>
-            <h4 className="text-[14px] text-content-primary">Theme</h4>
+            <h4 className="text-[14px] text-content-primary">Color palette</h4>
             <p className="mt-1 text-[13px] text-[#888888]">
-              Change the theme shown on{' '}
-              <a
-                href={`/${username}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium decoration-[#6b8949] underline-offset-2 hover:underline"
-              >
-                {siteLabel}
-              </a>
+              Change the colors shown on your personal domain.
             </p>
           </div>
 
@@ -464,14 +448,14 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   }}
                 >
                   <span
-                    className="text-[22px] font-medium tracking-tight"
+                    className="text-[22px] tracking-tight"
                     style={{ color: fg }}
                   >
                     Aa
                   </span>
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[14px] font-medium text-content-primary">
+                  <span className="text-[14px] text-content-primary">
                     {label}
                   </span>
                   <span className="text-[14px] text-[#737373]">

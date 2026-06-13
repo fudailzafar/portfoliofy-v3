@@ -192,29 +192,6 @@ export function EducationTab({
         <div className="space-y-6 pb-24">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">School*</Label>
-              <Input
-                value={currentEdu.school}
-                onChange={(e) =>
-                  setCurrentEdu({ ...currentEdu, school: e.target.value })
-                }
-                placeholder="Emily Carr University"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Degree*</Label>
-              <Input
-                value={currentEdu.degree}
-                onChange={(e) =>
-                  setCurrentEdu({ ...currentEdu, degree: e.target.value })
-                }
-                placeholder="Bachelor's in Graphic Design"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
               <Label className="text-xs text-content-secondary">
                 Start Year*
               </Label>
@@ -266,6 +243,29 @@ export function EducationTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">Degree*</Label>
+              <Input
+                value={currentEdu.degree}
+                onChange={(e) =>
+                  setCurrentEdu({ ...currentEdu, degree: e.target.value })
+                }
+                placeholder="Bachelor's in Graphic Design"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">School*</Label>
+              <Input
+                value={currentEdu.school}
+                onChange={(e) =>
+                  setCurrentEdu({ ...currentEdu, school: e.target.value })
+                }
+                placeholder="Emily Carr University"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
               <Label className="text-xs text-content-secondary">Location</Label>
               <Input
                 value={currentEdu.location || ''}
@@ -276,7 +276,7 @@ export function EducationTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Link</Label>
+              <Label className="text-xs text-content-secondary">URL</Label>
               <Input
                 value={currentEdu.link || ''}
                 onChange={(e) =>
