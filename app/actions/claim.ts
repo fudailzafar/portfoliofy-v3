@@ -3,6 +3,7 @@
 import { auth } from '@/auth';
 import { createUsernameLookup, storeResume } from '@/lib/server/dbActions';
 import { ResumeDataSchemaType, ResumeDataSchema } from '@/lib/resume';
+import { revalidateTag } from 'next/cache';
 
 export async function claimUsernameAndInitProfile(
   username: string,
@@ -47,6 +48,10 @@ export async function claimUsernameAndInitProfile(
     fileContent: null,
     resumeData: emptyResumeData,
   });
+
+  revalidateTag('usernames', 'max');
+  revalidateTag('resumes', 'max');
+  revalidateTag('users', 'max');
 
   return { success: true };
 }
