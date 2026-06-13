@@ -80,7 +80,7 @@ export function GlobalSidebar() {
                   className="group flex w-fit items-center gap-3"
                 >
                   <div
-                    className={`h-1 w-1 rounded-full ${pathname === `/${usernameQuery.data.username}` ? 'bg-action-primary dark:bg-surface-3' : 'bg-transparent'}`}
+                    className={`h-1 w-1 rounded-full ${pathname === `/${usernameQuery.data.username}` ? 'bg-content-primary' : 'bg-transparent'}`}
                   />
                   <span className="text-[14px] text-content-secondary underline-offset-4 group-hover:underline">
                     Profile
@@ -91,7 +91,7 @@ export function GlobalSidebar() {
               {/* About */}
               <Link href="/" className="group flex w-fit items-center gap-3">
                 <div
-                  className={`h-1 w-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-action-primary dark:bg-surface-3' : 'bg-transparent'}`}
+                  className={`h-1 w-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-content-primary' : 'bg-transparent'}`}
                 />
                 <span className="text-[14px] text-content-secondary underline-offset-4 group-hover:underline">
                   About

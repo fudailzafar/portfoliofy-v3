@@ -20,7 +20,7 @@ export function EmptyProfileState() {
           1. Add the basics, like work experience or education.
         </li>
         <li className="flex gap-2">
-          2. Add the stuff you're passionate about, like side projects or writing.
+          2. Add the stuff you&apos;re passionate about, like side projects or writing.
         </li>
       </ol>
 
