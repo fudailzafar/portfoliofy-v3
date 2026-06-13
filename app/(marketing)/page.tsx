@@ -173,7 +173,7 @@ export default async function Home() {
                   <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-12">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lauren"
+                      src="https://api.dicebear.com/10.x/glyphs/svg?seed=Lauren"
                       alt="Lauren"
                       className="h-full w-full object-cover"
                     />
@@ -194,7 +194,7 @@ export default async function Home() {
                   <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-12">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="https://api.dicebear.com/7.x/avataaars/svg?seed=Skip"
+                      src="https://api.dicebear.com/10.x/glyphs/svg?seed=Skip"
                       alt="Skip"
                       className="h-full w-full object-cover"
                     />
@@ -233,7 +233,7 @@ export default async function Home() {
                     <div className="h-full w-full overflow-hidden rounded-full bg-surface-3">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=Tom"
+                        src="https://api.dicebear.com/10.x/glyphs/svg?seed=Tom"
                         alt="Tom Chung"
                         className="h-full w-full object-cover"
                       />
