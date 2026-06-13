@@ -4,6 +4,8 @@ export const DEFAULT_SECTION_ORDER = [
   'work',
   'side_projects',
   'speaking',
+  'writing',
+  'exhibitions',
   'features',
   'volunteering',
   'projects',
@@ -144,6 +146,7 @@ const ContactSection = z.array(
       .string()
       .describe('Platform name (e.g., X, LinkedIn, Email, Custom)'),
     link: z.string().describe('URL to profile'),
+    hidden: z.boolean().optional().default(false),
   }),
 );
 
@@ -252,6 +255,34 @@ const CertificationsSection = z.array(
   }),
 );
 
+const WritingSection = z.array(
+  z.object({
+    id: z.string().optional().describe('Unique identifier for the writing piece'),
+    title: z.string().describe('Title of the piece'),
+    year: z.string().describe('Year of publication'),
+    publication: z.string().optional().describe('Publication or platform name'),
+    link: z.string().optional().describe('Link to the piece'),
+    description: z.string().optional().describe('Rich text description'),
+    hidden: z.boolean().optional().default(false),
+  }),
+);
+
+const ExhibitionsSection = z.array(
+  z.object({
+    id: z.string().optional().describe('Unique identifier for the exhibition'),
+    title: z.string().describe('Title of the exhibition'),
+    year: z.string().describe('Year of the exhibition'),
+    organization: z.string().optional().describe('Organization or gallery name'),
+    location: z.string().optional().describe('Location'),
+    link: z.string().optional().describe('Link to the exhibition'),
+    description: z
+      .string()
+      .optional()
+      .describe('Rich text description of the exhibition'),
+    hidden: z.boolean().optional().default(false),
+  }),
+);
+
 export const ResumeDataSchema = z.object({
   header: HeaderSection,
   summary: SummarySection,
@@ -260,6 +291,8 @@ export const ResumeDataSchema = z.object({
   projects: ProjectSection.optional().default([]),
   sideProjects: SideProjectSection.optional().default([]),
   speaking: SpeakingSection.optional().default([]),
+  writing: WritingSection.optional().default([]),
+  exhibitions: ExhibitionsSection.optional().default([]),
   features: FeaturesSection.optional().default([]),
   volunteering: VolunteeringSection.optional().default([]),
   awards: AwardsSection.optional().default([]),

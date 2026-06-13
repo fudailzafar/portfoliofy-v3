@@ -16,6 +16,8 @@ import {
   SettingsTab,
   AwardsTab,
   CertificationsTab,
+  WritingTab,
+  ExhibitionsTab,
 } from './tabs';
 
 interface ProfileContentProps {
@@ -145,6 +147,18 @@ export function ProfileContent({
           <CertificationsTab
             years={years}
             setProjectToDelete={setProjectToDelete('certification')}
+          />
+        )}
+        {activeTab === 'writing' && (
+          <WritingTab
+            years={years}
+            setProjectToDelete={setProjectToDelete('writing')}
+          />
+        )}
+        {activeTab === 'exhibitions' && (
+          <ExhibitionsTab
+            years={years}
+            setProjectToDelete={setProjectToDelete('exhibitions')}
           />
         )}
         {activeTab === 'awards' && (

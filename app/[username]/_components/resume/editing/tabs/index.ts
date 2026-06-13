@@ -12,4 +12,6 @@ export { VolunteeringTab } from './VolunteeringTab';
 export { WorkExperienceTab } from './WorkExperienceTab';
 export { AwardsTab } from './AwardsTab';
 export { CertificationsTab } from './CertificationsTab';
+export { WritingTab } from './WritingTab';
+export { ExhibitionsTab } from './ExhibitionsTab';
 export * from './PrintTab';

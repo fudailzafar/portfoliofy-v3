@@ -12,6 +12,8 @@ import { Summary } from './preview/Summary';
 import { WorkExperience } from './preview/WorkExperience';
 import { SideProjects } from './preview/SideProjects';
 import { Speaking } from './preview/Speaking';
+import { Writing } from './preview/Writing';
+import { Exhibitions } from './preview/Exhibitions';
 import { Projects } from './preview/Projects';
 import { Contact } from './preview/Contact';
 import { Features } from './preview/Features';
@@ -46,6 +48,14 @@ export const FullResume = ({
   const sortedSpeaking = useMemo(
     () => sortByDateDesc(resume.speaking),
     [resume.speaking],
+  );
+  const sortedWriting = useMemo(
+    () => sortByDateDesc(resume.writing),
+    [resume.writing],
+  );
+  const sortedExhibitions = useMemo(
+    () => sortByDateDesc(resume.exhibitions),
+    [resume.exhibitions],
   );
   const sortedFeatures = useMemo(
     () => sortByDateDesc(resume.features),
@@ -118,6 +128,10 @@ export const FullResume = ({
               );
             case 'speaking':
               return <Speaking key={sectionId} speaking={sortedSpeaking} />;
+            case 'writing':
+              return <Writing key={sectionId} writing={sortedWriting} />;
+            case 'exhibitions':
+              return <Exhibitions key={sectionId} exhibitions={sortedExhibitions} />;
             case 'features':
               return <Features key={sectionId} features={sortedFeatures} />;
             case 'volunteering':

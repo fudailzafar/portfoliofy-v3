@@ -53,6 +53,13 @@ export function ContactsTab({
     setCurrent(null);
   };
 
+  const handleToggleVisibility = (item: any) => {
+    const newItems = items.map((c: any) =>
+      c.id === item.id ? { ...c, hidden: !c.hidden } : c,
+    );
+    updateResume({ contacts: newItems });
+  };
+
   return (
     <div className="mx-auto flex h-full max-w-3xl flex-col">
       <TabHeader
@@ -96,19 +103,23 @@ export function ContactsTab({
               </div>
 
               <div className="flex flex-1 flex-col items-start justify-start">
-                <a
-                  href={buildContactUrl(c.link, c.platform)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block hover:underline"
-                >
-                  <span className="text-sm font-semibold text-content-primary">
-                    {extractUsername(c.link, c.platform)}
-                    <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                  </span>
-                </a>
+                <div className={`w-full transition-all duration-200 ${c.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                  <a
+                    href={buildContactUrl(c.link, c.platform)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block hover:underline"
+                  >
+                    <span className="text-sm font-semibold text-content-primary">
+                      {extractUsername(c.link, c.platform)}
+                      <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                    </span>
+                  </a>
+                </div>
 
                 <EditDeleteButtons
+                  isHidden={c.hidden}
+                  onToggleVisibility={() => handleToggleVisibility(c)}
                   onEdit={() => {
                     setCurrent({
                       ...c,

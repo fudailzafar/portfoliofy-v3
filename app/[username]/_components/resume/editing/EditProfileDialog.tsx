@@ -53,6 +53,8 @@ const TAB_DEFINITIONS: Record<string, { label: string; disabled: boolean }> = {
   work: { label: 'Work Experience', disabled: false },
   side_projects: { label: 'Side Projects', disabled: false },
   speaking: { label: 'Speaking', disabled: false },
+  writing: { label: 'Writing', disabled: false },
+  exhibitions: { label: 'Exhibitions', disabled: false },
   projects: { label: 'Projects', disabled: false },
   skills: { label: 'Skills', disabled: false },
   education: { label: 'Education', disabled: false },
@@ -68,6 +70,8 @@ type DeleteTarget =
   | { type: 'project'; id: string }
   | { type: 'sideProject'; id: string }
   | { type: 'speaking'; id: string }
+  | { type: 'writing'; id: string }
+  | { type: 'exhibitions'; id: string }
   | { type: 'volunteering'; id: string }
   | { type: 'feature'; id: string }
   | { type: 'education'; id: string }
@@ -83,6 +87,10 @@ const DELETE_DESCRIPTIONS: Record<DeleteTarget['type'], string> = {
     'This will permanently delete this side project. This action cannot be undone.',
   speaking:
     'This will permanently delete this speaking engagement. This action cannot be undone.',
+  writing:
+    'This will permanently delete this writing piece. This action cannot be undone.',
+  exhibitions:
+    'This will permanently delete this exhibition. This action cannot be undone.',
   work: 'This will permanently delete this work experience. This action cannot be undone.',
   contact:
     'This will permanently delete this contact. This action cannot be undone.',
@@ -211,6 +219,14 @@ export function EditProfileDialog({
     () => makeDeleteSetter('speaking'),
     [makeDeleteSetter],
   );
+  const setDeleteWriting = useMemo(
+    () => makeDeleteSetter('writing'),
+    [makeDeleteSetter],
+  );
+  const setDeleteExhibitions = useMemo(
+    () => makeDeleteSetter('exhibitions'),
+    [makeDeleteSetter],
+  );
   const setDeleteWork = useMemo(
     () => makeDeleteSetter('work'),
     [makeDeleteSetter],
@@ -263,6 +279,18 @@ export function EditProfileDialog({
         const s = useResumeStore.getState();
         s.updateResume({
           speaking: s.resume?.speaking?.filter((p: any) => p.id !== id),
+        });
+      },
+      writing: (id) => {
+        const s = useResumeStore.getState();
+        s.updateResume({
+          writing: s.resume?.writing?.filter((p: any) => p.id !== id),
+        });
+      },
+      exhibitions: (id) => {
+        const s = useResumeStore.getState();
+        s.updateResume({
+          exhibitions: s.resume?.exhibitions?.filter((p: any) => p.id !== id),
         });
       },
       work: (id) => {
@@ -543,6 +571,8 @@ export function EditProfileDialog({
                   project: setDeleteProject,
                   sideProject: setDeleteSideProject,
                   speaking: setDeleteSpeaking,
+                  writing: setDeleteWriting,
+                  exhibitions: setDeleteExhibitions,
                   work: setDeleteWork,
                   education: setDeleteEducation,
                   volunteering: setDeleteVolunteering,
