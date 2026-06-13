@@ -232,39 +232,8 @@ export function WorkExperienceTab({
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Company*</Label>
-              <Input
-                value={currentWork.company}
-                onChange={(e) =>
-                  setCurrentWork({
-                    ...currentWork,
-                    company: e.target.value,
-                  })
-                }
-                placeholder="Acme Design Studio"
-              />
-            </div>
-            <div className="space-y-2">
               <Label className="text-xs text-content-secondary">
-                Position*
-              </Label>
-              <Input
-                value={currentWork.title}
-                onChange={(e) =>
-                  setCurrentWork({
-                    ...currentWork,
-                    title: e.target.value,
-                  })
-                }
-                placeholder="Senior Product Designer"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Start Date*
+                Start Year*
               </Label>
               <Select
                 value={currentWork.start || ''}
@@ -287,7 +256,7 @@ export function WorkExperienceTab({
 
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">
-                End Date*
+                End Year*
               </Label>
               <Select
                 value={currentWork.end || ''}
@@ -312,6 +281,37 @@ export function WorkExperienceTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">
+                Title*
+              </Label>
+              <Input
+                value={currentWork.title}
+                onChange={(e) =>
+                  setCurrentWork({
+                    ...currentWork,
+                    title: e.target.value,
+                  })
+                }
+                placeholder="Senior Product Designer"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">Company*</Label>
+              <Input
+                value={currentWork.company}
+                onChange={(e) =>
+                  setCurrentWork({
+                    ...currentWork,
+                    company: e.target.value,
+                  })
+                }
+                placeholder="Acme Design Studio"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
               <Label className="text-xs text-content-secondary">Location</Label>
               <Input
                 value={currentWork.location || ''}
@@ -325,7 +325,7 @@ export function WorkExperienceTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Link</Label>
+              <Label className="text-xs text-content-secondary">URL</Label>
               <Input
                 value={currentWork.link || ''}
                 onChange={(e) =>
