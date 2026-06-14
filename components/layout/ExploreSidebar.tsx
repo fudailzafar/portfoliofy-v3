@@ -91,7 +91,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
           </div>
           <button
             onClick={onClose}
-            className="text-[14px] text-content-primary transition-colors hover:underline hover:underline-offset-2"
+            className="text-[14px] text-content-primary transition-colors hover:underline hover:underline-offset-4"
           >
             Done
           </button>

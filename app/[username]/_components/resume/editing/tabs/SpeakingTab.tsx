@@ -16,6 +16,8 @@ import {
 import { sortByDateDesc } from '@/lib/resume';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { SectionAttachments } from '@/components/composite/SectionAttachments';
+import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
@@ -88,7 +90,7 @@ export function SpeakingTab({
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col">
+    <div className="mx-auto flex max-w-3xl flex-col">
       <TabHeader
         title="Speaking"
         showAddButton={speakingView === 'list'}
@@ -158,7 +160,7 @@ export function SpeakingTab({
                           }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-block hover:underline"
+                          className="inline-block hover:underline hover:underline-offset-4"
                         >
                           <span className="text-sm font-semibold text-content-primary">
                             {engagement.title}
@@ -178,6 +180,7 @@ export function SpeakingTab({
                           {engagement.location}
                         </div>
                       )}
+                      <div className="mt-4"><AttachmentsPreview attachments={engagement.attachments} /></div>
                     </div>
 
                     <EditDeleteButtons
@@ -302,6 +305,15 @@ export function SpeakingTab({
               }
             />
           </div>
+          <SectionAttachments
+            attachments={currentSpeaking.attachments || []}
+            onChange={(val) =>
+              setCurrentSpeaking({
+                ...currentSpeaking,
+                attachments: val,
+              })
+            }
+          />
 
           <TabFormActions
             onCancel={() => setSpeakingView('list')}
