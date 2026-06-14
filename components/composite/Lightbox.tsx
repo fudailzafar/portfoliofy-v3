@@ -10,6 +10,7 @@ import {
 import { AttachmentSchemaType } from '@/lib/resume';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface LightboxProps {
   attachments: AttachmentSchemaType[];
@@ -26,51 +27,23 @@ export function Lightbox({
   onOpenChange,
   onIndexChange,
 }: LightboxProps) {
-  const scrollRef = React.useRef<HTMLDivElement>(null);
-  const isProgrammaticScroll = React.useRef(false);
+  const currentAttachment = attachments[currentIndex];
+  const [direction, setDirection] = React.useState(0);
 
   const handlePrevious = useCallback(() => {
+    setDirection(-1);
     onIndexChange((currentIndex - 1 + attachments.length) % attachments.length);
   }, [currentIndex, attachments.length, onIndexChange]);
 
   const handleNext = useCallback(() => {
+    setDirection(1);
     onIndexChange((currentIndex + 1) % attachments.length);
   }, [currentIndex, attachments.length, onIndexChange]);
 
-  // Setup initial scroll position when opened
-  useEffect(() => {
-    if (scrollRef.current && open) {
-      isProgrammaticScroll.current = true;
-      scrollRef.current.scrollTo({
-        left: currentIndex * scrollRef.current.clientWidth,
-        behavior: 'instant' as ScrollBehavior
-      });
-      setTimeout(() => { isProgrammaticScroll.current = false; }, 50);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
-
-  // Animate scroll when index changes via desktop arrows
-  useEffect(() => {
-    if (scrollRef.current && open && !isProgrammaticScroll.current) {
-      isProgrammaticScroll.current = true;
-      scrollRef.current.scrollTo({
-        left: currentIndex * scrollRef.current.clientWidth,
-        behavior: 'smooth'
-      });
-      setTimeout(() => { isProgrammaticScroll.current = false; }, 400);
-    }
-  }, [currentIndex, open]);
-
-  // Update currentIndex when user manually swipes
-  const handleScroll = useCallback(() => {
-    if (!scrollRef.current || isProgrammaticScroll.current) return;
-    const { scrollLeft, clientWidth } = scrollRef.current;
-    const newIndex = Math.round(scrollLeft / clientWidth);
-    if (newIndex !== currentIndex && newIndex >= 0 && newIndex < attachments.length) {
-      onIndexChange(newIndex);
-    }
-  }, [currentIndex, attachments.length, onIndexChange]);
+  const handleDotClick = useCallback((idx: number) => {
+    setDirection(idx > currentIndex ? 1 : -1);
+    onIndexChange(idx);
+  }, [currentIndex, onIndexChange]);
 
   useEffect(() => {
     if (!open) return;
@@ -87,7 +60,29 @@ export function Lightbox({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [open, handlePrevious, handleNext]);
 
-  if (!attachments || attachments.length === 0) return null;
+  if (!currentAttachment || !attachments || attachments.length === 0) return null;
+
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? '100%' : '-100%',
+      opacity: 0,
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? '100%' : '-100%',
+      opacity: 0,
+    }),
+  };
+
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -106,7 +101,7 @@ export function Lightbox({
           <span className="sr-only">Close</span>
         </button>
 
-        {/* Desktop Left/Right Click Areas (Overlayed over the scroll container) */}
+        {/* Desktop Left/Right Click Areas */}
         {attachments.length > 1 && (
           <>
             <div
@@ -126,23 +121,43 @@ export function Lightbox({
           </>
         )}
 
-        {/* Main Media Scroll Container */}
+        {/* Main Media Container */}
         <div
-          ref={scrollRef}
-          onScroll={handleScroll}
-          className="scrollbar-hide relative flex h-full w-full snap-x snap-mandatory items-center overflow-x-auto overflow-y-hidden scroll-smooth"
+          className="relative flex h-full max-h-[85vh] w-full max-w-7xl items-center justify-center overflow-hidden px-0 sm:px-4 md:px-16"
           onClick={() => onOpenChange(false)} // Clicking outside media closes dialog
         >
-          {attachments.map((attachment) => (
-            <div
-              key={attachment.id}
-              className="flex h-full w-full shrink-0 snap-center items-center justify-center px-0 sm:px-4 md:px-16"
-              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the media itself
-            >
-              <div className="relative flex max-h-[85vh] w-full items-center justify-center">
-                {attachment.type === 'video' ? (
+          <div
+            className="relative flex h-full w-full items-center justify-center"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the media itself
+          >
+            <AnimatePresence initial={false} custom={direction}>
+              <motion.div
+                key={currentIndex}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: 'spring', stiffness: 300, damping: 30 },
+                  opacity: { duration: 0.2 },
+                }}
+                drag={attachments.length > 1 ? 'x' : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={1}
+                onDragEnd={(e, { offset, velocity }) => {
+                  const swipe = swipePower(offset.x, velocity.x);
+                  if (swipe < -swipeConfidenceThreshold) {
+                    handleNext();
+                  } else if (swipe > swipeConfidenceThreshold) {
+                    handlePrevious();
+                  }
+                }}
+                className="absolute flex h-full w-full items-center justify-center"
+              >
+                {currentAttachment.type === 'video' ? (
                   <video
-                    src={attachment.url}
+                    src={currentAttachment.url}
                     autoPlay
                     loop
                     muted
@@ -152,28 +167,28 @@ export function Lightbox({
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={attachment.url}
-                    alt={attachment.filename || 'Attachment preview'}
+                    src={currentAttachment.url}
+                    alt={currentAttachment.filename || 'Attachment preview'}
                     className="relative z-0 max-h-[85vh] max-w-full rounded-lg object-contain sm:shadow-2xl"
-                    loading="lazy"
+                    loading="eager"
                   />
                 )}
-              </div>
-            </div>
-          ))}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Mobile controls (Bottom) */}
         <div className="fixed bottom-6 left-4 right-4 z-50 flex items-center justify-between sm:hidden pointer-events-none">
           <button
             onClick={() => onOpenChange(false)}
-            className="pointer-events-auto rounded-full bg-black/10 dark:bg-white/10 backdrop-blur-md px-5 py-2 text-sm font-medium text-content-primary"
+            className="pointer-events-auto rounded-full bg-black/10 px-5 py-2 text-sm font-medium text-content-primary backdrop-blur-md dark:bg-white/10"
           >
             Close
           </button>
-          
+
           {attachments.length > 1 && (
-            <div className="pointer-events-auto rounded-full bg-black/10 dark:bg-white/10 backdrop-blur-md px-5 py-2 text-sm font-medium text-content-primary tracking-widest">
+            <div className="pointer-events-auto rounded-full bg-black/10 px-5 py-2 text-sm font-medium tracking-widest text-content-primary backdrop-blur-md dark:bg-white/10">
               {currentIndex + 1} / {attachments.length}
             </div>
           )}
@@ -186,10 +201,10 @@ export function Lightbox({
               <div
                 key={idx}
                 className={cn(
-                  'size-2 rounded-full transition-all duration-200 cursor-pointer',
+                  'size-2 cursor-pointer rounded-full transition-all duration-200',
                   idx === currentIndex ? 'bg-[#6e6e6e]' : 'bg-surface-3',
                 )}
-                onClick={() => onIndexChange(idx)}
+                onClick={() => handleDotClick(idx)}
               />
             ))}
           </div>
