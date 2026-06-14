@@ -3,6 +3,8 @@ import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { SectionAttachments } from '@/components/composite/SectionAttachments';
+import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
@@ -93,7 +95,7 @@ export function SideProjectsTab({
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col">
+    <div className="mx-auto flex max-w-3xl flex-col">
       <TabHeader
         title="Side Projects"
         showAddButton={sideProjectsView === 'list'}
@@ -160,7 +162,7 @@ export function SideProjectsTab({
                           }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-block hover:underline"
+                          className="inline-block hover:underline hover:underline-offset-4"
                         >
                           <span className="text-sm font-semibold text-content-primary">
                             {project.title}
@@ -182,6 +184,7 @@ export function SideProjectsTab({
                             }}
                           />
                         )}
+                      <div className="mt-4"><AttachmentsPreview attachments={project.attachments} /></div>
                     </div>
 
                     <EditDeleteButtons
@@ -296,6 +299,15 @@ export function SideProjectsTab({
               }
             />
           </div>
+          <SectionAttachments
+            attachments={currentSideProject.attachments || []}
+            onChange={(val) =>
+              setCurrentSideProject({
+                ...currentSideProject,
+                attachments: val,
+              })
+            }
+          />
 
           <TabFormActions
             onCancel={() => setSideProjectsView('list')}

@@ -1,4 +1,5 @@
 import { ResumeDataSchemaType } from '@/lib/resume';
+import { AttachmentsPreview } from './AttachmentsPreview';
 import { useMemo } from 'react';
 
 import { ArrowUpRight } from 'lucide-react';
@@ -58,7 +59,7 @@ export function Education({
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-theme-primary hover:underline"
+                    className="text-theme-primary hover:underline hover:underline-offset-4"
                   >
                     <span className="text-sm font-semibold">
                       {edu.degree} at {edu.school}
@@ -86,6 +87,7 @@ export function Education({
                   }}
                 />
               )}
+              <AttachmentsPreview attachments={edu.attachments} />
             </div>
           </div>
         ))}
