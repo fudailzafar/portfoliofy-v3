@@ -203,7 +203,7 @@ export function GeneralTab({
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-6 w-full min-w-0">
         <div className="space-y-2">
           <Label htmlFor="uname" className="text-xs text-content-secondary">
             Username*

@@ -35,7 +35,7 @@ export function SettingsTab({ onDeleteAccount }: SettingsTabProps) {
         <h2 className="text-2xl font-bold text-content-primary">Settings</h2>
       </div>
       <div className="space-y-10">
-        <div className="space-y-6">
+        <div className="space-y-6 w-full min-w-0">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
@@ -58,7 +58,7 @@ export function SettingsTab({ onDeleteAccount }: SettingsTabProps) {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 w-full min-w-0">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col justify-between gap-4 rounded-xl border border-red-200 bg-red-50/50 p-4 shadow-sm dark:border-red-900/50 dark:bg-red-900/20 sm:flex-row sm:items-center">
               <div className="space-y-1">
