@@ -26,7 +26,8 @@ export function Lightbox({
   onOpenChange,
   onIndexChange,
 }: LightboxProps) {
-  const currentAttachment = attachments[currentIndex];
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const isProgrammaticScroll = React.useRef(false);
 
   const handlePrevious = useCallback(() => {
     onIndexChange((currentIndex - 1 + attachments.length) % attachments.length);
@@ -36,33 +37,40 @@ export function Lightbox({
     onIndexChange((currentIndex + 1) % attachments.length);
   }, [currentIndex, attachments.length, onIndexChange]);
 
-  // Touch handlers for swiping
-  const [touchStart, setTouchStart] = React.useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = React.useState<number | null>(null);
-
-  const minSwipeDistance = 50;
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEndHandler = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    
-    if (isLeftSwipe) {
-      handleNext();
-    } else if (isRightSwipe) {
-      handlePrevious();
+  // Setup initial scroll position when opened
+  useEffect(() => {
+    if (scrollRef.current && open) {
+      isProgrammaticScroll.current = true;
+      scrollRef.current.scrollTo({
+        left: currentIndex * scrollRef.current.clientWidth,
+        behavior: 'instant' as ScrollBehavior
+      });
+      setTimeout(() => { isProgrammaticScroll.current = false; }, 50);
     }
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  // Animate scroll when index changes via desktop arrows
+  useEffect(() => {
+    if (scrollRef.current && open && !isProgrammaticScroll.current) {
+      isProgrammaticScroll.current = true;
+      scrollRef.current.scrollTo({
+        left: currentIndex * scrollRef.current.clientWidth,
+        behavior: 'smooth'
+      });
+      setTimeout(() => { isProgrammaticScroll.current = false; }, 400);
+    }
+  }, [currentIndex, open]);
+
+  // Update currentIndex when user manually swipes
+  const handleScroll = useCallback(() => {
+    if (!scrollRef.current || isProgrammaticScroll.current) return;
+    const { scrollLeft, clientWidth } = scrollRef.current;
+    const newIndex = Math.round(scrollLeft / clientWidth);
+    if (newIndex !== currentIndex && newIndex >= 0 && newIndex < attachments.length) {
+      onIndexChange(newIndex);
+    }
+  }, [currentIndex, attachments.length, onIndexChange]);
 
   useEffect(() => {
     if (!open) return;
@@ -79,7 +87,7 @@ export function Lightbox({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [open, handlePrevious, handleNext]);
 
-  if (!currentAttachment) return null;
+  if (!attachments || attachments.length === 0) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -98,70 +106,74 @@ export function Lightbox({
           <span className="sr-only">Close</span>
         </button>
 
-        {/* Main Media Container */}
+        {/* Desktop Left/Right Click Areas (Overlayed over the scroll container) */}
+        {attachments.length > 1 && (
+          <>
+            <div
+              className="absolute left-0 top-0 z-10 hidden h-full w-[15%] cursor-w-resize sm:block"
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePrevious();
+              }}
+            />
+            <div
+              className="absolute right-0 top-0 z-10 hidden h-full w-[15%] cursor-e-resize sm:block"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleNext();
+              }}
+            />
+          </>
+        )}
+
+        {/* Main Media Scroll Container */}
         <div
-          className="relative flex h-full max-h-[85vh] w-full max-w-7xl items-center justify-center px-0 sm:px-4 md:px-16"
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="scrollbar-hide relative flex h-full w-full snap-x snap-mandatory items-center overflow-x-auto overflow-y-hidden scroll-smooth"
           onClick={() => onOpenChange(false)} // Clicking outside media closes dialog
         >
-          <div
-            className="relative flex h-full w-full items-center justify-center"
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the media itself
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEndHandler}
-          >
-            {/* Desktop Left/Right Click Areas */}
-            {attachments.length > 1 && (
-              <>
-                <div
-                  className="absolute left-0 top-0 z-10 hidden h-full w-1/2 cursor-w-resize sm:block"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePrevious();
-                  }}
-                />
-                <div
-                  className="absolute right-0 top-0 z-10 hidden h-full w-1/2 cursor-e-resize sm:block"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleNext();
-                  }}
-                />
-              </>
-            )}
-
-            {currentAttachment.type === 'video' ? (
-              <video
-                src={currentAttachment.url}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="relative z-0 max-h-full max-w-full rounded-lg object-contain sm:shadow-2xl"
-              />
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={currentAttachment.url}
-                alt={currentAttachment.filename || 'Attachment preview'}
-                className="relative z-0 max-h-full max-w-full rounded-lg object-contain sm:shadow-2xl"
-                loading="eager"
-              />
-            )}
-          </div>
+          {attachments.map((attachment) => (
+            <div
+              key={attachment.id}
+              className="flex h-full w-full shrink-0 snap-center items-center justify-center px-0 sm:px-4 md:px-16"
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the media itself
+            >
+              <div className="relative flex max-h-[85vh] w-full items-center justify-center">
+                {attachment.type === 'video' ? (
+                  <video
+                    src={attachment.url}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="relative z-0 max-h-full max-w-full rounded-lg object-contain sm:shadow-2xl"
+                  />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={attachment.url}
+                    alt={attachment.filename || 'Attachment preview'}
+                    className="relative z-0 max-h-[85vh] max-w-full rounded-lg object-contain sm:shadow-2xl"
+                    loading="lazy"
+                  />
+                )}
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Mobile controls (Bottom) */}
-        <div className="fixed bottom-6 left-4 right-4 z-50 flex items-center justify-between sm:hidden">
+        <div className="fixed bottom-6 left-4 right-4 z-50 flex items-center justify-between sm:hidden pointer-events-none">
           <button
             onClick={() => onOpenChange(false)}
-            className="rounded-full bg-black/10 dark:bg-white/10 backdrop-blur-md px-5 py-2 text-sm font-medium text-content-primary"
+            className="pointer-events-auto rounded-full bg-black/10 dark:bg-white/10 backdrop-blur-md px-5 py-2 text-sm font-medium text-content-primary"
           >
             Close
           </button>
           
           {attachments.length > 1 && (
-            <div className="rounded-full bg-black/10 dark:bg-white/10 backdrop-blur-md px-5 py-2 text-sm font-medium text-content-primary tracking-widest">
+            <div className="pointer-events-auto rounded-full bg-black/10 dark:bg-white/10 backdrop-blur-md px-5 py-2 text-sm font-medium text-content-primary tracking-widest">
               {currentIndex + 1} / {attachments.length}
             </div>
           )}
@@ -174,9 +186,10 @@ export function Lightbox({
               <div
                 key={idx}
                 className={cn(
-                  'size-2 rounded-full transition-all duration-200',
+                  'size-2 rounded-full transition-all duration-200 cursor-pointer',
                   idx === currentIndex ? 'bg-[#6e6e6e]' : 'bg-surface-3',
                 )}
+                onClick={() => onIndexChange(idx)}
               />
             ))}
           </div>
