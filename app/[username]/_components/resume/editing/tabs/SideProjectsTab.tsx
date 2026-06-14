@@ -1,15 +1,14 @@
 import React, { useMemo } from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
+import { useResumeList } from '@/hooks/useResumeList';
+import { ListTabLayout } from '@/components/composite/ListTabLayout';
+import { FormInput } from '@/components/ui/form-input';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
-import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
-import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
   () =>
@@ -35,8 +34,13 @@ export function SideProjectsTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const resume = useResumeStore((state) => state.resume);
-  const updateResume = useResumeStore((state) => state.updateResume);
+  const {
+    items: sideProjects,
+    handleSave: saveSideProject,
+    handleMoveUp,
+    handleToggleVisibility,
+  } = useResumeList<any>('sideProjects');
+
   const {
     view: sideProjectsView,
     setView: setSideProjectsView,
@@ -44,91 +48,41 @@ export function SideProjectsTab({
     setCurrent: setCurrentSideProject,
   } = useTabEditor<any>();
 
-  const sideProjects = useMemo(
-    () => resume?.sideProjects || [],
-    [resume?.sideProjects],
-  );
   const sortedSideProjects = useMemo(
     () => sortByDateDesc(sideProjects),
     [sideProjects],
   );
 
-  if (!resume) return null;
-
   const handleSave = () => {
     if (!currentSideProject?.title || !currentSideProject?.year) return;
-
-    const isEdit = !!currentSideProject.id;
-    const newItem = isEdit
-      ? currentSideProject
-      : { ...currentSideProject, id: Date.now().toString() };
-
-    const newItems = isEdit
-      ? sideProjects.map((p: any) =>
-          p.id === currentSideProject.id ? newItem : p,
-        )
-      : [...sideProjects, newItem];
-
-    updateResume({ sideProjects: newItems });
+    saveSideProject(currentSideProject);
     setSideProjectsView('list');
     setCurrentSideProject(null);
-  };
-
-  const handleMoveUp = (currentItem: any, prevItem: any) => {
-    const newItems = [...sideProjects];
-    const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
-    const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
-
-    if (idx1 !== -1 && idx2 !== -1) {
-      [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
-      updateResume({ sideProjects: newItems });
-    }
-  };
-
-  const handleToggleVisibility = (project: any) => {
-    const newItems = sideProjects.map((p: any) =>
-      p.id === project.id ? { ...p, hidden: !p.hidden } : p,
-    );
-    updateResume({ sideProjects: newItems });
   };
 
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col">
-      <TabHeader
-        title="Side Projects"
-        showAddButton={sideProjectsView === 'list'}
-        onAdd={() => {
-          setCurrentSideProject({
-            title: '',
-            year: currentYear.toString(),
-            link: '',
-            description: '',
-          });
-          setSideProjectsView('form');
-        }}
-        addButtonText="Add side project"
-      />
-
-      {sideProjectsView === 'list' && sideProjects.length === 0 && (
-        <EmptyState
-          icon={FolderCode}
-          buttonText="Add a side project you're proud of"
-          onClick={() => {
-            setCurrentSideProject({
-              title: '',
-              year: currentYear.toString(),
-              link: '',
-              description: '',
-            });
-            setSideProjectsView('form');
-          }}
-        />
-      )}
-
-      {sideProjectsView === 'list' && sideProjects.length > 0 && (
-        <div className="space-y-8">
+    <ListTabLayout
+      title="Side Projects"
+      view={sideProjectsView}
+      itemsLength={sideProjects.length}
+      onAdd={() => {
+        setCurrentSideProject({
+          title: '',
+          year: currentYear.toString(),
+          link: '',
+          description: '',
+        });
+        setSideProjectsView('form');
+      }}
+      addButtonText="Add side project"
+      emptyState={{
+        icon: FolderCode,
+        buttonText: "Add a side project you're proud of",
+      }}
+      renderList={() => (
+        <>
           {sortedSideProjects.map(
             (project: any, index: number, sortedArray: any[]) => {
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
@@ -212,15 +166,15 @@ export function SideProjectsTab({
               );
             },
           )}
-        </div>
+        </>
       )}
-
-      {sideProjectsView === 'form' && currentSideProject && (
-        <div className="space-y-6 w-full min-w-0">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Title*</Label>
-              <Input
+      renderForm={() =>
+        currentSideProject ? (
+          <>
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="title"
+                label="Title*"
                 value={currentSideProject.title}
                 onChange={(e) =>
                   setCurrentSideProject({
@@ -230,38 +184,35 @@ export function SideProjectsTab({
                 }
                 placeholder="My Side-Project"
               />
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">Year*</Label>
+                <Select
+                  value={currentSideProject.year}
+                  onValueChange={(val) =>
+                    setCurrentSideProject({
+                      ...currentSideProject,
+                      year: val,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {['Ongoing', ...years].map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Year*</Label>
-              <Select
-                value={currentSideProject.year}
-                onValueChange={(val) =>
-                  setCurrentSideProject({
-                    ...currentSideProject,
-                    year: val,
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {['Ongoing', ...years].map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Company or client
-              </Label>
-              <Input
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="company"
+                label="Company or client"
                 value={currentSideProject.company || ''}
                 onChange={(e) =>
                   setCurrentSideProject({
@@ -271,12 +222,9 @@ export function SideProjectsTab({
                 }
                 placeholder="Acme inc."
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Link to side-project
-              </Label>
-              <Input
+              <FormInput
+                id="link"
+                label="Link to side-project"
                 value={currentSideProject.link || ''}
                 onChange={(e) =>
                   setCurrentSideProject({
@@ -287,41 +235,41 @@ export function SideProjectsTab({
                 placeholder="https://example.com"
               />
             </div>
-          </div>
 
-          <div className="space-y-2 pt-2">
-            <Label className="text-xs text-content-secondary">
-              Description
-            </Label>
-            <RichTextEditor
-              content={currentSideProject.description || ''}
+            <div className="space-y-2 pt-2">
+              <Label className="text-xs text-content-secondary">
+                Description
+              </Label>
+              <RichTextEditor
+                content={currentSideProject.description || ''}
+                onChange={(val) =>
+                  setCurrentSideProject({
+                    ...currentSideProject,
+                    description: val,
+                  })
+                }
+              />
+            </div>
+            <SectionAttachments
+              attachments={currentSideProject.attachments || []}
               onChange={(val) =>
                 setCurrentSideProject({
                   ...currentSideProject,
-                  description: val,
+                  attachments: val,
                 })
               }
             />
-          </div>
-          <SectionAttachments
-            attachments={currentSideProject.attachments || []}
-            onChange={(val) =>
-              setCurrentSideProject({
-                ...currentSideProject,
-                attachments: val,
-              })
-            }
-          />
 
-          <TabFormActions
-            onCancel={() => setSideProjectsView('list')}
-            onSave={handleSave}
-            isSaveDisabled={
-              !currentSideProject?.title || !currentSideProject?.year
-            }
-          />
-        </div>
-      )}
-    </div>
+            <TabFormActions
+              onCancel={() => setSideProjectsView('list')}
+              onSave={handleSave}
+              isSaveDisabled={
+                !currentSideProject?.title || !currentSideProject?.year
+              }
+            />
+          </>
+        ) : null
+      }
+    />
   );
 }

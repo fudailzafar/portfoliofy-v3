@@ -1,7 +1,9 @@
 'use client';
 
-import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
+import { useResumeList } from '@/hooks/useResumeList';
+import { ListTabLayout } from '@/components/composite/ListTabLayout';
+import { FormInput } from '@/components/ui/form-input';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { MessageCircle, ArrowUpRight } from 'lucide-react';
@@ -14,9 +16,7 @@ import {
 } from '@/components/ui/select';
 import { buildContactUrl, extractUsername } from '@/utils/extractUsername';
 import { EditDeleteButtons } from '../EditDeleteButtons';
-import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
-import { EmptyState } from '../EmptyState';
 import { SortButtons } from '../SortButtons';
 
 export function ContactsTab({
@@ -24,298 +24,269 @@ export function ContactsTab({
 }: {
   setProjectToDelete: (id: string) => void;
 }) {
-  const resume = useResumeStore((state) => state.resume);
-  const updateResume = useResumeStore((state) => state.updateResume);
   const {
-    view: view,
-    setView: setView,
-    current: current,
-    setCurrent: setCurrent,
+    items: contacts,
+    handleSave: saveContact,
+    handleMoveUp,
+    handleToggleVisibility,
+  } = useResumeList<any>('contacts');
+
+  const {
+    view: contactsView,
+    setView: setContactsView,
+    current: currentContact,
+    setCurrent: setCurrentContact,
   } = useTabEditor<any>();
 
-  if (!resume) return null;
-  const items = resume.contacts || [];
-
   const handleSave = () => {
-    if (!current?.platform || !current?.link) return;
-
-    const isEdit = !!current.id;
-    const newItem = isEdit
-      ? current
-      : { ...current, id: Date.now().toString() };
-
-    const newItems = isEdit
-      ? items.map((c: any) => (c.id === newItem.id ? newItem : c))
-      : [...items, newItem];
-
-    updateResume({ contacts: newItems });
-    setView('list');
-    setCurrent(null);
-  };
-
-  const handleToggleVisibility = (item: any) => {
-    const newItems = items.map((c: any) =>
-      c.id === item.id ? { ...c, hidden: !c.hidden } : c,
-    );
-    updateResume({ contacts: newItems });
+    if (!currentContact?.platform || !currentContact?.link) return;
+    saveContact(currentContact);
+    setContactsView('list');
+    setCurrentContact(null);
   };
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col">
-      <TabHeader
-        title="Contact"
-        showAddButton={view === 'list'}
-        onAdd={() => {
-          setCurrent({
-            platform: '',
-            link: '',
-            type: 'Social',
-          });
-          setView('form');
-        }}
-        addButtonText="Add link"
-      />
+    <ListTabLayout
+      title="Contact"
+      view={contactsView}
+      itemsLength={contacts.length}
+      onAdd={() => {
+        setCurrentContact({
+          platform: '',
+          link: '',
+          type: 'Social',
+        });
+        setContactsView('form');
+      }}
+      addButtonText="Add link"
+      emptyState={{
+        icon: MessageCircle,
+        buttonText: "+ Add Contact",
+      }}
+      renderList={() => (
+        <>
+          {contacts.map((c: any, index: number, array: any[]) => {
+            const prevItem = index > 0 ? array[index - 1] : null;
+            const nextItem = index < array.length - 1 ? array[index + 1] : null;
 
-      {view === 'list' && items.length === 0 && (
-        <EmptyState
-          icon={MessageCircle}
-          buttonText="+ Add Contact"
-          onClick={() => {
-            setCurrent({
-              platform: '',
-              link: '',
-              type: 'Social',
-            });
-            setView('form');
-          }}
-        />
-      )}
-
-      {view === 'list' && items.length > 0 && (
-        <div className="space-y-8">
-          {items.map((c: any, index: number) => (
-            <div
-              key={c.id || c.platform}
-              className="flex flex-col gap-4 sm:flex-row sm:gap-12"
-            >
-              <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-32">
-                {c.platform}
-              </div>
-
-              <div className="flex flex-1 flex-col items-start justify-start">
-                <div
-                  className={`w-full transition-all duration-200 ${c.hidden ? 'opacity-50 blur-[1px]' : ''}`}
-                >
-                  <a
-                    href={buildContactUrl(c.link, c.platform)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block hover:underline hover:underline-offset-4"
-                  >
-                    <span className="text-sm font-semibold text-content-primary">
-                      {extractUsername(c.link, c.platform)}
-                      <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                    </span>
-                  </a>
+            return (
+              <div
+                key={c.id || c.platform}
+                className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
+              >
+                <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-32">
+                  {c.platform}
                 </div>
 
-                <EditDeleteButtons
-                  isHidden={c.hidden}
-                  onToggleVisibility={() => handleToggleVisibility(c)}
-                  onEdit={() => {
-                    setCurrent({
-                      ...c,
-                      type: [
-                        'Website',
-                        'Email',
-                        'LinkedIn',
-                        'GitHub',
-                        'X',
-                        'Threads',
-                        'Figma',
-                        'Instagram',
-                        'Bluesky',
-                        'Mastodon',
-                      ].includes(c.platform)
-                        ? c.platform
-                        : 'Custom',
-                      username: extractUsername(c.link, c.platform),
-                    });
-                    setView('form');
-                  }}
-                  onDelete={() => setProjectToDelete(c.id)}
-                >
-                  <SortButtons
-                    canMoveUp={index > 0}
-                    canMoveDown={index < items.length - 1}
-                    onMoveUp={() => {
-                      const newItems = [...items];
-                      [newItems[index - 1], newItems[index]] = [
-                        newItems[index],
-                        newItems[index - 1],
-                      ];
-                      updateResume({ contacts: newItems });
+                <div className="flex flex-1 flex-col items-start justify-start">
+                  <div
+                    className={`w-full transition-all duration-200 ${c.hidden ? 'opacity-50 blur-[1px]' : ''}`}
+                  >
+                    <a
+                      href={buildContactUrl(c.link, c.platform)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block hover:underline hover:underline-offset-4"
+                    >
+                      <span className="text-sm font-semibold text-content-primary">
+                        {extractUsername(c.link, c.platform)}
+                        <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                      </span>
+                    </a>
+                  </div>
+
+                  <EditDeleteButtons
+                    isHidden={c.hidden}
+                    onToggleVisibility={() => handleToggleVisibility(c)}
+                    onEdit={() => {
+                      setCurrentContact({
+                        ...c,
+                        type: [
+                          'Website',
+                          'Email',
+                          'LinkedIn',
+                          'GitHub',
+                          'X',
+                          'Threads',
+                          'Figma',
+                          'Instagram',
+                          'Bluesky',
+                          'Mastodon',
+                        ].includes(c.platform)
+                          ? c.platform
+                          : 'Custom',
+                        username: extractUsername(c.link, c.platform),
+                      });
+                      setContactsView('form');
                     }}
-                    onMoveDown={() => {
-                      const newItems = [...items];
-                      [newItems[index], newItems[index + 1]] = [
-                        newItems[index + 1],
-                        newItems[index],
-                      ];
-                      updateResume({ contacts: newItems });
-                    }}
-                  />
-                </EditDeleteButtons>
+                    onDelete={() => setProjectToDelete(c.id)}
+                  >
+                    <SortButtons
+                      canMoveUp={!!prevItem}
+                      canMoveDown={!!nextItem}
+                      onMoveUp={() => handleMoveUp(c, prevItem)}
+                      onMoveDown={() => handleMoveUp(c, nextItem)}
+                    />
+                  </EditDeleteButtons>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            );
+          })}
+        </>
       )}
-
-      {view === 'form' && current && (
-        <div className="space-y-6 w-full min-w-0">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-[13px] text-content-muted">Type*</Label>
-              <Select
-                value={current.type || 'Custom'}
-                onValueChange={(val) => {
-                  const isCustom = val === 'Custom';
-                  setCurrent({
-                    ...current,
-                    type: val,
-                    platform: isCustom ? current.platform : val,
-                    link: !isCustom
-                      ? buildContactUrl(current.username || '', val)
-                      : current.link,
-                  });
-                }}
-              >
-                <SelectTrigger className="h-10 text-[14px]">
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {[
-                    'Custom',
-                    'Website',
-                    'Email',
-                    'LinkedIn',
-                    'GitHub',
-                    'X',
-                    'Threads',
-                    'Figma',
-                    'Instagram',
-                    'Bluesky',
-                    'Mastodon',
-                  ].map((p) => (
-                    <SelectItem key={p} value={p}>
-                      {p}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {current.type === 'Custom' && (
+      renderForm={() =>
+        currentContact ? (
+          <>
+            <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label className="text-[13px] text-content-muted">
-                  Name of platform*
-                </Label>
-                <Input
-                  value={current.platform || ''}
-                  onChange={(e) =>
-                    setCurrent({
-                      ...current,
-                      platform: e.target.value,
-                    })
-                  }
-                  className="h-10 text-[14px]"
-                />
+                <Label className="text-[13px] text-content-muted">Type*</Label>
+                <Select
+                  value={currentContact.type || 'Custom'}
+                  onValueChange={(val) => {
+                    const isCustom = val === 'Custom';
+                    setCurrentContact({
+                      ...currentContact,
+                      type: val,
+                      platform: isCustom ? currentContact.platform : val,
+                      link: !isCustom
+                        ? buildContactUrl(currentContact.username || '', val)
+                        : currentContact.link,
+                    });
+                  }}
+                >
+                  <SelectTrigger className="h-10 text-[14px]">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[
+                      'Custom',
+                      'Website',
+                      'Email',
+                      'LinkedIn',
+                      'GitHub',
+                      'X',
+                      'Threads',
+                      'Figma',
+                      'Instagram',
+                      'Bluesky',
+                      'Mastodon',
+                    ].map((p) => (
+                      <SelectItem key={p} value={p}>
+                        {p}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            )}
 
-            {current.type === 'Custom' ? (
-              <>
+              {currentContact.type === 'Custom' && (
                 <div className="space-y-2">
                   <Label className="text-[13px] text-content-muted">
-                    Username*
+                    Name of platform*
                   </Label>
                   <Input
-                    value={current.username || ''}
-                    onChange={(e) => {
-                      const newUsername = e.target.value;
-                      setCurrent({
-                        ...current,
-                        username: newUsername,
-                      });
-                    }}
+                    value={currentContact.platform || ''}
+                    onChange={(e) =>
+                      setCurrentContact({
+                        ...currentContact,
+                        platform: e.target.value,
+                      })
+                    }
                     className="h-10 text-[14px]"
                   />
                 </div>
+              )}
+
+              {currentContact.type === 'Custom' ? (
+                <>
+                  <div className="space-y-2">
+                    <Label className="text-[13px] text-content-muted">
+                      Username*
+                    </Label>
+                    <Input
+                      value={currentContact.username || ''}
+                      onChange={(e) => {
+                        const newUsername = e.target.value;
+                        setCurrentContact({
+                          ...currentContact,
+                          username: newUsername,
+                        });
+                      }}
+                      className="h-10 text-[14px]"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[13px] text-content-muted">
+                      URL*
+                    </Label>
+                    <Input
+                      value={currentContact.link || ''}
+                      onChange={(e) => {
+                        const newUrl = e.target.value;
+                        setCurrentContact({
+                          ...currentContact,
+                          link: newUrl,
+                        });
+                      }}
+                      className="h-10 text-[14px]"
+                    />
+                  </div>
+                </>
+              ) : currentContact.type === 'Website' ? (
                 <div className="space-y-2">
-                  <Label className="text-[13px] text-content-muted">URL*</Label>
+                  <Label className="text-[13px] text-content-muted">
+                    Website URL*
+                  </Label>
                   <Input
-                    value={current.link || ''}
+                    value={currentContact.link || ''}
                     onChange={(e) => {
                       const newUrl = e.target.value;
-                      setCurrent({
-                        ...current,
+                      setCurrentContact({
+                        ...currentContact,
                         link: newUrl,
+                        username: extractUsername(
+                          newUrl,
+                          currentContact.platform || '',
+                        ),
                       });
                     }}
                     className="h-10 text-[14px]"
                   />
                 </div>
-              </>
-            ) : current.type === 'Website' ? (
-              <div className="space-y-2">
-                <Label className="text-[13px] text-content-muted">
-                  Website URL*
-                </Label>
-                <Input
-                  value={current.link || ''}
-                  onChange={(e) => {
-                    const newUrl = e.target.value;
-                    setCurrent({
-                      ...current,
-                      link: newUrl,
-                      username: extractUsername(newUrl, current.platform || ''),
-                    });
-                  }}
-                  className="h-10 text-[14px]"
-                />
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <Label className="text-[13px] text-content-muted">
-                  Username or Profile URL*
-                </Label>
-                <Input
-                  value={current.username || ''}
-                  onChange={(e) => {
-                    const newUsername = e.target.value;
-                    setCurrent({
-                      ...current,
-                      username: newUsername,
-                      link: buildContactUrl(
-                        newUsername,
-                        current.platform || '',
-                      ),
-                    });
-                  }}
-                  className="h-10 text-[14px]"
-                />
-              </div>
-            )}
-          </div>
+              ) : (
+                <div className="space-y-2">
+                  <Label className="text-[13px] text-content-muted">
+                    Username or Profile URL*
+                  </Label>
+                  <Input
+                    value={currentContact.username || ''}
+                    onChange={(e) => {
+                      const newUsername = e.target.value;
+                      setCurrentContact({
+                        ...currentContact,
+                        username: newUsername,
+                        link: buildContactUrl(
+                          newUsername,
+                          currentContact.platform || '',
+                        ),
+                      });
+                    }}
+                    className="h-10 text-[14px]"
+                  />
+                </div>
+              )}
+            </div>
 
-          <TabFormActions
-            onCancel={() => setView('list')}
-            onSave={handleSave}
-            isSaveDisabled={!current.platform || !current.link}
-          />
-        </div>
-      )}
-    </div>
+            <TabFormActions
+              onCancel={() => setContactsView('list')}
+              onSave={handleSave}
+              isSaveDisabled={
+                !currentContact.platform || !currentContact.link
+              }
+            />
+          </>
+        ) : null
+      }
+    />
   );
 }
