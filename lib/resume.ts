@@ -16,6 +16,17 @@ export const DEFAULT_SECTION_ORDER = [
   'certifications',
 ];
 
+export const AttachmentSchema = z.object({
+  id: z.string().describe('Unique identifier for the attachment'),
+  url: z.string().describe('S3 URL of the attachment'),
+  type: z.enum(['image', 'video']).describe('Type of media'),
+  filename: z.string().optional().describe('Original filename'),
+  width: z.number().optional().describe('Width of the media'),
+  height: z.number().optional().describe('Height of the media'),
+});
+
+export type AttachmentSchemaType = z.infer<typeof AttachmentSchema>;
+
 export const normalizeSectionOrder = (order?: string[] | null) => {
   const existingOrder = order || DEFAULT_SECTION_ORDER;
   const missingSections = DEFAULT_SECTION_ORDER.filter(
@@ -101,6 +112,7 @@ const WorkExperienceSection = z.array(
     end: z.string().optional().nullable().describe("End year or 'Now'"),
     description: z.string().describe('Job description'),
     hidden: z.boolean().optional().default(false),
+    attachments: z.array(AttachmentSchema).optional().default([]),
   }),
 );
 
@@ -121,6 +133,7 @@ const EducationSection = z.array(
       .optional()
       .describe('Rich text description of education'),
     hidden: z.boolean().optional().default(false),
+    attachments: z.array(AttachmentSchema).optional().default([]),
   }),
 );
 
@@ -136,6 +149,7 @@ const ProjectSection = z.array(
       .optional()
       .describe('Rich text description of the project'),
     hidden: z.boolean().optional().default(false),
+    attachments: z.array(AttachmentSchema).optional().default([]),
   }),
 );
 
@@ -165,6 +179,7 @@ const SideProjectSection = z.array(
       .optional()
       .describe('Rich text description of the side project'),
     hidden: z.boolean().optional().default(false),
+    attachments: z.array(AttachmentSchema).optional().default([]),
   }),
 );
 
@@ -184,6 +199,7 @@ const SpeakingSection = z.array(
       .optional()
       .describe('Rich text description of the speaking engagement'),
     hidden: z.boolean().optional().default(false),
+    attachments: z.array(AttachmentSchema).optional().default([]),
   }),
 );
 
@@ -202,6 +218,7 @@ const FeaturesSection = z.array(
       .optional()
       .describe('Rich text description of the feature'),
     hidden: z.boolean().optional().default(false),
+    attachments: z.array(AttachmentSchema).optional().default([]),
   }),
 );
 
@@ -222,6 +239,7 @@ const VolunteeringSection = z.array(
       .optional()
       .describe('Rich text description of the volunteering engagement'),
     hidden: z.boolean().optional().default(false),
+    attachments: z.array(AttachmentSchema).optional().default([]),
   }),
 );
 
@@ -234,6 +252,7 @@ const AwardsSection = z.array(
     link: z.string().optional().describe('Link to the award'),
     description: z.string().optional().describe('Description of the award'),
     hidden: z.boolean().optional().default(false),
+    attachments: z.array(AttachmentSchema).optional().default([]),
   }),
 );
 
@@ -252,6 +271,7 @@ const CertificationsSection = z.array(
       .optional()
       .describe('Description of the certification'),
     hidden: z.boolean().optional().default(false),
+    attachments: z.array(AttachmentSchema).optional().default([]),
   }),
 );
 
@@ -264,6 +284,7 @@ const WritingSection = z.array(
     link: z.string().optional().describe('Link to the piece'),
     description: z.string().optional().describe('Rich text description'),
     hidden: z.boolean().optional().default(false),
+    attachments: z.array(AttachmentSchema).optional().default([]),
   }),
 );
 
@@ -280,6 +301,7 @@ const ExhibitionsSection = z.array(
       .optional()
       .describe('Rich text description of the exhibition'),
     hidden: z.boolean().optional().default(false),
+    attachments: z.array(AttachmentSchema).optional().default([]),
   }),
 );
 

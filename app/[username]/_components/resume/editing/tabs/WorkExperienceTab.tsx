@@ -3,6 +3,8 @@ import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { SectionAttachments } from '@/components/composite/SectionAttachments';
+import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
@@ -177,7 +179,7 @@ export function WorkExperienceTab({
                         }
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block hover:underline"
+                        className="inline-block hover:underline hover:underline-offset-4"
                       >
                         <span className="text-sm font-semibold text-content-primary">
                           {w.title} at {w.company}
@@ -203,6 +205,7 @@ export function WorkExperienceTab({
                         }}
                       />
                     )}
+                    <div className="mt-4"><AttachmentsPreview attachments={w.attachments} /></div>
                   </div>
 
                   <EditDeleteButtons
@@ -350,6 +353,15 @@ export function WorkExperienceTab({
               }
             />
           </div>
+          <SectionAttachments
+            attachments={currentWork.attachments || []}
+            onChange={(val) =>
+              setCurrentWork({
+                ...currentWork,
+                attachments: val,
+              })
+            }
+          />
 
           <TabFormActions
             onCancel={() => setWorkView('list')}
