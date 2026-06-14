@@ -9,6 +9,7 @@ import {
   useContext,
 } from 'react';
 import { motion } from 'framer-motion';
+import { useDebounce } from 'use-debounce';
 import {
   Dialog,
   DialogContent,
@@ -171,18 +172,15 @@ export function EditProfileDialog({
     uname.length > 0 &&
     ((isInitialUsername || checkUsernameMutation.data?.available) ?? false);
 
+  const [debouncedUname] = useDebounce(uname, 500);
+
   // Username availability debounce — lives here only; GeneralTab renders the input
   useEffect(() => {
-    if (!isInitialUsername && uname) {
-      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-      debounceTimerRef.current = setTimeout(() => {
-        checkUsernameMutation.mutateAsync(uname);
-      }, 500);
+    if (!isInitialUsername && debouncedUname) {
+      checkUsernameMutation.mutateAsync(debouncedUname);
     }
-    return () => {
-      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-    };
-  }, [uname, isInitialUsername, checkUsernameMutation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedUname, isInitialUsername]);
 
   const [sectionOrder, setSectionOrder] = useState<string[]>(() =>
     normalizeSectionOrder(resume.sectionOrder),

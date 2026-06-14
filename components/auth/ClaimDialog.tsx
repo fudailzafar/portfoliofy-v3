@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { claimUsernameAndInitProfile } from '@/app/actions/claim';
 import { toast } from 'sonner';
-import { Check, Loader2 } from 'lucide-react';
+import { Check, LoaderCircle } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { cn } from '@/lib/utils';
 import {
@@ -135,7 +135,7 @@ export function ClaimDialog() {
               />
               {status === 'checking' && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <Loader2 className="h-4 w-4 animate-spin text-content-muted" />
+                  <LoaderCircle className="h-4 w-4 animate-spin text-content-muted" />
                 </div>
               )}
               {status === 'available' && (

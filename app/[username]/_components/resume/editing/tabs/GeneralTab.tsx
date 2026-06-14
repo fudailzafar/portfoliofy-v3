@@ -14,6 +14,7 @@ const RichTextEditor = dynamic(
   { ssr: false },
 );
 import { useUserActions } from '@/hooks/useUserActions';
+import { useDebounce } from 'use-debounce';
 import { Check, X } from 'lucide-react';
 
 export function GeneralTab({
@@ -39,18 +40,16 @@ export function GeneralTab({
   const updateHeader = useResumeStore((state) => state.updateHeader);
   const updateResume = useResumeStore((state) => state.updateResume);
   const { checkUsernameMutation } = useUserActions();
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [debouncedUname] = useDebounce(uname, 500);
 
   const isInitialUsername = uname === initialUsername;
 
   useEffect(() => {
-    if (!isInitialUsername && uname) {
-      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-      debounceTimerRef.current = setTimeout(() => {
-        checkUsernameMutation.mutateAsync(uname);
-      }, 500);
+    if (!isInitialUsername && debouncedUname) {
+      checkUsernameMutation.mutateAsync(debouncedUname);
     }
-  }, [uname, isInitialUsername, checkUsernameMutation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedUname, isInitialUsername]);
 
   if (!resume) return null;
 
