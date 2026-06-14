@@ -61,6 +61,8 @@ This project uses a modern, scalable full-stack architecture:
 └── public/             # Static assets, fonts, and Open Graph images
 ```
 
+> **Note for Developers**: For a deep dive into the architecture, component patterns, and a step-by-step guide on adding new features, please read our [Architecture & Developer Guide](./ARCHITECTURE.md).
+
 ## 🚀 Getting Started
 
 ### Prerequisites
