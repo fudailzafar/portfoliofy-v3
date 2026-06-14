@@ -1,10 +1,15 @@
 import React, { useMemo } from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
+import { useResumeList } from '@/hooks/useResumeList';
+import { ListTabLayout } from '@/components/composite/ListTabLayout';
+import { FormInput } from '@/components/ui/form-input';
+import { SortButtons } from '../SortButtons';
+import { EditDeleteButtons } from '../EditDeleteButtons';
+import { SectionAttachments } from '@/components/composite/SectionAttachments';
+import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
+import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Mic } from 'lucide-react';
-import { ArrowUpRight } from 'lucide-react';
+import { Mic, ArrowUpRight } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -12,15 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
 import { sortByDateDesc } from '@/lib/resume';
-import { SortButtons } from '../SortButtons';
-import { EditDeleteButtons } from '../EditDeleteButtons';
-import { SectionAttachments } from '@/components/composite/SectionAttachments';
-import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
-import { TabHeader } from '../TabHeader';
-import { TabFormActions } from '../TabFormActions';
-import { EmptyState } from '../EmptyState';
 import dynamic from 'next/dynamic';
 
 const RichTextEditor = dynamic(
@@ -38,8 +35,13 @@ export function SpeakingTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const resume = useResumeStore((state) => state.resume);
-  const updateResume = useResumeStore((state) => state.updateResume);
+  const {
+    items: speaking,
+    handleSave: saveSpeaking,
+    handleMoveUp,
+    handleToggleVisibility,
+  } = useResumeList<any>('speaking');
+
   const {
     view: speakingView,
     setView: setSpeakingView,
@@ -47,85 +49,39 @@ export function SpeakingTab({
     setCurrent: setCurrentSpeaking,
   } = useTabEditor<any>();
 
-  const speaking = useMemo(() => resume?.speaking || [], [resume?.speaking]);
   const sortedSpeaking = useMemo(() => sortByDateDesc(speaking), [speaking]);
-
-  if (!resume) return null;
 
   const handleSave = () => {
     if (!currentSpeaking?.title || !currentSpeaking?.year) return;
-
-    const isEdit = !!currentSpeaking.id;
-    const newItem = isEdit
-      ? currentSpeaking
-      : { ...currentSpeaking, id: Date.now().toString() };
-
-    const newItems = isEdit
-      ? speaking.map((p: any) => (p.id === currentSpeaking.id ? newItem : p))
-      : [...speaking, newItem];
-
-    updateResume({ speaking: newItems });
+    saveSpeaking(currentSpeaking);
     setSpeakingView('list');
     setCurrentSpeaking(null);
-  };
-
-  const handleMoveUp = (currentItem: any, prevItem: any) => {
-    const newItems = [...speaking];
-    const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
-    const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
-
-    if (idx1 !== -1 && idx2 !== -1) {
-      [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
-      updateResume({ speaking: newItems });
-    }
-  };
-
-  const handleToggleVisibility = (item: any) => {
-    const newItems = speaking.map((s: any) =>
-      s.id === item.id ? { ...s, hidden: !s.hidden } : s,
-    );
-    updateResume({ speaking: newItems });
   };
 
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col">
-      <TabHeader
-        title="Speaking"
-        showAddButton={speakingView === 'list'}
-        onAdd={() => {
-          setCurrentSpeaking({
-            title: '',
-            year: currentYear.toString(),
-            organization: '',
-            link: '',
-            location: '',
-          });
-          setSpeakingView('form');
-        }}
-        addButtonText="Add engagement"
-      />
-
-      {speakingView === 'list' && speaking.length === 0 && (
-        <EmptyState
-          icon={Mic}
-          buttonText="Add a talk you've given"
-          onClick={() => {
-            setCurrentSpeaking({
-              title: '',
-              year: currentYear.toString(),
-              organization: '',
-              link: '',
-              location: '',
-            });
-            setSpeakingView('form');
-          }}
-        />
-      )}
-
-      {speakingView === 'list' && speaking.length > 0 && (
-        <div className="space-y-8">
+    <ListTabLayout
+      title="Speaking"
+      view={speakingView}
+      itemsLength={speaking.length}
+      onAdd={() => {
+        setCurrentSpeaking({
+          title: '',
+          year: currentYear.toString(),
+          organization: '',
+          link: '',
+          location: '',
+        });
+        setSpeakingView('form');
+      }}
+      addButtonText="Add engagement"
+      emptyState={{
+        icon: Mic,
+        buttonText: "Add a talk you've given",
+      }}
+      renderList={() => (
+        <>
           {sortedSpeaking.map(
             (engagement: any, index: number, sortedArray: any[]) => {
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
@@ -216,15 +172,15 @@ export function SpeakingTab({
               );
             },
           )}
-        </div>
+        </>
       )}
-
-      {speakingView === 'form' && currentSpeaking && (
-        <div className="space-y-6 pb-24">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Title*</Label>
-              <Input
+      renderForm={() =>
+        currentSpeaking ? (
+          <>
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="title"
+                label="Title*"
                 value={currentSpeaking.title}
                 onChange={(e) =>
                   setCurrentSpeaking({
@@ -234,38 +190,35 @@ export function SpeakingTab({
                 }
                 placeholder="My great talk"
               />
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">Year*</Label>
+                <Select
+                  value={currentSpeaking.year}
+                  onValueChange={(val) =>
+                    setCurrentSpeaking({
+                      ...currentSpeaking,
+                      year: val,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Year*</Label>
-              <Select
-                value={currentSpeaking.year}
-                onValueChange={(val) =>
-                  setCurrentSpeaking({
-                    ...currentSpeaking,
-                    year: val,
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {years.map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Organization
-              </Label>
-              <Input
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="organization"
+                label="Organization"
                 value={currentSpeaking.organization || ''}
                 onChange={(e) =>
                   setCurrentSpeaking({
@@ -275,10 +228,9 @@ export function SpeakingTab({
                 }
                 placeholder="SXSW"
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Location</Label>
-              <Input
+              <FormInput
+                id="location"
+                label="Location"
                 value={currentSpeaking.location || ''}
                 onChange={(e) =>
                   setCurrentSpeaking({
@@ -289,11 +241,10 @@ export function SpeakingTab({
                 placeholder="Paris"
               />
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label className="text-xs text-content-secondary">Link</Label>
-            <Input
+            <FormInput
+              id="link"
+              label="Link"
               value={currentSpeaking.link || ''}
               onChange={(e) =>
                 setCurrentSpeaking({
@@ -303,39 +254,39 @@ export function SpeakingTab({
               }
               placeholder="https://example.com"
             />
-          </div>
 
-          <div className="space-y-2">
-            <Label className="text-xs text-content-secondary">
-              Description
-            </Label>
-            <RichTextEditor
-              content={currentSpeaking.description || ''}
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">
+                Description
+              </Label>
+              <RichTextEditor
+                content={currentSpeaking.description || ''}
+                onChange={(val) =>
+                  setCurrentSpeaking({
+                    ...currentSpeaking,
+                    description: val,
+                  })
+                }
+              />
+            </div>
+            <SectionAttachments
+              attachments={currentSpeaking.attachments || []}
               onChange={(val) =>
                 setCurrentSpeaking({
                   ...currentSpeaking,
-                  description: val,
+                  attachments: val,
                 })
               }
             />
-          </div>
-          <SectionAttachments
-            attachments={currentSpeaking.attachments || []}
-            onChange={(val) =>
-              setCurrentSpeaking({
-                ...currentSpeaking,
-                attachments: val,
-              })
-            }
-          />
 
-          <TabFormActions
-            onCancel={() => setSpeakingView('list')}
-            onSave={handleSave}
-            isSaveDisabled={!currentSpeaking?.title || !currentSpeaking?.year}
-          />
-        </div>
-      )}
-    </div>
+            <TabFormActions
+              onCancel={() => setSpeakingView('list')}
+              onSave={handleSave}
+              isSaveDisabled={!currentSpeaking?.title || !currentSpeaking?.year}
+            />
+          </>
+        ) : null
+      }
+    />
   );
 }

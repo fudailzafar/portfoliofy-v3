@@ -1,15 +1,14 @@
 import React, { useMemo } from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
+import { useResumeList } from '@/hooks/useResumeList';
+import { ListTabLayout } from '@/components/composite/ListTabLayout';
+import { FormInput } from '@/components/ui/form-input';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
-import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
-import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
   () =>
@@ -35,8 +34,13 @@ export function FeaturesTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const resume = useResumeStore((state) => state.resume);
-  const updateResume = useResumeStore((state) => state.updateResume);
+  const {
+    items: features,
+    handleSave: saveFeature,
+    handleMoveUp,
+    handleToggleVisibility,
+  } = useResumeList<any>('features');
+
   const {
     view: featuresView,
     setView: setFeaturesView,
@@ -44,85 +48,39 @@ export function FeaturesTab({
     setCurrent: setCurrentFeature,
   } = useTabEditor<any>();
 
-  const features = useMemo(() => resume?.features || [], [resume?.features]);
   const sortedFeatures = useMemo(() => sortByDateDesc(features), [features]);
-
-  if (!resume) return null;
 
   const handleSave = () => {
     if (!currentFeature?.title || !currentFeature?.year) return;
-
-    const isEdit = !!currentFeature.id;
-    const newItem = isEdit
-      ? currentFeature
-      : { ...currentFeature, id: Date.now().toString() };
-
-    const newItems = isEdit
-      ? features.map((p: any) => (p.id === currentFeature.id ? newItem : p))
-      : [...features, newItem];
-
-    updateResume({ features: newItems });
+    saveFeature(currentFeature);
     setFeaturesView('list');
     setCurrentFeature(null);
-  };
-
-  const handleMoveUp = (currentItem: any, prevItem: any) => {
-    const newItems = [...features];
-    const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
-    const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
-
-    if (idx1 !== -1 && idx2 !== -1) {
-      [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
-      updateResume({ features: newItems });
-    }
-  };
-
-  const handleToggleVisibility = (item: any) => {
-    const newItems = features.map((f: any) =>
-      f.id === item.id ? { ...f, hidden: !f.hidden } : f,
-    );
-    updateResume({ features: newItems });
   };
 
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col">
-      <TabHeader
-        title="Features"
-        showAddButton={featuresView === 'list'}
-        onAdd={() => {
-          setCurrentFeature({
-            title: '',
-            year: currentYear.toString(),
-            link: '',
-            location: '',
-            description: '',
-          });
-          setFeaturesView('form');
-        }}
-        addButtonText="Add feature"
-      />
-
-      {featuresView === 'list' && features.length === 0 && (
-        <EmptyState
-          icon={FolderCode}
-          buttonText="Add a feature"
-          onClick={() => {
-            setCurrentFeature({
-              title: '',
-              year: currentYear.toString(),
-              link: '',
-              location: '',
-              description: '',
-            });
-            setFeaturesView('form');
-          }}
-        />
-      )}
-
-      {featuresView === 'list' && features.length > 0 && (
-        <div className="space-y-8">
+    <ListTabLayout
+      title="Features"
+      view={featuresView}
+      itemsLength={features.length}
+      onAdd={() => {
+        setCurrentFeature({
+          title: '',
+          year: currentYear.toString(),
+          link: '',
+          location: '',
+          description: '',
+        });
+        setFeaturesView('form');
+      }}
+      addButtonText="Add feature"
+      emptyState={{
+        icon: FolderCode,
+        buttonText: "Add a feature",
+      }}
+      renderList={() => (
+        <>
           {sortedFeatures.map(
             (feature: any, index: number, sortedArray: any[]) => {
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
@@ -208,17 +166,15 @@ export function FeaturesTab({
               );
             },
           )}
-        </div>
+        </>
       )}
-
-      {featuresView === 'form' && currentFeature && (
-        <div className="space-y-6 w-full min-w-0">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Thing done*
-              </Label>
-              <Input
+      renderForm={() =>
+        currentFeature ? (
+          <>
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="title"
+                label="Thing done*"
                 value={currentFeature.title}
                 onChange={(e) =>
                   setCurrentFeature({
@@ -228,36 +184,35 @@ export function FeaturesTab({
                 }
                 placeholder="My great feature"
               />
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">Year*</Label>
+                <Select
+                  value={currentFeature.year}
+                  onValueChange={(val) =>
+                    setCurrentFeature({
+                      ...currentFeature,
+                      year: val,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {['Ongoing', ...years].map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Year*</Label>
-              <Select
-                value={currentFeature.year}
-                onValueChange={(val) =>
-                  setCurrentFeature({
-                    ...currentFeature,
-                    year: val,
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {['Ongoing', ...years].map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Where</Label>
-              <Input
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="location"
+                label="Where"
                 value={currentFeature.location || ''}
                 onChange={(e) =>
                   setCurrentFeature({
@@ -267,12 +222,9 @@ export function FeaturesTab({
                 }
                 placeholder="The Verge"
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Link to feature
-              </Label>
-              <Input
+              <FormInput
+                id="link"
+                label="Link to feature"
                 value={currentFeature.link || ''}
                 onChange={(e) =>
                   setCurrentFeature({
@@ -283,39 +235,39 @@ export function FeaturesTab({
                 placeholder="https://example.com"
               />
             </div>
-          </div>
 
-          <div className="space-y-2 pt-2">
-            <Label className="text-xs text-content-secondary">
-              Description
-            </Label>
-            <RichTextEditor
-              content={currentFeature.description || ''}
+            <div className="space-y-2 pt-2">
+              <Label className="text-xs text-content-secondary">
+                Description
+              </Label>
+              <RichTextEditor
+                content={currentFeature.description || ''}
+                onChange={(val) =>
+                  setCurrentFeature({
+                    ...currentFeature,
+                    description: val,
+                  })
+                }
+              />
+            </div>
+            <SectionAttachments
+              attachments={currentFeature.attachments || []}
               onChange={(val) =>
                 setCurrentFeature({
                   ...currentFeature,
-                  description: val,
+                  attachments: val,
                 })
               }
             />
-          </div>
-          <SectionAttachments
-            attachments={currentFeature.attachments || []}
-            onChange={(val) =>
-              setCurrentFeature({
-                ...currentFeature,
-                attachments: val,
-              })
-            }
-          />
 
-          <TabFormActions
-            onCancel={() => setFeaturesView('list')}
-            onSave={handleSave}
-            isSaveDisabled={!currentFeature?.title || !currentFeature?.year}
-          />
-        </div>
-      )}
-    </div>
+            <TabFormActions
+              onCancel={() => setFeaturesView('list')}
+              onSave={handleSave}
+              isSaveDisabled={!currentFeature?.title || !currentFeature?.year}
+            />
+          </>
+        ) : null
+      }
+    />
   );
 }

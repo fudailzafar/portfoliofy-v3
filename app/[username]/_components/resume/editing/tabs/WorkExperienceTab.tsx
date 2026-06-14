@@ -1,15 +1,14 @@
 import React, { useMemo } from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
+import { useResumeList } from '@/hooks/useResumeList';
+import { ListTabLayout } from '@/components/composite/ListTabLayout';
+import { FormInput } from '@/components/ui/form-input';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
-import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
-import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
   () =>
@@ -50,8 +49,13 @@ export function WorkExperienceTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const resume = useResumeStore((state) => state.resume);
-  const updateResume = useResumeStore((state) => state.updateResume);
+  const {
+    items: work,
+    handleSave: saveWork,
+    handleMoveUp,
+    handleToggleVisibility,
+  } = useResumeList<any>('workExperience');
+
   const {
     view: workView,
     setView: setWorkView,
@@ -59,98 +63,44 @@ export function WorkExperienceTab({
     setCurrent: setCurrentWork,
   } = useTabEditor<any>();
 
-  const work = useMemo(
-    () => resume?.workExperience || [],
-    [resume?.workExperience],
-  );
   const sortedWork = useMemo(() => sortByDateDesc(work), [work]);
-
-  if (!resume) return null;
 
   const handleSave = () => {
     if (!currentWork?.title || !currentWork?.company) return;
-
-    const isEdit = !!currentWork.id;
-    const newItem = isEdit
-      ? currentWork
-      : { ...currentWork, id: Date.now().toString() };
-
-    const newItems = isEdit
-      ? work.map((p: any) => (p.id === currentWork.id ? newItem : p))
-      : [...work, newItem];
-
-    updateResume({ workExperience: newItems });
+    saveWork(currentWork);
     setWorkView('list');
     setCurrentWork(null);
-  };
-
-  const handleMoveUp = (currentItem: any, prevItem: any) => {
-    const newItems = [...work];
-    const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
-    const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
-
-    if (idx1 !== -1 && idx2 !== -1) {
-      [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
-      updateResume({ workExperience: newItems });
-    }
-  };
-
-  const handleToggleVisibility = (item: any) => {
-    const newItems = work.map((w: any) =>
-      w.id === item.id ? { ...w, hidden: !w.hidden } : w,
-    );
-    updateResume({ workExperience: newItems });
   };
 
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col pb-24">
-      <TabHeader
-        title="Work Experience"
-        showAddButton={workView === 'list'}
-        onAdd={() => {
-          setCurrentWork({
-            company: '',
-            title: '',
-            startMonth: '',
-            start: currentYear.toString(),
-            endMonth: '',
-            end: 'Now',
-            location: '',
-            link: '',
-            contract: '',
-            description: '',
-          });
-          setWorkView('form');
-        }}
-        addButtonText="Add workplace"
-      />
-
-      {workView === 'list' && work.length === 0 && (
-        <EmptyState
-          icon={Briefcase}
-          buttonText="Add workplace"
-          onClick={() => {
-            setCurrentWork({
-              company: '',
-              title: '',
-              startMonth: '',
-              start: currentYear.toString(),
-              endMonth: '',
-              end: 'Now',
-              location: '',
-              link: '',
-              contract: '',
-              description: '',
-            });
-            setWorkView('form');
-          }}
-        />
-      )}
-
-      {workView === 'list' && work.length > 0 && (
-        <div className="space-y-8">
+    <ListTabLayout
+      title="Work Experience"
+      view={workView}
+      itemsLength={work.length}
+      onAdd={() => {
+        setCurrentWork({
+          company: '',
+          title: '',
+          startMonth: '',
+          start: currentYear.toString(),
+          endMonth: '',
+          end: 'Now',
+          location: '',
+          link: '',
+          contract: '',
+          description: '',
+        });
+        setWorkView('form');
+      }}
+      addButtonText="Add workplace"
+      emptyState={{
+        icon: Briefcase,
+        buttonText: "Add workplace",
+      }}
+      renderList={() => (
+        <>
           {sortedWork.map((w: any, index: number, sortedArray: any[]) => {
             const prevItem = index > 0 ? sortedArray[index - 1] : null;
             const canMoveUp =
@@ -234,64 +184,64 @@ export function WorkExperienceTab({
               </div>
             );
           })}
-        </div>
+        </>
       )}
+      renderForm={() =>
+        currentWork ? (
+          <>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">
+                  Start Year*
+                </Label>
+                <Select
+                  value={currentWork.start || ''}
+                  onValueChange={(val) =>
+                    setCurrentWork({ ...currentWork, start: val })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-      {workView === 'form' && currentWork && (
-        <div className="space-y-6 w-full min-w-0">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Start Year*
-              </Label>
-              <Select
-                value={currentWork.start || ''}
-                onValueChange={(val) =>
-                  setCurrentWork({ ...currentWork, start: val })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {years.map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">
+                  End Year*
+                </Label>
+                <Select
+                  value={currentWork.end || ''}
+                  onValueChange={(val) =>
+                    setCurrentWork({ ...currentWork, end: val })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Now">Now</SelectItem>
+                    {years.map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                End Year*
-              </Label>
-              <Select
-                value={currentWork.end || ''}
-                onValueChange={(val) =>
-                  setCurrentWork({ ...currentWork, end: val })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Now">Now</SelectItem>
-                  {years.map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Title*</Label>
-              <Input
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="title"
+                label="Title*"
                 value={currentWork.title}
                 onChange={(e) =>
                   setCurrentWork({
@@ -301,10 +251,9 @@ export function WorkExperienceTab({
                 }
                 placeholder="Senior Product Designer"
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Company*</Label>
-              <Input
+              <FormInput
+                id="company"
+                label="Company*"
                 value={currentWork.company}
                 onChange={(e) =>
                   setCurrentWork({
@@ -315,12 +264,11 @@ export function WorkExperienceTab({
                 placeholder="Acme Design Studio"
               />
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Location</Label>
-              <Input
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="location"
+                label="Location"
                 value={currentWork.location || ''}
                 onChange={(e) =>
                   setCurrentWork({
@@ -330,10 +278,9 @@ export function WorkExperienceTab({
                 }
                 placeholder="San Francisco, CA"
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">URL</Label>
-              <Input
+              <FormInput
+                id="link"
+                label="URL"
                 value={currentWork.link || ''}
                 onChange={(e) =>
                   setCurrentWork({
@@ -344,36 +291,36 @@ export function WorkExperienceTab({
                 placeholder="https://example.com"
               />
             </div>
-          </div>
 
-          <div className="space-y-2 pt-2">
-            <Label className="text-xs text-content-secondary">
-              Description
-            </Label>
-            <RichTextEditor
-              content={currentWork.description || ''}
+            <div className="space-y-2 pt-2">
+              <Label className="text-xs text-content-secondary">
+                Description
+              </Label>
+              <RichTextEditor
+                content={currentWork.description || ''}
+                onChange={(val) =>
+                  setCurrentWork({ ...currentWork, description: val })
+                }
+              />
+            </div>
+            <SectionAttachments
+              attachments={currentWork.attachments || []}
               onChange={(val) =>
-                setCurrentWork({ ...currentWork, description: val })
+                setCurrentWork({
+                  ...currentWork,
+                  attachments: val,
+                })
               }
             />
-          </div>
-          <SectionAttachments
-            attachments={currentWork.attachments || []}
-            onChange={(val) =>
-              setCurrentWork({
-                ...currentWork,
-                attachments: val,
-              })
-            }
-          />
 
-          <TabFormActions
-            onCancel={() => setWorkView('list')}
-            onSave={handleSave}
-            isSaveDisabled={!currentWork?.title || !currentWork?.company}
-          />
-        </div>
-      )}
-    </div>
+            <TabFormActions
+              onCancel={() => setWorkView('list')}
+              onSave={handleSave}
+              isSaveDisabled={!currentWork?.title || !currentWork?.company}
+            />
+          </>
+        ) : null
+      }
+    />
   );
 }

@@ -1,17 +1,16 @@
 'use client';
 
+import { useMemo } from 'react';
+import { useTabEditor } from '@/hooks/useTabEditor';
+import { useResumeList } from '@/hooks/useResumeList';
+import { ListTabLayout } from '@/components/composite/ListTabLayout';
+import { FormInput } from '@/components/ui/form-input';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
-import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
-import { EmptyState } from '../EmptyState';
-import { useMemo } from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
-import { useTabEditor } from '@/hooks/useTabEditor';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { GraduationCap } from 'lucide-react';
 import {
   Select,
@@ -38,8 +37,13 @@ export function EducationTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const resume = useResumeStore((state) => state.resume);
-  const updateResume = useResumeStore((state) => state.updateResume);
+  const {
+    items: education,
+    handleSave: saveEdu,
+    handleMoveUp,
+    handleToggleVisibility,
+  } = useResumeList<any>('education');
+
   const {
     view: eduView,
     setView: setEduView,
@@ -47,86 +51,40 @@ export function EducationTab({
     setCurrent: setCurrentEdu,
   } = useTabEditor<any>();
 
-  const education = useMemo(() => resume?.education || [], [resume?.education]);
   const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
-
-  if (!resume) return null;
 
   const handleSave = () => {
     if (!currentEdu?.school || !currentEdu?.degree) return;
-
-    const isEdit = !!currentEdu.id;
-    const newItem = isEdit
-      ? currentEdu
-      : { ...currentEdu, id: Date.now().toString() };
-
-    const newItems = isEdit
-      ? education.map((p: any) => (p.id === currentEdu.id ? newItem : p))
-      : [...education, newItem];
-
-    updateResume({ education: newItems });
+    saveEdu(currentEdu);
     setEduView('list');
     setCurrentEdu(null);
-  };
-
-  const handleMoveUp = (currentItem: any, prevItem: any) => {
-    const newItems = [...education];
-    const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
-    const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
-
-    if (idx1 !== -1 && idx2 !== -1) {
-      [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
-      updateResume({ education: newItems });
-    }
-  };
-
-  const handleToggleVisibility = (item: any) => {
-    const newItems = education.map((edu: any) =>
-      edu.id === item.id ? { ...edu, hidden: !edu.hidden } : edu,
-    );
-    updateResume({ education: newItems });
   };
 
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col">
-      <TabHeader
-        title="Education"
-        showAddButton={eduView === 'list'}
-        onAdd={() => {
-          setCurrentEdu({
-            school: '',
-            degree: '',
-            start: currentYear.toString(),
-            end: 'Now',
-            location: '',
-            description: '',
-          });
-          setEduView('form');
-        }}
-        addButtonText="Add education"
-      />
-
-      {eduView === 'list' && education.length === 0 && (
-        <EmptyState
-          icon={GraduationCap}
-          buttonText="Add education"
-          onClick={() => {
-            setCurrentEdu({
-              school: '',
-              degree: '',
-              start: currentYear.toString(),
-              end: 'Now',
-              location: '',
-            });
-            setEduView('form');
-          }}
-        />
-      )}
-
-      {eduView === 'list' && education.length > 0 && (
-        <div className="space-y-8">
+    <ListTabLayout
+      title="Education"
+      view={eduView}
+      itemsLength={education.length}
+      onAdd={() => {
+        setCurrentEdu({
+          school: '',
+          degree: '',
+          start: currentYear.toString(),
+          end: 'Now',
+          location: '',
+          description: '',
+        });
+        setEduView('form');
+      }}
+      addButtonText="Add education"
+      emptyState={{
+        icon: GraduationCap,
+        buttonText: "Add education",
+      }}
+      renderList={() => (
+        <>
           {sortedEducation.map(
             (edu: any, index: number, sortedArray: any[]) => {
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
@@ -192,76 +150,75 @@ export function EducationTab({
               );
             },
           )}
-        </div>
+        </>
       )}
-
-      {eduView === 'form' && currentEdu && (
-        <div className="space-y-6 pb-24">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Start Year*
-              </Label>
-              <Select
-                value={currentEdu.start || ''}
-                onValueChange={(val) =>
-                  setCurrentEdu({
-                    ...currentEdu,
-                    start: val,
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {years.map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+      renderForm={() =>
+        currentEdu ? (
+          <>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">
+                  Start Year*
+                </Label>
+                <Select
+                  value={currentEdu.start || ''}
+                  onValueChange={(val) =>
+                    setCurrentEdu({
+                      ...currentEdu,
+                      start: val,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">
+                  End Year*
+                </Label>
+                <Select
+                  value={currentEdu.end || ''}
+                  onValueChange={(val) =>
+                    setCurrentEdu({ ...currentEdu, end: val })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Now">Now</SelectItem>
+                    {years.map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                End Year*
-              </Label>
-              <Select
-                value={currentEdu.end || ''}
-                onValueChange={(val) =>
-                  setCurrentEdu({ ...currentEdu, end: val })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Now">Now</SelectItem>
-                  {years.map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Degree*</Label>
-              <Input
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="degree"
+                label="Degree*"
                 value={currentEdu.degree}
                 onChange={(e) =>
                   setCurrentEdu({ ...currentEdu, degree: e.target.value })
                 }
                 placeholder="Bachelor's in Graphic Design"
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">School*</Label>
-              <Input
+              <FormInput
+                id="school"
+                label="School*"
                 value={currentEdu.school}
                 onChange={(e) =>
                   setCurrentEdu({ ...currentEdu, school: e.target.value })
@@ -269,22 +226,20 @@ export function EducationTab({
                 placeholder="Emily Carr University"
               />
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Location</Label>
-              <Input
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="location"
+                label="Location"
                 value={currentEdu.location || ''}
                 onChange={(e) =>
                   setCurrentEdu({ ...currentEdu, location: e.target.value })
                 }
                 placeholder="New York"
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">URL</Label>
-              <Input
+              <FormInput
+                id="link"
+                label="URL"
                 value={currentEdu.link || ''}
                 onChange={(e) =>
                   setCurrentEdu({ ...currentEdu, link: e.target.value })
@@ -292,41 +247,41 @@ export function EducationTab({
                 placeholder="https://example.com"
               />
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label className="text-xs text-content-secondary">
-              Description
-            </Label>
-            <RichTextEditor
-              content={currentEdu.description || ''}
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">
+                Description
+              </Label>
+              <RichTextEditor
+                content={currentEdu.description || ''}
+                onChange={(val) =>
+                  setCurrentEdu({
+                    ...currentEdu,
+                    description: val,
+                  })
+                }
+              />
+            </div>
+            <SectionAttachments
+              attachments={currentEdu.attachments || []}
               onChange={(val) =>
                 setCurrentEdu({
                   ...currentEdu,
-                  description: val,
+                  attachments: val,
                 })
               }
             />
-          </div>
-          <SectionAttachments
-            attachments={currentEdu.attachments || []}
-            onChange={(val) =>
-              setCurrentEdu({
-                ...currentEdu,
-                attachments: val,
-              })
-            }
-          />
 
-          <TabFormActions
-            onCancel={() => setEduView('list')}
-            onSave={handleSave}
-            isSaveDisabled={
-              !currentEdu?.school || !currentEdu?.degree || !currentEdu?.end
-            }
-          />
-        </div>
-      )}
-    </div>
+            <TabFormActions
+              onCancel={() => setEduView('list')}
+              onSave={handleSave}
+              isSaveDisabled={
+                !currentEdu?.school || !currentEdu?.degree || !currentEdu?.end
+              }
+            />
+          </>
+        ) : null
+      }
+    />
   );
 }

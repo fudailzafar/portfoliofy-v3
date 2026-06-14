@@ -1,15 +1,14 @@
 import { useMemo } from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
+import { useResumeList } from '@/hooks/useResumeList';
+import { ListTabLayout } from '@/components/composite/ListTabLayout';
+import { FormInput } from '@/components/ui/form-input';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
-import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
-import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
   () =>
@@ -35,8 +34,13 @@ export function AwardsTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const resume = useResumeStore((state) => state.resume);
-  const updateResume = useResumeStore((state) => state.updateResume);
+  const {
+    items: awards,
+    handleSave: saveAward,
+    handleMoveUp,
+    handleToggleVisibility,
+  } = useResumeList<any>('awards');
+
   const {
     view: awardsView,
     setView: setAwardsView,
@@ -44,86 +48,40 @@ export function AwardsTab({
     setCurrent: setCurrentAward,
   } = useTabEditor<any>();
 
-  const awards = useMemo(() => resume?.awards || [], [resume?.awards]);
   const sortedAwards = useMemo(() => sortByDateDesc(awards), [awards]);
-
-  if (!resume) return null;
 
   const handleSave = () => {
     if (!currentAward?.title || !currentAward?.year || !currentAward?.issuer)
       return;
-
-    const isEdit = !!currentAward.id;
-    const newItem = isEdit
-      ? currentAward
-      : { ...currentAward, id: Date.now().toString() };
-
-    const newItems = isEdit
-      ? awards.map((p: any) => (p.id === currentAward.id ? newItem : p))
-      : [...awards, newItem];
-
-    updateResume({ awards: newItems });
+    saveAward(currentAward);
     setAwardsView('list');
     setCurrentAward(null);
-  };
-
-  const handleMoveUp = (currentItem: any, prevItem: any) => {
-    const newItems = [...awards];
-    const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
-    const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
-
-    if (idx1 !== -1 && idx2 !== -1) {
-      [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
-      updateResume({ awards: newItems });
-    }
-  };
-
-  const handleToggleVisibility = (item: any) => {
-    const newItems = awards.map((a: any) =>
-      a.id === item.id ? { ...a, hidden: !a.hidden } : a,
-    );
-    updateResume({ awards: newItems });
   };
 
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col">
-      <TabHeader
-        title="Awards"
-        showAddButton={awardsView === 'list'}
-        onAdd={() => {
-          setCurrentAward({
-            title: '',
-            issuer: '',
-            year: currentYear.toString(),
-            link: '',
-            description: '',
-          });
-          setAwardsView('form');
-        }}
-        addButtonText="Add award"
-      />
-
-      {awardsView === 'list' && awards.length === 0 && (
-        <EmptyState
-          icon={Award}
-          buttonText="Add an award you received"
-          onClick={() => {
-            setCurrentAward({
-              title: '',
-              issuer: '',
-              year: currentYear.toString(),
-              link: '',
-              description: '',
-            });
-            setAwardsView('form');
-          }}
-        />
-      )}
-
-      {awardsView === 'list' && awards.length > 0 && (
-        <div className="space-y-8">
+    <ListTabLayout
+      title="Awards"
+      view={awardsView}
+      itemsLength={awards.length}
+      onAdd={() => {
+        setCurrentAward({
+          title: '',
+          issuer: '',
+          year: currentYear.toString(),
+          link: '',
+          description: '',
+        });
+        setAwardsView('form');
+      }}
+      addButtonText="Add award"
+      emptyState={{
+        icon: Award,
+        buttonText: "Add an award you received",
+      }}
+      renderList={() => (
+        <>
           {sortedAwards.map((award: any, index: number, sortedArray: any[]) => {
             const prevItem = index > 0 ? sortedArray[index - 1] : null;
             const canMoveUp =
@@ -202,15 +160,15 @@ export function AwardsTab({
               </div>
             );
           })}
-        </div>
+        </>
       )}
-
-      {awardsView === 'form' && currentAward && (
-        <div className="space-y-6 w-full min-w-0">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Title*</Label>
-              <Input
+      renderForm={() =>
+        currentAward ? (
+          <>
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="title"
+                label="Title*"
                 value={currentAward.title}
                 onChange={(e) =>
                   setCurrentAward({
@@ -220,36 +178,35 @@ export function AwardsTab({
                 }
                 placeholder="My great award"
               />
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">Year*</Label>
+                <Select
+                  value={currentAward.year}
+                  onValueChange={(val) =>
+                    setCurrentAward({
+                      ...currentAward,
+                      year: val,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Year*</Label>
-              <Select
-                value={currentAward.year}
-                onValueChange={(val) =>
-                  setCurrentAward({
-                    ...currentAward,
-                    year: val,
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {years.map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Issuer*</Label>
-              <Input
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="issuer"
+                label="Issuer*"
                 value={currentAward.issuer || ''}
                 onChange={(e) =>
                   setCurrentAward({
@@ -259,12 +216,9 @@ export function AwardsTab({
                 }
                 placeholder="Apple"
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Link to award
-              </Label>
-              <Input
+              <FormInput
+                id="link"
+                label="Link to award"
                 value={currentAward.link || ''}
                 onChange={(e) =>
                   setCurrentAward({
@@ -275,43 +229,43 @@ export function AwardsTab({
                 placeholder="https://example.com"
               />
             </div>
-          </div>
 
-          <div className="space-y-2 pt-2">
-            <Label className="text-xs text-content-secondary">
-              Description
-            </Label>
-            <RichTextEditor
-              content={currentAward.description || ''}
+            <div className="space-y-2 pt-2">
+              <Label className="text-xs text-content-secondary">
+                Description
+              </Label>
+              <RichTextEditor
+                content={currentAward.description || ''}
+                onChange={(val) =>
+                  setCurrentAward({
+                    ...currentAward,
+                    description: val,
+                  })
+                }
+              />
+            </div>
+            <SectionAttachments
+              attachments={currentAward.attachments || []}
               onChange={(val) =>
                 setCurrentAward({
                   ...currentAward,
-                  description: val,
+                  attachments: val,
                 })
               }
             />
-          </div>
-          <SectionAttachments
-            attachments={currentAward.attachments || []}
-            onChange={(val) =>
-              setCurrentAward({
-                ...currentAward,
-                attachments: val,
-              })
-            }
-          />
 
-          <TabFormActions
-            onCancel={() => setAwardsView('list')}
-            onSave={handleSave}
-            isSaveDisabled={
-              !currentAward?.title ||
-              !currentAward?.year ||
-              !currentAward?.issuer
-            }
-          />
-        </div>
-      )}
-    </div>
+            <TabFormActions
+              onCancel={() => setAwardsView('list')}
+              onSave={handleSave}
+              isSaveDisabled={
+                !currentAward?.title ||
+                !currentAward?.year ||
+                !currentAward?.issuer
+              }
+            />
+          </>
+        ) : null
+      }
+    />
   );
 }

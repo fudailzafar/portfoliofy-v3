@@ -1,15 +1,14 @@
 import React, { useMemo } from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
+import { useResumeList } from '@/hooks/useResumeList';
+import { ListTabLayout } from '@/components/composite/ListTabLayout';
+import { FormInput } from '@/components/ui/form-input';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
-import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
-import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
   () =>
@@ -18,8 +17,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { FolderCode } from 'lucide-react';
-import { ArrowUpRight } from 'lucide-react';
+import { FolderCode, ArrowUpRight } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -36,8 +34,13 @@ export function ProjectsTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const resume = useResumeStore((state) => state.resume);
-  const updateResume = useResumeStore((state) => state.updateResume);
+  const {
+    items: projects,
+    handleSave: saveProject,
+    handleMoveUp,
+    handleToggleVisibility,
+  } = useResumeList<any>('projects');
+
   const {
     view: projectsView,
     setView: setProjectsView,
@@ -45,85 +48,39 @@ export function ProjectsTab({
     setCurrent: setCurrentProject,
   } = useTabEditor<any>();
 
-  const projects = useMemo(() => resume?.projects || [], [resume?.projects]);
   const sortedProjects = useMemo(() => sortByDateDesc(projects), [projects]);
-
-  if (!resume) return null;
 
   const handleSave = () => {
     if (!currentProject?.title || !currentProject?.year) return;
-
-    const isEdit = !!currentProject.id;
-    const newProject = isEdit
-      ? currentProject
-      : { ...currentProject, id: Date.now().toString() };
-
-    const newProjects = isEdit
-      ? projects.map((p: any) => (p.id === currentProject.id ? newProject : p))
-      : [...projects, newProject];
-
-    updateResume({ projects: newProjects });
+    saveProject(currentProject);
     setProjectsView('list');
     setCurrentProject(null);
-  };
-
-  const handleMoveUp = (currentItem: any, prevItem: any) => {
-    const newItems = [...projects];
-    const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
-    const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
-
-    if (idx1 !== -1 && idx2 !== -1) {
-      [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
-      updateResume({ projects: newItems });
-    }
-  };
-
-  const handleToggleVisibility = (item: any) => {
-    const newItems = projects.map((p: any) =>
-      p.id === item.id ? { ...p, hidden: !p.hidden } : p,
-    );
-    updateResume({ projects: newItems });
   };
 
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col">
-      <TabHeader
-        title="Projects"
-        showAddButton={projectsView === 'list'}
-        onAdd={() => {
-          setCurrentProject({
-            title: '',
-            year: currentYear.toString(),
-            company: '',
-            link: '',
-            description: '',
-          });
-          setProjectsView('form');
-        }}
-        addButtonText="Add project"
-      />
-
-      {projectsView === 'list' && projects.length === 0 && (
-        <EmptyState
-          icon={FolderCode}
-          buttonText="Add a work project you're proud of"
-          onClick={() => {
-            setCurrentProject({
-              title: '',
-              year: currentYear.toString(),
-              company: '',
-              link: '',
-              description: '',
-            });
-            setProjectsView('form');
-          }}
-        />
-      )}
-
-      {projectsView === 'list' && projects.length > 0 && (
-        <div className="space-y-8">
+    <ListTabLayout
+      title="Projects"
+      view={projectsView}
+      itemsLength={projects.length}
+      onAdd={() => {
+        setCurrentProject({
+          title: '',
+          year: currentYear.toString(),
+          company: '',
+          link: '',
+          description: '',
+        });
+        setProjectsView('form');
+      }}
+      addButtonText="Add project"
+      emptyState={{
+        icon: FolderCode,
+        buttonText: "Add a work project you're proud of",
+      }}
+      renderList={() => (
+        <>
           {sortedProjects.map(
             (project: any, index: number, sortedArray: any[]) => {
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
@@ -219,15 +176,15 @@ export function ProjectsTab({
               );
             },
           )}
-        </div>
+        </>
       )}
-
-      {projectsView === 'form' && currentProject && (
-        <div className="space-y-6 w-full min-w-0">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Title*</Label>
-              <Input
+      renderForm={() =>
+        currentProject ? (
+          <>
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="title"
+                label="Title*"
                 value={currentProject.title}
                 onChange={(e) =>
                   setCurrentProject({
@@ -237,38 +194,35 @@ export function ProjectsTab({
                 }
                 placeholder="My Great Project"
               />
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">Year*</Label>
+                <Select
+                  value={currentProject.year}
+                  onValueChange={(val) =>
+                    setCurrentProject({
+                      ...currentProject,
+                      year: val,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {['Ongoing', ...years].map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Year*</Label>
-              <Select
-                value={currentProject.year}
-                onValueChange={(val) =>
-                  setCurrentProject({
-                    ...currentProject,
-                    year: val,
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {['Ongoing', ...years].map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Company or client
-              </Label>
-              <Input
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="company"
+                label="Company or client"
                 value={currentProject.company || ''}
                 onChange={(e) =>
                   setCurrentProject({
@@ -278,12 +232,9 @@ export function ProjectsTab({
                 }
                 placeholder="Acme inc."
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Link to project
-              </Label>
-              <Input
+              <FormInput
+                id="link"
+                label="Link to project"
                 value={currentProject.link || ''}
                 onChange={(e) =>
                   setCurrentProject({
@@ -294,39 +245,39 @@ export function ProjectsTab({
                 placeholder="https://example.com"
               />
             </div>
-          </div>
 
-          <div className="space-y-2 pt-2">
-            <Label className="text-xs text-content-secondary">
-              Description
-            </Label>
-            <RichTextEditor
-              content={currentProject.description || ''}
+            <div className="space-y-2 pt-2">
+              <Label className="text-xs text-content-secondary">
+                Description
+              </Label>
+              <RichTextEditor
+                content={currentProject.description || ''}
+                onChange={(val) =>
+                  setCurrentProject({
+                    ...currentProject,
+                    description: val,
+                  })
+                }
+              />
+            </div>
+            <SectionAttachments
+              attachments={currentProject.attachments || []}
               onChange={(val) =>
                 setCurrentProject({
                   ...currentProject,
-                  description: val,
+                  attachments: val,
                 })
               }
             />
-          </div>
-          <SectionAttachments
-            attachments={currentProject.attachments || []}
-            onChange={(val) =>
-              setCurrentProject({
-                ...currentProject,
-                attachments: val,
-              })
-            }
-          />
 
-          <TabFormActions
-            onCancel={() => setProjectsView('list')}
-            onSave={handleSave}
-            isSaveDisabled={!currentProject?.title || !currentProject?.year}
-          />
-        </div>
-      )}
-    </div>
+            <TabFormActions
+              onCancel={() => setProjectsView('list')}
+              onSave={handleSave}
+              isSaveDisabled={!currentProject?.title || !currentProject?.year}
+            />
+          </>
+        ) : null
+      }
+    />
   );
 }

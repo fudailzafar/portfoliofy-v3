@@ -1,13 +1,14 @@
 import React, { useMemo } from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
+import { useResumeList } from '@/hooks/useResumeList';
+import { ListTabLayout } from '@/components/composite/ListTabLayout';
+import { FormInput } from '@/components/ui/form-input';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
-import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
-import { EmptyState } from '../EmptyState';
+import { Label } from '@/components/ui/label';
 import dynamic from 'next/dynamic';
 
 const RichTextEditor = dynamic(
@@ -17,8 +18,6 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -36,8 +35,13 @@ export function VolunteeringTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const resume = useResumeStore((state) => state.resume);
-  const updateResume = useResumeStore((state) => state.updateResume);
+  const {
+    items: volunteering,
+    handleSave: saveVolunteering,
+    handleMoveUp,
+    handleToggleVisibility,
+  } = useResumeList<any>('volunteering');
+
   const {
     view: volunteeringView,
     setView: setVolunteeringView,
@@ -45,93 +49,44 @@ export function VolunteeringTab({
     setCurrent: setCurrentVolunteering,
   } = useTabEditor<any>();
 
-  const volunteering = useMemo(
-    () => resume?.volunteering || [],
-    [resume?.volunteering],
-  );
   const sortedVolunteering = useMemo(
     () => sortByDateDesc(volunteering),
     [volunteering],
   );
 
-  if (!resume) return null;
-
   const handleSave = () => {
     if (!currentVolunteering?.role || !currentVolunteering?.organization)
       return;
-
-    const isEdit = !!currentVolunteering.id;
-    const newItem = isEdit
-      ? currentVolunteering
-      : { ...currentVolunteering, id: Date.now().toString() };
-
-    const newItems = isEdit
-      ? volunteering.map((p: any) =>
-          p.id === currentVolunteering.id ? newItem : p,
-        )
-      : [...volunteering, newItem];
-
-    updateResume({ volunteering: newItems });
+    saveVolunteering(currentVolunteering);
     setVolunteeringView('list');
     setCurrentVolunteering(null);
   };
 
-  const handleMoveUp = (currentItem: any, prevItem: any) => {
-    const newItems = [...volunteering];
-    const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
-    const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
+  const currentYear = new Date().getFullYear();
 
-    if (idx1 !== -1 && idx2 !== -1) {
-      [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
-      updateResume({ volunteering: newItems });
-    }
-  };
-
-  const handleToggleVisibility = (item: any) => {
-    const newItems = volunteering.map((v: any) =>
-      v.id === item.id ? { ...v, hidden: !v.hidden } : v,
-    );
-    updateResume({ volunteering: newItems });
-  };
   return (
-    <div className="mx-auto flex max-w-3xl flex-col">
-      <TabHeader
-        title="Volunteering"
-        showAddButton={volunteeringView === 'list'}
-        onAdd={() => {
-          setCurrentVolunteering({
-            role: '',
-            organization: '',
-            startYear: '',
-            endYear: '',
-            location: '',
-            link: '',
-          });
-          setVolunteeringView('form');
-        }}
-        addButtonText="Add volunteering"
-      />
-
-      {volunteeringView === 'list' && volunteering.length === 0 && (
-        <EmptyState
-          icon={HeartHandshake}
-          buttonText="Add volunteering"
-          onClick={() => {
-            setCurrentVolunteering({
-              role: '',
-              organization: '',
-              startYear: '',
-              endYear: '',
-              location: '',
-              link: '',
-            });
-            setVolunteeringView('form');
-          }}
-        />
-      )}
-
-      {volunteeringView === 'list' && volunteering.length > 0 && (
-        <div className="space-y-8">
+    <ListTabLayout
+      title="Volunteering"
+      view={volunteeringView}
+      itemsLength={volunteering.length}
+      onAdd={() => {
+        setCurrentVolunteering({
+          role: '',
+          organization: '',
+          startYear: '',
+          endYear: '',
+          location: '',
+          link: '',
+        });
+        setVolunteeringView('form');
+      }}
+      addButtonText="Add volunteering"
+      emptyState={{
+        icon: HeartHandshake,
+        buttonText: "Add volunteering",
+      }}
+      renderList={() => (
+        <>
           {sortedVolunteering.map(
             (v: any, index: number, sortedArray: any[]) => {
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
@@ -211,76 +166,75 @@ export function VolunteeringTab({
               );
             },
           )}
-        </div>
+        </>
       )}
-
-      {volunteeringView === 'form' && currentVolunteering && (
-        <div className="space-y-6 pb-24">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Start Year*
-              </Label>
-              <Select
-                value={currentVolunteering.startYear}
-                onValueChange={(val) =>
-                  setCurrentVolunteering({
-                    ...currentVolunteering,
-                    startYear: val,
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Array.from(
-                    { length: 50 },
-                    (_, i) => new Date().getFullYear() - i,
-                  ).map((year) => (
-                    <SelectItem key={year} value={year.toString()}>
-                      {year}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+      renderForm={() =>
+        currentVolunteering ? (
+          <>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">
+                  Start Year*
+                </Label>
+                <Select
+                  value={currentVolunteering.startYear}
+                  onValueChange={(val) =>
+                    setCurrentVolunteering({
+                      ...currentVolunteering,
+                      startYear: val,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.from(
+                      { length: 50 },
+                      (_, i) => new Date().getFullYear() - i,
+                    ).map((year) => (
+                      <SelectItem key={year} value={year.toString()}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">
+                  End Year*
+                </Label>
+                <Select
+                  value={currentVolunteering.endYear}
+                  onValueChange={(val) =>
+                    setCurrentVolunteering({
+                      ...currentVolunteering,
+                      endYear: val,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Now">Now</SelectItem>
+                    {Array.from(
+                      { length: 50 },
+                      (_, i) => new Date().getFullYear() - i,
+                    ).map((year) => (
+                      <SelectItem key={year} value={year.toString()}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                End Year*
-              </Label>
-              <Select
-                value={currentVolunteering.endYear}
-                onValueChange={(val) =>
-                  setCurrentVolunteering({
-                    ...currentVolunteering,
-                    endYear: val,
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select year" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Now">Now</SelectItem>
-                  {Array.from(
-                    { length: 50 },
-                    (_, i) => new Date().getFullYear() - i,
-                  ).map((year) => (
-                    <SelectItem key={year} value={year.toString()}>
-                      {year}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Role*</Label>
-              <Input
-                required
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="role"
+                label="Role*"
                 value={currentVolunteering.role}
                 onChange={(e) =>
                   setCurrentVolunteering({
@@ -290,13 +244,9 @@ export function VolunteeringTab({
                 }
                 placeholder="Volunteer"
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Organization*
-              </Label>
-              <Input
-                required
+              <FormInput
+                id="organization"
+                label="Organization*"
                 value={currentVolunteering.organization}
                 onChange={(e) =>
                   setCurrentVolunteering({
@@ -307,12 +257,11 @@ export function VolunteeringTab({
                 placeholder="Non-profit Org."
               />
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Location</Label>
-              <Input
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="location"
+                label="Location"
                 value={currentVolunteering.location}
                 onChange={(e) =>
                   setCurrentVolunteering({
@@ -322,10 +271,9 @@ export function VolunteeringTab({
                 }
                 placeholder="Paris"
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">URL</Label>
-              <Input
+              <FormInput
+                id="link"
+                label="URL"
                 value={currentVolunteering.link || ''}
                 onChange={(e) =>
                   setCurrentVolunteering({
@@ -336,41 +284,41 @@ export function VolunteeringTab({
                 placeholder="https://example.com"
               />
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label className="text-xs text-content-secondary">
-              Description
-            </Label>
-            <RichTextEditor
-              content={currentVolunteering.description || ''}
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">
+                Description
+              </Label>
+              <RichTextEditor
+                content={currentVolunteering.description || ''}
+                onChange={(val) =>
+                  setCurrentVolunteering({
+                    ...currentVolunteering,
+                    description: val,
+                  })
+                }
+              />
+            </div>
+            <SectionAttachments
+              attachments={currentVolunteering.attachments || []}
               onChange={(val) =>
                 setCurrentVolunteering({
                   ...currentVolunteering,
-                  description: val,
+                  attachments: val,
                 })
               }
             />
-          </div>
-          <SectionAttachments
-            attachments={currentVolunteering.attachments || []}
-            onChange={(val) =>
-              setCurrentVolunteering({
-                ...currentVolunteering,
-                attachments: val,
-              })
-            }
-          />
 
-          <TabFormActions
-            onCancel={() => setVolunteeringView('list')}
-            onSave={handleSave}
-            isSaveDisabled={
-              !currentVolunteering?.role || !currentVolunteering?.organization
-            }
-          />
-        </div>
-      )}
-    </div>
+            <TabFormActions
+              onCancel={() => setVolunteeringView('list')}
+              onSave={handleSave}
+              isSaveDisabled={
+                !currentVolunteering?.role || !currentVolunteering?.organization
+              }
+            />
+          </>
+        ) : null
+      }
+    />
   );
 }
