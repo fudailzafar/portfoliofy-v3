@@ -42,7 +42,7 @@ export const getCachedUserProfile = cache(
       },
       [userId],
       {
-        tags: ['users'],
+        tags: ['users', `user-${userId}`],
         revalidate: 86400, // 1 day
       },
     )();
@@ -56,7 +56,7 @@ export const getCachedResume = cache(async (userId: string) => {
     },
     [userId],
     {
-      tags: ['resumes'],
+      tags: ['resumes', `resume-${userId}`],
       revalidate: 86400, // 1 day
     },
   )();

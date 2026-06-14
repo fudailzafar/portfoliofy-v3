@@ -45,19 +45,24 @@ const checkUsernameAvailability = async (
   return await response.json();
 };
 
+import { useSession } from 'next-auth/react';
+
 export function useUserActions() {
   const queryClient = useQueryClient();
   const { uploadToS3 } = useS3Upload();
+  const { status } = useSession();
 
   // Query for fetching resume data
   const resumeQuery = useQuery({
     queryKey: ['resume'],
     queryFn: fetchResume,
+    enabled: status === 'authenticated',
   });
 
   const usernameQuery = useQuery({
     queryKey: ['username'],
     queryFn: fetchUsername,
+    enabled: status === 'authenticated',
   });
 
   const internalResumeUpdate = async (newResume: Resume) => {
