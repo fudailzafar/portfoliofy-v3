@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
-import { LiveResumeWrapper } from '@/app/[username]/_components/resume/LiveResumeWrapper';
 import { PrintResumeWrapper } from '@/app/[username]/_components/resume/PrintResumeWrapper';
+import { FullResume } from '@/app/[username]/_components/resume/FullResume';
 import { Metadata } from 'next';
 import { getUserData } from './utils';
 import { getOptimizedImageUrl } from '@/lib/utils';
@@ -9,6 +9,10 @@ import dynamic from 'next/dynamic';
 
 const EditProfileDialog = dynamic(
   () => import('@/app/[username]/_components/resume/editing/EditProfileDialog').then((mod) => mod.EditProfileDialog),
+);
+
+const LiveResumeWrapper = dynamic(
+  () => import('@/app/[username]/_components/resume/LiveResumeWrapper').then((mod) => mod.LiveResumeWrapper),
 );
 export async function generateMetadata({
   params,
@@ -108,12 +112,23 @@ export default async function ProfilePage({
           />
         )}
 
-        <LiveResumeWrapper
-          initialResume={resume?.resumeData}
-          profilePicture={profilePicture}
-          isOwner={userId === user_id}
-          userProfile={userProfile || undefined}
-        />
+        {userId === user_id ? (
+          <LiveResumeWrapper
+            initialResume={resume?.resumeData}
+            profilePicture={profilePicture}
+            isOwner={true}
+            userProfile={userProfile || undefined}
+          />
+        ) : (
+          <div className={`flex flex-1 flex-col bg-theme-bg ${resume?.resumeData?.design?.typography === 'serif' ? 'font-serif' : resume?.resumeData?.design?.typography === 'mono' ? 'font-mono' : 'font-sans'} theme-${resume?.resumeData?.design?.theme || 'default'}`}>
+            <FullResume
+              resume={resume?.resumeData as any}
+              profilePicture={profilePicture}
+              isOwner={false}
+              userProfile={userProfile || undefined}
+            />
+          </div>
+        )}
       </div>
 
       {/* Print-only layout */}

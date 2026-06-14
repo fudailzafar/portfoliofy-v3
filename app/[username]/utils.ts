@@ -10,12 +10,14 @@ export async function getUserData(username: string) {
   if (!user_id)
     return { user_id: undefined, resume: undefined, userProfile: undefined };
 
-  const resume = await getCachedResume(user_id);
+  const [resume, userProfile] = await Promise.all([
+    getCachedResume(user_id),
+    getCachedUserProfile(user_id),
+  ]);
+
   if (!resume?.resumeData || resume.status !== 'live') {
     return { user_id, resume: undefined, userProfile: undefined };
   }
-
-  const userProfile: UserProfile | null = await getCachedUserProfile(user_id);
 
   return { user_id, resume, userProfile };
 }

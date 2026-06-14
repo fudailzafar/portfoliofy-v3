@@ -36,7 +36,8 @@ export async function POST(
     }
     const body = await request.json();
     await storeResume(session.user.id, body);
-    revalidateTag('resumes', 'max');
+    // @ts-expect-error Next.js 16 Canary types require second profile argument
+    revalidateTag(`resume-${session.user.id}`);
     return NextResponse.json({ success: true });
   } catch (error) {
     if (error instanceof z.ZodError) {
