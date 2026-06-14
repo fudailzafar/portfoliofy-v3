@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ResumeDataSchemaType } from '@/lib/resume';
