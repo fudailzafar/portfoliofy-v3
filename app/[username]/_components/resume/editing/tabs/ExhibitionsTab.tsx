@@ -16,6 +16,8 @@ import {
 import { sortByDateDesc } from '@/lib/resume';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { SectionAttachments } from '@/components/composite/SectionAttachments';
+import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
@@ -88,7 +90,7 @@ export function ExhibitionsTab({
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col">
+    <div className="mx-auto flex max-w-3xl flex-col">
       <TabHeader
         title="Exhibitions"
         showAddButton={exhibitionsView === 'list'}
@@ -160,7 +162,7 @@ export function ExhibitionsTab({
                           }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-block hover:underline"
+                          className="inline-block hover:underline hover:underline-offset-4"
                         >
                           <span className="text-sm font-semibold text-content-primary">
                             {exhibition.title}
@@ -180,6 +182,7 @@ export function ExhibitionsTab({
                           {exhibition.location}
                         </div>
                       )}
+                      <div className="mt-4"><AttachmentsPreview attachments={exhibition.attachments} /></div>
                     </div>
 
                     <EditDeleteButtons
@@ -304,6 +307,15 @@ export function ExhibitionsTab({
               }
             />
           </div>
+          <SectionAttachments
+            attachments={currentExhibition.attachments || []}
+            onChange={(val) =>
+              setCurrentExhibition({
+                ...currentExhibition,
+                attachments: val,
+              })
+            }
+          />
 
           <TabFormActions
             onCancel={() => setExhibitionsView('list')}

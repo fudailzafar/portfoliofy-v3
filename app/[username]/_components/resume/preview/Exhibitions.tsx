@@ -1,4 +1,5 @@
 import { ResumeDataSchemaType } from '@/lib/resume';
+import { AttachmentsPreview } from './AttachmentsPreview';
 import { ArrowUpRight } from 'lucide-react';
 
 export function Exhibitions({
@@ -44,7 +45,7 @@ export function Exhibitions({
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-theme-primary hover:underline"
+                    className="text-theme-primary hover:underline hover:underline-offset-4"
                   >
                     <span className="text-sm font-semibold">
                       {exhibition.title}
@@ -61,7 +62,7 @@ export function Exhibitions({
               </div>
 
               {exhibition.location && (
-                <div className="mt-2 text-sm text-theme-secondary">
+                <div className="text-sm text-theme-secondary">
                   {exhibition.location}
                 </div>
               )}
@@ -73,6 +74,7 @@ export function Exhibitions({
                     dangerouslySetInnerHTML={{ __html: exhibition.description }}
                   />
                 )}
+              <AttachmentsPreview attachments={exhibition.attachments} />
             </div>
           </div>
         ))}

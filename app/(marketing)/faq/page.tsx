@@ -28,7 +28,7 @@ export default function FAQPage() {
               Just me,{' '}
               <Link
                 href="/safwaan"
-                className="text-content-primary hover:underline"
+                className="text-content-primary hover:underline hover:underline-offset-4"
               >
                 Safwaan
               </Link>
