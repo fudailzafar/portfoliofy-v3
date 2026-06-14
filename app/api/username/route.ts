@@ -41,6 +41,7 @@ export async function POST(
       );
     }
 
+    const oldUsername = await getUsernameById(session.user.id);
     const success = await updateUsername(session.user.id, username);
 
     if (!success) {
@@ -50,7 +51,12 @@ export async function POST(
       );
     }
 
-    revalidateTag('usernames', 'max');
+    if (oldUsername) {
+      // @ts-expect-error Next.js 16 Canary types
+      revalidateTag(`username-${oldUsername}`);
+    }
+    // @ts-expect-error Next.js 16 Canary types
+    revalidateTag(`username-${username}`);
 
     return NextResponse.json({ success: true });
   } catch (error) {
