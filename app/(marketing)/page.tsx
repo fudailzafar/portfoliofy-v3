@@ -47,7 +47,7 @@ export default async function Home() {
               <p className="text-[15px] leading-snug text-content-muted">
                 A fun and intuitive{' '}
                 <Link
-                  href="/claim"
+                  href="/"
                   className="cursor-text text-inherit no-underline hover:text-inherit"
                 >
                   editor
