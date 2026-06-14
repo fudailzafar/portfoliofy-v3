@@ -7,7 +7,9 @@ export function Exhibitions({
 }: {
   exhibitions?: ResumeDataSchemaType['exhibitions'];
 }) {
-  const visibleExhibitions = exhibitions?.filter((exhibition) => !exhibition.hidden);
+  const visibleExhibitions = exhibitions?.filter(
+    (exhibition) => !exhibition.hidden,
+  );
   if (!visibleExhibitions || visibleExhibitions.length === 0) return null;
 
   return (
@@ -49,14 +51,18 @@ export function Exhibitions({
                   >
                     <span className="text-sm font-semibold">
                       {exhibition.title}
-                      {exhibition.organization ? ` at ${exhibition.organization}` : ''}
+                      {exhibition.organization
+                        ? ` at ${exhibition.organization}`
+                        : ''}
                       <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
                     </span>
                   </a>
                 ) : (
                   <p className="text-sm font-semibold text-theme-primary">
                     {exhibition.title}
-                    {exhibition.organization ? ` at ${exhibition.organization}` : ''}
+                    {exhibition.organization
+                      ? ` at ${exhibition.organization}`
+                      : ''}
                   </p>
                 )}
               </div>
@@ -70,7 +76,7 @@ export function Exhibitions({
               {exhibition.description &&
                 exhibition.description !== '<p></p>' && (
                   <div
-                    className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-2 max-w-none text-sm text-theme-secondary"
+                    className="prose prose-sm mt-2 max-w-none text-sm text-theme-secondary prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ul:my-1 prose-ul:text-theme-secondary prose-li:text-theme-secondary"
                     dangerouslySetInnerHTML={{ __html: exhibition.description }}
                   />
                 )}

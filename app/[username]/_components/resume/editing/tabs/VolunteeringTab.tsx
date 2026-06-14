@@ -156,7 +156,9 @@ export function VolunteeringTab({
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <div className={`w-full transition-all duration-200 ${v.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                    <div
+                      className={`w-full transition-all duration-200 ${v.hidden ? 'opacity-50 blur-[1px]' : ''}`}
+                    >
                       {v.link ? (
                         <a
                           href={
@@ -183,7 +185,9 @@ export function VolunteeringTab({
                           {v.location}
                         </p>
                       )}
-                      <div className="mt-4"><AttachmentsPreview attachments={v.attachments} /></div>
+                      <div className="mt-4">
+                        <AttachmentsPreview attachments={v.attachments} />
+                      </div>
                     </div>
 
                     <EditDeleteButtons
@@ -214,7 +218,9 @@ export function VolunteeringTab({
         <div className="space-y-6 pb-24">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Start Year*</Label>
+              <Label className="text-xs text-content-secondary">
+                Start Year*
+              </Label>
               <Select
                 value={currentVolunteering.startYear}
                 onValueChange={(val) =>
@@ -240,7 +246,9 @@ export function VolunteeringTab({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">End Year*</Label>
+              <Label className="text-xs text-content-secondary">
+                End Year*
+              </Label>
               <Select
                 value={currentVolunteering.endYear}
                 onValueChange={(val) =>
@@ -284,7 +292,9 @@ export function VolunteeringTab({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Organization*</Label>
+              <Label className="text-xs text-content-secondary">
+                Organization*
+              </Label>
               <Input
                 required
                 value={currentVolunteering.organization}

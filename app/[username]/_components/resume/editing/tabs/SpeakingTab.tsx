@@ -150,7 +150,9 @@ export function SpeakingTab({
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <div className={`w-full transition-all duration-200 ${engagement.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                    <div
+                      className={`w-full transition-all duration-200 ${engagement.hidden ? 'opacity-50 blur-[1px]' : ''}`}
+                    >
                       {engagement.link ? (
                         <a
                           href={
@@ -164,14 +166,18 @@ export function SpeakingTab({
                         >
                           <span className="text-sm font-semibold text-content-primary">
                             {engagement.title}
-                            {engagement.organization ? ` at ${engagement.organization}` : ''}
+                            {engagement.organization
+                              ? ` at ${engagement.organization}`
+                              : ''}
                             <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                           </span>
                         </a>
                       ) : (
                         <p className="text-sm font-semibold text-content-primary">
                           {engagement.title}
-                          {engagement.organization ? ` at ${engagement.organization}` : ''}
+                          {engagement.organization
+                            ? ` at ${engagement.organization}`
+                            : ''}
                         </p>
                       )}
 
@@ -180,12 +186,18 @@ export function SpeakingTab({
                           {engagement.location}
                         </div>
                       )}
-                      <div className="mt-4"><AttachmentsPreview attachments={engagement.attachments} /></div>
+                      <div className="mt-4">
+                        <AttachmentsPreview
+                          attachments={engagement.attachments}
+                        />
+                      </div>
                     </div>
 
                     <EditDeleteButtons
                       isHidden={engagement.hidden}
-                      onToggleVisibility={() => handleToggleVisibility(engagement)}
+                      onToggleVisibility={() =>
+                        handleToggleVisibility(engagement)
+                      }
                       onEdit={() => {
                         setCurrentSpeaking(engagement);
                         setSpeakingView('form');
@@ -250,7 +262,9 @@ export function SpeakingTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Organization</Label>
+              <Label className="text-xs text-content-secondary">
+                Organization
+              </Label>
               <Input
                 value={currentSpeaking.organization || ''}
                 onChange={(e) =>

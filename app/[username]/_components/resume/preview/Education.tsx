@@ -16,7 +16,10 @@ export function Education({
   // Filter out invalid education entries
   const validEducations = useMemo(
     () =>
-      educations?.filter((edu) => edu.school && edu.degree && edu.start && edu.end && !edu.hidden) || [],
+      educations?.filter(
+        (edu) =>
+          edu.school && edu.degree && edu.start && edu.end && !edu.hidden,
+      ) || [],
     [educations],
   );
 
@@ -81,7 +84,7 @@ export function Education({
 
               {edu.description && edu.description !== '<p></p>' && (
                 <div
-                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-1 max-w-none text-sm leading-relaxed text-content-muted"
+                  className="prose prose-sm mt-1 max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ul:my-1 prose-ul:text-content-muted prose-li:text-content-muted"
                   dangerouslySetInnerHTML={{
                     __html: edu.description,
                   }}

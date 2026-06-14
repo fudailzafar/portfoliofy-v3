@@ -63,7 +63,7 @@ export function Features({
 
               {feature.description && feature.description !== '<p></p>' && (
                 <div
-                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary max-w-none text-sm leading-relaxed text-theme-secondary"
+                  className="prose prose-sm max-w-none text-sm leading-relaxed text-theme-secondary prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ul:my-1 prose-ul:text-theme-secondary prose-li:text-theme-secondary"
                   dangerouslySetInnerHTML={{ __html: feature.description }}
                 />
               )}

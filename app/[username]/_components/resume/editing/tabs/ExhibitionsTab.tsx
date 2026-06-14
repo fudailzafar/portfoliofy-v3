@@ -47,8 +47,14 @@ export function ExhibitionsTab({
     setCurrent: setCurrentExhibition,
   } = useTabEditor<any>();
 
-  const exhibitions = useMemo(() => resume?.exhibitions || [], [resume?.exhibitions]);
-  const sortedExhibitions = useMemo(() => sortByDateDesc(exhibitions), [exhibitions]);
+  const exhibitions = useMemo(
+    () => resume?.exhibitions || [],
+    [resume?.exhibitions],
+  );
+  const sortedExhibitions = useMemo(
+    () => sortByDateDesc(exhibitions),
+    [exhibitions],
+  );
 
   if (!resume) return null;
 
@@ -61,7 +67,9 @@ export function ExhibitionsTab({
       : { ...currentExhibition, id: Date.now().toString() };
 
     const newItems = isEdit
-      ? exhibitions.map((p: any) => (p.id === currentExhibition.id ? newItem : p))
+      ? exhibitions.map((p: any) =>
+          p.id === currentExhibition.id ? newItem : p,
+        )
       : [...exhibitions, newItem];
 
     updateResume({ exhibitions: newItems });
@@ -152,7 +160,9 @@ export function ExhibitionsTab({
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <div className={`w-full transition-all duration-200 ${exhibition.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                    <div
+                      className={`w-full transition-all duration-200 ${exhibition.hidden ? 'opacity-50 blur-[1px]' : ''}`}
+                    >
                       {exhibition.link ? (
                         <a
                           href={
@@ -166,14 +176,18 @@ export function ExhibitionsTab({
                         >
                           <span className="text-sm font-semibold text-content-primary">
                             {exhibition.title}
-                            {exhibition.organization ? ` at ${exhibition.organization}` : ''}
+                            {exhibition.organization
+                              ? ` at ${exhibition.organization}`
+                              : ''}
                             <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                           </span>
                         </a>
                       ) : (
                         <p className="text-sm font-semibold text-content-primary">
                           {exhibition.title}
-                          {exhibition.organization ? ` at ${exhibition.organization}` : ''}
+                          {exhibition.organization
+                            ? ` at ${exhibition.organization}`
+                            : ''}
                         </p>
                       )}
 
@@ -182,12 +196,18 @@ export function ExhibitionsTab({
                           {exhibition.location}
                         </div>
                       )}
-                      <div className="mt-4"><AttachmentsPreview attachments={exhibition.attachments} /></div>
+                      <div className="mt-4">
+                        <AttachmentsPreview
+                          attachments={exhibition.attachments}
+                        />
+                      </div>
                     </div>
 
                     <EditDeleteButtons
                       isHidden={exhibition.hidden}
-                      onToggleVisibility={() => handleToggleVisibility(exhibition)}
+                      onToggleVisibility={() =>
+                        handleToggleVisibility(exhibition)
+                      }
                       onEdit={() => {
                         setCurrentExhibition(exhibition);
                         setExhibitionsView('form');
@@ -252,7 +272,9 @@ export function ExhibitionsTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Organization</Label>
+              <Label className="text-xs text-content-secondary">
+                Organization
+              </Label>
               <Input
                 value={currentExhibition.organization || ''}
                 onChange={(e) =>
@@ -320,7 +342,9 @@ export function ExhibitionsTab({
           <TabFormActions
             onCancel={() => setExhibitionsView('list')}
             onSave={handleSave}
-            isSaveDisabled={!currentExhibition?.title || !currentExhibition?.year}
+            isSaveDisabled={
+              !currentExhibition?.title || !currentExhibition?.year
+            }
           />
         </div>
       )}

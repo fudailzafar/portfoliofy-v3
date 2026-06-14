@@ -171,11 +171,15 @@ export function WorkExperienceTab({
                 </div>
 
                 <div className="flex flex-1 flex-col items-start justify-start">
-                  <div className={`w-full transition-all duration-200 ${w.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                  <div
+                    className={`w-full transition-all duration-200 ${w.hidden ? 'opacity-50 blur-[1px]' : ''}`}
+                  >
                     {w.link ? (
                       <a
                         href={
-                          w.link.startsWith('http') ? w.link : `https://${w.link}`
+                          w.link.startsWith('http')
+                            ? w.link
+                            : `https://${w.link}`
                         }
                         target="_blank"
                         rel="noopener noreferrer"
@@ -199,13 +203,15 @@ export function WorkExperienceTab({
 
                     {w.description && w.description !== '<p></p>' && (
                       <div
-                        className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
+                        className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ul:my-1 prose-ul:text-content-muted prose-li:text-content-muted"
                         dangerouslySetInnerHTML={{
                           __html: w.description,
                         }}
                       />
                     )}
-                    <div className="mt-4"><AttachmentsPreview attachments={w.attachments} /></div>
+                    <div className="mt-4">
+                      <AttachmentsPreview attachments={w.attachments} />
+                    </div>
                   </div>
 
                   <EditDeleteButtons
@@ -284,9 +290,7 @@ export function WorkExperienceTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Title*
-              </Label>
+              <Label className="text-xs text-content-secondary">Title*</Label>
               <Input
                 value={currentWork.title}
                 onChange={(e) =>

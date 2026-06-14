@@ -38,15 +38,15 @@ export function SectionAttachments({
       </div>
 
       {attachments.length === 0 ? (
-        <div className="border border-dashed border-border-strong rounded-lg p-6 flex items-center justify-center bg-surface-2/30">
+        <div className="bg-surface-2/30 flex items-center justify-center rounded-lg border border-dashed border-border-strong p-6">
           <p className="text-sm text-content-muted">No attachments yet</p>
         </div>
       ) : (
-        <div className="flex overflow-x-auto gap-3 pb-2 mb-2 snap-x custom-scrollbar">
+        <div className="custom-scrollbar mb-2 flex snap-x gap-3 overflow-x-auto pb-2">
           {attachments.map((attachment) => (
             <div
               key={attachment.id}
-              className="shrink-0 overflow-hidden rounded-lg border border-border-strong bg-surface-2 relative group h-[90px] snap-center"
+              className="group relative h-[90px] shrink-0 snap-center overflow-hidden rounded-lg border border-border-strong bg-surface-2"
             >
               {attachment.type === 'video' ? (
                 <video

@@ -138,7 +138,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="relative w-full sm:max-w-[320px] flex-1">
+              <div className="relative w-full flex-1 sm:max-w-[320px]">
                 {isVerifyingDomain ? (
                   <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
                     <Loader2 className="h-3.5 w-3.5 animate-spin text-content-muted" />

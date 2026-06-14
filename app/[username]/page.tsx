@@ -7,12 +7,16 @@ import { getOptimizedImageUrl } from '@/lib/utils';
 import { auth } from '@/auth';
 import dynamic from 'next/dynamic';
 
-const EditProfileDialog = dynamic(
-  () => import('@/app/[username]/_components/resume/editing/EditProfileDialog').then((mod) => mod.EditProfileDialog),
+const EditProfileDialog = dynamic(() =>
+  import('@/app/[username]/_components/resume/editing/EditProfileDialog').then(
+    (mod) => mod.EditProfileDialog,
+  ),
 );
 
-const LiveResumeWrapper = dynamic(
-  () => import('@/app/[username]/_components/resume/LiveResumeWrapper').then((mod) => mod.LiveResumeWrapper),
+const LiveResumeWrapper = dynamic(() =>
+  import('@/app/[username]/_components/resume/LiveResumeWrapper').then(
+    (mod) => mod.LiveResumeWrapper,
+  ),
 );
 export async function generateMetadata({
   params,
@@ -72,7 +76,7 @@ export default async function ProfilePage({
   if (!user_id) {
     notFound();
   }
-  
+
   if (!resume?.resumeData || resume.status !== 'live')
     redirect(`/?idNotFound=${user_id}`);
 
@@ -120,7 +124,9 @@ export default async function ProfilePage({
             userProfile={userProfile || undefined}
           />
         ) : (
-          <div className={`flex flex-1 flex-col bg-theme-bg ${resume?.resumeData?.design?.typography === 'serif' ? 'font-serif' : resume?.resumeData?.design?.typography === 'mono' ? 'font-mono' : 'font-sans'} theme-${resume?.resumeData?.design?.theme || 'default'}`}>
+          <div
+            className={`flex flex-1 flex-col bg-theme-bg ${resume?.resumeData?.design?.typography === 'serif' ? 'font-serif' : resume?.resumeData?.design?.typography === 'mono' ? 'font-mono' : 'font-sans'} theme-${resume?.resumeData?.design?.theme || 'default'}`}
+          >
             <FullResume
               resume={resume?.resumeData as any}
               profilePicture={profilePicture}

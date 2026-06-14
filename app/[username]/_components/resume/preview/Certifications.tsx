@@ -7,7 +7,9 @@ export function Certifications({
 }: {
   certifications?: ResumeDataSchemaType['certifications'];
 }) {
-  const visibleCertifications = certifications?.filter((certification) => !certification.hidden);
+  const visibleCertifications = certifications?.filter(
+    (certification) => !certification.hidden,
+  );
   if (!visibleCertifications || visibleCertifications.length === 0) return null;
 
   return (
@@ -62,7 +64,7 @@ export function Certifications({
               {certification.description &&
                 certification.description !== '<p></p>' && (
                   <div
-                    className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary max-w-none text-sm text-theme-secondary"
+                    className="prose prose-sm max-w-none text-sm text-theme-secondary prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ul:my-1 prose-ul:text-theme-secondary prose-li:text-theme-secondary"
                     dangerouslySetInnerHTML={{
                       __html: certification.description,
                     }}

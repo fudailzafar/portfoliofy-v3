@@ -58,7 +58,10 @@ export const PrintResume = ({
   );
   const sortedSpeaking = useMemo(() => sortByDateDesc(speaking), [speaking]);
   const sortedWriting = useMemo(() => sortByDateDesc(writing), [writing]);
-  const sortedExhibitions = useMemo(() => sortByDateDesc(exhibitions), [exhibitions]);
+  const sortedExhibitions = useMemo(
+    () => sortByDateDesc(exhibitions),
+    [exhibitions],
+  );
   const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
 
   if (!resume) return null;
@@ -102,7 +105,7 @@ export const PrintResume = ({
             summary &&
             summary !== '<p></p>' && (
               <div
-                className="prose prose-sm prose-p:my-2 prose-a:text-content-primary max-w-none text-sm leading-relaxed text-content-primary"
+                className="prose prose-sm max-w-none text-sm leading-relaxed text-content-primary prose-p:my-2 prose-a:text-content-primary"
                 dangerouslySetInnerHTML={{ __html: summary }}
               />
             )}
@@ -131,7 +134,7 @@ export const PrintResume = ({
                         {award.description &&
                           award.description !== '<p></p>' && (
                             <div
-                              className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
+                              className="prose prose-sm mt-2 max-w-none text-xs text-content-secondary prose-p:my-1"
                               dangerouslySetInnerHTML={{
                                 __html: award.description,
                               }}
@@ -161,7 +164,7 @@ export const PrintResume = ({
                         </p>
                         {cert.description && cert.description !== '<p></p>' && (
                           <div
-                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
+                            className="prose prose-sm mt-2 max-w-none text-xs text-content-secondary prose-p:my-1"
                             dangerouslySetInnerHTML={{
                               __html: cert.description,
                             }}
@@ -196,7 +199,7 @@ export const PrintResume = ({
                         )}
                         {w.description && w.description !== '<p></p>' && (
                           <div
-                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
+                            className="prose prose-sm mt-2 max-w-none text-xs text-content-secondary prose-p:my-1"
                             dangerouslySetInnerHTML={{ __html: w.description }}
                           />
                         )}
@@ -222,7 +225,7 @@ export const PrintResume = ({
                         <p className="text-sm">{p.title}</p>
                         {p.description && p.description !== '<p></p>' && (
                           <div
-                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
+                            className="prose prose-sm mt-2 max-w-none text-xs text-content-secondary prose-p:my-1"
                             dangerouslySetInnerHTML={{ __html: p.description }}
                           />
                         )}
@@ -248,7 +251,7 @@ export const PrintResume = ({
                         <p className="text-sm">{p.title}</p>
                         {p.description && p.description !== '<p></p>' && (
                           <div
-                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
+                            className="prose prose-sm mt-2 max-w-none text-xs text-content-secondary prose-p:my-1"
                             dangerouslySetInnerHTML={{ __html: p.description }}
                           />
                         )}
@@ -277,7 +280,7 @@ export const PrintResume = ({
                         </p>
                         {f.description && f.description !== '<p></p>' && (
                           <div
-                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
+                            className="prose prose-sm mt-2 max-w-none text-xs text-content-secondary prose-p:my-1"
                             dangerouslySetInnerHTML={{ __html: f.description }}
                           />
                         )}
@@ -423,7 +426,7 @@ export const PrintResume = ({
                         )}
                         {e.description && e.description !== '<p></p>' && (
                           <div
-                            className="prose prose-sm prose-p:my-1 mt-2 max-w-none text-xs text-content-secondary"
+                            className="prose prose-sm mt-2 max-w-none text-xs text-content-secondary prose-p:my-1"
                             dangerouslySetInnerHTML={{ __html: e.description }}
                           />
                         )}
