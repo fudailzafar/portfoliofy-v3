@@ -169,7 +169,7 @@ export function StatusEditor({
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={onClose}
-                className="px-4 text-[14px] font-medium text-theme-primary hover:underline hover:underline-offset-2"
+                className="px-4 text-[14px] font-medium text-theme-primary hover:underline hover:underline-offset-4"
               >
                 Cancel
               </button>
