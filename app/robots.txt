@@ -1,5 +1,5 @@
 User-Agent: *
 Allow: /
 Disallow: /api/
-Disallow: /claim/
+
 Sitemap: https://portfoliofy.me/sitemap.xml
