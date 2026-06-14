@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
-import { Loader2 } from 'lucide-react';
+import { LoaderCircle } from 'lucide-react';
 
 export function PersonalDomainTab({ username }: { username: string }) {
   const resume = useResumeStore((state) => state.resume);
@@ -141,7 +141,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
               <div className="relative w-full flex-1 sm:max-w-[320px]">
                 {isVerifyingDomain ? (
                   <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
-                    <Loader2 className="h-3.5 w-3.5 animate-spin text-content-muted" />
+                    <LoaderCircle className="h-3.5 w-3.5 animate-spin text-content-muted" />
                   </div>
                 ) : domainStatus?.verified ? (
                   <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
