@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useS3Upload } from 'next-s3-upload';
-import { X, Loader2, Equal } from 'lucide-react';
+import { X, Equal, LoaderCircle } from 'lucide-react';
 import { AttachmentSchemaType } from '@/lib/resume';
 import {
   DndContext,
@@ -340,7 +340,7 @@ export function MediaUploadDialog({
                       {file.file.name}
                     </p>
                   </div>
-                  <Loader2 className="h-4 w-4 animate-spin text-content-muted" />
+                  <LoaderCircle className="h-4 w-4 animate-spin text-content-muted" />
                 </div>
               ))}
             </div>
