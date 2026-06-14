@@ -97,7 +97,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
       : '76.76.21.21';
 
   return (
-    <div className="mx-auto flex h-full max-w-2xl flex-col">
+    <div className="mx-auto flex max-w-2xl flex-col">
       <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
         <h2 className="text-2xl font-bold text-content-primary">
           Personal Domain
@@ -128,7 +128,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 Optionally set a domain other than{' '}
                 <a
                   href={`https://portfoliofy.me/${username}`}
-                  className="text-content-primary underline-offset-2 hover:underline"
+                  className="text-content-primary underline-offset-4 hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -221,7 +221,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                         href={`https://${customDomain}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium decoration-[#6b8949] underline-offset-2 hover:underline"
+                        className="font-medium decoration-[#6b8949] underline-offset-4 hover:underline"
                       >
                         {customDomain}
                       </a>
@@ -278,7 +278,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                       <button
                         onClick={fetchDomain}
                         disabled={isVerifyingDomain}
-                        className="font-medium text-content-secondary underline decoration-border-strong underline-offset-2 hover:text-content-primary disabled:opacity-50 dark:hover:text-content-muted"
+                        className="font-medium text-content-secondary underline decoration-border-strong underline-offset-4 hover:text-content-primary disabled:opacity-50 dark:hover:text-content-muted"
                       >
                         click here to manually refresh
                       </button>

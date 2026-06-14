@@ -1,4 +1,5 @@
 import { ResumeDataSchemaType } from '@/lib/resume';
+import { AttachmentsPreview } from './AttachmentsPreview';
 import { useMemo } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -53,7 +54,7 @@ export function WorkExperience({
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-theme-primary hover:underline"
+                    className="text-theme-primary hover:underline hover:underline-offset-4"
                   >
                     <span className="text-sm font-semibold">
                       {item.title} at {item.company}
@@ -68,7 +69,7 @@ export function WorkExperience({
               </div>
 
               {item.location && (
-                <p className="mt-1 text-sm text-theme-secondary">
+                <p className="text-sm text-theme-secondary">
                   {item.location}
                 </p>
               )}
@@ -79,6 +80,7 @@ export function WorkExperience({
                   dangerouslySetInnerHTML={{ __html: item.description }}
                 />
               )}
+              <AttachmentsPreview attachments={item.attachments} />
             </div>
           </div>
         ))}

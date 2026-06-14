@@ -3,6 +3,8 @@ import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { SectionAttachments } from '@/components/composite/SectionAttachments';
+import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
@@ -98,7 +100,7 @@ export function CertificationsTab({
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col">
+    <div className="mx-auto flex max-w-3xl flex-col">
       <TabHeader
         title="Certifications"
         showAddButton={certificationsView === 'list'}
@@ -167,7 +169,7 @@ export function CertificationsTab({
                           }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-block hover:underline"
+                          className="inline-block hover:underline hover:underline-offset-4"
                         >
                           <span className="text-sm font-semibold text-content-primary">
                             {certification.title} from {certification.issuer}
@@ -189,6 +191,7 @@ export function CertificationsTab({
                             }}
                           />
                         )}
+                      <div className="mt-4"><AttachmentsPreview attachments={certification.attachments} /></div>
                     </div>
 
                     <EditDeleteButtons
@@ -300,6 +303,15 @@ export function CertificationsTab({
               }
             />
           </div>
+          <SectionAttachments
+            attachments={currentCertification.attachments || []}
+            onChange={(val) =>
+              setCurrentCertification({
+                ...currentCertification,
+                attachments: val,
+              })
+            }
+          />
 
           <TabFormActions
             onCancel={() => setCertificationsView('list')}

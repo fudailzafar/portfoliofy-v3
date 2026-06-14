@@ -477,7 +477,7 @@ export const PrintResume = ({
                                 ? c.link
                                 : `https://${c.link}`
                             }
-                            className="text-sm text-content-primary hover:underline"
+                            className="text-sm text-content-primary hover:underline hover:underline-offset-4"
                           >
                             {c.link}
                           </a>

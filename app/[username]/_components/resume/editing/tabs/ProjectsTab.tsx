@@ -3,6 +3,8 @@ import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { SectionAttachments } from '@/components/composite/SectionAttachments';
+import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
@@ -86,7 +88,7 @@ export function ProjectsTab({
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col">
+    <div className="mx-auto flex max-w-3xl flex-col">
       <TabHeader
         title="Projects"
         showAddButton={projectsView === 'list'}
@@ -155,7 +157,7 @@ export function ProjectsTab({
                           }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-block hover:underline"
+                          className="inline-block hover:underline hover:underline-offset-4"
                         >
                           <span className="text-sm font-semibold text-content-primary">
                             {project.title}
@@ -189,6 +191,7 @@ export function ProjectsTab({
                             }}
                           />
                         )}
+                      <div className="mt-4"><AttachmentsPreview attachments={project.attachments} /></div>
                     </div>
 
                     <EditDeleteButtons
@@ -303,6 +306,15 @@ export function ProjectsTab({
               }
             />
           </div>
+          <SectionAttachments
+            attachments={currentProject.attachments || []}
+            onChange={(val) =>
+              setCurrentProject({
+                ...currentProject,
+                attachments: val,
+              })
+            }
+          />
 
           <TabFormActions
             onCancel={() => setProjectsView('list')}

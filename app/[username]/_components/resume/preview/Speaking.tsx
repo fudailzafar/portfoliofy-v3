@@ -1,4 +1,5 @@
 import { ResumeDataSchemaType } from '@/lib/resume';
+import { AttachmentsPreview } from './AttachmentsPreview';
 import { ArrowUpRight } from 'lucide-react';
 
 export function Speaking({
@@ -44,7 +45,7 @@ export function Speaking({
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-theme-primary hover:underline"
+                    className="text-theme-primary hover:underline hover:underline-offset-4"
                   >
                     <span className="text-sm font-semibold">
                       {engagement.title}
@@ -61,7 +62,7 @@ export function Speaking({
               </div>
 
               {engagement.location && (
-                <div className="mt-2 text-sm text-theme-secondary">
+                <div className="text-sm text-theme-secondary">
                   {engagement.location}
                 </div>
               )}
@@ -73,6 +74,7 @@ export function Speaking({
                     dangerouslySetInnerHTML={{ __html: engagement.description }}
                   />
                 )}
+              <AttachmentsPreview attachments={engagement.attachments} />
             </div>
           </div>
         ))}

@@ -66,7 +66,7 @@ export function GlobalSidebar() {
                   Not you?{' '}
                   <button
                     onClick={() => signOut({ callbackUrl: '/' })}
-                    className="text-[#b3b3b3] hover:underline"
+                    className="text-[#b3b3b3] hover:underline hover:underline-offset-4"
                   >
                     Logout
                   </button>
