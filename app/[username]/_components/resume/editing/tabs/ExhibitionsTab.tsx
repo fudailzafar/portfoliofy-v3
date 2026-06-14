@@ -1,10 +1,15 @@
 import React, { useMemo } from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
+import { useResumeList } from '@/hooks/useResumeList';
+import { ListTabLayout } from '@/components/composite/ListTabLayout';
+import { FormInput } from '@/components/ui/form-input';
+import { SortButtons } from '../SortButtons';
+import { EditDeleteButtons } from '../EditDeleteButtons';
+import { SectionAttachments } from '@/components/composite/SectionAttachments';
+import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
+import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Palette } from 'lucide-react';
-import { ArrowUpRight } from 'lucide-react';
+import { Palette, ArrowUpRight } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -12,15 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
 import { sortByDateDesc } from '@/lib/resume';
-import { SortButtons } from '../SortButtons';
-import { EditDeleteButtons } from '../EditDeleteButtons';
-import { SectionAttachments } from '@/components/composite/SectionAttachments';
-import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
-import { TabHeader } from '../TabHeader';
-import { TabFormActions } from '../TabFormActions';
-import { EmptyState } from '../EmptyState';
 import dynamic from 'next/dynamic';
 
 const RichTextEditor = dynamic(
@@ -38,8 +35,13 @@ export function ExhibitionsTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const resume = useResumeStore((state) => state.resume);
-  const updateResume = useResumeStore((state) => state.updateResume);
+  const {
+    items: exhibitions,
+    handleSave: saveExhibition,
+    handleMoveUp,
+    handleToggleVisibility,
+  } = useResumeList<any>('exhibitions');
+
   const {
     view: exhibitionsView,
     setView: setExhibitionsView,
@@ -47,95 +49,43 @@ export function ExhibitionsTab({
     setCurrent: setCurrentExhibition,
   } = useTabEditor<any>();
 
-  const exhibitions = useMemo(
-    () => resume?.exhibitions || [],
-    [resume?.exhibitions],
-  );
   const sortedExhibitions = useMemo(
     () => sortByDateDesc(exhibitions),
     [exhibitions],
   );
 
-  if (!resume) return null;
-
   const handleSave = () => {
     if (!currentExhibition?.title || !currentExhibition?.year) return;
-
-    const isEdit = !!currentExhibition.id;
-    const newItem = isEdit
-      ? currentExhibition
-      : { ...currentExhibition, id: Date.now().toString() };
-
-    const newItems = isEdit
-      ? exhibitions.map((p: any) =>
-          p.id === currentExhibition.id ? newItem : p,
-        )
-      : [...exhibitions, newItem];
-
-    updateResume({ exhibitions: newItems });
+    saveExhibition(currentExhibition);
     setExhibitionsView('list');
     setCurrentExhibition(null);
-  };
-
-  const handleMoveUp = (currentItem: any, prevItem: any) => {
-    const newItems = [...exhibitions];
-    const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
-    const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
-
-    if (idx1 !== -1 && idx2 !== -1) {
-      [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
-      updateResume({ exhibitions: newItems });
-    }
-  };
-
-  const handleToggleVisibility = (item: any) => {
-    const newItems = exhibitions.map((s: any) =>
-      s.id === item.id ? { ...s, hidden: !s.hidden } : s,
-    );
-    updateResume({ exhibitions: newItems });
   };
 
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col">
-      <TabHeader
-        title="Exhibitions"
-        showAddButton={exhibitionsView === 'list'}
-        onAdd={() => {
-          setCurrentExhibition({
-            title: '',
-            year: currentYear.toString(),
-            organization: '',
-            link: '',
-            location: '',
-            description: '',
-          });
-          setExhibitionsView('form');
-        }}
-        addButtonText="Add exhibition"
-      />
-
-      {exhibitionsView === 'list' && exhibitions.length === 0 && (
-        <EmptyState
-          icon={Palette}
-          buttonText="Add an exhibition"
-          onClick={() => {
-            setCurrentExhibition({
-              title: '',
-              year: currentYear.toString(),
-              organization: '',
-              link: '',
-              location: '',
-              description: '',
-            });
-            setExhibitionsView('form');
-          }}
-        />
-      )}
-
-      {exhibitionsView === 'list' && exhibitions.length > 0 && (
-        <div className="space-y-8">
+    <ListTabLayout
+      title="Exhibitions"
+      view={exhibitionsView}
+      itemsLength={exhibitions.length}
+      onAdd={() => {
+        setCurrentExhibition({
+          title: '',
+          year: currentYear.toString(),
+          organization: '',
+          link: '',
+          location: '',
+          description: '',
+        });
+        setExhibitionsView('form');
+      }}
+      addButtonText="Add exhibition"
+      emptyState={{
+        icon: Palette,
+        buttonText: "Add an exhibition",
+      }}
+      renderList={() => (
+        <>
           {sortedExhibitions.map(
             (exhibition: any, index: number, sortedArray: any[]) => {
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
@@ -226,15 +176,15 @@ export function ExhibitionsTab({
               );
             },
           )}
-        </div>
+        </>
       )}
-
-      {exhibitionsView === 'form' && currentExhibition && (
-        <div className="space-y-6 pb-24">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Title*</Label>
-              <Input
+      renderForm={() =>
+        currentExhibition ? (
+          <>
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="title"
+                label="Title*"
                 value={currentExhibition.title}
                 onChange={(e) =>
                   setCurrentExhibition({
@@ -244,38 +194,35 @@ export function ExhibitionsTab({
                 }
                 placeholder="My great show"
               />
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">Year*</Label>
+                <Select
+                  value={currentExhibition.year}
+                  onValueChange={(val) =>
+                    setCurrentExhibition({
+                      ...currentExhibition,
+                      year: val,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Year*</Label>
-              <Select
-                value={currentExhibition.year}
-                onValueChange={(val) =>
-                  setCurrentExhibition({
-                    ...currentExhibition,
-                    year: val,
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {years.map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Organization
-              </Label>
-              <Input
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="organization"
+                label="Organization"
                 value={currentExhibition.organization || ''}
                 onChange={(e) =>
                   setCurrentExhibition({
@@ -285,10 +232,9 @@ export function ExhibitionsTab({
                 }
                 placeholder="The Vancouver Art Gallery"
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Location</Label>
-              <Input
+              <FormInput
+                id="location"
+                label="Location"
                 value={currentExhibition.location || ''}
                 onChange={(e) =>
                   setCurrentExhibition({
@@ -299,11 +245,10 @@ export function ExhibitionsTab({
                 placeholder="Vancouver"
               />
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label className="text-xs text-content-secondary">Link</Label>
-            <Input
+            <FormInput
+              id="link"
+              label="Link"
               value={currentExhibition.link || ''}
               onChange={(e) =>
                 setCurrentExhibition({
@@ -313,41 +258,41 @@ export function ExhibitionsTab({
               }
               placeholder="https://example.com"
             />
-          </div>
 
-          <div className="space-y-2">
-            <Label className="text-xs text-content-secondary">
-              Description
-            </Label>
-            <RichTextEditor
-              content={currentExhibition.description || ''}
+            <div className="space-y-2">
+              <Label className="text-xs text-content-secondary">
+                Description
+              </Label>
+              <RichTextEditor
+                content={currentExhibition.description || ''}
+                onChange={(val) =>
+                  setCurrentExhibition({
+                    ...currentExhibition,
+                    description: val,
+                  })
+                }
+              />
+            </div>
+            <SectionAttachments
+              attachments={currentExhibition.attachments || []}
               onChange={(val) =>
                 setCurrentExhibition({
                   ...currentExhibition,
-                  description: val,
+                  attachments: val,
                 })
               }
             />
-          </div>
-          <SectionAttachments
-            attachments={currentExhibition.attachments || []}
-            onChange={(val) =>
-              setCurrentExhibition({
-                ...currentExhibition,
-                attachments: val,
-              })
-            }
-          />
 
-          <TabFormActions
-            onCancel={() => setExhibitionsView('list')}
-            onSave={handleSave}
-            isSaveDisabled={
-              !currentExhibition?.title || !currentExhibition?.year
-            }
-          />
-        </div>
-      )}
-    </div>
+            <TabFormActions
+              onCancel={() => setExhibitionsView('list')}
+              onSave={handleSave}
+              isSaveDisabled={
+                !currentExhibition?.title || !currentExhibition?.year
+              }
+            />
+          </>
+        ) : null
+      }
+    />
   );
 }
