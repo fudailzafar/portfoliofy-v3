@@ -20,7 +20,7 @@ export function TabFormActions({
       <div className="flex w-full justify-end gap-3 border-t border-border-subtle pt-4">
         <button
           onClick={onCancel}
-          className="px-4 text-[14px] font-medium text-content-primary hover:underline hover:underline-offset-2"
+          className="px-4 text-[14px] font-medium text-content-primary hover:underline hover:underline-offset-4"
         >
           {cancelText}
         </button>

@@ -1,4 +1,5 @@
 import { ResumeDataSchemaType } from '@/lib/resume';
+import { AttachmentsPreview } from './AttachmentsPreview';
 import { ArrowUpRight } from 'lucide-react';
 
 export function Awards({
@@ -44,7 +45,7 @@ export function Awards({
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-theme-primary hover:underline"
+                    className="text-theme-primary hover:underline hover:underline-offset-4"
                   >
                     <span className="text-sm font-semibold">
                       {award.title} from {award.issuer}
@@ -60,10 +61,11 @@ export function Awards({
 
               {award.description && award.description !== '<p></p>' && (
                 <div
-                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-2 max-w-none text-sm text-theme-secondary"
+                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary max-w-none text-sm text-theme-secondary"
                   dangerouslySetInnerHTML={{ __html: award.description }}
                 />
               )}
+              <AttachmentsPreview attachments={award.attachments} />
             </div>
           </div>
         ))}

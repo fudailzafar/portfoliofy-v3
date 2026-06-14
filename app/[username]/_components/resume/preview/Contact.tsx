@@ -42,7 +42,7 @@ export function Contact({
                 href={buildContactUrl(contact.link, contact.platform)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-block text-theme-primary hover:underline"
+                className="group inline-block text-theme-primary hover:underline hover:underline-offset-4"
               >
                 <span className="text-sm font-semibold">
                   {extractUsername(contact.link, contact.platform)}

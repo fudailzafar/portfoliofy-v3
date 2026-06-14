@@ -3,6 +3,8 @@ import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { SectionAttachments } from '@/components/composite/SectionAttachments';
+import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
@@ -86,7 +88,7 @@ export function AwardsTab({
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col">
+    <div className="mx-auto flex max-w-3xl flex-col">
       <TabHeader
         title="Awards"
         showAddButton={awardsView === 'list'}
@@ -152,7 +154,7 @@ export function AwardsTab({
                         }
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block hover:underline"
+                        className="inline-block hover:underline hover:underline-offset-4"
                       >
                         <span className="text-sm font-semibold text-content-primary">
                           {award.title} from {award.issuer}
@@ -173,6 +175,7 @@ export function AwardsTab({
                         }}
                       />
                     )}
+                    <div className="mt-4"><AttachmentsPreview attachments={award.attachments} /></div>
                   </div>
 
                   <EditDeleteButtons
@@ -284,6 +287,15 @@ export function AwardsTab({
               }
             />
           </div>
+          <SectionAttachments
+            attachments={currentAward.attachments || []}
+            onChange={(val) =>
+              setCurrentAward({
+                ...currentAward,
+                attachments: val,
+              })
+            }
+          />
 
           <TabFormActions
             onCancel={() => setAwardsView('list')}

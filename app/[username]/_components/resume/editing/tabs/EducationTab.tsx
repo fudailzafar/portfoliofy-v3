@@ -2,6 +2,8 @@
 
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { SectionAttachments } from '@/components/composite/SectionAttachments';
+import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
@@ -88,7 +90,7 @@ export function EducationTab({
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col">
+    <div className="mx-auto flex max-w-3xl flex-col">
       <TabHeader
         title="Education"
         showAddButton={eduView === 'list'}
@@ -163,6 +165,7 @@ export function EducationTab({
                           }}
                         />
                       )}
+                      <div className="mt-4"><AttachmentsPreview attachments={edu.attachments} /></div>
                     </div>
                     <EditDeleteButtons
                       isHidden={edu.hidden}
@@ -301,6 +304,15 @@ export function EducationTab({
               }
             />
           </div>
+          <SectionAttachments
+            attachments={currentEdu.attachments || []}
+            onChange={(val) =>
+              setCurrentEdu({
+                ...currentEdu,
+                attachments: val,
+              })
+            }
+          />
 
           <TabFormActions
             onCancel={() => setEduView('list')}

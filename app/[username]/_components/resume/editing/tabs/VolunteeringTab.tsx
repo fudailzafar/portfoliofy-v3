@@ -3,6 +3,8 @@ import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { SectionAttachments } from '@/components/composite/SectionAttachments';
+import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
 import { EmptyState } from '../EmptyState';
@@ -92,7 +94,7 @@ export function VolunteeringTab({
     updateResume({ volunteering: newItems });
   };
   return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col">
+    <div className="mx-auto flex max-w-3xl flex-col">
       <TabHeader
         title="Volunteering"
         showAddButton={volunteeringView === 'list'}
@@ -164,7 +166,7 @@ export function VolunteeringTab({
                           }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-block hover:underline"
+                          className="inline-block hover:underline hover:underline-offset-4"
                         >
                           <span className="text-sm font-semibold text-content-primary">
                             {v.role} at {v.organization}
@@ -181,6 +183,7 @@ export function VolunteeringTab({
                           {v.location}
                         </p>
                       )}
+                      <div className="mt-4"><AttachmentsPreview attachments={v.attachments} /></div>
                     </div>
 
                     <EditDeleteButtons
@@ -339,6 +342,15 @@ export function VolunteeringTab({
               }
             />
           </div>
+          <SectionAttachments
+            attachments={currentVolunteering.attachments || []}
+            onChange={(val) =>
+              setCurrentVolunteering({
+                ...currentVolunteering,
+                attachments: val,
+              })
+            }
+          />
 
           <TabFormActions
             onCancel={() => setVolunteeringView('list')}

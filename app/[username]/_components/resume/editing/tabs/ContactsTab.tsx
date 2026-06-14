@@ -61,7 +61,7 @@ export function ContactsTab({
   };
 
   return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col">
+    <div className="mx-auto flex max-w-3xl flex-col">
       <TabHeader
         title="Contact"
         showAddButton={view === 'list'}
@@ -108,7 +108,7 @@ export function ContactsTab({
                     href={buildContactUrl(c.link, c.platform)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block hover:underline"
+                    className="inline-block hover:underline hover:underline-offset-4"
                   >
                     <span className="text-sm font-semibold text-content-primary">
                       {extractUsername(c.link, c.platform)}

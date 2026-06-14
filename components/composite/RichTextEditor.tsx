@@ -33,7 +33,7 @@ export function RichTextEditor({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-blue-500 underline underline-offset-2',
+          class: 'text-blue-500 underline underline-offset-4',
         },
       }),
     ],

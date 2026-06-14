@@ -1,4 +1,5 @@
 import { ResumeDataSchemaType } from '@/lib/resume';
+import { AttachmentsPreview } from './AttachmentsPreview';
 import { ArrowUpRight } from 'lucide-react';
 
 interface VolunteeringProps {
@@ -45,7 +46,7 @@ export function Volunteering({ volunteering }: VolunteeringProps) {
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-theme-primary hover:underline"
+                    className="text-theme-primary hover:underline hover:underline-offset-4"
                   >
                     <span className="text-sm font-semibold">
                       {v.role} at {v.organization}
@@ -71,6 +72,7 @@ export function Volunteering({ volunteering }: VolunteeringProps) {
                   dangerouslySetInnerHTML={{ __html: v.description }}
                 />
               )}
+              <AttachmentsPreview attachments={v.attachments} />
             </div>
           </div>
         ))}
