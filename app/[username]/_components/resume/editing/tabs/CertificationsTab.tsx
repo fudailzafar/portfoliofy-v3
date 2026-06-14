@@ -1,15 +1,14 @@
 import { useMemo } from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
 import { useTabEditor } from '@/hooks/useTabEditor';
+import { useResumeList } from '@/hooks/useResumeList';
+import { ListTabLayout } from '@/components/composite/ListTabLayout';
+import { FormInput } from '@/components/ui/form-input';
 import { SortButtons } from '../SortButtons';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
-import { TabHeader } from '../TabHeader';
 import { TabFormActions } from '../TabFormActions';
-import { EmptyState } from '../EmptyState';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
   () =>
@@ -35,8 +34,13 @@ export function CertificationsTab({
   years: number[];
   setProjectToDelete: (id: string) => void;
 }) {
-  const resume = useResumeStore((state) => state.resume);
-  const updateResume = useResumeStore((state) => state.updateResume);
+  const {
+    items: certifications,
+    handleSave: saveCertification,
+    handleMoveUp,
+    handleToggleVisibility,
+  } = useResumeList<any>('certifications');
+
   const {
     view: certificationsView,
     setView: setCertificationsView,
@@ -44,16 +48,10 @@ export function CertificationsTab({
     setCurrent: setCurrentCertification,
   } = useTabEditor<any>();
 
-  const certifications = useMemo(
-    () => resume?.certifications || [],
-    [resume?.certifications],
-  );
   const sortedCertifications = useMemo(
     () => sortByDateDesc(certifications),
     [certifications],
   );
-
-  if (!resume) return null;
 
   const handleSave = () => {
     if (
@@ -62,80 +60,35 @@ export function CertificationsTab({
       !currentCertification?.issuer
     )
       return;
-
-    const isEdit = !!currentCertification.id;
-    const newItem = isEdit
-      ? currentCertification
-      : { ...currentCertification, id: Date.now().toString() };
-
-    const newItems = isEdit
-      ? certifications.map((p: any) =>
-          p.id === currentCertification.id ? newItem : p,
-        )
-      : [...certifications, newItem];
-
-    updateResume({ certifications: newItems });
+    saveCertification(currentCertification);
     setCertificationsView('list');
     setCurrentCertification(null);
-  };
-
-  const handleMoveUp = (currentItem: any, prevItem: any) => {
-    const newItems = [...certifications];
-    const idx1 = newItems.findIndex((i: any) => i.id === currentItem.id);
-    const idx2 = newItems.findIndex((i: any) => i.id === prevItem.id);
-
-    if (idx1 !== -1 && idx2 !== -1) {
-      [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
-      updateResume({ certifications: newItems });
-    }
-  };
-
-  const handleToggleVisibility = (item: any) => {
-    const newItems = certifications.map((c: any) =>
-      c.id === item.id ? { ...c, hidden: !c.hidden } : c,
-    );
-    updateResume({ certifications: newItems });
   };
 
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col">
-      <TabHeader
-        title="Certifications"
-        showAddButton={certificationsView === 'list'}
-        onAdd={() => {
-          setCurrentCertification({
-            title: '',
-            issuer: '',
-            year: currentYear.toString(),
-            link: '',
-            description: '',
-          });
-          setCertificationsView('form');
-        }}
-        addButtonText="Add certification"
-      />
-
-      {certificationsView === 'list' && certifications.length === 0 && (
-        <EmptyState
-          icon={FileBadge}
-          buttonText="Add an certification you received"
-          onClick={() => {
-            setCurrentCertification({
-              title: '',
-              issuer: '',
-              year: currentYear.toString(),
-              link: '',
-              description: '',
-            });
-            setCertificationsView('form');
-          }}
-        />
-      )}
-
-      {certificationsView === 'list' && certifications.length > 0 && (
-        <div className="space-y-8">
+    <ListTabLayout
+      title="Certifications"
+      view={certificationsView}
+      itemsLength={certifications.length}
+      onAdd={() => {
+        setCurrentCertification({
+          title: '',
+          issuer: '',
+          year: currentYear.toString(),
+          link: '',
+          description: '',
+        });
+        setCertificationsView('form');
+      }}
+      addButtonText="Add certification"
+      emptyState={{
+        icon: FileBadge,
+        buttonText: "Add an certification you received",
+      }}
+      renderList={() => (
+        <>
           {sortedCertifications.map(
             (certification: any, index: number, sortedArray: any[]) => {
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
@@ -223,15 +176,15 @@ export function CertificationsTab({
               );
             },
           )}
-        </div>
+        </>
       )}
-
-      {certificationsView === 'form' && currentCertification && (
-        <div className="space-y-6 w-full min-w-0">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Title*</Label>
-              <Input
+      renderForm={() =>
+        currentCertification ? (
+          <>
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="title"
+                label="Title*"
                 value={currentCertification.title}
                 onChange={(e) =>
                   setCurrentCertification({
@@ -241,35 +194,34 @@ export function CertificationsTab({
                 }
                 placeholder="My certification"
               />
+              <div className="space-y-2">
+                <Label className="text-xs text-content-secondary">Year*</Label>
+                <Select
+                  value={currentCertification.year}
+                  onValueChange={(val) =>
+                    setCurrentCertification({
+                      ...currentCertification,
+                      year: val,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Year*</Label>
-              <Select
-                value={currentCertification.year}
-                onValueChange={(val) =>
-                  setCurrentCertification({
-                    ...currentCertification,
-                    year: val,
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {years.map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Issuer*</Label>
-              <Input
+            <div className="grid grid-cols-2 gap-6">
+              <FormInput
+                id="issuer"
+                label="Issuer*"
                 value={currentCertification.issuer || ''}
                 onChange={(e) =>
                   setCurrentCertification({
@@ -279,12 +231,9 @@ export function CertificationsTab({
                 }
                 placeholder="Issuing organization"
               />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">
-                Link to certification
-              </Label>
-              <Input
+              <FormInput
+                id="link"
+                label="Link to certification"
                 value={currentCertification.link || ''}
                 onChange={(e) =>
                   setCurrentCertification({
@@ -295,43 +244,43 @@ export function CertificationsTab({
                 placeholder="https://example.com"
               />
             </div>
-          </div>
 
-          <div className="space-y-2 pt-2">
-            <Label className="text-xs text-content-secondary">
-              Description
-            </Label>
-            <RichTextEditor
-              content={currentCertification.description || ''}
+            <div className="space-y-2 pt-2">
+              <Label className="text-xs text-content-secondary">
+                Description
+              </Label>
+              <RichTextEditor
+                content={currentCertification.description || ''}
+                onChange={(val) =>
+                  setCurrentCertification({
+                    ...currentCertification,
+                    description: val,
+                  })
+                }
+              />
+            </div>
+            <SectionAttachments
+              attachments={currentCertification.attachments || []}
               onChange={(val) =>
                 setCurrentCertification({
                   ...currentCertification,
-                  description: val,
+                  attachments: val,
                 })
               }
             />
-          </div>
-          <SectionAttachments
-            attachments={currentCertification.attachments || []}
-            onChange={(val) =>
-              setCurrentCertification({
-                ...currentCertification,
-                attachments: val,
-              })
-            }
-          />
 
-          <TabFormActions
-            onCancel={() => setCertificationsView('list')}
-            onSave={handleSave}
-            isSaveDisabled={
-              !currentCertification?.title ||
-              !currentCertification?.year ||
-              !currentCertification?.issuer
-            }
-          />
-        </div>
-      )}
-    </div>
+            <TabFormActions
+              onCancel={() => setCertificationsView('list')}
+              onSave={handleSave}
+              isSaveDisabled={
+                !currentCertification?.title ||
+                !currentCertification?.year ||
+                !currentCertification?.issuer
+              }
+            />
+          </>
+        ) : null
+      }
+    />
   );
 }
