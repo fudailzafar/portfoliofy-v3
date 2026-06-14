@@ -52,7 +52,10 @@ interface SortableAttachmentProps {
   onRemove: (id: string) => void;
 }
 
-function SortableAttachmentRow({ attachment, onRemove }: SortableAttachmentProps) {
+function SortableAttachmentRow({
+  attachment,
+  onRemove,
+}: SortableAttachmentProps) {
   const {
     attributes,
     listeners,
@@ -72,35 +75,50 @@ function SortableAttachmentRow({ attachment, onRemove }: SortableAttachmentProps
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-4 bg-surface-3 p-3 rounded-lg relative group border border-transparent ${
-        isDragging ? 'shadow-lg opacity-80 border-border-hover' : ''
+      className={`group relative flex items-center gap-4 rounded-lg border border-transparent bg-surface-3 p-3 ${
+        isDragging ? 'border-border-hover opacity-80 shadow-lg' : ''
       }`}
     >
-      <div className="w-24 h-16 bg-surface-1 rounded overflow-hidden flex-shrink-0">
+      <div className="h-16 w-24 flex-shrink-0 overflow-hidden rounded bg-surface-1">
         {attachment.type === 'video' ? (
-          <video src={attachment.url} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+          <video
+            src={attachment.url}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="h-full w-full object-cover"
+          />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={attachment.url} alt={attachment.filename || ''} className="w-full h-full object-cover" />
+          <img
+            src={attachment.url}
+            alt={attachment.filename || ''}
+            className="h-full w-full object-cover"
+          />
         )}
       </div>
       <div className="flex-1 truncate">
-        <p className="text-sm font-medium">{attachment.width} × {attachment.height}</p>
-        <p className="text-xs text-content-muted truncate">{attachment.filename}</p>
+        <p className="text-sm font-medium">
+          {attachment.width} × {attachment.height}
+        </p>
+        <p className="truncate text-xs text-content-muted">
+          {attachment.filename}
+        </p>
       </div>
-      <button 
+      <button
         onClick={() => onRemove(attachment.id)}
-        className="p-2 text-content-muted hover:text-red-500 transition-colors"
+        className="p-2 text-content-muted transition-colors hover:text-red-500"
       >
-        <X className="w-4 h-4" />
+        <X className="h-4 w-4" />
       </button>
 
       <div
         {...attributes}
         {...listeners}
-        className="cursor-grab hover:bg-surface-2 p-1 rounded transition-colors text-content-muted"
+        className="cursor-grab rounded p-1 text-content-muted transition-colors hover:bg-surface-2"
       >
-        <Equal className="w-4 h-4" />
+        <Equal className="h-4 w-4" />
       </div>
     </div>
   );
@@ -113,7 +131,9 @@ export function MediaUploadDialog({
   onSave,
 }: MediaUploadDialogProps) {
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
-  const [uploadedAttachments, setUploadedAttachments] = useState<AttachmentSchemaType[]>([]);
+  const [uploadedAttachments, setUploadedAttachments] = useState<
+    AttachmentSchemaType[]
+  >([]);
   const { uploadToS3 } = useS3Upload();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -183,7 +203,7 @@ export function MediaUploadDialog({
     for (const item of newUploadingFiles) {
       try {
         const dimensions = await extractDimensions(item.file, item.type);
-        
+
         setUploadingFiles((prev) =>
           prev.map((f) => (f.id === item.id ? { ...f, progress: 50 } : f)),
         );
@@ -217,9 +237,15 @@ export function MediaUploadDialog({
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const oldIndex = uploadedAttachments.findIndex((item) => item.id === active.id);
-      const newIndex = uploadedAttachments.findIndex((item) => item.id === over.id);
-      setUploadedAttachments(arrayMove(uploadedAttachments, oldIndex, newIndex));
+      const oldIndex = uploadedAttachments.findIndex(
+        (item) => item.id === active.id,
+      );
+      const newIndex = uploadedAttachments.findIndex(
+        (item) => item.id === over.id,
+      );
+      setUploadedAttachments(
+        arrayMove(uploadedAttachments, oldIndex, newIndex),
+      );
     }
   };
 
@@ -238,23 +264,23 @@ export function MediaUploadDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl bg-surface-1 border-border-strong text-content-primary p-0 overflow-hidden flex flex-col h-[600px] [&>button]:hidden">
+      <DialogContent className="flex h-[600px] flex-col overflow-hidden border-border-strong bg-surface-1 p-0 text-content-primary sm:max-w-2xl [&>button]:hidden">
         <DialogTitle className="sr-only">Upload Media</DialogTitle>
         <DialogDescription className="sr-only">
           Upload media attachments
         </DialogDescription>
-        
-        <div 
-          className="flex-1 overflow-y-auto p-6 scrollbar-hide"
+
+        <div
+          className="scrollbar-hide flex-1 overflow-y-auto p-6"
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => {
             e.preventDefault();
             handleFiles(e.dataTransfer.files);
           }}
         >
-          {(uploadingFiles.length === 0 && uploadedAttachments.length === 0) ? (
-            <div className="h-full flex flex-col items-center justify-center text-center">
-              <p className="text-content-secondary text-lg mb-2">
+          {uploadingFiles.length === 0 && uploadedAttachments.length === 0 ? (
+            <div className="flex h-full flex-col items-center justify-center text-center">
+              <p className="mb-2 text-lg text-content-secondary">
                 Add one or more jpg, png, gif, mov, or mp4 file
                 <br />
                 that is less than 30mb.
@@ -285,53 +311,70 @@ export function MediaUploadDialog({
               </DndContext>
 
               {uploadingFiles.map((file) => (
-                <div key={file.id} className="flex items-center gap-4 bg-surface-3 p-3 rounded-lg relative opacity-70">
-                  <div className="w-24 h-16 bg-surface-1 rounded overflow-hidden flex-shrink-0">
+                <div
+                  key={file.id}
+                  className="relative flex items-center gap-4 rounded-lg bg-surface-3 p-3 opacity-70"
+                >
+                  <div className="h-16 w-24 flex-shrink-0 overflow-hidden rounded bg-surface-1">
                     {file.type === 'video' ? (
-                      <video src={file.previewUrl} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                      <video
+                        src={file.previewUrl}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="h-full w-full object-cover"
+                      />
                     ) : (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={file.previewUrl} alt={file.file.name} className="w-full h-full object-cover" />
+                      <img
+                        src={file.previewUrl}
+                        alt={file.file.name}
+                        className="h-full w-full object-cover"
+                      />
                     )}
                   </div>
                   <div className="flex-1 truncate">
                     <p className="text-sm font-medium">Uploading...</p>
-                    <p className="text-xs text-content-muted truncate">{file.file.name}</p>
+                    <p className="truncate text-xs text-content-muted">
+                      {file.file.name}
+                    </p>
                   </div>
-                  <Loader2 className="w-4 h-4 animate-spin text-content-muted" />
+                  <Loader2 className="h-4 w-4 animate-spin text-content-muted" />
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        <div className="bg-surface-1 px-4 pb-4 sm:px-8 md:px-12 md:pb-6 mt-auto z-10">
+        <div className="z-10 mt-auto bg-surface-1 px-6 pb-6">
           <div className="flex w-full items-center justify-between border-t border-border-subtle pt-4">
             <div>
-              <input 
-                type="file" 
-                multiple 
-                accept="image/*,video/mp4,video/quicktime" 
-                className="hidden" 
+              <input
+                type="file"
+                multiple
+                accept="image/*,video/mp4,video/quicktime"
+                className="hidden"
                 ref={fileInputRef}
                 onChange={(e) => handleFiles(e.target.files)}
               />
-              <button 
+              <Button
+                variant="outline"
                 onClick={() => fileInputRef.current?.click()}
                 className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
               >
                 Upload
-              </button>
+              </Button>
             </div>
             <div className="flex items-center gap-3">
-              <button 
+              <button
                 onClick={handleCancel}
-                className="px-4 py-2 text-[14px] font-medium text-content-primary hover:underline hover:underline-offset-4"
+                className="px-4 py-2 text-sm font-medium text-content-primary hover:underline hover:underline-offset-4"
               >
                 Cancel
               </button>
-              <Button 
-                onClick={handleSave} 
+              <Button
+                onClick={handleSave}
                 disabled={uploadingFiles.length > 0}
                 variant="outline"
                 className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"

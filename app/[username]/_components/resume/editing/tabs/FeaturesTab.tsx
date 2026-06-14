@@ -146,7 +146,9 @@ export function FeaturesTab({
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <div className={`w-full transition-all duration-200 ${feature.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                    <div
+                      className={`w-full transition-all duration-200 ${feature.hidden ? 'opacity-50 blur-[1px]' : ''}`}
+                    >
                       {feature.link ? (
                         <a
                           href={
@@ -174,13 +176,15 @@ export function FeaturesTab({
                       {feature.description &&
                         feature.description !== '<p></p>' && (
                           <div
-                            className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-content-muted prose-ul:text-content-muted prose-li:text-content-muted prose-strong:text-content-primary mt-4 max-w-none text-sm leading-relaxed text-content-muted"
+                            className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ul:my-1 prose-ul:text-content-muted prose-li:text-content-muted"
                             dangerouslySetInnerHTML={{
                               __html: feature.description,
                             }}
                           />
                         )}
-                      <div className="mt-4"><AttachmentsPreview attachments={feature.attachments} /></div>
+                      <div className="mt-4">
+                        <AttachmentsPreview attachments={feature.attachments} />
+                      </div>
                     </div>
 
                     <EditDeleteButtons

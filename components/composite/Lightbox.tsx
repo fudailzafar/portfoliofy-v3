@@ -55,9 +55,7 @@ export function Lightbox({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent 
-        className="max-w-[100vw] w-[100vw] h-[100dvh] bg-surface-1 border-none shadow-none p-0 rounded-none sm:rounded-none flex flex-col items-center justify-center [&>button.absolute]:hidden"
-      >
+      <DialogContent className="flex h-[100dvh] w-[100vw] max-w-[100vw] flex-col items-center justify-center rounded-none border-none bg-surface-1 p-0 shadow-none sm:rounded-none [&>button.absolute]:hidden">
         <DialogTitle className="sr-only">Attachment Viewer</DialogTitle>
         <DialogDescription className="sr-only">
           Viewing attachment {currentIndex + 1} of {attachments.length}
@@ -66,33 +64,33 @@ export function Lightbox({
         {/* Viewport Close Button */}
         <button
           onClick={() => onOpenChange(false)}
-          className="fixed top-3 right-3 z-50 p-2 rounded-full bg-[#383838] text-white"
+          className="fixed right-3 top-3 z-50 rounded-full bg-[#383838] p-2 text-white"
         >
           <X className="size-3" strokeWidth={4} />
           <span className="sr-only">Close</span>
         </button>
 
         {/* Main Media Container */}
-        <div 
-          className="relative w-full max-w-7xl h-full max-h-[85vh] flex items-center justify-center px-4 md:px-16"
+        <div
+          className="relative flex h-full max-h-[85vh] w-full max-w-7xl items-center justify-center px-4 md:px-16"
           onClick={() => onOpenChange(false)} // Clicking outside media closes dialog
         >
-          <div 
-            className="relative w-full h-full flex items-center justify-center"
+          <div
+            className="relative flex h-full w-full items-center justify-center"
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the media itself
           >
             {/* Left/Right Click Areas */}
             {attachments.length > 1 && (
               <>
-                <div 
-                  className="absolute left-0 top-0 w-1/2 h-full z-10 cursor-w-resize" 
+                <div
+                  className="absolute left-0 top-0 z-10 h-full w-1/2 cursor-w-resize"
                   onClick={(e) => {
                     e.stopPropagation();
                     handlePrevious();
                   }}
                 />
-                <div 
-                  className="absolute right-0 top-0 w-1/2 h-full z-10 cursor-e-resize" 
+                <div
+                  className="absolute right-0 top-0 z-10 h-full w-1/2 cursor-e-resize"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleNext();
@@ -108,33 +106,29 @@ export function Lightbox({
                 loop
                 muted
                 playsInline
-                className="max-w-full max-h-full rounded-lg object-contain shadow-2xl relative z-0"
+                className="relative z-0 max-h-full max-w-full rounded-lg object-contain shadow-2xl"
               />
             ) : (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={currentAttachment.url}
                 alt={currentAttachment.filename || 'Attachment preview'}
-                className="max-w-full max-h-full rounded-lg object-contain shadow-2xl relative z-0"
+                className="relative z-0 max-h-full max-w-full rounded-lg object-contain shadow-2xl"
                 loading="eager"
               />
             )}
           </div>
         </div>
 
-
-
         {/* Bottom Pagination Dots */}
         {attachments.length > 1 && (
-          <div className="fixed bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-50 px-4 py-2">
+          <div className="fixed bottom-3 left-1/2 z-50 flex -translate-x-1/2 items-center gap-1.5 px-4 py-2">
             {attachments.map((_, idx) => (
               <div
                 key={idx}
                 className={cn(
-                  "size-2 rounded-full transition-all duration-200",
-                  idx === currentIndex 
-                    ? "bg-[#6e6e6e]" 
-                    : "bg-surface-3"
+                  'size-2 rounded-full transition-all duration-200',
+                  idx === currentIndex ? 'bg-[#6e6e6e]' : 'bg-surface-3',
                 )}
               />
             ))}

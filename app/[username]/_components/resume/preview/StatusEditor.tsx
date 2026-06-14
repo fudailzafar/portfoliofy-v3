@@ -114,7 +114,7 @@ export function StatusEditor({
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                    className="flex size-10 shrink-0 items-center justify-center rounded-full bg-theme-bg-hover text-xl transition-colors hover:opacity-80"
+                    className="bg-theme-bg-hover flex size-10 shrink-0 items-center justify-center rounded-full text-xl transition-colors hover:opacity-80"
                   >
                     <Twemoji
                       tag="span"
@@ -178,7 +178,7 @@ export function StatusEditor({
                   variant="outline"
                   size="sm"
                   onClick={handleClear}
-                  className="h-9 rounded-md border border-theme-border bg-theme-bg-hover px-6 font-medium text-theme-primary shadow-sm hover:bg-theme-bg-hover/80"
+                  className="bg-theme-bg-hover hover:bg-theme-bg-hover/80 h-9 rounded-md border border-theme-border px-6 font-medium text-theme-primary shadow-sm"
                 >
                   Clear status
                 </Button>
@@ -187,7 +187,7 @@ export function StatusEditor({
                   size="sm"
                   onClick={handleSave}
                   variant="outline"
-                  className="h-9 rounded-md border border-theme-border bg-theme-bg-hover px-6 font-medium text-theme-primary shadow-sm hover:bg-theme-bg-hover/80"
+                  className="bg-theme-bg-hover hover:bg-theme-bg-hover/80 h-9 rounded-md border border-theme-border px-6 font-medium text-theme-primary shadow-sm"
                 >
                   Set status
                 </Button>

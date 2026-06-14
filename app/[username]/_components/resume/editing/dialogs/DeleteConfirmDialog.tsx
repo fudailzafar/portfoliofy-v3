@@ -51,7 +51,7 @@ export function DeleteConfirmDialog({
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isLoading}
-            className="m-0 h-9 rounded-md border-none bg-action-danger px-5 text-sm font-medium text-surface-1 hover:bg-red-700 dark:hover:bg-red-600 dark:text-white"
+            className="m-0 h-9 rounded-md border-none bg-action-danger px-5 text-sm font-medium text-surface-1 hover:bg-red-700 dark:text-white dark:hover:bg-red-600"
           >
             {isLoading ? loadingLabel : confirmLabel}
           </AlertDialogAction>

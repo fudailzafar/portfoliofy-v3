@@ -22,9 +22,21 @@ export function EditDeleteButtons({
           onClick={onToggleVisibility}
           className="grid items-center justify-items-start hover:underline hover:underline-offset-4"
         >
-          <span className="col-start-1 row-start-1">{isHidden ? 'Show' : 'Hide'}</span>
-          <span className="col-start-1 row-start-1 invisible" aria-hidden="true">Show</span>
-          <span className="col-start-1 row-start-1 invisible" aria-hidden="true">Hide</span>
+          <span className="col-start-1 row-start-1">
+            {isHidden ? 'Show' : 'Hide'}
+          </span>
+          <span
+            className="invisible col-start-1 row-start-1"
+            aria-hidden="true"
+          >
+            Show
+          </span>
+          <span
+            className="invisible col-start-1 row-start-1"
+            aria-hidden="true"
+          >
+            Hide
+          </span>
         </button>
       )}
       <button

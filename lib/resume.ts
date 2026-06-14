@@ -277,7 +277,10 @@ const CertificationsSection = z.array(
 
 const WritingSection = z.array(
   z.object({
-    id: z.string().optional().describe('Unique identifier for the writing piece'),
+    id: z
+      .string()
+      .optional()
+      .describe('Unique identifier for the writing piece'),
     title: z.string().describe('Title of the piece'),
     year: z.string().describe('Year of publication'),
     publication: z.string().optional().describe('Publication or platform name'),
@@ -293,7 +296,10 @@ const ExhibitionsSection = z.array(
     id: z.string().optional().describe('Unique identifier for the exhibition'),
     title: z.string().describe('Title of the exhibition'),
     year: z.string().describe('Year of the exhibition'),
-    organization: z.string().optional().describe('Organization or gallery name'),
+    organization: z
+      .string()
+      .optional()
+      .describe('Organization or gallery name'),
     location: z.string().optional().describe('Location'),
     link: z.string().optional().describe('Link to the exhibition'),
     description: z
