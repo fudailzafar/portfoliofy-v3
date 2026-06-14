@@ -39,6 +39,14 @@ export async function claimUsernameAndInitProfile(
     workExperience: [],
     education: [],
     projects: [],
+    sideProjects: [],
+    speaking: [],
+    writing: [],
+    exhibitions: [],
+    features: [],
+    volunteering: [],
+    awards: [],
+    certifications: [],
     contacts: [],
   });
 
@@ -49,9 +57,12 @@ export async function claimUsernameAndInitProfile(
     resumeData: emptyResumeData,
   });
 
-  revalidateTag('usernames', 'max');
-  revalidateTag('resumes', 'max');
-  revalidateTag('users', 'max');
+  // @ts-expect-error Next.js 16 Canary types
+  revalidateTag(`username-${username}`);
+  // @ts-expect-error Next.js 16 Canary types
+  revalidateTag(`resume-${userId}`);
+  // @ts-expect-error Next.js 16 Canary types
+  revalidateTag(`user-${userId}`);
 
   return { success: true };
 }
