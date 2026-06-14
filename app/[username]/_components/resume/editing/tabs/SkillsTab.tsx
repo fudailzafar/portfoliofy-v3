@@ -28,7 +28,7 @@ export function SkillsTab() {
         <h2 className="text-2xl font-bold">Skills</h2>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-6 w-full min-w-0">
         <div className="flex gap-3">
           <Input
             value={skillInput}

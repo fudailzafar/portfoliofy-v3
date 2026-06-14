@@ -212,7 +212,7 @@ export function FeaturesTab({
       )}
 
       {featuresView === 'form' && currentFeature && (
-        <div className="space-y-6">
+        <div className="space-y-6 w-full min-w-0">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">

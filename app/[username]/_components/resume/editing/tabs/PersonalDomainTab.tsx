@@ -118,7 +118,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
 
       <div className="space-y-10">
         {/* Custom Domain */}
-        <div className="space-y-6">
+        <div className="space-y-6 w-full min-w-0">
           <div className="flex flex-col gap-4">
             <div className="space-y-1">
               <h4 className="text-[14px] text-content-primary">
