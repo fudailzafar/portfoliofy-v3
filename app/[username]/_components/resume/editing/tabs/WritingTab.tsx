@@ -131,14 +131,12 @@ export function WritingTab({
               const prevItem = index > 0 ? sortedArray[index - 1] : null;
               const canMoveUp =
                 prevItem &&
-                parseInt(piece.year || '0') ===
-                  parseInt(prevItem.year || '0');
+                parseInt(piece.year || '0') === parseInt(prevItem.year || '0');
               const nextItem =
                 index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
               const canMoveDown =
                 nextItem &&
-                parseInt(piece.year || '0') ===
-                  parseInt(nextItem.year || '0');
+                parseInt(piece.year || '0') === parseInt(nextItem.year || '0');
 
               return (
                 <div
@@ -150,7 +148,9 @@ export function WritingTab({
                   </div>
 
                   <div className="flex flex-1 flex-col items-start justify-start">
-                    <div className={`w-full transition-all duration-200 ${piece.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                    <div
+                      className={`w-full transition-all duration-200 ${piece.hidden ? 'opacity-50 blur-[1px]' : ''}`}
+                    >
                       {piece.link ? (
                         <a
                           href={
@@ -174,7 +174,9 @@ export function WritingTab({
                           {piece.publication ? `, ${piece.publication}` : ''}
                         </p>
                       )}
-                      <div className="mt-4"><AttachmentsPreview attachments={piece.attachments} /></div>
+                      <div className="mt-4">
+                        <AttachmentsPreview attachments={piece.attachments} />
+                      </div>
                     </div>
 
                     <EditDeleteButtons
@@ -244,7 +246,9 @@ export function WritingTab({
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label className="text-xs text-content-secondary">Publication</Label>
+              <Label className="text-xs text-content-secondary">
+                Publication
+              </Label>
               <Input
                 value={currentWriting.publication || ''}
                 onChange={(e) =>

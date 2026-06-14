@@ -77,20 +77,34 @@ export const FullResume = ({
 
   const getSectionProps = (sectionId: string) => {
     switch (sectionId) {
-      case 'work': return { work: sortedWork };
-      case 'side_projects': return { sideProjects: sortedSideProjects };
-      case 'speaking': return { speaking: sortedSpeaking };
-      case 'writing': return { writing: sortedWriting };
-      case 'exhibitions': return { exhibitions: sortedExhibitions };
-      case 'features': return { features: sortedFeatures };
-      case 'volunteering': return { volunteering: sortedVolunteering };
-      case 'awards': return { awards: sortedAwards };
-      case 'certifications': return { certifications: sortedCertifications };
-      case 'projects': return { projects: sortedProjects };
-      case 'education': return { educations: sortedEducation };
-      case 'contact': return { contacts: resume?.contacts };
-      case 'skills': return { skills: resume?.header?.skills };
-      default: return {};
+      case 'work':
+        return { work: sortedWork };
+      case 'side_projects':
+        return { sideProjects: sortedSideProjects };
+      case 'speaking':
+        return { speaking: sortedSpeaking };
+      case 'writing':
+        return { writing: sortedWriting };
+      case 'exhibitions':
+        return { exhibitions: sortedExhibitions };
+      case 'features':
+        return { features: sortedFeatures };
+      case 'volunteering':
+        return { volunteering: sortedVolunteering };
+      case 'awards':
+        return { awards: sortedAwards };
+      case 'certifications':
+        return { certifications: sortedCertifications };
+      case 'projects':
+        return { projects: sortedProjects };
+      case 'education':
+        return { educations: sortedEducation };
+      case 'contact':
+        return { contacts: resume?.contacts };
+      case 'skills':
+        return { skills: resume?.header?.skills };
+      default:
+        return {};
     }
   };
 

@@ -49,14 +49,18 @@ export function Speaking({
                   >
                     <span className="text-sm font-semibold">
                       {engagement.title}
-                      {engagement.organization ? ` at ${engagement.organization}` : ''}
+                      {engagement.organization
+                        ? ` at ${engagement.organization}`
+                        : ''}
                       <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
                     </span>
                   </a>
                 ) : (
                   <p className="text-sm font-semibold text-theme-primary">
                     {engagement.title}
-                    {engagement.organization ? ` at ${engagement.organization}` : ''}
+                    {engagement.organization
+                      ? ` at ${engagement.organization}`
+                      : ''}
                   </p>
                 )}
               </div>
@@ -70,7 +74,7 @@ export function Speaking({
               {engagement.description &&
                 engagement.description !== '<p></p>' && (
                   <div
-                    className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-2 max-w-none text-sm text-theme-secondary"
+                    className="prose prose-sm mt-2 max-w-none text-sm text-theme-secondary prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ul:my-1 prose-ul:text-theme-secondary prose-li:text-theme-secondary"
                     dangerouslySetInnerHTML={{ __html: engagement.description }}
                   />
                 )}

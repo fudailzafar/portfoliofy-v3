@@ -86,7 +86,7 @@ export function RichTextEditor({
 
   return (
     <div className="w-full overflow-hidden rounded-md border border-border-strong bg-surface-card shadow-sm focus-within:ring-1 focus-within:ring-black dark:focus-within:ring-white">
-      <div className="flex items-center border-b border-border-strong bg-surface-2/50">
+      <div className="bg-surface-2/50 flex items-center border-b border-border-strong">
         <Button
           type="button"
           variant="ghost"
@@ -94,7 +94,8 @@ export function RichTextEditor({
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={cn(
             'h-10 w-12 rounded-none border-r border-border-strong p-0 text-content-secondary hover:text-content-primary',
-            editor.isActive('bulletList') && 'bg-surface-3 text-content-primary',
+            editor.isActive('bulletList') &&
+              'bg-surface-3 text-content-primary',
           )}
           aria-label="Toggle bullet list"
         >
@@ -107,7 +108,8 @@ export function RichTextEditor({
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={cn(
             'h-10 w-12 rounded-none border-r border-border-strong p-0 text-content-secondary hover:text-content-primary',
-            editor.isActive('orderedList') && 'bg-surface-3 text-content-primary',
+            editor.isActive('orderedList') &&
+              'bg-surface-3 text-content-primary',
           )}
           aria-label="Toggle ordered list"
         >

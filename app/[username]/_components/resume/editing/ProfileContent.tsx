@@ -70,8 +70,8 @@ export function ProfileContent({
     >
       <div
         className={cn(
-          "scrollbar-hide flex-1 overflow-y-auto p-4 sm:p-8 md:p-12",
-          isEditingTab && "pb-24 sm:pb-28 md:pb-32"
+          'scrollbar-hide flex-1 overflow-y-auto p-4 sm:p-8 md:p-12',
+          isEditingTab && 'pb-24 sm:pb-28 md:pb-32',
         )}
       >
         <div className="mb-6 flex items-center sm:hidden">

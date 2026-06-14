@@ -11,7 +11,9 @@ export function WorkExperience({
   // Filter out invalid work experiences
   const validWork = useMemo(() => {
     return (
-      work?.filter((item) => item.company && item.title && item.start && !item.hidden) || []
+      work?.filter(
+        (item) => item.company && item.title && item.start && !item.hidden,
+      ) || []
     );
   }, [work]);
 
@@ -69,14 +71,12 @@ export function WorkExperience({
               </div>
 
               {item.location && (
-                <p className="text-sm text-theme-secondary">
-                  {item.location}
-                </p>
+                <p className="text-sm text-theme-secondary">{item.location}</p>
               )}
 
               {item.description && item.description !== '<p></p>' && (
                 <div
-                  className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-p:text-theme-secondary prose-ul:text-theme-secondary prose-li:text-theme-secondary prose-strong:text-theme-primary mt-4 max-w-none text-sm leading-relaxed text-theme-secondary"
+                  className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-theme-secondary prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ul:my-1 prose-ul:text-theme-secondary prose-li:text-theme-secondary"
                   dangerouslySetInnerHTML={{ __html: item.description }}
                 />
               )}

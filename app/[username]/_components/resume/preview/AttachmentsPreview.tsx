@@ -23,11 +23,11 @@ export function AttachmentsPreview({
 
   return (
     <>
-      <div className="mt-4 flex overflow-x-auto gap-3 pb-2 mb-2 snap-x custom-scrollbar">
+      <div className="custom-scrollbar mb-2 mt-4 flex snap-x gap-3 overflow-x-auto pb-2">
         {attachments.map((attachment, index) => (
           <div
             key={attachment.id}
-            className="shrink-0 overflow-hidden rounded-lg border border-border-strong bg-surface-2 cursor-pointer group relative h-[90px] snap-center"
+            className="group relative h-[90px] shrink-0 cursor-pointer snap-center overflow-hidden rounded-lg border border-border-strong bg-surface-2"
             onClick={() => handleOpenLightbox(index)}
           >
             {attachment.type === 'video' ? (

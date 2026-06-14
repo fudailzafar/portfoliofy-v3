@@ -48,13 +48,16 @@ export function PrintTab() {
         Toggle printed sections
       </h3>
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex flex-1 flex-col">
         {SECTIONS.map((section) => {
           const isHidden = printHiddenSections.includes(section.id);
           const isOn = !isHidden;
 
           return (
-            <div key={section.id} className="flex items-center justify-between border-b border-border-subtle py-4">
+            <div
+              key={section.id}
+              className="flex items-center justify-between border-b border-border-subtle py-4"
+            >
               <div>
                 <p className="text-sm text-content-primary">{section.label}</p>
                 <p className="mt-0.5 text-xs text-content-muted dark:text-content-muted">
@@ -70,7 +73,6 @@ export function PrintTab() {
           );
         })}
       </div>
-
     </div>
   );
 }

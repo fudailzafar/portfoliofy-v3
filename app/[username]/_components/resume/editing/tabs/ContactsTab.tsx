@@ -103,7 +103,9 @@ export function ContactsTab({
               </div>
 
               <div className="flex flex-1 flex-col items-start justify-start">
-                <div className={`w-full transition-all duration-200 ${c.hidden ? 'opacity-50 blur-[1px]' : ''}`}>
+                <div
+                  className={`w-full transition-all duration-200 ${c.hidden ? 'opacity-50 blur-[1px]' : ''}`}
+                >
                   <a
                     href={buildContactUrl(c.link, c.platform)}
                     target="_blank"
