@@ -70,7 +70,7 @@ export const getCachedUserIdByUsername = cache(
       },
       [username],
       {
-        tags: ['usernames'],
+        tags: ['usernames', `username-${username}`],
         revalidate: 86400, // 1 day
       },
     )();

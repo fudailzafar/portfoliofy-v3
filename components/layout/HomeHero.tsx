@@ -5,15 +5,21 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { AuthDialog } from '@/components/auth/AuthDialog';
+import { useUserActions } from '@/hooks/useUserActions';
 
 export function HomeHero() {
   const { data: session } = useSession();
+  const { usernameQuery } = useUserActions();
   const router = useRouter();
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
 
   const handleCreateProfile = () => {
     if (session) {
-      router.push('/claim');
+      if (usernameQuery.data?.username) {
+        router.push(`/${usernameQuery.data.username}`);
+      } else {
+        window.location.reload();
+      }
     } else {
       setAuthDialogOpen(true);
     }
