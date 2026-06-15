@@ -130,6 +130,15 @@ export function WritingTab({
                           {piece.publication ? `, ${piece.publication}` : ''}
                         </p>
                       )}
+
+                      {piece.description && piece.description !== '<p></p>' && (
+                        <div
+                          className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ul:my-1 prose-ul:text-content-muted prose-li:text-content-muted"
+                          dangerouslySetInnerHTML={{
+                            __html: piece.description,
+                          }}
+                        />
+                      )}
                       <div className="mt-4">
                         <AttachmentsPreview attachments={piece.attachments} />
                       </div>
