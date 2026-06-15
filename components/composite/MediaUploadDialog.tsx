@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useS3Upload } from 'next-s3-upload';
+import { usePresignedUpload } from 'next-s3-upload';
 import { X, Equal, LoaderCircle } from 'lucide-react';
 import { AttachmentSchemaType } from '@/lib/resume';
 import {
@@ -134,7 +134,7 @@ export function MediaUploadDialog({
   const [uploadedAttachments, setUploadedAttachments] = useState<
     AttachmentSchemaType[]
   >([]);
-  const { uploadToS3 } = useS3Upload();
+  const { uploadToS3 } = usePresignedUpload();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const sensors = useSensors(
