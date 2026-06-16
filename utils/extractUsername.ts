@@ -21,6 +21,7 @@ export function buildContactUrl(link: string, platform: string): string {
   if (
     platform.toLowerCase() === 'email' ||
     (cleanLink.includes('@') &&
+      !cleanLink.startsWith('@') &&
       !cleanLink.includes('://') &&
       !platform.toLowerCase().match(/mastodon|bluesky/))
   ) {
