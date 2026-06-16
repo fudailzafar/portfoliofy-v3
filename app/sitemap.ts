@@ -3,9 +3,6 @@ import sql from '@/lib/server/db';
 
 const SITE_URL = 'https://portfoliofy.me';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 86400; // 24 hours
-
 async function getLiveProfileEntries(): Promise<MetadataRoute.Sitemap> {
   try {
     const rows = await sql`
