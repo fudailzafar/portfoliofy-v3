@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import pdfParse from 'pdf-parse';
 import { GoogleGenAI } from '@google/genai';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { ResumeDataSchema } from '@/lib/resume';
@@ -34,53 +33,37 @@ export async function POST(req: NextRequest) {
     // Convert File to Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-
-    // Extract text from PDF
-    let pdfData;
-    try {
-      pdfData = await pdfParse(buffer);
-    } catch (error) {
-      console.error('Error parsing PDF:', error);
-      return NextResponse.json(
-        { error: 'Could not parse the PDF file' },
-        { status: 400 }
-      );
-    }
-
-    const rawText = pdfData.text;
-
-    if (!rawText || rawText.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'The uploaded PDF contains no readable text' },
-        { status: 400 }
-      );
-    }
+    const base64Data = buffer.toString('base64');
 
     // Convert our Zod schema to a JSON schema to guide the LLM
     const jsonSchema = zodToJsonSchema(ResumeDataSchema, 'ResumeData');
 
-    const prompt = `You are an expert data extraction assistant. I will provide you with the raw text of a resume or a LinkedIn profile export.
+    const prompt = `You are an expert data extraction assistant. I have provided a PDF document of a resume or a LinkedIn profile export.
 Your task is to extract all the relevant information and structure it perfectly according to the provided JSON schema.
 
 Instructions:
 1. Extract the name, contact info, summary, work experience, education, projects, skills, etc.
 2. For dates (start, end), format them as simple years (e.g., "2020") unless a specific month is required by the context. If "present" or "ongoing", use "Now" or "Ongoing".
-3. Clean up the text. Remove irrelevant formatting artifacts from the PDF extraction.
-4. Output ONLY valid JSON matching the schema. Do not add markdown code blocks, just raw JSON.
+3. Output ONLY valid JSON matching the schema. Do not add markdown code blocks, just raw JSON.
 
 CRITICAL CONSTRAINTS:
 - For the \`shortAbout\` field under \`header\`, YOU MUST keep it to an absolute maximum of 32 characters. It must be very brief, like a tiny sub-headline (e.g. "Software Engineer", "Product Designer", "Data Scientist"). Do NOT exceed 32 characters under any circumstances!
 
 Schema:
-${JSON.stringify(jsonSchema, null, 2)}
+${JSON.stringify(jsonSchema, null, 2)}`;
 
-Resume Text:
-${rawText}`;
-
-    // Call Gemini to structure the data
+    // Call Gemini to structure the data natively from the PDF
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: prompt,
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            { inlineData: { data: base64Data, mimeType: 'application/pdf' } },
+            { text: prompt },
+          ],
+        },
+      ],
       config: {
         responseMimeType: 'application/json',
       },
