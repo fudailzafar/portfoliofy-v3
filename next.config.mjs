@@ -3,7 +3,6 @@ const nextConfig = {
   images: {
     remotePatterns: [{ protocol: 'https', hostname: '**' }],
   },
-  serverExternalPackages: ['pdf-parse'],
   experimental: {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
