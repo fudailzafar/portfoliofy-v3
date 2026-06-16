@@ -19,6 +19,7 @@ import {
   WritingTab,
   ExhibitionsTab,
 } from './tabs';
+import { ImportDataTab } from './ImportDataTab';
 
 interface ProfileContentProps {
   activeTab: string;
@@ -184,6 +185,7 @@ export function ProfileContent({
             onDeleteAccount={() => setShowDeleteAccountWarning(true)}
           />
         )}
+        {activeTab === 'import_data' && <ImportDataTab />}
       </div>
 
       {/* Bottom action bar */}
