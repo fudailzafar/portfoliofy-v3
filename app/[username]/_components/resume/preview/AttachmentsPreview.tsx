@@ -27,7 +27,7 @@ export function AttachmentsPreview({
         {attachments.map((attachment, index) => (
           <div
             key={attachment.id}
-            className="group relative h-[90px] shrink-0 cursor-pointer snap-center overflow-hidden rounded-lg border border-border-strong bg-surface-2"
+            className="group relative h-[90px] shrink-0 cursor-pointer snap-center overflow-hidden rounded-lg border border-theme-border bg-theme-bg"
             onClick={() => handleOpenLightbox(index)}
           >
             {attachment.type === 'video' ? (
