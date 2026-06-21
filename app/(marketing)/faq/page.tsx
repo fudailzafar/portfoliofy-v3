@@ -20,21 +20,21 @@ export default function FAQPage() {
             </p>
           </div>
 
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <h3 className="text-lg font-bold text-content-primary">
               Who&apos;s behind Portfoliofy?
             </h3>
             <p className="text-content-secondary">
               Just me,{' '}
               <Link
-                href="/safwaan"
+                href="/fudail"
                 className="text-content-primary hover:underline hover:underline-offset-4"
               >
-                Safwaan
+                Fudail
               </Link>
               .
             </p>
-          </div>
+          </div> */}
 
           <div className="space-y-2">
             <h3 className="text-lg font-bold text-content-primary">
@@ -66,12 +66,12 @@ export default function FAQPage() {
             </p>
           </div>
 
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <h3 className="text-lg font-bold text-content-primary">
               Where can I get updates on Portfoliofy?
             </h3>
             <p className="text-content-secondary">
-              Follow @hellosafwaan on Twitter and on LinkedIn for updates.
+              Follow @fudailzafar on Twitter and on LinkedIn for updates.
             </p>
           </div>
 
@@ -81,7 +81,7 @@ export default function FAQPage() {
               harassment, who can I reach out to?
             </h3>
             <p className="text-content-secondary">
-              Please reach out to hellosafwaan@gmail.com. We take all reports
+              Please reach out to fudail.zafar@gmail.com. We take all reports
               very seriously.
             </p>
           </div>
@@ -91,9 +91,9 @@ export default function FAQPage() {
               I have more questions, who should I call?
             </h3>
             <p className="text-content-secondary">
-              Email me, hellosafwaan@gmail.com.
+              Email me, fudail.zafar@gmail.com.
             </p>
-          </div>
+          </div> */}
         </div>
       </main>
 
