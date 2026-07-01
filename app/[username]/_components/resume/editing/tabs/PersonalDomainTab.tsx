@@ -99,7 +99,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
   return (
     <div className="mx-auto flex max-w-2xl flex-col">
       <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-2xl font-bold text-content-primary">
+        <h2 className="hidden text-2xl font-bold text-content-primary sm:block">
           Personal Domain
         </h2>
         <a
