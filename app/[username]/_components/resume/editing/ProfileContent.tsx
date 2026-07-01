@@ -43,6 +43,24 @@ interface ProfileContentProps {
   setShowDeleteAccountWarning: (show: boolean) => void;
 }
 
+const TAB_TITLES: Record<string, string> = {
+  general: 'Personal Domain',
+  workExperience: 'Work Experience',
+  education: 'Education',
+  projects: 'Projects',
+  sideProjects: 'Side Projects',
+  speaking: 'Speaking',
+  writing_published: 'Writing',
+  writing_drafts: 'Writing',
+  exhibitions: 'Exhibitions',
+  features: 'Features',
+  volunteering: 'Volunteering',
+  awards: 'Awards',
+  certifications: 'Certifications',
+  contacts: 'Contacts',
+  settings: 'Settings',
+};
+
 export function ProfileContent({
   activeTab,
   showMobileMenu,
@@ -78,7 +96,7 @@ export function ProfileContent({
         <div className="mb-6 flex items-center sm:hidden">
           <button
             onClick={() => setShowMobileMenu(true)}
-            className="flex items-center text-sm font-medium text-content-secondary hover:text-content-primary"
+            className="flex items-center text-sm font-medium text-content-primary hover:text-content-secondary"
           >
             <svg
               className="mr-1 h-5 w-5"
@@ -93,7 +111,7 @@ export function ProfileContent({
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            Back to Menu
+            {TAB_TITLES[activeTab] || 'Back'}
           </button>
         </div>
 
