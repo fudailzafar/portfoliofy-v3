@@ -75,7 +75,7 @@ export function Projects({
 
               {project.description && project.description !== '<p></p>' && (
                 <div
-                  className="prose prose-sm max-w-none text-sm text-theme-secondary prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ul:my-1 prose-ul:text-theme-secondary prose-li:text-theme-secondary"
+                  className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 max-w-none text-sm text-theme-secondary prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ul:my-1 prose-ul:text-theme-secondary prose-li:text-theme-secondary"
                   dangerouslySetInnerHTML={{ __html: project.description }}
                 />
               )}
