@@ -111,7 +111,6 @@ export function ProfileContent({
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            {TAB_TITLES[activeTab] || 'Back'}
           </button>
         </div>
 
