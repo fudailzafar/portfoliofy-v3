@@ -23,14 +23,26 @@ export function EmptyProfileState() {
           2. Add the stuff you&apos;re passionate about, like side projects or
           writing.
         </li>
+        <li className="flex gap-2">
+          3. Add images or videos to any experiences that needs more details.
+        </li>
       </ol>
 
-      <div className="pt-2">
+      <div className="pt-2 flex flex-wrap gap-4">
         <Button
           onClick={handleOpenEditor}
           className="h-10 border-none bg-surface-2 px-5 font-medium text-content-primary shadow-none hover:bg-surface-3"
         >
           Add your first work experience
+        </Button>
+        <Button
+          onClick={() => {
+            setActiveTab('import_data');
+            window.dispatchEvent(new CustomEvent('open-editor'));
+          }}
+          className="h-10 border-none bg-surface-2 px-5 font-medium text-content-primary shadow-none hover:bg-surface-3"
+        >
+          Upload resume
         </Button>
       </div>
     </div>
