@@ -116,7 +116,7 @@ export function WorkExperienceTab({
                 key={w.id || w.company}
                 className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
               >
-                <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-32">
+                <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-24">
                   {w.start} — {w.end}
                 </div>
 
@@ -192,7 +192,7 @@ export function WorkExperienceTab({
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label className="text-xs text-content-secondary">
-                  Start Year*
+                  From*
                 </Label>
                 <Select
                   value={currentWork.start || ''}
@@ -215,7 +215,7 @@ export function WorkExperienceTab({
 
               <div className="space-y-2">
                 <Label className="text-xs text-content-secondary">
-                  End Year*
+                  To*
                 </Label>
                 <Select
                   value={currentWork.end || ''}
