@@ -105,7 +105,7 @@ export function CertificationsTab({
               return (
                 <div
                   key={certification.id}
-                  className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
+                  className="group flex flex-col gap-4 sm:flex-row sm:gap-12 border-b border-border-subtle pb-5 mb-5 last:border-b-0 last:pb-0 last:mb-0"
                 >
                   <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-24">
                     {certification.year}
