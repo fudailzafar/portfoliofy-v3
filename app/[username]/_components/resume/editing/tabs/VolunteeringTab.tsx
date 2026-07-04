@@ -93,13 +93,13 @@ export function VolunteeringTab({
               const canMoveUp =
                 prevItem &&
                 parseInt(v.startYear || '0') ===
-                  parseInt(prevItem.startYear || '0');
+                parseInt(prevItem.startYear || '0');
               const nextItem =
                 index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
               const canMoveDown =
                 nextItem &&
                 parseInt(v.startYear || '0') ===
-                  parseInt(nextItem.startYear || '0');
+                parseInt(nextItem.startYear || '0');
 
               return (
                 <div
@@ -140,7 +140,7 @@ export function VolunteeringTab({
                           {v.location}
                         </p>
                       )}
-                      
+
                       {v.description && v.description !== '<p></p>' && (
                         <div
                           className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ul:my-1 prose-ul:text-content-muted prose-li:text-content-muted"
@@ -183,7 +183,7 @@ export function VolunteeringTab({
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label className="text-xs text-content-secondary">
-                  Start Year*
+                  From*
                 </Label>
                 <Select
                   value={currentVolunteering.startYear}
@@ -211,7 +211,7 @@ export function VolunteeringTab({
               </div>
               <div className="space-y-2">
                 <Label className="text-xs text-content-secondary">
-                  End Year*
+                  To*
                 </Label>
                 <Select
                   value={currentVolunteering.endYear}

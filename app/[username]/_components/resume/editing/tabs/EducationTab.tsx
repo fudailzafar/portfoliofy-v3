@@ -102,7 +102,7 @@ export function EducationTab({
                   key={edu.id || edu.school}
                   className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
                 >
-                  <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-32">
+                  <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-24">
                     {edu.start ? `${edu.start} — ${edu.end}` : edu.end}
                   </div>
                   <div className="flex flex-1 flex-col items-start justify-start">
@@ -158,7 +158,7 @@ export function EducationTab({
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label className="text-xs text-content-secondary">
-                  Start Year*
+                  From*
                 </Label>
                 <Select
                   value={currentEdu.start || ''}
@@ -183,7 +183,7 @@ export function EducationTab({
               </div>
               <div className="space-y-2">
                 <Label className="text-xs text-content-secondary">
-                  End Year*
+                  To*
                 </Label>
                 <Select
                   value={currentEdu.end || ''}
@@ -209,7 +209,7 @@ export function EducationTab({
             <div className="grid grid-cols-2 gap-6">
               <FormInput
                 id="degree"
-                label="Degree*"
+                label="Degree or certification*"
                 value={currentEdu.degree}
                 onChange={(e) =>
                   setCurrentEdu({ ...currentEdu, degree: e.target.value })
@@ -218,7 +218,7 @@ export function EducationTab({
               />
               <FormInput
                 id="school"
-                label="School*"
+                label="School or institution*"
                 value={currentEdu.school}
                 onChange={(e) =>
                   setCurrentEdu({ ...currentEdu, school: e.target.value })
