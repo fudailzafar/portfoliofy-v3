@@ -68,7 +68,7 @@ export function Volunteering({ volunteering }: VolunteeringProps) {
 
               {v.description && v.description !== '<p></p>' && (
                 <div
-                  className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-theme-secondary prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ul:my-1 prose-ul:text-theme-secondary prose-li:text-theme-secondary"
+                  className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-4 max-w-none text-sm leading-relaxed text-theme-secondary prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ul:my-1 prose-ul:text-theme-secondary prose-li:text-theme-secondary"
                   dangerouslySetInnerHTML={{ __html: v.description }}
                 />
               )}
