@@ -74,7 +74,7 @@ export function ContactsTab({
                 key={c.id || c.platform}
                 className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
               >
-                <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-32">
+                <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-24">
                   {c.platform}
                 </div>
 
@@ -137,7 +137,7 @@ export function ContactsTab({
       renderForm={() =>
         currentContact ? (
           <>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label className="text-[13px] text-content-muted">Type*</Label>
                 <Select
