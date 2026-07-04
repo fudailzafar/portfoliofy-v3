@@ -97,7 +97,7 @@ export function AwardsTab({
                 key={award.id}
                 className="group flex flex-col gap-4 sm:flex-row sm:gap-12"
               >
-                <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-16">
+                <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-24">
                   {award.year}
                 </div>
 
