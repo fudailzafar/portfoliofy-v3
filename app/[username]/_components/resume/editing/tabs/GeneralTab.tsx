@@ -62,6 +62,9 @@ export function GeneralTab({
 
   return (
     <div className="mx-auto max-w-2xl space-y-8">
+      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
+        <h2 className="text-xl sm:text-2xl font-bold text-content-primary">General</h2>
+      </div>
       {/* Avatar Section */}
       <div className="flex items-center gap-6">
         {/* Hidden file input — always present */}

@@ -25,7 +25,7 @@ export function SkillsTab() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col">
       <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-2xl font-bold">Skills</h2>
+        <h2 className="text-xl sm:text-2xl font-bold">Skills</h2>
       </div>
 
       <div className="space-y-6 w-full min-w-0">

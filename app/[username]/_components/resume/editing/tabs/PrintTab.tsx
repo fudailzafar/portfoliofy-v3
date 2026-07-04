@@ -35,7 +35,7 @@ export function PrintTab() {
   return (
     <div className="mx-auto flex max-w-2xl flex-col pb-24">
       <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-2xl font-bold">Print</h2>
+        <h2 className="text-xl sm:text-2xl font-bold">Print</h2>
       </div>
 
       <div className="mb-4 rounded-lg bg-surface-2 p-4 text-sm text-content-primary">
