@@ -32,7 +32,7 @@ export function SettingsTab({ onDeleteAccount }: SettingsTabProps) {
   return (
     <div className="mx-auto flex max-w-2xl flex-col">
       <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="hidden text-2xl font-bold text-content-primary sm:block">Settings</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-content-primary">Settings</h2>
       </div>
       <div className="space-y-10">
         <div className="space-y-6 w-full min-w-0">
