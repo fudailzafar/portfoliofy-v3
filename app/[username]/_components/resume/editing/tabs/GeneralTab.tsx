@@ -16,6 +16,7 @@ const RichTextEditor = dynamic(
 import { useUserActions } from '@/hooks/useUserActions';
 import { useDebounce } from 'use-debounce';
 import { Check, X } from 'lucide-react';
+import { isValidWebsite, normalizeWebsite } from '@/lib/validation/url';
 
 export function GeneralTab({
   initialUsername,
@@ -331,16 +332,28 @@ export function GeneralTab({
               Website
             </Label>
             <span className="text-xs text-content-muted">
-              {(header?.website || '').length} of 96
+              {(header?.website || '').length} of 200
             </span>
           </div>
           <Input
             id="website"
             placeholder="https://example.com"
-            maxLength={96}
+            maxLength={200}
             value={header?.website || ''}
             onChange={(e) => updateHeader({ website: e.target.value })}
+            onBlur={(e) => {
+              const normalized = normalizeWebsite(e.target.value);
+              if (normalized !== e.target.value) {
+                updateHeader({ website: normalized });
+              }
+            }}
+            className={!isValidWebsite(header?.website || '') ? 'border-red-500 focus-visible:ring-red-500' : ''}
           />
+          {!isValidWebsite(header?.website || '') && (
+            <p className="text-xs text-red-500">
+              Enter a valid web address, e.g. https://yoursite.com
+            </p>
+          )}
         </div>
 
         <div className="space-y-2">

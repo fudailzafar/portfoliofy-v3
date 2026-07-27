@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { isReversedRange } from '@/lib/validation/dates';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
@@ -198,12 +199,9 @@ export function VolunteeringTab({
                     <SelectValue placeholder="Select year" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Array.from(
-                      { length: 50 },
-                      (_, i) => new Date().getFullYear() - i,
-                    ).map((year) => (
-                      <SelectItem key={year} value={year.toString()}>
-                        {year}
+                    {years.map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -222,21 +220,25 @@ export function VolunteeringTab({
                     })
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger
+                    className={isReversedRange(currentVolunteering.startYear, currentVolunteering.endYear) ? 'border-red-500' : ''}
+                  >
                     <SelectValue placeholder="Select year" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Now">Now</SelectItem>
-                    {Array.from(
-                      { length: 50 },
-                      (_, i) => new Date().getFullYear() - i,
-                    ).map((year) => (
-                      <SelectItem key={year} value={year.toString()}>
-                        {year}
+                    {years.map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                {isReversedRange(currentVolunteering.startYear, currentVolunteering.endYear) && (
+                  <p className="text-xs text-red-500">
+                    End year can&apos;t be earlier than the start year.
+                  </p>
+                )}
               </div>
             </div>
 
@@ -322,7 +324,9 @@ export function VolunteeringTab({
               onCancel={() => setVolunteeringView('list')}
               onSave={handleSave}
               isSaveDisabled={
-                !currentVolunteering?.role || !currentVolunteering?.organization
+                !currentVolunteering?.role ||
+                !currentVolunteering?.organization ||
+                isReversedRange(currentVolunteering.startYear, currentVolunteering.endYear)
               }
             />
           </>

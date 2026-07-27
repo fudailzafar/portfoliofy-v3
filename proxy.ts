@@ -13,60 +13,64 @@ export default async function middleware(req: NextRequest) {
   const isVercelDomain = hostname.endsWith('.vercel.app');
   const isLocalhost = hostname.includes('localhost');
 
-  // If this is a custom domain, we check Supabase to find the username
+  let res = NextResponse.next();
+
+  // If this is a custom domain, rewrite to /[domain]
   if (!isMainDomain && !isVercelDomain && !isLocalhost) {
-    try {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-
-      if (supabaseUrl && supabaseKey) {
-        // Query the Supabase REST API (Edge compatible)
-        const res = await fetch(
-          `${supabaseUrl}/rest/v1/users?custom_domain=eq.${hostname}&select=username`,
-          {
-            headers: {
-              apikey: supabaseKey,
-              Authorization: `Bearer ${supabaseKey}`,
-            },
-          },
-        );
-
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.length > 0 && data[0].username) {
-            // Rewrite the request to the dynamic /[username] route
-            return NextResponse.rewrite(
-              new URL(`/${data[0].username}`, req.url),
-            );
-          }
-        }
+    const url = req.nextUrl.clone();
+    url.pathname = `/${hostname}${url.pathname === '/' ? '' : url.pathname}`;
+    res = NextResponse.rewrite(url);
+  } else {
+    // Run NextAuth middleware for normal requests
+    const authMiddleware = auth((req) => {
+      // Always allow NextAuth's own API routes and the public explore route
+      if (
+        req.nextUrl.pathname.startsWith('/api/auth') ||
+        req.nextUrl.pathname.startsWith('/api/explore')
+      ) {
+        return;
       }
-    } catch (error) {
-      console.error('Failed to lookup custom domain:', error);
-    }
+
+      const isPrivateRoute = PRIVATE_ROUTES.some((route) =>
+        req.nextUrl.pathname.startsWith(`/${route}`),
+      );
+
+      if (isPrivateRoute && !req.auth) {
+        // Redirect unauthenticated users to home — auth dialog triggers there
+        return NextResponse.redirect(new URL('/', req.nextUrl));
+      }
+    });
+
+    const authRes = (authMiddleware as any)(req, undefined);
+    if (authRes) res = authRes;
   }
 
-  // Run NextAuth middleware for normal requests
-  const authMiddleware = auth((req) => {
-    // Always allow NextAuth's own API routes and the public explore route
-    if (
-      req.nextUrl.pathname.startsWith('/api/auth') ||
-      req.nextUrl.pathname.startsWith('/api/explore')
-    ) {
-      return;
-    }
+  // ── Static security headers ──────────────────────────────────────────────
+  res.headers.set('X-Frame-Options', 'DENY');
+  res.headers.set('X-Content-Type-Options', 'nosniff');
+  res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.headers.set(
+    'Permissions-Policy',
+    'camera=(), microphone=(), geolocation=()',
+  );
 
-    const isPrivateRoute = PRIVATE_ROUTES.some((route) =>
-      req.nextUrl.pathname.startsWith(`/${route}`),
-    );
+  const csp = [
+    `default-src 'self'`,
+    `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.vercel-insights.com https://vercel.live`,
+    `style-src 'self' 'unsafe-inline'`,
+    `img-src 'self' data: blob: https://api.dicebear.com https://lh3.googleusercontent.com https://*.amazonaws.com https://*.s3.amazonaws.com`,
+    `font-src 'self' data:`,
+    `connect-src 'self' https://accounts.google.com https://*.vercel-insights.com https://*.amazonaws.com https://*.s3.amazonaws.com`,
+    `frame-src https://accounts.google.com`,
+    `frame-ancestors 'none'`,
+    `base-uri 'self'`,
+    `form-action 'self' https://accounts.google.com`,
+    `object-src 'none'`,
+  ].join('; ');
 
-    if (isPrivateRoute && !req.auth) {
-      // Redirect unauthenticated users to home — auth dialog triggers there
-      return NextResponse.redirect(new URL('/', req.nextUrl));
-    }
-  });
+  res.headers.set('Content-Security-Policy-Report-Only', csp);
 
-  return (authMiddleware as any)(req, undefined);
+  return res;
 }
 
 export const config = {

@@ -41,6 +41,7 @@ import {
 import { getOptimizedImageUrl } from '@/lib/utils';
 import { useS3Upload } from 'next-s3-upload';
 import { toast } from 'sonner';
+import { isValidWebsite } from '@/lib/validation/url';
 import { ProfileSidebar } from './ProfileSidebar';
 import { ProfileContent } from './ProfileContent';
 import { DeleteConfirmDialog, UnsavedChangesDialog } from './dialogs';
@@ -170,6 +171,10 @@ export function EditProfileDialog({
     /^[a-zA-Z0-9-]+$/.test(uname) &&
     uname.length > 0 &&
     ((isInitialUsername || checkUsernameMutation.data?.available) ?? false);
+
+  // Also block Save when the website field contains an invalid URL
+  const resumeWebsite = useResumeStore.getState().resume?.header?.website ?? '';
+  const isValidSiteUrl = isValidWebsite(resumeWebsite);
 
   const [debouncedUname] = useDebounce(uname, 500);
 
@@ -560,7 +565,7 @@ export function EditProfileDialog({
               isUploadingPicture={isUploadingPicture}
               isEditingTab={isEditingTab}
               isSaving={isSaving}
-              isValidUname={isValidUname}
+              isValidUname={isValidUname && isValidSiteUrl}
               checkUsernameMutationIsPending={checkUsernameMutation.isPending}
               years={years}
               setProjectToDelete={(type) => (id) => {
@@ -595,7 +600,7 @@ export function EditProfileDialog({
                 <Button
                   onClick={handleGlobalSave}
                   disabled={
-                    isSaving || !isValidUname || checkUsernameMutation.isPending
+                    isSaving || !isValidUname || !isValidSiteUrl || checkUsernameMutation.isPending
                   }
                   variant="outline"
                   className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
