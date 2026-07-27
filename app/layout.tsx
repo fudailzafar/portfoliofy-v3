@@ -92,12 +92,20 @@ export const viewport: Viewport = {
   colorScheme: 'light dark',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID || 'G-B99MN9ZMBL';
+  
+  const headersList = await require('next/headers').headers();
+  const rawHostname = headersList.get('host') || '';
+  const hostname = rawHostname.split(':')[0]; // Strip port for local testing
+  const isMainDomain = hostname === 'portfoliofy.me' || hostname === 'www.portfoliofy.me';
+  const isVercelDomain = hostname.endsWith('.vercel.app');
+  const isLocalhost = hostname.includes('localhost');
+  const isCustomDomain = !isMainDomain && !isVercelDomain && !isLocalhost;
 
   return (
     <SessionProviderWrapper>
@@ -161,7 +169,11 @@ export default function RootLayout({
           <body className="flex min-h-screen flex-col font-sans antialiased">
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               <main className="flex flex-1 flex-col">
-                <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+                {isCustomDomain ? (
+                  children
+                ) : (
+                  <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+                )}
                 <SpeedInsights />
                 <Analytics />
               </main>
