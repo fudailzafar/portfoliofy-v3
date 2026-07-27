@@ -60,22 +60,19 @@ export function SettingsTab({ onDeleteAccount }: SettingsTabProps) {
 
         <div className="space-y-6 w-full min-w-0">
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col justify-between gap-4 rounded-xl border border-red-200 bg-red-50/50 p-4 shadow-sm dark:border-red-900/50 dark:bg-red-900/20 sm:flex-row sm:items-center">
-              <div className="space-y-1">
-                <h4 className="text-sm font-semibold text-red-900 dark:text-red-400">
-                  Danger Zone
-                </h4>
-                <p className="text-xs text-red-600/80 dark:text-red-300/80">
-                  Permanently delete your account and all associated data. This
-                  action cannot be undone.
+            <div className="flex items-center justify-between">
+              <div className="space-y-1 pr-4">
+                <h4 className="text-sm text-content-primary">Delete account</h4>
+                <p className="text-xs text-content-muted">
+                  Permanently delete your account and all associated data.
                 </p>
               </div>
               <Button
-                variant="destructive"
+                variant="outline"
                 onClick={onDeleteAccount}
-                className="w-full whitespace-nowrap rounded-md bg-red-600 px-6 text-surface-1 shadow-sm hover:bg-red-700 dark:text-white sm:w-auto"
+                className="w-[120px] shrink-0 border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 dark:border-red-900/60 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40 dark:hover:border-red-800 dark:hover:text-red-300 transition-colors"
               >
-                Delete Account
+                Delete
               </Button>
             </div>
           </div>
