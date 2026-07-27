@@ -41,7 +41,7 @@ export default async function middleware(req: NextRequest) {
       }
     });
 
-    const authRes = (authMiddleware as any)(req, undefined);
+    const authRes = await (authMiddleware as any)(req, undefined);
     if (authRes) res = authRes;
   }
 
