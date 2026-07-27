@@ -1,12 +1,20 @@
 import {
   getCachedUserProfile,
   getCachedUserIdByUsername,
+  getCachedUserIdByCustomDomain,
   getCachedResume,
   UserProfile,
 } from '@/lib/server/cachedFunctions';
 
 export async function getUserData(username: string) {
-  const user_id = await getCachedUserIdByUsername(username);
+  let user_id;
+  // If the identifier contains a dot, it's a custom domain, not a username
+  if (username.includes('.')) {
+    user_id = await getCachedUserIdByCustomDomain(username);
+  } else {
+    user_id = await getCachedUserIdByUsername(username);
+  }
+
   if (!user_id)
     return { user_id: undefined, resume: undefined, userProfile: undefined };
 
