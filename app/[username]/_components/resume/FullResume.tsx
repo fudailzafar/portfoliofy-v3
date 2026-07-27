@@ -118,6 +118,7 @@ export const FullResume = ({
         picture={profilePicture}
         isOwner={isOwner}
         userProfile={userProfile}
+        hideSocialFeatures={resume.design?.hideSocialFeatures}
       />
 
       <div className="flex flex-col gap-6">
