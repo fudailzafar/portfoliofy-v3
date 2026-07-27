@@ -1,1 +1,1 @@
-export const PRIVATE_ROUTES = ['api', 'claim'];
+export const PRIVATE_ROUTES = ['api'];

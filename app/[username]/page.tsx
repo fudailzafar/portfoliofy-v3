@@ -28,10 +28,11 @@ export async function generateMetadata({
 
   if (!user_id) {
     return {
-      title: `Claim @${username} | Portfoliofy`,
-      description: `The username @${username} is available! Create your portfolio on Portfoliofy.`,
+      title: 'Page Not Found | Portfoliofy',
+      description: 'This page could not be found on Portfoliofy.',
     };
   }
+
 
   if (!resume?.resumeData || resume.status !== 'live') {
     return {

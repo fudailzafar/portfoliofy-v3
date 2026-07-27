@@ -1,4 +1,4 @@
-import { getResume, getUserIdByUsername } from '@/lib/server/dbActions';
+import { getResume, getUserIdByUsername, getUserIdByCustomDomain } from '@/lib/server/dbActions';
 import sql from '@/lib/server/db';
 import { unstable_cache } from 'next/cache';
 import { cache } from 'react';
@@ -71,6 +71,21 @@ export const getCachedUserIdByUsername = cache(
       [username],
       {
         tags: ['usernames', `username-${username}`],
+        revalidate: 86400, // 1 day
+      },
+    )();
+  },
+);
+
+export const getCachedUserIdByCustomDomain = cache(
+  async (domain: string): Promise<string | null> => {
+    return unstable_cache(
+      async () => {
+        return await getUserIdByCustomDomain(domain);
+      },
+      [domain],
+      {
+        tags: ['domains', `domain-${domain}`],
         revalidate: 86400, // 1 day
       },
     )();

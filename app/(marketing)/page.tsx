@@ -321,7 +321,7 @@ export default async function Home() {
                 <span className="text-[14px] text-content-muted sm:text-[15px]">
                   Architectural Designer
                 </span>
-                <span className="text-[14px] text-action-primary sm:text-[15px]">
+                <span className="text-[14px] text-content-muted sm:text-[15px]">
                   portfoliofy.me/tom
                 </span>
               </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { isReversedRange } from '@/lib/validation/dates';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
@@ -191,7 +192,9 @@ export function EducationTab({
                     setCurrentEdu({ ...currentEdu, end: val })
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger
+                    className={isReversedRange(currentEdu.start, currentEdu.end) ? 'border-red-500' : ''}
+                  >
                     <SelectValue placeholder="Year" />
                   </SelectTrigger>
                   <SelectContent>
@@ -203,6 +206,11 @@ export function EducationTab({
                     ))}
                   </SelectContent>
                 </Select>
+                {isReversedRange(currentEdu.start, currentEdu.end) && (
+                  <p className="text-xs text-red-500">
+                    End year can&apos;t be earlier than the start year.
+                  </p>
+                )}
               </div>
             </div>
 
@@ -276,7 +284,10 @@ export function EducationTab({
               onCancel={() => setEduView('list')}
               onSave={handleSave}
               isSaveDisabled={
-                !currentEdu?.school || !currentEdu?.degree || !currentEdu?.end
+                !currentEdu?.school ||
+                !currentEdu?.degree ||
+                !currentEdu?.end ||
+                isReversedRange(currentEdu?.start, currentEdu?.end)
               }
             />
           </>

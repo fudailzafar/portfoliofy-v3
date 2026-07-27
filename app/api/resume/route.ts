@@ -34,8 +34,20 @@ export async function POST(
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const body = await request.json();
-    await storeResume(session.user.id, body);
+
+    // Guard: parse body first — a missing or malformed body would otherwise
+    // throw an unhandled error and bubble up as HTTP 500.
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid or missing JSON body' },
+        { status: 400 },
+      );
+    }
+
+    await storeResume(session.user.id, body as Resume);
     // @ts-expect-error Next.js 16 Canary types require second profile argument
     revalidateTag(`resume-${session.user.id}`);
     return NextResponse.json({ success: true });
@@ -53,3 +65,4 @@ export async function POST(
     );
   }
 }
+
