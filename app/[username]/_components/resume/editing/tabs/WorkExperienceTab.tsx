@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { isReversedRange } from '@/lib/validation/dates';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
@@ -223,7 +224,9 @@ export function WorkExperienceTab({
                     setCurrentWork({ ...currentWork, end: val })
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger
+                    className={isReversedRange(currentWork.start, currentWork.end) ? 'border-red-500' : ''}
+                  >
                     <SelectValue placeholder="Year" />
                   </SelectTrigger>
                   <SelectContent>
@@ -235,6 +238,11 @@ export function WorkExperienceTab({
                     ))}
                   </SelectContent>
                 </Select>
+                {isReversedRange(currentWork.start, currentWork.end) && (
+                  <p className="text-xs text-red-500">
+                    End year can&apos;t be earlier than the start year.
+                  </p>
+                )}
               </div>
             </div>
 
@@ -316,7 +324,11 @@ export function WorkExperienceTab({
             <TabFormActions
               onCancel={() => setWorkView('list')}
               onSave={handleSave}
-              isSaveDisabled={!currentWork?.title || !currentWork?.company}
+              isSaveDisabled={
+                !currentWork?.title ||
+                !currentWork?.company ||
+                isReversedRange(currentWork.start, currentWork.end)
+              }
             />
           </>
         ) : null
