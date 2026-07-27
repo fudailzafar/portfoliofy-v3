@@ -101,6 +101,9 @@ export default async function ProfilePage({
     skills: resume.resumeData.header.skills,
   };
 
+  const isCustomDomain = username.includes('.');
+  const isOwner = userId === user_id && !isCustomDomain;
+
   return (
     <div className="flex min-h-screen flex-col font-sans">
       <script
@@ -109,7 +112,7 @@ export default async function ProfilePage({
       />
       {/* Standard UI visible only on screen */}
       <div className="flex flex-1 flex-col print:hidden">
-        {userId === user_id && resume?.resumeData && (
+        {isOwner && resume?.resumeData && (
           <EditProfileDialog
             resume={resume.resumeData}
             username={username}
@@ -117,7 +120,7 @@ export default async function ProfilePage({
           />
         )}
 
-        {userId === user_id ? (
+        {isOwner ? (
           <LiveResumeWrapper
             initialResume={resume?.resumeData}
             profilePicture={profilePicture}
