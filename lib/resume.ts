@@ -342,9 +342,10 @@ export const ResumeDataSchema = z.object({
         ])
         .optional()
         .default('default'),
+      hideSocialFeatures: z.boolean().optional().default(false),
     })
     .optional()
-    .default({ typography: 'sans', theme: 'default' }),
+    .default({ typography: 'sans', theme: 'default', hideSocialFeatures: false }),
 });
 
 export type ResumeDataSchemaType = z.infer<typeof ResumeDataSchema>;

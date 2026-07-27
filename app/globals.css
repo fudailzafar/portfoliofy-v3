@@ -122,6 +122,16 @@
   }
 }
 
+/* Custom prose link styling */
+.prose a {
+  color: inherit !important;
+  font-weight: inherit !important;
+  text-decoration: underline !important;
+  text-decoration-color: var(--theme-secondary) !important;
+  text-underline-offset: 3px !important;
+  text-decoration-thickness: 1px !important;
+}
+
 /* Custom animations */
 @keyframes bounce {
   0%,

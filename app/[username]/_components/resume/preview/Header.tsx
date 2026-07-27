@@ -53,11 +53,13 @@ export function Header({
   picture,
   isOwner,
   userProfile,
+  hideSocialFeatures = false,
 }: {
   header: ResumeDataSchemaType['header'];
   picture?: string;
   isOwner?: boolean;
   userProfile?: UserProfile;
+  hideSocialFeatures?: boolean;
 }) {
   const [isEditingStatus, setIsEditingStatus] = useState(false);
   const [currentStatus, setCurrentStatus] = useState({
@@ -69,56 +71,58 @@ export function Header({
   return (
     <div className="mb-8">
       <header className="flex items-center gap-4 md:gap-6">
-        <div className="relative">
-          <Avatar className="size-20 shrink-0 md:size-24" aria-hidden="true">
-            <AvatarImage
-              src={picture}
-              alt={`${header.name}'s profile picture`}
-            />
-            <AvatarFallback>
-              {header.name
-                .split(' ')
-                .map((n) => n[0])
-                .join('')}
-            </AvatarFallback>
-          </Avatar>
+        {!hideSocialFeatures && (
+          <div className="relative">
+            <Avatar className="size-20 shrink-0 md:size-24" aria-hidden="true">
+              <AvatarImage
+                src={picture}
+                alt={`${header.name}'s profile picture`}
+              />
+              <AvatarFallback>
+                {header.name
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')}
+              </AvatarFallback>
+            </Avatar>
 
-          {isOwner && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    id="status-toggle-btn"
-                    onClick={() => setIsEditingStatus((prev) => !prev)}
-                    className="absolute -bottom-1 -right-2 flex h-7 w-10 items-center justify-center rounded-full border border-theme-border bg-theme-bg text-sm text-theme-primary shadow-sm transition-transform hover:scale-105"
-                  >
-                    <Twemoji
-                      tag="span"
-                      className="flex items-center justify-center leading-none"
-                      options={{ className: 'h-[1.2em] w-[1.2em]' }}
+            {isOwner && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      id="status-toggle-btn"
+                      onClick={() => setIsEditingStatus((prev) => !prev)}
+                      className="absolute -bottom-1 -right-2 flex h-7 w-10 items-center justify-center rounded-full border border-theme-border bg-theme-bg text-sm text-theme-primary shadow-sm transition-transform hover:scale-105"
                     >
-                      {currentStatus.emoji || <SmilePlus size={16} />}
-                    </Twemoji>
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Set status</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-          {!isOwner && currentStatus.emoji && (
-            <div className="absolute -bottom-1 -right-2 flex h-7 w-9 items-center justify-center rounded-full border border-theme-border bg-theme-bg text-sm text-theme-primary shadow-sm">
-              <Twemoji
-                tag="span"
-                className="flex items-center justify-center leading-none"
-                options={{ className: 'h-[1.2em] w-[1.2em]' }}
-              >
-                {currentStatus.emoji}
-              </Twemoji>
-            </div>
-          )}
-        </div>
+                      <Twemoji
+                        tag="span"
+                        className="flex items-center justify-center leading-none"
+                        options={{ className: 'h-[1.2em] w-[1.2em]' }}
+                      >
+                        {currentStatus.emoji || <SmilePlus size={16} />}
+                      </Twemoji>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Set status</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+            {!isOwner && currentStatus.emoji && (
+              <div className="absolute -bottom-1 -right-2 flex h-7 w-9 items-center justify-center rounded-full border border-theme-border bg-theme-bg text-sm text-theme-primary shadow-sm">
+                <Twemoji
+                  tag="span"
+                  className="flex items-center justify-center leading-none"
+                  options={{ className: 'h-[1.2em] w-[1.2em]' }}
+                >
+                  {currentStatus.emoji}
+                </Twemoji>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="flex-1 space-y-1">
           <h1
@@ -164,7 +168,7 @@ export function Header({
 
       {/* Status Editor Dialog */}
       <AnimatePresence>
-        {isEditingStatus && (
+        {isEditingStatus && !hideSocialFeatures && (
           <StatusEditor
             initialEmoji={currentStatus.emoji}
             initialText={currentStatus.text}
@@ -177,7 +181,7 @@ export function Header({
       </AnimatePresence>
 
       {/* Status Display Bubble */}
-      {!isEditingStatus && currentStatus.text && (
+      {!isEditingStatus && !hideSocialFeatures && currentStatus.text && (
         <div className="relative mt-4 flex w-full flex-col gap-1 rounded-3xl border border-theme-border bg-theme-bg p-4 shadow-sm">
           {/* Speech Bubble Tail */}
           <div className="absolute -top-[6px] left-[64px] h-3 w-3 rotate-45 rounded-tl-sm border-l border-t border-theme-border bg-theme-bg md:left-[80px]" />

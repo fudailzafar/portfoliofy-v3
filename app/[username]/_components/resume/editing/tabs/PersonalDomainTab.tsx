@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
 import { LoaderCircle } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 
 export function PersonalDomainTab({ username }: { username: string }) {
   const resume = useResumeStore((state) => state.resume);
@@ -465,6 +466,27 @@ export function PersonalDomainTab({ username }: { username: string }) {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Hide Social Features */}
+        <div className="mt-4 flex items-center justify-between border-t border-border-subtle pt-8">
+          <div className="flex flex-col gap-1 pr-4">
+            <h4 className="text-[14px] text-content-primary">
+              Hide social features
+            </h4>
+            <p className="text-[13px] text-[#888888]">
+              Hide your profile photo and status updates on your personal domain
+              for a more minimal look.
+            </p>
+          </div>
+          <Switch
+            checked={resume?.design?.hideSocialFeatures || false}
+            onCheckedChange={(checked) => {
+              updateDesign({ hideSocialFeatures: checked });
+              setHasUnsavedChanges(true);
+            }}
+            className="data-[state=checked]:bg-blue-600"
+          />
         </div>
       </div>
     </div>
