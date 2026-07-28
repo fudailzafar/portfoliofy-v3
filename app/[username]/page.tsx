@@ -102,8 +102,11 @@ export default async function ProfilePage({
   };
 
   const headersList = await import('next/headers').then(m => m.headers());
-  const host = headersList.get('host') || '';
-  const isSubdomainView = host.includes('.portfoliofy.me') || host.includes('.localhost');
+  const hostHeader = headersList.get('host') || '';
+  const hostname = hostHeader.split(':')[0];
+  const isSubdomainView =
+    (hostname.endsWith('.portfoliofy.me') && hostname !== 'www.portfoliofy.me') ||
+    (hostname.endsWith('.localhost') && hostname !== 'localhost');
   const isCustomDomain = username.includes('.') || isSubdomainView;
   const isOwner = userId === user_id && !isCustomDomain;
 
