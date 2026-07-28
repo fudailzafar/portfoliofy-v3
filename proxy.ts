@@ -17,9 +17,12 @@ export default async function middleware(req: NextRequest) {
 
   // If this is a custom domain, rewrite to /[domain]
   if (!isMainDomain && !isVercelDomain && !isLocalhost) {
-    const url = req.nextUrl.clone();
-    url.pathname = `/${hostname}${url.pathname === '/' ? '' : url.pathname}`;
-    res = NextResponse.rewrite(url);
+    // Allow API routes to pass through to the global API handlers
+    if (!req.nextUrl.pathname.startsWith('/api/')) {
+      const url = req.nextUrl.clone();
+      url.pathname = `/${hostname}${url.pathname === '/' ? '' : url.pathname}`;
+      res = NextResponse.rewrite(url);
+    }
   } else {
     // Run NextAuth middleware for normal requests
     const authMiddleware = auth((req) => {
@@ -58,7 +61,7 @@ export default async function middleware(req: NextRequest) {
     `default-src 'self'`,
     `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.vercel-insights.com https://vercel.live`,
     `style-src 'self' 'unsafe-inline'`,
-    `img-src 'self' data: blob: https://api.dicebear.com https://lh3.googleusercontent.com https://*.amazonaws.com https://*.s3.amazonaws.com`,
+    `img-src 'self' data: blob: https://api.dicebear.com https://lh3.googleusercontent.com https://*.amazonaws.com https://*.s3.amazonaws.com https://cdn.jsdelivr.net https://*.cloudfront.net`,
     `font-src 'self' data:`,
     `connect-src 'self' https://accounts.google.com https://*.vercel-insights.com https://*.amazonaws.com https://*.s3.amazonaws.com`,
     `frame-src https://accounts.google.com`,
