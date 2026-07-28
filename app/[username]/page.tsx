@@ -101,7 +101,10 @@ export default async function ProfilePage({
     skills: resume.resumeData.header.skills,
   };
 
-  const isCustomDomain = username.includes('.');
+  const headersList = await import('next/headers').then(m => m.headers());
+  const host = headersList.get('host') || '';
+  const isSubdomainView = host.includes('.portfoliofy.me') || host.includes('.localhost');
+  const isCustomDomain = username.includes('.') || isSubdomainView;
   const isOwner = userId === user_id && !isCustomDomain;
 
   return (

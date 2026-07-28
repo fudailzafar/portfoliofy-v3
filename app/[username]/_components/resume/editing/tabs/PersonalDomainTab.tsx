@@ -107,7 +107,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
           href={
             domainStatus?.verified && customDomain
               ? `https://${customDomain}`
-              : `https://portfoliofy.me/${username}`
+              : `https://${username}.portfoliofy.me`
           }
           target="_blank"
           rel="noopener noreferrer"
@@ -128,12 +128,12 @@ export function PersonalDomainTab({ username }: { username: string }) {
               <p className="text-[13px] text-[#888888]">
                 Optionally set a domain other than{' '}
                 <a
-                  href={`https://portfoliofy.me/${username}`}
+                  href={`https://${username}.portfoliofy.me`}
                   className="text-content-primary underline-offset-4 hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  portfoliofy.me/{username}
+                  {username}.portfoliofy.me
                 </a>
               </p>
             </div>
