@@ -36,7 +36,7 @@ export function HomeHero() {
           >
             progressive platform
           </a>{' '}
-          used by thousands of people to create more{' '}
+          used by hundreds of people to create more{' '}
           <a
             href="https://en.wikipedia.org/wiki/Mindfulness"
             className="cursor-text text-inherit no-underline hover:text-inherit"
