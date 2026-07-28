@@ -11,13 +11,26 @@ export default async function middleware(req: NextRequest) {
   const isMainDomain =
     hostname === 'portfoliofy.me' || hostname === 'www.portfoliofy.me';
   const isVercelDomain = hostname.endsWith('.vercel.app');
-  const isLocalhost = hostname.includes('localhost');
+  const isLocalhost = hostname === 'localhost';
+  const isSubdomain =
+    (hostname.endsWith('.portfoliofy.me') || hostname.endsWith('.localhost')) &&
+    !isMainDomain &&
+    !isLocalhost;
 
   let res = NextResponse.next();
 
-  // If this is a custom domain, rewrite to /[domain]
-  if (!isMainDomain && !isVercelDomain && !isLocalhost) {
-    // Allow API routes to pass through to the global API handlers
+  if (isSubdomain) {
+    // Treat subdomains like username.portfoliofy.me as user profiles
+    if (!req.nextUrl.pathname.startsWith('/api/')) {
+      const subdomain = hostname
+        .replace('.portfoliofy.me', '')
+        .replace('.localhost', '');
+      const url = req.nextUrl.clone();
+      url.pathname = `/${subdomain}${url.pathname === '/' ? '' : url.pathname}`;
+      res = NextResponse.rewrite(url);
+    }
+  } else if (!isMainDomain && !isVercelDomain && !isLocalhost) {
+    // If this is a custom domain (e.g. abaan.lol), rewrite to /[domain]
     if (!req.nextUrl.pathname.startsWith('/api/')) {
       const url = req.nextUrl.clone();
       url.pathname = `/${hostname}${url.pathname === '/' ? '' : url.pathname}`;
