@@ -151,6 +151,13 @@ export async function POST(req: Request) {
       );
     }
 
+    // Invalidate the cache for this custom domain so the 404 page doesn't stick around!
+    const { revalidateTag } = await import('next/cache');
+    // @ts-expect-error Next.js 16 Canary types
+    revalidateTag(`domain-${cleanDomain}`);
+    // @ts-expect-error Next.js 16 Canary types
+    revalidateTag(`user-${session.user.id}`); // Also invalidate user cache just in case
+
     return NextResponse.json({ success: true, domain: cleanDomain, data });
   } catch (error) {
     console.error('Failed to add domain:', error);
@@ -185,6 +192,12 @@ export async function DELETE() {
 
     // Remove from DB
     await removeCustomDomain(session.user.id);
+
+    const { revalidateTag } = await import('next/cache');
+    // @ts-expect-error Next.js 16 Canary types
+    revalidateTag(`domain-${domain}`);
+    // @ts-expect-error Next.js 16 Canary types
+    revalidateTag(`user-${session.user.id}`);
 
     return NextResponse.json({ success: true });
   } catch (error) {
