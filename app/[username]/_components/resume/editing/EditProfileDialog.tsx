@@ -497,6 +497,7 @@ export function EditProfileDialog({
           <DialogTrigger asChild>
             <TooltipTrigger asChild>
               <motion.button
+                initial={false}
                 animate={{ x: isSidebarOpen ? 330 : 0 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 whileTap={{ scale: 0.9 }}
