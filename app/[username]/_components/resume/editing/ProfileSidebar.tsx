@@ -69,34 +69,33 @@ export function ProfileSidebar({
   return (
     <div
       className={cn(
-        'scrollbar-hide h-full w-full shrink-0 flex-col overflow-y-auto border-r border-border-subtle bg-surface-1 sm:w-64',
+        'scrollbar-hide flex h-full w-full shrink-0 flex-col overflow-hidden border-r border-border-subtle bg-surface-1 sm:w-64',
         showMobileMenu ? 'flex' : 'hidden sm:flex',
       )}
     >
-      <div className="flex w-full items-center border-b border-border-strong px-4 pt-6">
+      <div className="relative flex w-full items-center border-b border-border-strong pt-6">
         {groups.map((group) => (
-          <div key={group.id} className="flex flex-1 justify-center">
-            <button
-              onClick={() => handleGroupChange(group.id)}
-              className={`relative cursor-default pb-3 text-center text-[14px] transition-all ${
-                activeGroup === group.id
-                  ? 'text-content-primary'
-                  : 'text-content-muted'
-              }`}
-            >
-              {group.label}
-              {activeGroup === group.id && (
-                <motion.div
-                  layoutId="profileTabIndicator"
-                  className="absolute -bottom-[1px] -left-4 -right-4 h-[1px] bg-action-primary"
-                />
-              )}
-            </button>
-          </div>
+          <button
+            key={group.id}
+            onClick={() => handleGroupChange(group.id)}
+            className={`flex-1 cursor-default pb-3 text-center text-[14px] transition-colors ${
+              activeGroup === group.id
+                ? 'text-content-primary'
+                : 'text-content-muted'
+            }`}
+          >
+            {group.label}
+          </button>
         ))}
+        <div
+          className="absolute bottom-[-1px] left-0 h-[1px] w-1/2 bg-action-primary transition-transform duration-300 ease-in-out"
+          style={{
+            transform: activeGroup === 'profile' ? 'translateX(0%)' : 'translateX(100%)',
+          }}
+        />
       </div>
 
-      <div className="flex flex-col gap-0 py-4">
+      <div className="scrollbar-hide flex flex-1 flex-col overflow-y-auto py-4">
         {activeGroup === 'profile' ? (
           <>
             <SidebarButton
