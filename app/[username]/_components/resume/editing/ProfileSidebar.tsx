@@ -75,24 +75,27 @@ export function ProfileSidebar({
     >
       <div className="relative flex w-full items-center border-b border-border-strong pt-6">
         {groups.map((group) => (
-          <button
-            key={group.id}
-            onClick={() => handleGroupChange(group.id)}
-            className={`flex-1 cursor-default pb-3 text-center text-[14px] transition-colors ${
-              activeGroup === group.id
-                ? 'text-content-primary'
-                : 'text-content-muted'
-            }`}
-          >
-            {group.label}
-          </button>
+          <div key={group.id} className="flex flex-1 justify-center px-2">
+            <button
+              onClick={() => handleGroupChange(group.id)}
+              className={`relative cursor-default pb-3 text-center text-[14px] transition-colors ${
+                activeGroup === group.id
+                  ? 'text-content-primary'
+                  : 'text-content-muted'
+              }`}
+            >
+              {group.label}
+            </button>
+          </div>
         ))}
         <div
-          className="absolute bottom-[-1px] left-0 h-[1px] w-1/2 bg-action-primary transition-transform duration-300 ease-in-out"
+          className="absolute bottom-[-1px] left-0 flex h-[1px] w-1/2 justify-center transition-transform duration-300 ease-in-out"
           style={{
             transform: activeGroup === 'profile' ? 'translateX(0%)' : 'translateX(100%)',
           }}
-        />
+        >
+          <div className="w-[80px] bg-action-primary" />
+        </div>
       </div>
 
       <div className="scrollbar-hide flex flex-1 flex-col overflow-y-auto py-4">
