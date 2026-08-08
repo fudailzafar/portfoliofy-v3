@@ -28,10 +28,10 @@ export function Exhibitions({
         {visibleExhibitions.map((exhibition) => (
           <div
             key={exhibition.id || exhibition.title}
-            className="flex flex-col gap-1 sm:flex-row sm:gap-12 print:mb-6"
+            className="flex flex-col gap-1 sm:flex-row sm:gap-[36px] print:mb-6"
           >
             {/* Left column: Year */}
-            <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-32">
+            <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-[94px]">
               {exhibition.year}
             </div>
 

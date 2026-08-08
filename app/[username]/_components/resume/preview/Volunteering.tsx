@@ -26,11 +26,11 @@ export function Volunteering({ volunteering }: VolunteeringProps) {
         {visibleVolunteering.map((v) => (
           <div
             key={v.id}
-            className="flex flex-col gap-1 sm:flex-row sm:gap-12 print:mb-6"
+            className="flex flex-col gap-1 sm:flex-row sm:gap-[36px] print:mb-6"
           >
             {/* Year Column */}
             <div
-              className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-32"
+              className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-[94px]"
               aria-label={`From ${v.startYear} to ${v.endYear}`}
             >
               {v.startYear} — {v.endYear}
