@@ -110,7 +110,7 @@ export const FullResume = ({
 
   return (
     <section
-      className="mx-auto my-8 w-full max-w-xl space-y-8 bg-theme-bg px-6 md:px-4 print:space-y-4"
+      className="mx-auto my-8 w-full max-w-[540px] space-y-8 bg-theme-bg px-6 sm:px-0 print:space-y-4"
       aria-label="Resume Content"
     >
       <Header
