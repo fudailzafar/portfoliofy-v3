@@ -28,9 +28,9 @@ export function Education({
   }
 
   return (
-    <section className="mb-12 print:mb-8">
+    <section className="mb-9 print:mb-8">
       <h2
-        className="mb-8 text-sm font-bold text-theme-primary print:mb-4"
+        className="mb-6 text-sm font-bold text-theme-primary print:mb-4"
         id="education-section"
       >
         Education
