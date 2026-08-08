@@ -15,9 +15,9 @@ export function Skills({ skills, className }: SkillsProps) {
   if (!skills || skills.length === 0) return null;
 
   return (
-    <section className={cn('mb-12 print:mb-8', className)}>
+    <section className={cn('mb-9 print:mb-8', className)}>
       <h2
-        className="mb-8 text-sm font-bold text-theme-primary print:mb-4"
+        className="mb-6 text-sm font-bold text-theme-primary print:mb-4"
         id="skills-section"
       >
         Skills
