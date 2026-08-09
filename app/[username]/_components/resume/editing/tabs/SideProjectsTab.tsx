@@ -4,6 +4,7 @@ import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
 import { FormInput } from '@/components/ui/form-input';
 import { SortButtons } from '../SortButtons';
+import { EditorListItem } from '../shared/EditorListItem';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { AttachmentsPreview } from '../../preview/AttachmentsPreview';

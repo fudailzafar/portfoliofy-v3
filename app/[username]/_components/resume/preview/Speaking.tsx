@@ -1,88 +1,32 @@
-import { ResumeDataSchemaType } from '@/lib/resume';
-import { AttachmentsPreview } from './AttachmentsPreview';
-import { ArrowUpRight } from 'lucide-react';
+import { ResumeDataSchemaType } from "@/lib/resume";
+import { PreviewSection } from "./shared/PreviewSection";
+import { PreviewListItem } from "./shared/PreviewListItem";
 
 export function Speaking({
   speaking,
 }: {
-  speaking?: ResumeDataSchemaType['speaking'];
+  speaking?: ResumeDataSchemaType["speaking"];
 }) {
-  const visibleSpeaking = speaking?.filter((engagement) => !engagement.hidden);
-  if (!visibleSpeaking || visibleSpeaking.length === 0) return null;
+  const validItems = speaking?.filter((item) => !item.hidden) || [];
+
+  if (validItems.length === 0) {
+    return null;
+  }
 
   return (
-    <section className="mb-9 print:mb-8">
-      <h2
-        className="mb-6 text-sm font-bold text-theme-primary print:mb-4"
-        id="speaking-section"
-      >
-        Speaking
-      </h2>
-      <div
-        className="ml-6 flex flex-col gap-8 sm:ml-0"
-        role="feed"
-        aria-labelledby="speaking-section"
-      >
-        {visibleSpeaking.map((engagement) => (
-          <div
-            key={engagement.id || engagement.title}
-            className="flex flex-col gap-1 sm:flex-row sm:gap-[36px] print:mb-6"
-          >
-            {/* Left column: Year */}
-            <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-[94px]">
-              {engagement.year}
-            </div>
-
-            {/* Right column: Content */}
-            <div className="flex flex-1 flex-col items-start justify-start">
-              <div className="group flex items-center gap-1">
-                {engagement.link ? (
-                  <a
-                    href={
-                      engagement.link.startsWith('http')
-                        ? engagement.link
-                        : `https://${engagement.link}`
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-theme-primary hover:underline hover:underline-offset-4"
-                  >
-                    <span className="text-sm font-semibold">
-                      {engagement.title}
-                      {engagement.organization
-                        ? ` at ${engagement.organization}`
-                        : ''}
-                      <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
-                    </span>
-                  </a>
-                ) : (
-                  <p className="text-sm font-semibold text-theme-primary">
-                    {engagement.title}
-                    {engagement.organization
-                      ? ` at ${engagement.organization}`
-                      : ''}
-                  </p>
-                )}
-              </div>
-
-              {engagement.location && (
-                <div className="text-sm text-theme-secondary">
-                  {engagement.location}
-                </div>
-              )}
-
-              {engagement.description &&
-                engagement.description !== '<p></p>' && (
-                  <div
-                    className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-2 max-w-none text-sm text-theme-secondary prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ul:my-1 prose-ul:text-theme-secondary prose-li:text-theme-secondary"
-                    dangerouslySetInnerHTML={{ __html: engagement.description }}
-                  />
-                )}
-              <AttachmentsPreview attachments={engagement.attachments} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
+    <PreviewSection id="speaking-section" title="Speaking">
+      {validItems.map((item, idx) => (
+        <PreviewListItem
+          key={item.id || idx}
+          leftContent={item.year}
+          title={item.title}
+          subtitle={item.organization ? `at \${item.organization}` : undefined}
+          link={item.link}
+          location={undefined}
+          description={item.description}
+          attachments={item.attachments}
+        />
+      ))}
+    </PreviewSection>
   );
 }
