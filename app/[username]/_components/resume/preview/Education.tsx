@@ -1,100 +1,32 @@
-import { ResumeDataSchemaType } from '@/lib/resume';
-import { AttachmentsPreview } from './AttachmentsPreview';
-import { useMemo } from 'react';
+import { ResumeDataSchemaType } from "@/lib/resume";
+import { PreviewSection } from "./shared/PreviewSection";
+import { PreviewListItem } from "./shared/PreviewListItem";
 
-import { ArrowUpRight } from 'lucide-react';
-
-/**
- * Main education section component
- * Renders a list of education experiences in a two-column layout
- */
 export function Education({
   educations,
 }: {
-  educations: ResumeDataSchemaType['education'];
+  educations?: ResumeDataSchemaType["education"];
 }) {
-  // Filter out invalid education entries
-  const validEducations = useMemo(
-    () =>
-      educations?.filter(
-        (edu) =>
-          edu.school && edu.degree && edu.start && edu.end && !edu.hidden,
-      ) || [],
-    [educations],
-  );
+  const validItems = educations?.filter((item) => item.school && item.degree && item.end && !item.hidden) || [];
 
-  if (validEducations.length === 0) {
+  if (validItems.length === 0) {
     return null;
   }
 
   return (
-    <section className="mb-9 print:mb-8">
-      <h2
-        className="mb-6 text-sm font-bold text-theme-primary print:mb-4"
-        id="education-section"
-      >
-        Education
-      </h2>
-      <div
-        className="ml-6 flex flex-col gap-8 sm:ml-0"
-        role="feed"
-        aria-labelledby="education-section"
-      >
-        {validEducations.map((edu, idx) => (
-          <div
-            key={edu.id || idx}
-            className="flex flex-col gap-1 sm:flex-row sm:gap-[36px] print:mb-6"
-          >
-            {/* Left column: Years */}
-            <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-[94px]">
-              {edu.start ? `${edu.start} — ${edu.end}` : edu.end}
-            </div>
-
-            {/* Right column: Content */}
-            <div className="flex flex-1 flex-col items-start justify-start">
-              <div className="group flex items-center gap-1">
-                {edu.link ? (
-                  <a
-                    href={
-                      edu.link.startsWith('http')
-                        ? edu.link
-                        : `https://${edu.link}`
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-theme-primary hover:underline hover:underline-offset-4"
-                  >
-                    <span className="text-sm font-semibold">
-                      {edu.degree} at {edu.school}
-                      <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
-                    </span>
-                  </a>
-                ) : (
-                  <p className="text-sm font-semibold text-theme-primary">
-                    {edu.degree} at {edu.school}
-                  </p>
-                )}
-              </div>
-
-              {edu.location && (
-                <p className="mt-1 text-sm text-theme-secondary">
-                  {edu.location}
-                </p>
-              )}
-
-              {edu.description && edu.description !== '<p></p>' && (
-                <div
-                  className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-1 max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ul:my-1 prose-ul:text-content-muted prose-li:text-content-muted"
-                  dangerouslySetInnerHTML={{
-                    __html: edu.description,
-                  }}
-                />
-              )}
-              <AttachmentsPreview attachments={edu.attachments} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
+    <PreviewSection id="education-section" title="Education">
+      {validItems.map((item, idx) => (
+        <PreviewListItem
+          key={item.id || idx}
+          leftContent={item.start ? `\${item.start} — \${item.end}` : item.end}
+          title={item.degree}
+          subtitle={`at \${item.school}`}
+          link={item.link}
+          location={undefined}
+          description={item.description}
+          attachments={item.attachments}
+        />
+      ))}
+    </PreviewSection>
   );
 }
