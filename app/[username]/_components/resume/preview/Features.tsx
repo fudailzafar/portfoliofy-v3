@@ -20,7 +20,7 @@ export function Features({
           key={item.id || idx}
           leftContent={item.year}
           title={item.title}
-          subtitle={item.location ? `by \${item.location}` : undefined}
+          subtitle={item.location ? `by ${item.location}` : undefined}
           link={item.link}
           location={undefined}
           description={item.description}

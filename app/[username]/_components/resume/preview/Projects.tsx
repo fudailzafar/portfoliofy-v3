@@ -20,7 +20,7 @@ export function Projects({
           key={item.id || idx}
           leftContent={item.year}
           title={item.title}
-          subtitle={item.company ? `at \${item.company}` : undefined}
+          subtitle={item.company ? `at ${item.company}` : undefined}
           link={item.link}
           location={undefined}
           description={item.description}

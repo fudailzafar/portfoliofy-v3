@@ -20,7 +20,7 @@ export function Writing({
           key={item.id || idx}
           leftContent={item.year}
           title={item.title}
-          subtitle={item.publication ? `in \${item.publication}` : undefined}
+          subtitle={item.publication ? `in ${item.publication}` : undefined}
           link={item.link}
           location={undefined}
           description={item.description}
