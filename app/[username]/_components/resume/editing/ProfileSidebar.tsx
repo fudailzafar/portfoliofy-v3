@@ -11,7 +11,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
 import { cn } from '@/lib/utils';
 import { SortableSidebarItem } from './SortableSidebarItem';
 import { SidebarButton } from './SidebarButton';
@@ -114,7 +114,7 @@ export function ProfileSidebar({
               sensors={sensors}
               collisionDetection={closestCenter}
               onDragEnd={onDragEnd}
-              modifiers={[restrictToVerticalAxis]}
+              modifiers={[restrictToVerticalAxis, restrictToParentElement]}
             >
               <div className="flex flex-col">
                 <SortableContext
