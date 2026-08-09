@@ -20,7 +20,7 @@ export function Certifications({
           key={item.id || idx}
           leftContent={item.year}
           title={item.title}
-          subtitle={item.issuer ? `from \${item.issuer}` : undefined}
+          subtitle={item.issuer ? `from ${item.issuer}` : undefined}
           link={item.link}
           location={undefined}
           description={item.description}

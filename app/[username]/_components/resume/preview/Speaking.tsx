@@ -20,7 +20,7 @@ export function Speaking({
           key={item.id || idx}
           leftContent={item.year}
           title={item.title}
-          subtitle={item.organization ? `at \${item.organization}` : undefined}
+          subtitle={item.organization ? `at ${item.organization}` : undefined}
           link={item.link}
           location={undefined}
           description={item.description}

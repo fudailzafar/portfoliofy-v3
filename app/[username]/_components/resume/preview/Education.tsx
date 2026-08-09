@@ -18,9 +18,9 @@ export function Education({
       {validItems.map((item, idx) => (
         <PreviewListItem
           key={item.id || idx}
-          leftContent={item.start ? `\${item.start} — \${item.end}` : item.end}
+          leftContent={item.start ? `${item.start} — ${item.end}` : item.end}
           title={item.degree}
-          subtitle={`at \${item.school}`}
+          subtitle={`at ${item.school}`}
           link={item.link}
           location={undefined}
           description={item.description}
