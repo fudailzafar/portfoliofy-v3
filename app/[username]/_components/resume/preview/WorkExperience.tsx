@@ -18,9 +18,9 @@ export function WorkExperience({
       {validItems.map((item, idx) => (
         <PreviewListItem
           key={item.id || idx}
-          leftContent={`\${item.start} — \${item.end || "Now"}`}
+          leftContent={`${item.start} — ${item.end || "Now"}`}
           title={item.title}
-          subtitle={`at \${item.company}`}
+          subtitle={`at ${item.company}`}
           link={item.link}
           location={item.location}
           description={item.description}

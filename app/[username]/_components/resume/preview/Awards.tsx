@@ -20,7 +20,7 @@ export function Awards({
           key={item.id || idx}
           leftContent={item.year}
           title={item.title}
-          subtitle={item.issuer ? `by \${item.issuer}` : undefined}
+          subtitle={item.issuer ? `by ${item.issuer}` : undefined}
           link={item.link}
           location={undefined}
           description={item.description}

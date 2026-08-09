@@ -18,9 +18,9 @@ export function Volunteering({
       {validItems.map((item, idx) => (
         <PreviewListItem
           key={item.id || idx}
-          leftContent={item.startYear ? `\${item.start} — \${item.end || "Now"}` : item.endYear}
+          leftContent={item.startYear ? `${item.startYear} — ${item.endYear || "Now"}` : item.endYear}
           title={item.role}
-          subtitle={item.organization ? `at \${item.organization}` : undefined}
+          subtitle={item.organization ? `at ${item.organization}` : undefined}
           link={item.link}
           location={undefined}
           description={item.description}
