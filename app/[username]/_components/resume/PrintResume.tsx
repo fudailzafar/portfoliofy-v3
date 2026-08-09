@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { ResumeData } from '@/lib/server/dbActions';
 import { sortByDateDesc, normalizeSectionOrder } from '@/lib/resume';
 import { cn } from '@/lib/utils';
+import { PrintListItem } from './print/PrintListItem';
 
 export const PrintResume = ({
   resume,
@@ -115,28 +116,13 @@ export const PrintResume = ({
                   'awards',
                   'Awards',
                   sortedAwards.map((award: any) => (
-                    <div
+                    <PrintListItem
                       key={award.id || award.title}
-                      className="flex items-baseline gap-4"
-                    >
-                      <div className="w-24 shrink-0 text-sm text-black">
-                        {award.year}
-                      </div>
-                      <div>
-                        <p className="text-sm">
-                          {award.title} from {award.issuer}
-                        </p>
-                        {award.description &&
-                          award.description !== '<p></p>' && (
-                            <div
-                              className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-2 max-w-none text-sm text-black prose-p:my-1"
-                              dangerouslySetInnerHTML={{
-                                __html: award.description,
-                              }}
-                            />
-                          )}
-                      </div>
-                    </div>
+                      leftContent={award.year}
+                      title={award.title}
+                      subtitle={`from ${award.issuer}`}
+                      description={award.description}
+                    />
                   )),
                 )}
               </div>
@@ -149,27 +135,13 @@ export const PrintResume = ({
                   'certifications',
                   'Certifications',
                   sortedCertifications.map((cert: any) => (
-                    <div
+                    <PrintListItem
                       key={cert.id || cert.title}
-                      className="flex items-baseline gap-4"
-                    >
-                      <div className="w-24 shrink-0 text-sm text-black">
-                        {cert.year}
-                      </div>
-                      <div>
-                        <p className="text-sm">
-                          {cert.title} from {cert.issuer}
-                        </p>
-                        {cert.description && cert.description !== '<p></p>' && (
-                          <div
-                            className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-2 max-w-none text-sm text-black prose-p:my-1"
-                            dangerouslySetInnerHTML={{
-                              __html: cert.description,
-                            }}
-                          />
-                        )}
-                      </div>
-                    </div>
+                      leftContent={cert.year}
+                      title={cert.title}
+                      subtitle={`from ${cert.issuer}`}
+                      description={cert.description}
+                    />
                   )),
                 )}
               </div>
@@ -182,30 +154,14 @@ export const PrintResume = ({
                   'work',
                   'Work Experience',
                   sortedWork.map((w: any) => (
-                    <div
+                    <PrintListItem
                       key={w.id || w.company}
-                      className="flex items-baseline gap-4"
-                    >
-                      <div className="w-24 shrink-0 text-sm text-black">
-                        {w.start} — {w.end}
-                      </div>
-                      <div>
-                        <p className="text-sm">
-                          {w.title} at {w.company}
-                        </p>
-                        {w.location && (
-                          <p className="mt-0.5 text-sm text-black">
-                            {w.location}
-                          </p>
-                        )}
-                        {w.description && w.description !== '<p></p>' && (
-                          <div
-                            className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-2 max-w-none text-sm text-black prose-p:my-1"
-                            dangerouslySetInnerHTML={{ __html: w.description }}
-                          />
-                        )}
-                      </div>
-                    </div>
+                      leftContent={`${w.start} — ${w.end}`}
+                      title={w.title}
+                      subtitle={`at ${w.company}`}
+                      location={w.location}
+                      description={w.description}
+                    />
                   )),
                 )}
               </div>
@@ -218,23 +174,12 @@ export const PrintResume = ({
                   'projects',
                   'Projects',
                   sortedProjects.map((p: any) => (
-                    <div
+                    <PrintListItem
                       key={p.id || p.title}
-                      className="flex items-baseline gap-4"
-                    >
-                      <div className="w-24 shrink-0 text-sm text-black">
-                        {p.year}
-                      </div>
-                      <div>
-                        <p className="text-sm">{p.title}</p>
-                        {p.description && p.description !== '<p></p>' && (
-                          <div
-                            className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-2 max-w-none text-sm text-black prose-p:my-1"
-                            dangerouslySetInnerHTML={{ __html: p.description }}
-                          />
-                        )}
-                      </div>
-                    </div>
+                      leftContent={p.year}
+                      title={p.title}
+                      description={p.description}
+                    />
                   )),
                 )}
               </div>
@@ -247,23 +192,12 @@ export const PrintResume = ({
                   'side_projects',
                   'Side Projects',
                   sortedSideProjects.map((p: any) => (
-                    <div
+                    <PrintListItem
                       key={p.id || p.title}
-                      className="flex items-baseline gap-4"
-                    >
-                      <div className="w-24 shrink-0 text-sm text-black">
-                        {p.year}
-                      </div>
-                      <div>
-                        <p className="text-sm">{p.title}</p>
-                        {p.description && p.description !== '<p></p>' && (
-                          <div
-                            className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-2 max-w-none text-sm text-black prose-p:my-1"
-                            dangerouslySetInnerHTML={{ __html: p.description }}
-                          />
-                        )}
-                      </div>
-                    </div>
+                      leftContent={p.year}
+                      title={p.title}
+                      description={p.description}
+                    />
                   )),
                 )}
               </div>
@@ -276,26 +210,13 @@ export const PrintResume = ({
                   'features',
                   'Features',
                   sortedFeatures.map((f: any) => (
-                    <div
+                    <PrintListItem
                       key={f.id || f.title}
-                      className="flex items-baseline gap-4"
-                    >
-                      <div className="w-24 shrink-0 text-sm text-black">
-                        {f.year}
-                      </div>
-                      <div>
-                        <p className="text-sm">
-                          {f.title}
-                          {f.location ? ` on ${f.location}` : ''}
-                        </p>
-                        {f.description && f.description !== '<p></p>' && (
-                          <div
-                            className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-2 max-w-none text-sm text-black prose-p:my-1"
-                            dangerouslySetInnerHTML={{ __html: f.description }}
-                          />
-                        )}
-                      </div>
-                    </div>
+                      leftContent={f.year}
+                      title={f.title}
+                      subtitle={f.location ? `on ${f.location}` : undefined}
+                      description={f.description}
+                    />
                   )),
                 )}
               </div>
@@ -308,24 +229,13 @@ export const PrintResume = ({
                   'volunteering',
                   'Volunteering',
                   sortedVolunteering.map((v: any) => (
-                    <div
+                    <PrintListItem
                       key={v.id || v.organization}
-                      className="flex items-baseline gap-4"
-                    >
-                      <div className="w-24 shrink-0 text-sm text-black">
-                        {v.startYear} — {v.endYear}
-                      </div>
-                      <div>
-                        <p className="text-sm">
-                          {v.role} at {v.organization}
-                        </p>
-                        {v.location && (
-                          <p className="mt-0.5 text-sm text-black">
-                            {v.location}
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                      leftContent={`${v.startYear} — ${v.endYear}`}
+                      title={v.role}
+                      subtitle={`at ${v.organization}`}
+                      location={v.location}
+                    />
                   )),
                 )}
               </div>
@@ -338,20 +248,12 @@ export const PrintResume = ({
                   'speaking',
                   'Speaking',
                   sortedSpeaking.map((s: any) => (
-                    <div
+                    <PrintListItem
                       key={s.id || s.title}
-                      className="flex items-baseline gap-4"
-                    >
-                      <div className="w-24 shrink-0 text-sm text-black">
-                        {s.year}
-                      </div>
-                      <div>
-                        <p className="text-sm">
-                          {s.title}
-                          {s.location ? ` at ${s.location}` : ''}
-                        </p>
-                      </div>
-                    </div>
+                      leftContent={s.year}
+                      title={s.title}
+                      subtitle={s.location ? `at ${s.location}` : undefined}
+                    />
                   )),
                 )}
               </div>
@@ -364,26 +266,13 @@ export const PrintResume = ({
                   'writing',
                   'Writing',
                   sortedWriting.map((s: any) => (
-                    <div
+                    <PrintListItem
                       key={s.id || s.title}
-                      className="flex items-baseline gap-4"
-                    >
-                      <div className="w-24 shrink-0 text-sm text-black">
-                        {s.year}
-                      </div>
-                      <div>
-                        <p className="text-sm">
-                          {s.title}
-                          {s.publication ? `, ${s.publication}` : ''}
-                        </p>
-                        {s.description && s.description !== '<p></p>' && (
-                          <div
-                            className="mt-1 text-sm text-black"
-                            dangerouslySetInnerHTML={{ __html: s.description }}
-                          />
-                        )}
-                      </div>
-                    </div>
+                      leftContent={s.year}
+                      title={s.title}
+                      subtitle={s.publication ? `, ${s.publication}` : undefined}
+                      description={s.description}
+                    />
                   )),
                 )}
               </div>
@@ -396,31 +285,14 @@ export const PrintResume = ({
                   'exhibitions',
                   'Exhibitions',
                   sortedExhibitions.map((s: any) => (
-                    <div
+                    <PrintListItem
                       key={s.id || s.title}
-                      className="flex items-baseline gap-4"
-                    >
-                      <div className="w-24 shrink-0 text-sm text-black">
-                        {s.year}
-                      </div>
-                      <div>
-                        <p className="text-sm">
-                          {s.title}
-                          {s.organization ? ` at ${s.organization}` : ''}
-                        </p>
-                        {s.location && (
-                          <p className="mt-0.5 text-sm text-black">
-                            {s.location}
-                          </p>
-                        )}
-                        {s.description && s.description !== '<p></p>' && (
-                          <div
-                            className="mt-1 text-sm text-black"
-                            dangerouslySetInnerHTML={{ __html: s.description }}
-                          />
-                        )}
-                      </div>
-                    </div>
+                      leftContent={s.year}
+                      title={s.title}
+                      subtitle={s.organization ? `at ${s.organization}` : undefined}
+                      location={s.location}
+                      description={s.description}
+                    />
                   )),
                 )}
               </div>
@@ -433,30 +305,14 @@ export const PrintResume = ({
                   'education',
                   'Education',
                   sortedEducation.map((e: any) => (
-                    <div
+                    <PrintListItem
                       key={e.id || e.school}
-                      className="flex items-baseline gap-4"
-                    >
-                      <div className="w-24 shrink-0 text-sm text-black">
-                        {e.start} — {e.end}
-                      </div>
-                      <div>
-                        <p className="text-sm">
-                          {e.degree} at {e.school}
-                        </p>
-                        {e.location && (
-                          <p className="mt-0.5 text-sm text-black">
-                            {e.location}
-                          </p>
-                        )}
-                        {e.description && e.description !== '<p></p>' && (
-                          <div
-                            className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-2 max-w-none text-sm text-black prose-p:my-1"
-                            dangerouslySetInnerHTML={{ __html: e.description }}
-                          />
-                        )}
-                      </div>
-                    </div>
+                      leftContent={`${e.start} — ${e.end}`}
+                      title={e.degree}
+                      subtitle={`at ${e.school}`}
+                      location={e.location}
+                      description={e.description}
+                    />
                   )),
                 )}
               </div>
