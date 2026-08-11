@@ -107,8 +107,10 @@ export default async function ProfilePage({
   const isSubdomainView =
     (hostname.endsWith('.portfoliofy.me') && hostname !== 'www.portfoliofy.me') ||
     (hostname.endsWith('.localhost') && hostname !== 'localhost');
-  const isCustomDomain = username.includes('.') || isSubdomainView;
-  const isOwner = userId === user_id && !isCustomDomain;
+  // True for custom domains (abaan.lol) and subdomains (fidel.portfoliofy.me);
+  // false for the default portfoliofy.me/username path.
+  const isPersonalDomainView = username.includes('.') || isSubdomainView;
+  const isOwner = userId === user_id && !isPersonalDomainView;
 
   return (
     <div className="flex min-h-screen flex-col font-sans">
@@ -142,6 +144,10 @@ export default async function ProfilePage({
               profilePicture={profilePicture}
               isOwner={false}
               userProfile={userProfile || undefined}
+              hideSocialFeatures={
+                isPersonalDomainView &&
+                !!resume?.resumeData?.design?.hideSocialFeatures
+              }
             />
           </div>
         )}
