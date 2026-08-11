@@ -70,13 +70,28 @@ export default async function middleware(req: NextRequest) {
     'camera=(), microphone=(), geolocation=()',
   );
 
+  // Next.js injects inline hydration scripts, and framer-motion writes inline
+  // styles, so 'unsafe-inline' is still required for both. 'unsafe-eval' is
+  // only needed by dev-mode HMR/React Refresh and is dropped in production.
+  // Removing 'unsafe-inline' from script-src requires nonce plumbing through
+  // the NextAuth middleware branch below — tracked as follow-up work.
+  const scriptSrc = [
+    `'self'`,
+    `'unsafe-inline'`,
+    ...(process.env.NODE_ENV === 'development' ? [`'unsafe-eval'`] : []),
+    'https://accounts.google.com',
+    'https://*.vercel-insights.com',
+    'https://vercel.live',
+    'https://www.googletagmanager.com',
+  ].join(' ');
+
   const csp = [
     `default-src 'self'`,
-    `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.vercel-insights.com https://vercel.live`,
+    `script-src ${scriptSrc}`,
     `style-src 'self' 'unsafe-inline'`,
     `img-src 'self' data: blob: https://api.dicebear.com https://lh3.googleusercontent.com https://*.amazonaws.com https://*.s3.amazonaws.com https://cdn.jsdelivr.net https://*.cloudfront.net`,
     `font-src 'self' data:`,
-    `connect-src 'self' https://accounts.google.com https://*.vercel-insights.com https://*.amazonaws.com https://*.s3.amazonaws.com`,
+    `connect-src 'self' https://accounts.google.com https://*.vercel-insights.com https://*.amazonaws.com https://*.s3.amazonaws.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com`,
     `frame-src https://accounts.google.com`,
     `frame-ancestors 'none'`,
     `base-uri 'self'`,
@@ -84,7 +99,7 @@ export default async function middleware(req: NextRequest) {
     `object-src 'none'`,
   ].join('; ');
 
-  res.headers.set('Content-Security-Policy-Report-Only', csp);
+  res.headers.set('Content-Security-Policy', csp);
 
   return res;
 }
