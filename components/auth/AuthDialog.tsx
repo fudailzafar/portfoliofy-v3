@@ -50,7 +50,7 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={handleGoogleSignIn}
-                className="flex h-11 w-full items-center justify-center gap-3 rounded-md border border-border-strong bg-surface-1 px-4 text-sm font-medium text-content-primary shadow-sm outline-none transition-colors hover:bg-surface-2"
+                className="flex h-11 w-full items-center justify-center gap-3 rounded-md border border-border-strong bg-surface-1 px-4 text-sm font-medium text-content-primary shadow-sm outline-none ring-offset-background transition-colors hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 {/* Google SVG Icon */}
                 <svg
