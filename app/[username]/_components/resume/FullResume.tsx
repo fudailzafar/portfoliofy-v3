@@ -40,11 +40,13 @@ export const FullResume = ({
   profilePicture,
   isOwner,
   userProfile,
+  hideSocialFeatures = false,
 }: {
   resume: ResumeData;
   profilePicture?: string;
   isOwner?: boolean;
   userProfile?: UserProfile;
+  hideSocialFeatures?: boolean;
 }) => {
   const order = normalizeSectionOrder(resume.sectionOrder);
 
@@ -118,7 +120,7 @@ export const FullResume = ({
         picture={profilePicture}
         isOwner={isOwner}
         userProfile={userProfile}
-        hideSocialFeatures={resume.design?.hideSocialFeatures}
+        hideSocialFeatures={hideSocialFeatures}
       />
 
       <div className="flex flex-col gap-6">
