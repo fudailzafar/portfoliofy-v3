@@ -508,7 +508,7 @@ export function EditProfileDialog({
                   left: '80px',
                   zIndex: 50,
                 }}
-                className="flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm outline-none transition-colors print:hidden"
+                className="flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 print:hidden"
               >
                 <Pencil
                   className="h-[18px] w-[18px] text-content-primary"

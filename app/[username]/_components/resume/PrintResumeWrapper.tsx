@@ -25,10 +25,16 @@ export function PrintResumeWrapper({
         : 'font-sans';
 
   return (
-    <PrintResume
-      resume={displayResume}
-      printHiddenSections={printHiddenSections}
-      className={cn('hidden print:block print:bg-surface-1', fontClass)}
-    />
+    // aria-hidden: this tree duplicates the on-screen resume (name, headings,
+    // etc.) and is only ever visually shown via the print stylesheet — left
+    // exposed to the accessibility tree it doubles up headings for screen
+    // reader users on every normal page visit.
+    <div aria-hidden="true">
+      <PrintResume
+        resume={displayResume}
+        printHiddenSections={printHiddenSections}
+        className={cn('hidden print:block print:bg-surface-1', fontClass)}
+      />
+    </div>
   );
 }
