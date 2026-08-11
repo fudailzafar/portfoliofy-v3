@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { isReversedRange } from './validation/dates';
+import { isValidWebsite } from './validation/url';
 
 export const DEFAULT_SECTION_ORDER = [
   'work',
@@ -80,7 +82,13 @@ const HeaderSection = z.object({
     .string()
     .describe("Preferred pronouns (e.g., 'He/Him')")
     .optional(),
-  website: z.string().describe('Personal website link').optional(),
+  website: z
+    .string()
+    .describe('Personal website link')
+    .optional()
+    .refine((val) => !val || isValidWebsite(val), {
+      message: 'Enter a valid web address',
+    }),
   skills: z
     .array(z.string())
     .describe('Skills used within the different jobs the user has had.'),
@@ -113,6 +121,9 @@ const WorkExperienceSection = z.array(
     description: z.string().describe('Job description'),
     hidden: z.boolean().optional().default(false),
     attachments: z.array(AttachmentSchema).optional().default([]),
+  }).refine((data) => !isReversedRange(data.start, data.end), {
+    message: "End year can't be earlier than the start year",
+    path: ['end'],
   }),
 );
 
@@ -134,6 +145,9 @@ const EducationSection = z.array(
       .describe('Rich text description of education'),
     hidden: z.boolean().optional().default(false),
     attachments: z.array(AttachmentSchema).optional().default([]),
+  }).refine((data) => !isReversedRange(data.start, data.end), {
+    message: "End year can't be earlier than the start year",
+    path: ['end'],
   }),
 );
 
@@ -240,6 +254,9 @@ const VolunteeringSection = z.array(
       .describe('Rich text description of the volunteering engagement'),
     hidden: z.boolean().optional().default(false),
     attachments: z.array(AttachmentSchema).optional().default([]),
+  }).refine((data) => !isReversedRange(data.startYear, data.endYear), {
+    message: "End year can't be earlier than the start year",
+    path: ['endYear'],
   }),
 );
 

@@ -93,6 +93,7 @@ export function Header({
                     <button
                       id="status-toggle-btn"
                       onClick={() => setIsEditingStatus((prev) => !prev)}
+                      aria-label="Set status"
                       className="absolute -bottom-1 -right-2 flex h-7 w-10 items-center justify-center rounded-full border border-theme-border bg-theme-bg text-sm text-theme-primary shadow-sm transition-transform hover:scale-105"
                     >
                       <Twemoji

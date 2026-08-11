@@ -27,10 +27,12 @@ export async function generateMetadata({
   const { user_id, resume } = await getUserData(username);
 
   if (!user_id) {
-    return {
-      title: 'Page Not Found | Portfoliofy',
-      description: 'This page could not be found on Portfoliofy.',
-    };
+    // Calling notFound() here (not just in the page body below) matters:
+    // generateMetadata resolves before the page component renders, and if
+    // it returns normally, Next commits to a 200 status before the page's
+    // own notFound() call gets a chance to override it — producing a
+    // "soft 404" (correct not-found content, wrong HTTP status).
+    notFound();
   }
 
 

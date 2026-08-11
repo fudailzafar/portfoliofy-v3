@@ -62,7 +62,6 @@ export const FullResume = ({
   const sortedAwards = sortByDateDesc(resume.awards);
   const sortedCertifications = sortByDateDesc(resume.certifications);
 
-  // TEMPORARY OVERRIDE FOR TESTING: Change this to `true` to see the empty state always
   const isEmptyProfile =
     (!resume.summary || resume.summary.trim() === '') &&
     resume.workExperience.length === 0 &&

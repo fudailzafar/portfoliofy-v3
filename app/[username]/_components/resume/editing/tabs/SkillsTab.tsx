@@ -61,7 +61,7 @@ export function SkillsTab() {
                 <span className="mr-2">{skill}</span>
                 <button
                   onClick={() => handleRemoveSkill(index)}
-                  className="flex items-center justify-center rounded-full text-content-muted transition-colors hover:text-content-secondary focus:outline-none"
+                  className="flex items-center justify-center rounded-full text-content-muted transition-colors hover:text-content-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-surface-card"
                   aria-label={`Remove ${skill}`}
                 >
                   <svg
