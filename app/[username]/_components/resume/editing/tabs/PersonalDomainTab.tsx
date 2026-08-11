@@ -35,7 +35,9 @@ export function PersonalDomainTab({ username }: { username: string }) {
         setCustomDomain('');
         setDomainStatus(null);
       }
-    } catch {}
+    } catch (error) {
+      console.error('Failed to fetch domain status:', error);
+    }
     setIsVerifyingDomain(false);
   };
 
