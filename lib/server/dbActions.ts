@@ -212,20 +212,29 @@ export const updateUsername = async (
   }
 };
 
+export type SetCustomDomainResult =
+  | { success: true }
+  | { success: false; reason: 'taken' | 'error' };
+
 export const setCustomDomain = async (
   userId: string,
   domain: string,
-): Promise<boolean> => {
+): Promise<SetCustomDomainResult> => {
   try {
     await sql`
-      UPDATE users 
-      SET custom_domain = ${domain} 
+      UPDATE users
+      SET custom_domain = ${domain}
       WHERE id = ${userId}
     `;
-    return true;
+    return { success: true };
   } catch (error: any) {
+    if (error.code === '23505') {
+      // users.custom_domain has a UNIQUE constraint — this is the hard
+      // backstop against two users racing to claim the same domain.
+      return { success: false, reason: 'taken' };
+    }
     console.error('Failed to set custom domain:', error);
-    return false;
+    return { success: false, reason: 'error' };
   }
 };
 

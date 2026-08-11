@@ -4,6 +4,7 @@ import {
   setCustomDomain,
   removeCustomDomain,
   getCustomDomainByUserId,
+  getUserIdByCustomDomain,
 } from '@/lib/server/dbActions';
 
 const VERCEL_API_TOKEN = process.env.VERCEL_API_TOKEN;
@@ -114,6 +115,16 @@ export async function POST(req: Request) {
 
     const cleanDomain = domain.toLowerCase().trim();
 
+    // Reject up front if the domain is already claimed by a different
+    // account — fails fast, before we spend a Vercel API call on it.
+    const ownerId = await getUserIdByCustomDomain(cleanDomain);
+    if (ownerId && ownerId !== session.user.id) {
+      return NextResponse.json(
+        { error: 'This domain is already connected to another account' },
+        { status: 409 },
+      );
+    }
+
     // Check if user already has a domain, if so, remove it first from Vercel
     const existingDomain = await getCustomDomainByUserId(session.user.id);
     if (existingDomain && existingDomain !== cleanDomain) {
@@ -142,12 +153,19 @@ export async function POST(req: Request) {
       );
     }
 
-    // Save to our DB
-    const dbSuccess = await setCustomDomain(session.user.id, cleanDomain);
-    if (!dbSuccess) {
+    // Save to our DB. The UNIQUE constraint on users.custom_domain is the
+    // hard backstop against a race with another request claiming the same
+    // domain between the check above and this write.
+    const result = await setCustomDomain(session.user.id, cleanDomain);
+    if (!result.success) {
       return NextResponse.json(
-        { error: 'Failed to save domain in database' },
-        { status: 500 },
+        {
+          error:
+            result.reason === 'taken'
+              ? 'This domain is already connected to another account'
+              : 'Failed to save domain in database',
+        },
+        { status: result.reason === 'taken' ? 409 : 500 },
       );
     }
 
