@@ -2,6 +2,7 @@ import sql from './db';
 import { ResumeDataSchema } from '@/lib/resume';
 import { z } from 'zod';
 import { PRIVATE_ROUTES } from '../routes';
+import { sanitizeResumeData } from './sanitize';
 
 const FORBIDDEN_USERNAMES = PRIVATE_ROUTES;
 
@@ -66,12 +67,16 @@ export async function storeResume(
   try {
     const validatedData = ResumeSchema.parse(resumeData);
 
+    // Strip untrusted markup before it ever reaches the database, so every
+    // render path (public profile, print view, editor preview) is safe.
+    const safeResumeData = sanitizeResumeData(validatedData.resumeData);
+
     // We stringify the JSON parts
     const fileJson = validatedData.file
       ? JSON.stringify(validatedData.file)
       : null;
-    const resumeDataJson = validatedData.resumeData
-      ? JSON.stringify(validatedData.resumeData)
+    const resumeDataJson = safeResumeData
+      ? JSON.stringify(safeResumeData)
       : null;
 
     await sql`
