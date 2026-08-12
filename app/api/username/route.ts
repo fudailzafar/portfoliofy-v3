@@ -42,11 +42,18 @@ export async function POST(
     }
 
     const oldUsername = await getUsernameById(session.user.id);
-    const success = await updateUsername(session.user.id, username);
+    const result = await updateUsername(session.user.id, username);
 
-    if (!success) {
+    if (!result.success) {
+      const messages: Record<typeof result.reason, string> = {
+        invalid:
+          'Username must be 2-30 characters: lowercase letters, numbers, and hyphens only',
+        reserved: 'This username is reserved',
+        taken: 'Username already taken',
+        error: 'Failed to update username',
+      };
       return NextResponse.json(
-        { error: 'Username already taken' },
+        { error: messages[result.reason] },
         { status: 400 },
       );
     }

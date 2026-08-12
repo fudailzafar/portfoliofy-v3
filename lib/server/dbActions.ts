@@ -1,10 +1,14 @@
 import sql from './db';
 import { ResumeDataSchema } from '@/lib/resume';
 import { z } from 'zod';
-import { PRIVATE_ROUTES } from '../routes';
+import { RESERVED_USERNAMES } from '../routes';
 import { sanitizeResumeData } from './sanitize';
+import {
+  normalizeUsername,
+  isValidUsernameFormat,
+} from '../validation/username';
 
-const FORBIDDEN_USERNAMES = PRIVATE_ROUTES;
+const FORBIDDEN_USERNAMES = RESERVED_USERNAMES;
 
 // Define the file schema
 const FileSchema = z.object({
@@ -117,7 +121,11 @@ export const createUsernameLookup = async ({
   email?: string | null;
   image?: string | null;
 }): Promise<boolean> => {
-  if (FORBIDDEN_USERNAMES.includes(username.toLowerCase())) {
+  const normalized = normalizeUsername(username);
+  if (
+    !isValidUsernameFormat(normalized) ||
+    FORBIDDEN_USERNAMES.includes(normalized)
+  ) {
     return false;
   }
 
@@ -125,7 +133,7 @@ export const createUsernameLookup = async ({
     // Insert into users. If id or username already exists, it will throw a unique constraint error.
     await sql`
       INSERT INTO users (id, username, name, email, image)
-      VALUES (${userId}, ${username}, ${name || null}, ${email || null}, ${image || null})
+      VALUES (${userId}, ${normalized}, ${name || null}, ${email || null}, ${image || null})
     `;
     return true;
   } catch (error: any) {
@@ -153,7 +161,8 @@ export const getUserIdByUsername = async (
   username: string,
 ): Promise<string | null> => {
   try {
-    const [row] = await sql`SELECT id FROM users WHERE username = ${username}`;
+    const [row] =
+      await sql`SELECT id FROM users WHERE username = ${normalizeUsername(username)}`;
     return row?.id || null;
   } catch (error) {
     return null;
@@ -165,10 +174,14 @@ export const checkUsernameAvailability = async (
 ): Promise<{
   available: boolean;
 }> => {
-  if (FORBIDDEN_USERNAMES.includes(username.toLowerCase())) {
+  const normalized = normalizeUsername(username);
+  if (
+    !isValidUsernameFormat(normalized) ||
+    FORBIDDEN_USERNAMES.includes(normalized)
+  ) {
     return { available: false };
   }
-  const userId = await getUserIdByUsername(username);
+  const userId = await getUserIdByUsername(normalized);
   return { available: !userId };
 };
 
@@ -192,28 +205,37 @@ export const deleteUser = async (opts: {
   }
 };
 
+export type UpdateUsernameResult =
+  | { success: true }
+  | { success: false; reason: 'invalid' | 'reserved' | 'taken' | 'error' };
+
 export const updateUsername = async (
   userId: string,
   newUsername: string,
-): Promise<boolean> => {
-  if (FORBIDDEN_USERNAMES.includes(newUsername.toLowerCase())) {
-    return false;
+): Promise<UpdateUsernameResult> => {
+  const normalized = normalizeUsername(newUsername);
+  if (!isValidUsernameFormat(normalized)) {
+    return { success: false, reason: 'invalid' };
+  }
+  if (FORBIDDEN_USERNAMES.includes(normalized)) {
+    return { success: false, reason: 'reserved' };
   }
 
   try {
     const result = await sql`
-      UPDATE users 
-      SET username = ${newUsername} 
+      UPDATE users
+      SET username = ${normalized}
       WHERE id = ${userId}
     `;
-    return result.count > 0;
+    return result.count > 0
+      ? { success: true }
+      : { success: false, reason: 'error' };
   } catch (error: any) {
     if (error.code === '23505') {
-      // Username already taken
-      return false;
+      return { success: false, reason: 'taken' };
     }
     console.error('Username update failed:', error);
-    return false;
+    return { success: false, reason: 'error' };
   }
 };
 
