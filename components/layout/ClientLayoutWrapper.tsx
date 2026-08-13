@@ -106,7 +106,7 @@ export function ClientLayoutWrapper({
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Menu"
-                className="flex size-[50px] flex-col items-center justify-center gap-1 rounded-full border border-border-strong bg-surface-1 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1"
+                className="flex size-[48px] flex-col items-center justify-center gap-1 rounded-full border border-border-strong bg-surface-1 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1"
               >
                 {/* 3 lines menu icon */}
                 <div className="flex flex-col gap-[5px]">

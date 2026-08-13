@@ -38,14 +38,24 @@ export function PreviewListItem({
             >
               <span className="text-sm font-semibold">
                 {title}
-                {subtitle && <span className="font-normal text-theme-primary"> {subtitle}</span>}
+                {subtitle && (
+                  <span className="font-normal text-theme-primary">
+                    {' '}
+                    {subtitle}
+                  </span>
+                )}
                 <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
               </span>
             </a>
           ) : (
             <p className="text-sm font-semibold text-theme-primary">
               {title}
-              {subtitle && <span className="font-normal text-theme-primary"> {subtitle}</span>}
+              {subtitle && (
+                <span className="font-normal text-theme-primary">
+                  {' '}
+                  {subtitle}
+                </span>
+              )}
             </p>
           )}
         </div>
@@ -54,7 +64,7 @@ export function PreviewListItem({
 
         {description && description !== '<p></p>' && (
           <div
-            className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-4 max-w-none text-sm leading-relaxed text-theme-secondary prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ul:my-1 prose-ul:text-theme-secondary prose-li:text-theme-secondary"
+            className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:pl-0 prose-li:text-theme-secondary"
             dangerouslySetInnerHTML={{ __html: description }}
           />
         )}
