@@ -102,7 +102,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
   return (
     <div className="mx-auto flex max-w-2xl flex-col">
       <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-xl sm:text-2xl font-bold text-content-primary">
+        <h2 className="text-xl font-bold text-content-primary sm:text-2xl">
           Personal Domain
         </h2>
         <a
@@ -121,7 +121,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
 
       <div className="space-y-10">
         {/* Custom Domain */}
-        <div className="space-y-6 w-full min-w-0">
+        <div className="w-full min-w-0 space-y-6">
           <div className="flex flex-col gap-4">
             <div className="space-y-1">
               <h4 className="text-[14px] text-content-primary">
@@ -378,14 +378,14 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   label: 'Default',
                   description: 'Classic grayscale.',
                   bg: '#ffffff',
-                  fg: '#111827',
-                  border: '#e5e7eb',
+                  fg: '#111111',
+                  border: '#e5e5e5',
                 },
                 {
                   value: 'brutalist',
                   label: 'Brutalist',
                   description: 'Raw internet materials.',
-                  bg: '#b6b6b6',
+                  bg: '#bbbbbb',
                   fg: '#000000',
                   border: 'transparent',
                 },
@@ -393,7 +393,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   value: 'swiss',
                   label: 'Swiss',
                   description: 'International typographic style.',
-                  bg: '#e3583d',
+                  bg: '#e25336',
                   fg: '#ffffff',
                   border: 'transparent',
                 },
@@ -401,7 +401,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   value: 'klein',
                   label: 'Klein',
                   description: 'International Klein Blue.',
-                  bg: '#1538a7',
+                  bg: '#002fa7',
                   fg: '#ffffff',
                   border: 'transparent',
                 },
@@ -409,24 +409,32 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   value: 'red',
                   label: 'Red',
                   description: 'Radiates energy.',
-                  bg: '#fcf4f0',
-                  fg: '#ea5b4d',
+                  bg: '#fdf2f1',
+                  fg: '#e50800',
                   border: 'transparent',
                 },
                 {
                   value: 'green',
                   label: 'Green',
                   description: 'Lush and leafy.',
-                  bg: '#eff8eb',
-                  fg: '#4fa847',
+                  bg: '#edfced',
+                  fg: '#008000',
                   border: 'transparent',
                 },
                 {
                   value: 'blue',
                   label: 'Blue',
                   description: 'Da ba dee da ba di.',
-                  bg: '#eaf3fa',
-                  fg: '#267efb',
+                  bg: '#edf5fd',
+                  fg: '#0066cc',
+                  border: 'transparent',
+                },
+                {
+                  value: 'albers',
+                  label: 'Albers',
+                  description: 'Interaction of Color.',
+                  bg: '#f7e3ea',
+                  fg: '#4c3e51',
                   border: 'transparent',
                 },
               ] as const
