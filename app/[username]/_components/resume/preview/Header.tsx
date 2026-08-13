@@ -73,7 +73,7 @@ export function Header({
       <header className="flex items-center gap-4 md:gap-6">
         {!hideSocialFeatures && (
           <div className="relative">
-            <Avatar className="size-20 shrink-0 md:size-24" aria-hidden="true">
+            <Avatar className="size-[92px] shrink-0" aria-hidden="true">
               <AvatarImage
                 src={picture}
                 alt={`${header.name}'s profile picture`}
@@ -185,7 +185,7 @@ export function Header({
       {!isEditingStatus && !hideSocialFeatures && currentStatus.text && (
         <div className="relative mt-4 flex w-full flex-col gap-1 rounded-3xl border border-theme-border bg-theme-bg px-6 py-[18px] shadow-sm">
           {/* Speech Bubble Tail */}
-          <div className="absolute -top-[6px] left-[64px] h-3 w-3 rotate-45 rounded-tl-sm border-l border-t border-theme-border bg-theme-bg md:left-[80px]" />
+          <div className="absolute -top-[11px] left-[64px] h-3 w-3 rotate-45 rounded-tl-sm border-l border-t border-theme-border bg-theme-bg max-[480px]:left-[72px]" />
           <span className="text-sm text-theme-primary">
             {currentStatus.text}
           </span>

@@ -29,10 +29,10 @@ export function Contact({
         {visibleContacts.map((contact) => (
           <div
             key={contact.id || contact.platform}
-            className="flex flex-col gap-0 sm:flex-row sm:gap-[36px] print:mb-6"
+            className="flex flex-col gap-0 min-[481px]:flex-row min-[481px]:gap-[36px] print:mb-6"
           >
             {/* Left column: Platform */}
-            <div className="shrink-0 pt-0.5 text-sm text-theme-secondary sm:w-[94px]">
+            <div className="shrink-0 pt-0.5 text-sm text-theme-secondary min-[481px]:w-[94px]">
               {contact.platform}
             </div>
 
