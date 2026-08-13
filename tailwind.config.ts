@@ -26,6 +26,10 @@ const config: Config = {
         extrabold: '400',
         black: '400',
       },
+      fontSize: {
+        xs: ['0.75rem', '1.6'],
+        sm: ['0.875rem', '1.6'],
+      },
       colors: {
         theme: {
           bg: 'var(--theme-bg)',
