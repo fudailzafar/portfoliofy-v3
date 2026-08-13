@@ -97,58 +97,62 @@ const HeaderSection = z.object({
 const SummarySection = z.string().describe('Summary of your profile');
 
 const WorkExperienceSection = z.array(
-  z.object({
-    id: z
-      .string()
-      .optional()
-      .describe('Unique identifier for the work experience'),
-    company: z.string().describe('Company name'),
-    link: z.string().optional().describe('Company website URL'),
-    location: z
-      .string()
-      .describe(
-        "Location with format 'City, Country' or could be Hybrid or Remote",
-      ),
-    contract: z
-      .string()
-      .optional()
-      .describe('Type of work contract like Full-time, Part-time, Contract'),
-    title: z.string().describe('Job title'),
-    startMonth: z.string().optional().describe('Start month'),
-    start: z.string().describe('Start year'),
-    endMonth: z.string().optional().describe('End month'),
-    end: z.string().optional().nullable().describe("End year or 'Now'"),
-    description: z.string().describe('Job description'),
-    hidden: z.boolean().optional().default(false),
-    attachments: z.array(AttachmentSchema).optional().default([]),
-  }).refine((data) => !isReversedRange(data.start, data.end), {
-    message: "End year can't be earlier than the start year",
-    path: ['end'],
-  }),
+  z
+    .object({
+      id: z
+        .string()
+        .optional()
+        .describe('Unique identifier for the work experience'),
+      company: z.string().describe('Company name'),
+      link: z.string().optional().describe('Company website URL'),
+      location: z
+        .string()
+        .describe(
+          "Location with format 'City, Country' or could be Hybrid or Remote",
+        ),
+      contract: z
+        .string()
+        .optional()
+        .describe('Type of work contract like Full-time, Part-time, Contract'),
+      title: z.string().describe('Job title'),
+      startMonth: z.string().optional().describe('Start month'),
+      start: z.string().describe('Start year'),
+      endMonth: z.string().optional().describe('End month'),
+      end: z.string().optional().nullable().describe("End year or 'Now'"),
+      description: z.string().describe('Job description'),
+      hidden: z.boolean().optional().default(false),
+      attachments: z.array(AttachmentSchema).optional().default([]),
+    })
+    .refine((data) => !isReversedRange(data.start, data.end), {
+      message: "End year can't be earlier than the start year",
+      path: ['end'],
+    }),
 );
 
 const EducationSection = z.array(
-  z.object({
-    id: z
-      .string()
-      .optional()
-      .describe('Unique identifier for the education entry'),
-    school: z.string().describe('School or university name'),
-    degree: z.string().describe('Degree or certification obtained'),
-    start: z.string().describe('Start year'),
-    end: z.string().describe('End year'),
-    link: z.string().optional().describe('Link to the school or program'),
-    location: z.string().optional().describe('Location of the school'),
-    description: z
-      .string()
-      .optional()
-      .describe('Rich text description of education'),
-    hidden: z.boolean().optional().default(false),
-    attachments: z.array(AttachmentSchema).optional().default([]),
-  }).refine((data) => !isReversedRange(data.start, data.end), {
-    message: "End year can't be earlier than the start year",
-    path: ['end'],
-  }),
+  z
+    .object({
+      id: z
+        .string()
+        .optional()
+        .describe('Unique identifier for the education entry'),
+      school: z.string().describe('School or university name'),
+      degree: z.string().describe('Degree or certification obtained'),
+      start: z.string().describe('Start year'),
+      end: z.string().describe('End year'),
+      link: z.string().optional().describe('Link to the school or program'),
+      location: z.string().optional().describe('Location of the school'),
+      description: z
+        .string()
+        .optional()
+        .describe('Rich text description of education'),
+      hidden: z.boolean().optional().default(false),
+      attachments: z.array(AttachmentSchema).optional().default([]),
+    })
+    .refine((data) => !isReversedRange(data.start, data.end), {
+      message: "End year can't be earlier than the start year",
+      path: ['end'],
+    }),
 );
 
 const ProjectSection = z.array(
@@ -237,27 +241,29 @@ const FeaturesSection = z.array(
 );
 
 const VolunteeringSection = z.array(
-  z.object({
-    id: z
-      .string()
-      .optional()
-      .describe('Unique identifier for the volunteering engagement'),
-    role: z.string().describe('Role or title'),
-    organization: z.string().describe('Organization or place'),
-    startYear: z.string().describe('Start year'),
-    endYear: z.string().describe('End year'),
-    location: z.string().optional().describe('Location'),
-    link: z.string().optional().describe('Link to organization or role'),
-    description: z
-      .string()
-      .optional()
-      .describe('Rich text description of the volunteering engagement'),
-    hidden: z.boolean().optional().default(false),
-    attachments: z.array(AttachmentSchema).optional().default([]),
-  }).refine((data) => !isReversedRange(data.startYear, data.endYear), {
-    message: "End year can't be earlier than the start year",
-    path: ['endYear'],
-  }),
+  z
+    .object({
+      id: z
+        .string()
+        .optional()
+        .describe('Unique identifier for the volunteering engagement'),
+      role: z.string().describe('Role or title'),
+      organization: z.string().describe('Organization or place'),
+      startYear: z.string().describe('Start year'),
+      endYear: z.string().describe('End year'),
+      location: z.string().optional().describe('Location'),
+      link: z.string().optional().describe('Link to organization or role'),
+      description: z
+        .string()
+        .optional()
+        .describe('Rich text description of the volunteering engagement'),
+      hidden: z.boolean().optional().default(false),
+      attachments: z.array(AttachmentSchema).optional().default([]),
+    })
+    .refine((data) => !isReversedRange(data.startYear, data.endYear), {
+      message: "End year can't be earlier than the start year",
+      path: ['endYear'],
+    }),
 );
 
 const AwardsSection = z.array(
@@ -356,13 +362,18 @@ export const ResumeDataSchema = z.object({
           'red',
           'green',
           'blue',
+          'albers',
         ])
         .optional()
         .default('default'),
       hideSocialFeatures: z.boolean().optional().default(false),
     })
     .optional()
-    .default({ typography: 'sans', theme: 'default', hideSocialFeatures: false }),
+    .default({
+      typography: 'sans',
+      theme: 'default',
+      hideSocialFeatures: false,
+    }),
 });
 
 export type ResumeDataSchemaType = z.infer<typeof ResumeDataSchema>;
