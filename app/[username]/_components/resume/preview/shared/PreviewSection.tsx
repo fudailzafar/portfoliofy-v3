@@ -18,7 +18,7 @@ export function PreviewSection({
         {title}
       </h2>
       <div
-        className="ml-6 flex flex-col gap-8 sm:ml-0"
+        className="ml-4 flex flex-col gap-8 min-[481px]:ml-0"
         role="feed"
         aria-labelledby={id}
       >
