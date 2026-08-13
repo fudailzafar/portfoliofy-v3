@@ -22,7 +22,7 @@ export function Summary({ summary }: AboutProps) {
         About
       </h2>
       <div
-        className="prose prose-sm ml-6 max-w-none text-pretty text-sm text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:pl-0 prose-li:text-theme-secondary sm:ml-0 print:text-[12px]"
+        className="prose prose-sm ml-4 max-w-none text-pretty text-sm text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:pl-0 prose-li:text-theme-secondary min-[481px]:ml-0 print:text-[12px]"
         aria-labelledby="about-section"
         dangerouslySetInnerHTML={{ __html: summary }}
       />
