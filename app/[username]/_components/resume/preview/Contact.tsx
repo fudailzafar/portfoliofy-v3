@@ -38,17 +38,19 @@ export function Contact({
 
             {/* Right column: Content */}
             <div className="flex flex-1 flex-col items-start justify-start">
-              <a
-                href={buildContactUrl(contact.link, contact.platform)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-block text-theme-primary hover:underline hover:underline-offset-4"
-              >
-                <span className="text-sm font-semibold">
-                  {extractUsername(contact.link, contact.platform)}
-                  <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
-                </span>
-              </a>
+              <div className="group">
+                <a
+                  href={buildContactUrl(contact.link, contact.platform)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-theme-primary hover:underline hover:decoration-1 hover:underline-offset-2"
+                >
+                  <span className="text-sm font-semibold">
+                    {extractUsername(contact.link, contact.platform)}
+                  </span>
+                </a>
+                <ArrowUpRight className="ml-0.5 inline-block h-3 w-3 shrink-0 align-baseline text-theme-primary" />
+              </div>
             </div>
           </div>
         ))}
