@@ -62,6 +62,15 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  icons: {
+    other: [
+      {
+        rel: 'mask-icon',
+        url: '/mask-icon.svg',
+        color: '#000000',
+      },
+    ],
+  },
   openGraph: {
     title: 'Portfoliofy - Mindful professional profiles',
     description:
@@ -98,11 +107,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID || 'G-B99MN9ZMBL';
-  
+
   const headersList = await require('next/headers').headers();
   const rawHostname = headersList.get('host') || '';
   const hostname = rawHostname.split(':')[0]; // Strip port for local testing
-  const isMainDomain = hostname === 'portfoliofy.me' || hostname === 'www.portfoliofy.me';
+  const isMainDomain =
+    hostname === 'portfoliofy.me' || hostname === 'www.portfoliofy.me';
   const isVercelDomain = hostname.endsWith('.vercel.app');
   const isLocalhost = hostname.includes('localhost');
   const isCustomDomain = !isMainDomain && !isVercelDomain && !isLocalhost;
