@@ -28,13 +28,13 @@ export function PreviewListItem({
       </div>
 
       <div className="flex flex-1 flex-col items-start justify-start">
-        <div className="group flex items-center gap-1">
+        <div className="group">
           {link ? (
             <a
               href={link.startsWith('http') ? link : `https://${link}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-theme-primary hover:underline hover:underline-offset-4"
+              className="text-theme-primary hover:underline hover:decoration-1 hover:underline-offset-2"
             >
               <span className="text-sm font-semibold">
                 {title}
@@ -44,7 +44,6 @@ export function PreviewListItem({
                     {subtitle}
                   </span>
                 )}
-                <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4" />
               </span>
             </a>
           ) : (
@@ -58,13 +57,16 @@ export function PreviewListItem({
               )}
             </p>
           )}
+          {link && (
+            <ArrowUpRight className="ml-0.5 inline-block h-3 w-3 shrink-0 align-baseline text-theme-primary" />
+          )}
         </div>
 
         {location && <p className="text-sm text-theme-secondary">{location}</p>}
 
         {description && description !== '<p></p>' && (
           <div
-            className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:pl-0 prose-li:text-theme-secondary"
+            className="prose prose-sm max-w-none text-sm leading-relaxed text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:pl-0 prose-li:text-theme-secondary"
             dangerouslySetInnerHTML={{ __html: description }}
           />
         )}
