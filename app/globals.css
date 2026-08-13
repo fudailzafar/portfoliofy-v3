@@ -119,6 +119,7 @@
   html,
   body {
     @apply bg-surface-1 text-content-primary;
+    overscroll-behavior-y: none;
   }
 }
 
