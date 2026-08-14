@@ -2,6 +2,7 @@ export { ContactsTab } from './ContactsTab';
 export { EducationTab } from './EducationTab';
 export { FeaturesTab } from './FeaturesTab';
 export { GeneralTab } from './GeneralTab';
+export { InsightsTab } from './InsightsTab';
 export { PersonalDomainTab } from './PersonalDomainTab';
 export { ProjectsTab } from './ProjectsTab';
 export { SettingsTab } from './SettingsTab';

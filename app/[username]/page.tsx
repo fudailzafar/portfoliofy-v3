@@ -6,6 +6,8 @@ import { getUserData } from './utils';
 import { getOptimizedImageUrl } from '@/lib/utils';
 import { auth } from '@/auth';
 import dynamic from 'next/dynamic';
+import { after } from 'next/server';
+import { recordPageView } from '@/lib/server/dbActions';
 
 const EditProfileDialog = dynamic(() =>
   import('@/app/[username]/_components/resume/editing/EditProfileDialog').then(
@@ -34,7 +36,6 @@ export async function generateMetadata({
     // "soft 404" (correct not-found content, wrong HTTP status).
     notFound();
   }
-
 
   if (!resume?.resumeData || resume.status !== 'live') {
     return {
@@ -83,6 +84,8 @@ export default async function ProfilePage({
   if (!resume?.resumeData || resume.status !== 'live')
     redirect(`/?idNotFound=${user_id}`);
 
+  after(() => recordPageView(user_id, username.includes('.')));
+
   const rawProfilePicture = userProfile?.avatarUrl || userProfile?.image;
   const profilePicture = getOptimizedImageUrl(rawProfilePicture) || '';
 
@@ -103,11 +106,12 @@ export default async function ProfilePage({
     skills: resume.resumeData.header.skills,
   };
 
-  const headersList = await import('next/headers').then(m => m.headers());
+  const headersList = await import('next/headers').then((m) => m.headers());
   const hostHeader = headersList.get('host') || '';
   const hostname = hostHeader.split(':')[0];
   const isSubdomainView =
-    (hostname.endsWith('.portfoliofy.me') && hostname !== 'www.portfoliofy.me') ||
+    (hostname.endsWith('.portfoliofy.me') &&
+      hostname !== 'www.portfoliofy.me') ||
     (hostname.endsWith('.localhost') && hostname !== 'localhost');
   // True for custom domains (abaan.lol) and subdomains (fidel.portfoliofy.me);
   // false for the default portfoliofy.me/username path.
