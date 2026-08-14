@@ -302,3 +302,56 @@ export const getUserIdByCustomDomain = async (
     return null;
   }
 };
+
+export const recordPageView = async (
+  userId: string,
+  viaCustomDomain: boolean,
+): Promise<void> => {
+  try {
+    await sql`
+      INSERT INTO page_views (user_id, via_custom_domain)
+      VALUES (${userId}, ${viaCustomDomain})
+    `;
+  } catch (error) {
+    // Best-effort; a tracking write should never break the page render.
+    console.error('Failed to record page view:', error);
+  }
+};
+
+export type PageViewRange = 'week' | 'month' | 'year' | 'all';
+
+export const getPageViewSeries = async (
+  userId: string,
+  range: PageViewRange,
+  viaCustomDomain: boolean,
+): Promise<{ date: string; views: number }[]> => {
+  try {
+    const startExpr =
+      range === 'week'
+        ? sql`now() - interval '7 days'`
+        : range === 'month'
+          ? sql`now() - interval '30 days'`
+          : range === 'year'
+            ? sql`now() - interval '365 days'`
+            : sql`COALESCE((SELECT min(viewed_at) FROM page_views WHERE user_id = ${userId}), now())`;
+
+    const rows = await sql`
+      SELECT gs.day::date::text AS date, count(pv.id) AS views
+      FROM generate_series((${startExpr})::timestamptz, now(), '1 day') AS gs(day)
+      LEFT JOIN page_views pv
+        ON pv.user_id = ${userId}
+        AND pv.via_custom_domain = ${viaCustomDomain}
+        AND date_trunc('day', pv.viewed_at) = date_trunc('day', gs.day)
+      GROUP BY gs.day
+      ORDER BY gs.day
+    `;
+
+    return rows.map((row) => ({
+      date: row.date,
+      views: Number(row.views),
+    }));
+  } catch (error) {
+    console.error('Failed to get page view series:', error);
+    return [];
+  }
+};

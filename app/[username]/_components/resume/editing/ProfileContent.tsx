@@ -12,6 +12,7 @@ import {
   FeaturesTab,
   ContactsTab,
   PersonalDomainTab,
+  InsightsTab,
   PrintTab,
   SettingsTab,
   AwardsTab,
@@ -45,6 +46,7 @@ interface ProfileContentProps {
 
 const TAB_TITLES: Record<string, string> = {
   general: 'Personal Domain',
+  insights: 'Insights',
   workExperience: 'Work Experience',
   education: 'Education',
   projects: 'Projects',
@@ -83,7 +85,7 @@ export function ProfileContent({
   return (
     <div
       className={cn(
-        'relative h-full flex-1 flex-col bg-surface-1 min-w-0',
+        'relative h-full min-w-0 flex-1 flex-col bg-surface-1',
         !showMobileMenu ? 'flex' : 'hidden sm:flex',
       )}
     >
@@ -197,6 +199,7 @@ export function ProfileContent({
         {activeTab === 'personal_domain' && (
           <PersonalDomainTab username={username} />
         )}
+        {activeTab === 'insights' && <InsightsTab />}
         {activeTab === 'settings' && (
           <SettingsTab
             onDeleteAccount={() => setShowDeleteAccountWarning(true)}
