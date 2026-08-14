@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { auth } from '@/auth';
 import { getUsernameById } from '@/lib/server/dbActions';
 import { ClaimDialog } from '@/components/auth/ClaimDialog';
-import { Grab } from 'lucide-react';
+import { Grab, MousePointer2 } from 'lucide-react';
 
 const ResumePaper = ({ className }: { className?: string }) => (
   <div
@@ -74,11 +74,11 @@ export default async function Home() {
     <div className="flex min-h-screen flex-col bg-surface-1">
       {needsClaim && <ClaimDialog />}
       <main className="flex flex-1 flex-col items-center font-sans text-content-primary">
-        <div className="flex w-full max-w-[500px] flex-col gap-6 px-6 pb-32 pt-24">
+        <div className="flex w-full max-w-[540px] flex-col gap-6 px-6 pb-32 pt-24">
           {/* Hero Section */}
           <HomeHero />
           {/* Feature 1: Create a beautiful profile */}
-          <div className="relative flex h-[340px] flex-col overflow-hidden rounded-[24px] bg-surface-2 p-5 pb-0 sm:h-[340px] sm:p-8 sm:pb-0">
+          <div className="relative flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -93,10 +93,10 @@ export default async function Home() {
               }}
             />
             <div className="mb-8">
-              <h3 className="mb-1.5 text-[17px] font-bold text-content-primary">
+              <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-content-primary">
                 Create a beautiful profile
               </h3>
-              <p className="text-[15px] leading-snug text-content-muted">
+              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-content-muted">
                 A fun and intuitive{' '}
                 <Link
                   href="/"
@@ -111,7 +111,7 @@ export default async function Home() {
 
             {/* Mock UI */}
             <div className="relative -mx-4 flex flex-1 flex-col justify-start overflow-hidden px-4">
-              <div className="pointer-events-none absolute inset-0 z-20 "></div>
+              <div className="pointer-events-none absolute inset-0 z-20"></div>
 
               <div className="mb-4 px-4 text-[24px] tracking-tight text-content-muted">
                 Side Projects
@@ -128,7 +128,7 @@ export default async function Home() {
                   {/* Grabbing Hand SVG */}
                   <div className="absolute -bottom-6 -right-2 h-8 w-8 opacity-100">
                     <Grab
-                      className="text-white dark:text-black stroke-black dark:stroke-white"
+                      className="stroke-black text-white dark:stroke-white dark:text-black"
                       strokeWidth={1.5}
                       fill="currentColor"
                     />
@@ -145,8 +145,97 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* Feature 2: Print it out */}
-          <div className="relative flex h-[340px] flex-col overflow-hidden rounded-[24px] bg-surface-2 p-5 pb-0 sm:h-[340px] sm:p-8 sm:pb-0">
+          {/* Feature 2: Make it collaborative */}
+          <div className="relative flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
+            <style
+              dangerouslySetInnerHTML={{
+                __html: `
+              @keyframes cursor-tag {
+                0%, 20% { transform: translate(0px, 0px); }
+                50%, 70% { transform: translate(-3px, -3px); }
+                90%, 100% { transform: translate(0px, 0px); }
+              }
+              .animate-cursor-tag {
+                animation: cursor-tag 3.5s ease-in-out infinite;
+              }
+              @keyframes tag-bubble {
+                0%, 35% { opacity: 0; transform: translateY(6px) scale(0.96); }
+                50%, 75% { opacity: 1; transform: translateY(0px) scale(1); }
+                90%, 100% { opacity: 0; transform: translateY(6px) scale(0.96); }
+              }
+              .animate-tag-bubble {
+                animation: tag-bubble 3.5s ease-in-out infinite;
+              }
+            `,
+              }}
+            />
+            <div className="mb-8">
+              <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-content-primary">
+                Make it collaborative
+              </h3>
+              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-content-muted">
+                Profiles are made even richer when you tag collaborators in
+                experiences.
+              </p>
+            </div>
+
+            <div className="relative flex w-full flex-1 items-center justify-center overflow-hidden">
+              <div className="relative flex w-full max-w-[400px] flex-col justify-between gap-6 rounded-[18px] border border-border-strong bg-surface-1 p-4 shadow-xl dark:shadow-none sm:p-5">
+                <div className="relative">
+                  <div className="text-[16px] font-semibold tracking-tight text-content-primary sm:text-[20px]">
+                    Product Designer at Quip
+                  </div>
+                  <div className="text-[14px] text-content-muted sm:text-[16px]">
+                    San Francisco, CA
+                  </div>
+
+                  <div className="animate-tag-bubble bg-content-primary/80 pointer-events-none absolute left-8 top-4 whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-medium text-surface-1 shadow-lg backdrop-blur-sm">
+                    Mia Chen
+                  </div>
+                </div>
+
+                <div className="relative flex items-center gap-2">
+                  <div className="flex -space-x-2">
+                    <div className="size-7 shrink-0 overflow-hidden rounded-full bg-surface-3 ring-2 ring-surface-1 sm:size-8">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="https://api.dicebear.com/10.x/glyphs/svg?seed=Jeff"
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <div className="size-7 shrink-0 overflow-hidden rounded-full bg-surface-3 ring-2 ring-surface-1 sm:size-8">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="https://api.dicebear.com/10.x/glyphs/svg?seed=Mia"
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <div className="size-7 shrink-0 overflow-hidden rounded-full bg-surface-3 ring-2 ring-surface-1 sm:size-8">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="https://api.dicebear.com/10.x/glyphs/svg?seed=Alex"
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="animate-cursor-tag pointer-events-none">
+                    <MousePointer2
+                      className="h-4 w-4 stroke-black text-white dark:stroke-white dark:text-black"
+                      strokeWidth={1.5}
+                      fill="currentColor"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Feature 3: Print it out */}
+          <div className="relative flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -162,28 +251,26 @@ export default async function Home() {
               }}
             />
             <div className="mb-8">
-              <h3 className="mb-1.5 text-[17px] font-bold text-content-primary">
+              <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-content-primary">
                 Print it out
               </h3>
-              <p className="text-[15px] leading-snug text-content-muted">
+              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-content-muted">
                 Profiles are print ready, with optimized typography and only the
                 relevant information shown.
               </p>
             </div>
 
-            <div className="relative flex flex-1 w-full justify-center overflow-hidden">
-              {/* Fixed Stack Layers (already printed) */}
-              <ResumePaper className="absolute top-0 z-10 rotate-[-1.5deg] translate-x-1 translate-y-2 opacity-50 shadow-sm" />
-              <ResumePaper className="absolute top-0 z-10 rotate-[1.5deg] -translate-x-1 translate-y-1 shadow-sm" />
-              <ResumePaper className="absolute top-0 z-10 shadow-sm" />
+            <div className="relative flex w-full flex-1 justify-center overflow-hidden">
+              {/* Sheet underneath, peeking out slightly */}
+              <ResumePaper className="absolute top-1 z-10 shadow-sm" />
 
               {/* Printing Paper (animated) */}
               <ResumePaper className="animate-print absolute top-0 z-20 shadow-md" />
             </div>
           </div>
 
-          {/* Feature 3: Find who you're looking for */}
-          <div className="relative flex h-[340px] flex-col overflow-hidden rounded-[24px] bg-surface-2 p-5 pb-0 sm:h-[340px] sm:p-8 sm:pb-0">
+          {/* Feature 4: Find who you're looking for */}
+          <div className="relative flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -198,19 +285,19 @@ export default async function Home() {
               }}
             />
             <div className="mb-8">
-              <h3 className="mb-1.5 text-[17px] font-bold text-content-primary">
+              <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-content-primary">
                 Find who you&apos;re looking for
               </h3>
-              <p className="text-[15px] leading-snug text-content-muted">
+              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-content-muted">
                 Search by title, location, and username.
               </p>
             </div>
 
-            <div className="flex flex-1 w-full flex-col">
+            <div className="flex w-full flex-1 flex-col">
               <div className="mb-6 flex max-w-[95%] items-center rounded-full border bg-surface-1 px-3 py-2 shadow-sm dark:shadow-none sm:px-5 sm:py-3">
                 <span className="flex items-center text-[15px] font-medium tracking-tight text-content-primary sm:text-[18px]">
                   Art director
-                  <span className="animate-blink ml-0.5 inline-block h-[1.1em] w-[2px] bg-blue-500"></span>
+                  <span className="animate-blink ml-0.5 inline-block h-[1.1em] w-[2px] bg-[#0085FF]"></span>
                 </span>
               </div>
 
@@ -229,7 +316,7 @@ export default async function Home() {
                       Lauren Jochum
                     </div>
                     <div className="text-[13px] text-content-muted dark:text-content-muted sm:text-[15px]">
-                      <strong className="text-content-muted">
+                      <strong className="text-content-primary">
                         Art director
                       </strong>{' '}
                       in Berkeley
@@ -250,7 +337,7 @@ export default async function Home() {
                       Skip Hursh
                     </div>
                     <div className="text-[13px] text-content-muted dark:text-content-muted sm:text-[15px]">
-                      <strong className="text-content-muted">
+                      <strong className="text-content-primary">
                         Art director
                       </strong>{' '}
                       in NYC
@@ -261,20 +348,20 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* Feature 4: Use it anywhere */}
-          <div className="flex h-[340px] flex-col overflow-hidden rounded-[24px] bg-surface-2 p-5 pb-0 sm:h-[340px] sm:p-8 sm:pb-0">
+          {/* Feature 5: Use it anywhere */}
+          <div className="relative flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
             <div className="mb-6 sm:mb-8">
-              <h3 className="mb-1.5 text-[17px] font-bold text-content-primary">
+              <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-content-primary">
                 Use it anywhere
               </h3>
-              <p className="text-[15px] leading-snug text-content-muted">
+              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-content-muted">
                 Add your link wherever your audience is.
               </p>
             </div>
 
-            <div className="flex flex-1 w-full flex-col rounded-t-[16px] border border-b-0 border-border-strong bg-surface-1 p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] dark:shadow-none sm:p-8">
+            <div className="flex w-full flex-1 flex-col rounded-t-[16px] border border-b-0 border-border-strong bg-surface-1 p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] dark:shadow-none sm:p-8">
               <div className="mb-4 flex items-center gap-4 sm:gap-8">
-                <div className="size-[64px] shrink-0 rounded-full bg-gradient-to-tr from-[#feda75] via-[#fa7e1e] to-[#d62976] p-[2px] sm:size-[84px] sm:p-[3px]">
+                <div className="size-[64px] shrink-0 rounded-full bg-gradient-to-b from-[#9E2692] to-[#FAA958] p-[2px] sm:size-[84px] sm:p-[3px]">
                   <div className="h-full w-full rounded-full bg-surface-1 p-0.5">
                     <div className="h-full w-full overflow-hidden rounded-full bg-surface-3">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
