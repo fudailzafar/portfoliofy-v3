@@ -11,7 +11,10 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
+import {
+  restrictToVerticalAxis,
+  restrictToParentElement,
+} from '@dnd-kit/modifiers';
 import { cn } from '@/lib/utils';
 import { SortableSidebarItem } from './SortableSidebarItem';
 import { SidebarButton } from './SidebarButton';
@@ -43,7 +46,13 @@ export function ProfileSidebar({
     useSensor(KeyboardSensor),
   );
 
-  const accountTabs = ['personal_domain', 'print', 'import_data', 'settings'];
+  const accountTabs = [
+    'personal_domain',
+    'insights',
+    'print',
+    'import_data',
+    'settings',
+  ];
   const [activeGroup, setActiveGroup] = useState<'profile' | 'account'>(
     accountTabs.includes(activeTab) ? 'account' : 'profile',
   );
@@ -91,7 +100,8 @@ export function ProfileSidebar({
         <div
           className="absolute bottom-[-1px] left-0 flex h-[1px] w-1/2 justify-center transition-transform duration-300 ease-in-out"
           style={{
-            transform: activeGroup === 'profile' ? 'translateX(0%)' : 'translateX(100%)',
+            transform:
+              activeGroup === 'profile' ? 'translateX(0%)' : 'translateX(100%)',
           }}
         >
           <div className="w-[80px] bg-action-primary" />
@@ -149,6 +159,14 @@ export function ProfileSidebar({
               isActive={activeTab === 'personal_domain'}
               onClick={() => {
                 setActiveTab('personal_domain');
+                setShowMobileMenu(false);
+              }}
+            />
+            <SidebarButton
+              label="Insights"
+              isActive={activeTab === 'insights'}
+              onClick={() => {
+                setActiveTab('insights');
                 setShowMobileMenu(false);
               }}
             />
