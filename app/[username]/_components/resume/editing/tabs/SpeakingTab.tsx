@@ -287,15 +287,6 @@ export function SpeakingTab({
                 }
               />
             </div>
-            <SectionAttachments
-              attachments={currentSpeaking.attachments || []}
-              onChange={(val) =>
-                setCurrentSpeaking({
-                  ...currentSpeaking,
-                  attachments: val,
-                })
-              }
-            />
             <CollaboratorsField
               label="Collaborators"
               value={currentSpeaking.collaborators || []}
@@ -303,6 +294,15 @@ export function SpeakingTab({
                 setCurrentSpeaking({
                   ...currentSpeaking,
                   collaborators: val,
+                })
+              }
+            />
+            <SectionAttachments
+              attachments={currentSpeaking.attachments || []}
+              onChange={(val) =>
+                setCurrentSpeaking({
+                  ...currentSpeaking,
+                  attachments: val,
                 })
               }
             />

@@ -291,15 +291,6 @@ export function ExhibitionsTab({
                 }
               />
             </div>
-            <SectionAttachments
-              attachments={currentExhibition.attachments || []}
-              onChange={(val) =>
-                setCurrentExhibition({
-                  ...currentExhibition,
-                  attachments: val,
-                })
-              }
-            />
             <CollaboratorsField
               label="Collaborators"
               value={currentExhibition.collaborators || []}
@@ -307,6 +298,15 @@ export function ExhibitionsTab({
                 setCurrentExhibition({
                   ...currentExhibition,
                   collaborators: val,
+                })
+              }
+            />
+            <SectionAttachments
+              attachments={currentExhibition.attachments || []}
+              onChange={(val) =>
+                setCurrentExhibition({
+                  ...currentExhibition,
+                  attachments: val,
                 })
               }
             />

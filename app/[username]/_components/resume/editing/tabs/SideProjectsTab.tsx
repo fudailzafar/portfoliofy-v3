@@ -258,15 +258,6 @@ export function SideProjectsTab({
                 }
               />
             </div>
-            <SectionAttachments
-              attachments={currentSideProject.attachments || []}
-              onChange={(val) =>
-                setCurrentSideProject({
-                  ...currentSideProject,
-                  attachments: val,
-                })
-              }
-            />
             <CollaboratorsField
               label="Collaborators"
               value={currentSideProject.collaborators || []}
@@ -274,6 +265,15 @@ export function SideProjectsTab({
                 setCurrentSideProject({
                   ...currentSideProject,
                   collaborators: val,
+                })
+              }
+            />
+            <SectionAttachments
+              attachments={currentSideProject.attachments || []}
+              onChange={(val) =>
+                setCurrentSideProject({
+                  ...currentSideProject,
+                  attachments: val,
                 })
               }
             />
