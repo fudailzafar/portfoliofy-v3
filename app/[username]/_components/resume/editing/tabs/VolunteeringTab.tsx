@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { HeartHandshake } from 'lucide-react';
-import { sortByDateDesc } from '@/lib/resume';
+import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
 
 export function VolunteeringTab({
   years,
@@ -89,17 +89,8 @@ export function VolunteeringTab({
         <>
           {sortedVolunteering.map(
             (v: any, index: number, sortedArray: any[]) => {
-              const prevItem = index > 0 ? sortedArray[index - 1] : null;
-              const canMoveUp =
-                prevItem &&
-                parseInt(v.startYear || '0') ===
-                  parseInt(prevItem.startYear || '0');
-              const nextItem =
-                index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
-              const canMoveDown =
-                nextItem &&
-                parseInt(v.startYear || '0') ===
-                  parseInt(nextItem.startYear || '0');
+              const { prevItem, nextItem, canMoveUp, canMoveDown } =
+                getListAdjacency(sortedArray, index);
 
               return (
                 <EditorListItem
