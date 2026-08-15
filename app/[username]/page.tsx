@@ -8,7 +8,7 @@ import { auth } from '@/auth';
 import dynamic from 'next/dynamic';
 import { after } from 'next/server';
 import { recordPageView } from '@/lib/server/dbActions';
-import { ProfileUrlContext } from './_components/ProfileUrlContext';
+import { ProfileUrlProvider } from '@/lib/ProfileUrlContext';
 
 const EditProfileDialog = dynamic(() =>
   import('@/app/[username]/_components/resume/editing/EditProfileDialog').then(
@@ -119,15 +119,8 @@ export default async function ProfilePage({
   const isPersonalDomainView = username.includes('.') || isSubdomainView;
   const isOwner = userId === user_id && !isPersonalDomainView;
 
-  // Build the appropriate profile URL based on the current view context:
-  // - Personal domain / subdomain view → absolute subdomain URLs (username.portfoliofy.me)
-  // - Main platform view → relative paths (/username)
-  const getProfileUrl = isPersonalDomainView
-    ? (u: string) => `https://${u}.portfoliofy.me`
-    : (u: string) => `/${u}`;
-
   return (
-    <ProfileUrlContext.Provider value={getProfileUrl}>
+    <ProfileUrlProvider isPersonalDomainView={isPersonalDomainView}>
       <div className="flex min-h-screen flex-col font-sans">
         <script
           type="application/ld+json"
@@ -185,6 +178,6 @@ export default async function ProfilePage({
           isOwner={userId === user_id}
         />
       </div>
-    </ProfileUrlContext.Provider>
+    </ProfileUrlProvider>
   );
 }
