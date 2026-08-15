@@ -92,14 +92,14 @@ export function Header({
                       id="status-toggle-btn"
                       onClick={() => setIsEditingStatus((prev) => !prev)}
                       aria-label="Set status"
-                      className="absolute -bottom-1 -right-2 flex h-7 w-10 items-center justify-center rounded-full border border-theme-border bg-theme-bg text-sm text-theme-primary shadow-sm transition-transform hover:scale-105"
+                      className="absolute -bottom-1 -right-1 flex h-6 w-8 items-center justify-center rounded-full border border-theme-bg bg-theme-border text-sm text-theme-primary shadow-md transition-transform hover:scale-105"
                     >
                       <Twemoji
                         tag="span"
                         className="flex items-center justify-center leading-none"
-                        options={{ className: 'h-[1.2em] w-[1.2em]' }}
+                        options={{ className: 'h-[1em] w-[1em]' }}
                       >
-                        {currentStatus.emoji || <SmilePlus size={16} />}
+                        {currentStatus.emoji || <SmilePlus size={14} />}
                       </Twemoji>
                     </button>
                   </TooltipTrigger>
@@ -110,11 +110,11 @@ export function Header({
               </TooltipProvider>
             )}
             {!isOwner && currentStatus.emoji && (
-              <div className="absolute -bottom-1 -right-2 flex h-7 w-9 items-center justify-center rounded-full border border-theme-border bg-theme-bg text-sm text-theme-primary shadow-sm">
+              <div className="absolute -bottom-1 -right-1 flex h-6 w-8 items-center justify-center rounded-full border border-theme-bg bg-theme-border text-sm text-theme-primary shadow-md">
                 <Twemoji
                   tag="span"
                   className="flex items-center justify-center leading-none"
-                  options={{ className: 'h-[1.2em] w-[1.2em]' }}
+                  options={{ className: 'h-[1em] w-[1em]' }}
                 >
                   {currentStatus.emoji}
                 </Twemoji>
@@ -181,9 +181,21 @@ export function Header({
 
       {/* Status Display Bubble */}
       {!isEditingStatus && !hideSocialFeatures && currentStatus.text && (
-        <div className="relative mt-4 flex w-full flex-col gap-1 rounded-3xl border border-theme-border bg-theme-bg px-6 py-[18px] shadow-sm">
-          {/* Speech Bubble Tail */}
-          <div className="absolute -top-[11px] left-[64px] h-3 w-3 rotate-45 rounded-tl-sm border-l border-t border-theme-border bg-theme-bg max-[480px]:left-[72px]" />
+        <div className="relative mt-4 flex w-full flex-col gap-1 rounded-3xl bg-theme-border px-6 py-[18px] shadow-sm">
+          {/* Speech Bubble Tail — centered under the status toggle button */}
+          <svg
+            width="48"
+            height="12"
+            viewBox="0 0 48 12"
+            fill="none"
+            className="absolute -top-[10px] left-[56px]"
+            aria-hidden="true"
+          >
+            <path
+              d="M0 12V11H6C13 11 17 1 24 1C31 1 35 11 42 11H48V12H0Z"
+              className="fill-theme-border"
+            />
+          </svg>
           <span className="text-sm text-theme-primary">
             {currentStatus.text}
           </span>

@@ -102,10 +102,22 @@ export function StatusEditor({
     >
       <div
         ref={containerRef}
-        className="relative flex w-full flex-col gap-1 rounded-3xl border border-theme-border bg-theme-bg p-4 shadow-sm"
+        className="relative flex w-full flex-col gap-1 rounded-3xl bg-theme-border p-4 shadow-sm"
       >
-        {/* Speech Bubble Tail */}
-        <div className="absolute -top-[9px] left-[62px] h-4 w-4 rotate-45 rounded-tl-sm border-l border-t border-theme-border bg-theme-bg md:left-[78px]" />
+        {/* Speech Bubble Tail — centered under the status toggle button */}
+        <svg
+          width="48"
+          height="12"
+          viewBox="0 0 48 12"
+          fill="none"
+          className="absolute -top-[10px] left-[56px]"
+          aria-hidden="true"
+        >
+          <path
+            d="M0 12V11H6C13 11 17 1 24 1C31 1 35 11 42 11H48V12H0Z"
+            className="fill-theme-border"
+          />
+        </svg>
 
         <div className="flex items-start gap-3">
           <div className="relative">
