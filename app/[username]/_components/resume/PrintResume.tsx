@@ -61,6 +61,8 @@ export const PrintResume = ({
   );
   const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
 
+  const visibleContacts = contacts?.filter((c: any) => !c.hidden);
+
   if (!resume) return null;
 
   const renderSection = (
@@ -78,6 +80,206 @@ export const PrintResume = ({
       </div>
     );
   };
+
+  // Each entry's `content` mirrors what that section actually looks like on
+  // the page — the field mapping is inherently section-specific, but the
+  // guard-and-wrap boilerplate around it is not, so `order.map` below only
+  // has to do that once.
+  const sections: Record<string, { title: string; content: React.ReactNode }> =
+    {
+      awards: {
+        title: 'Awards',
+        content: awards?.length
+          ? sortedAwards.map((award: any) => (
+              <PrintListItem
+                key={award.id || award.title}
+                leftContent={award.year}
+                title={award.title}
+                subtitle={`from ${award.issuer}`}
+                description={award.description}
+              />
+            ))
+          : null,
+      },
+      certifications: {
+        title: 'Certifications',
+        content: certifications?.length
+          ? sortedCertifications.map((cert: any) => (
+              <PrintListItem
+                key={cert.id || cert.title}
+                leftContent={cert.year}
+                title={cert.title}
+                subtitle={`from ${cert.issuer}`}
+                description={cert.description}
+              />
+            ))
+          : null,
+      },
+      work: {
+        title: 'Work Experience',
+        content: workExperience?.length
+          ? sortedWork.map((w: any) => (
+              <PrintListItem
+                key={w.id || w.company}
+                leftContent={`${w.start} — ${w.end}`}
+                title={w.title}
+                subtitle={`at ${w.company}`}
+                location={w.location}
+                description={w.description}
+              />
+            ))
+          : null,
+      },
+      projects: {
+        title: 'Projects',
+        content: projects?.length
+          ? sortedProjects.map((p: any) => (
+              <PrintListItem
+                key={p.id || p.title}
+                leftContent={p.year}
+                title={p.title}
+                description={p.description}
+              />
+            ))
+          : null,
+      },
+      side_projects: {
+        title: 'Side Projects',
+        content: sideProjects?.length
+          ? sortedSideProjects.map((p: any) => (
+              <PrintListItem
+                key={p.id || p.title}
+                leftContent={p.year}
+                title={p.title}
+                description={p.description}
+              />
+            ))
+          : null,
+      },
+      features: {
+        title: 'Features',
+        content: features?.length
+          ? sortedFeatures.map((f: any) => (
+              <PrintListItem
+                key={f.id || f.title}
+                leftContent={f.year}
+                title={f.title}
+                subtitle={f.location ? `on ${f.location}` : undefined}
+                description={f.description}
+              />
+            ))
+          : null,
+      },
+      volunteering: {
+        title: 'Volunteering',
+        content: volunteering?.length
+          ? sortedVolunteering.map((v: any) => (
+              <PrintListItem
+                key={v.id || v.organization}
+                leftContent={`${v.startYear} — ${v.endYear}`}
+                title={v.role}
+                subtitle={`at ${v.organization}`}
+                location={v.location}
+              />
+            ))
+          : null,
+      },
+      speaking: {
+        title: 'Speaking',
+        content: speaking?.length
+          ? sortedSpeaking.map((s: any) => (
+              <PrintListItem
+                key={s.id || s.title}
+                leftContent={s.year}
+                title={s.title}
+                subtitle={s.location ? `at ${s.location}` : undefined}
+              />
+            ))
+          : null,
+      },
+      writing: {
+        title: 'Writing',
+        content: writing?.length
+          ? sortedWriting.map((s: any) => (
+              <PrintListItem
+                key={s.id || s.title}
+                leftContent={s.year}
+                title={s.title}
+                subtitle={s.publication ? `, ${s.publication}` : undefined}
+                description={s.description}
+              />
+            ))
+          : null,
+      },
+      exhibitions: {
+        title: 'Exhibitions',
+        content: exhibitions?.length
+          ? sortedExhibitions.map((s: any) => (
+              <PrintListItem
+                key={s.id || s.title}
+                leftContent={s.year}
+                title={s.title}
+                subtitle={s.organization ? `at ${s.organization}` : undefined}
+                location={s.location}
+                description={s.description}
+              />
+            ))
+          : null,
+      },
+      education: {
+        title: 'Education',
+        content: education?.length
+          ? sortedEducation.map((e: any) => (
+              <PrintListItem
+                key={e.id || e.school}
+                leftContent={`${e.start} — ${e.end}`}
+                title={e.degree}
+                subtitle={`at ${e.school}`}
+                location={e.location}
+                description={e.description}
+              />
+            ))
+          : null,
+      },
+      skills: {
+        title: 'Skills',
+        content: skillsList?.length ? (
+          <div className="flex flex-wrap gap-2">
+            {skillsList.map((skill: string) => (
+              <span key={skill} className="text-sm text-black">
+                {skill}
+              </span>
+            ))}
+          </div>
+        ) : null,
+      },
+      contact: {
+        title: 'Contact',
+        content: visibleContacts?.length ? (
+          <div className="flex flex-col gap-3">
+            {visibleContacts.map((c: any) => (
+              <div key={c.id || c.link} className="flex items-baseline gap-4">
+                <div className="w-24 shrink-0 text-sm capitalize text-black">
+                  {c.platform}:
+                </div>
+                <div>
+                  <a
+                    href={
+                      c.link.startsWith('mailto:') || c.link.startsWith('tel:')
+                        ? c.link
+                        : ensureHttps(c.link)
+                    }
+                    className="text-sm text-black hover:underline hover:underline-offset-4"
+                  >
+                    {c.link.replace(/^mailto:/, '').replace(/^tel:/, '')}
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null,
+      },
+    };
 
   return (
     <div
@@ -107,278 +309,13 @@ export const PrintResume = ({
 
       {/* Sections */}
       {order.map((sectionId) => {
-        switch (sectionId) {
-          case 'awards':
-            if (!awards?.length) return null;
-            return (
-              <div key="awards">
-                {renderSection(
-                  'awards',
-                  'Awards',
-                  sortedAwards.map((award: any) => (
-                    <PrintListItem
-                      key={award.id || award.title}
-                      leftContent={award.year}
-                      title={award.title}
-                      subtitle={`from ${award.issuer}`}
-                      description={award.description}
-                    />
-                  )),
-                )}
-              </div>
-            );
-          case 'certifications':
-            if (!certifications?.length) return null;
-            return (
-              <div key="certifications">
-                {renderSection(
-                  'certifications',
-                  'Certifications',
-                  sortedCertifications.map((cert: any) => (
-                    <PrintListItem
-                      key={cert.id || cert.title}
-                      leftContent={cert.year}
-                      title={cert.title}
-                      subtitle={`from ${cert.issuer}`}
-                      description={cert.description}
-                    />
-                  )),
-                )}
-              </div>
-            );
-          case 'work':
-            if (!workExperience?.length) return null;
-            return (
-              <div key="work">
-                {renderSection(
-                  'work',
-                  'Work Experience',
-                  sortedWork.map((w: any) => (
-                    <PrintListItem
-                      key={w.id || w.company}
-                      leftContent={`${w.start} — ${w.end}`}
-                      title={w.title}
-                      subtitle={`at ${w.company}`}
-                      location={w.location}
-                      description={w.description}
-                    />
-                  )),
-                )}
-              </div>
-            );
-          case 'projects':
-            if (!projects?.length) return null;
-            return (
-              <div key="projects">
-                {renderSection(
-                  'projects',
-                  'Projects',
-                  sortedProjects.map((p: any) => (
-                    <PrintListItem
-                      key={p.id || p.title}
-                      leftContent={p.year}
-                      title={p.title}
-                      description={p.description}
-                    />
-                  )),
-                )}
-              </div>
-            );
-          case 'side_projects':
-            if (!sideProjects?.length) return null;
-            return (
-              <div key="side_projects">
-                {renderSection(
-                  'side_projects',
-                  'Side Projects',
-                  sortedSideProjects.map((p: any) => (
-                    <PrintListItem
-                      key={p.id || p.title}
-                      leftContent={p.year}
-                      title={p.title}
-                      description={p.description}
-                    />
-                  )),
-                )}
-              </div>
-            );
-          case 'features':
-            if (!features?.length) return null;
-            return (
-              <div key="features">
-                {renderSection(
-                  'features',
-                  'Features',
-                  sortedFeatures.map((f: any) => (
-                    <PrintListItem
-                      key={f.id || f.title}
-                      leftContent={f.year}
-                      title={f.title}
-                      subtitle={f.location ? `on ${f.location}` : undefined}
-                      description={f.description}
-                    />
-                  )),
-                )}
-              </div>
-            );
-          case 'volunteering':
-            if (!volunteering?.length) return null;
-            return (
-              <div key="volunteering">
-                {renderSection(
-                  'volunteering',
-                  'Volunteering',
-                  sortedVolunteering.map((v: any) => (
-                    <PrintListItem
-                      key={v.id || v.organization}
-                      leftContent={`${v.startYear} — ${v.endYear}`}
-                      title={v.role}
-                      subtitle={`at ${v.organization}`}
-                      location={v.location}
-                    />
-                  )),
-                )}
-              </div>
-            );
-          case 'speaking':
-            if (!speaking?.length) return null;
-            return (
-              <div key="speaking">
-                {renderSection(
-                  'speaking',
-                  'Speaking',
-                  sortedSpeaking.map((s: any) => (
-                    <PrintListItem
-                      key={s.id || s.title}
-                      leftContent={s.year}
-                      title={s.title}
-                      subtitle={s.location ? `at ${s.location}` : undefined}
-                    />
-                  )),
-                )}
-              </div>
-            );
-          case 'writing':
-            if (!writing?.length) return null;
-            return (
-              <div key="writing">
-                {renderSection(
-                  'writing',
-                  'Writing',
-                  sortedWriting.map((s: any) => (
-                    <PrintListItem
-                      key={s.id || s.title}
-                      leftContent={s.year}
-                      title={s.title}
-                      subtitle={
-                        s.publication ? `, ${s.publication}` : undefined
-                      }
-                      description={s.description}
-                    />
-                  )),
-                )}
-              </div>
-            );
-          case 'exhibitions':
-            if (!exhibitions?.length) return null;
-            return (
-              <div key="exhibitions">
-                {renderSection(
-                  'exhibitions',
-                  'Exhibitions',
-                  sortedExhibitions.map((s: any) => (
-                    <PrintListItem
-                      key={s.id || s.title}
-                      leftContent={s.year}
-                      title={s.title}
-                      subtitle={
-                        s.organization ? `at ${s.organization}` : undefined
-                      }
-                      location={s.location}
-                      description={s.description}
-                    />
-                  )),
-                )}
-              </div>
-            );
-          case 'education':
-            if (!education?.length) return null;
-            return (
-              <div key="education">
-                {renderSection(
-                  'education',
-                  'Education',
-                  sortedEducation.map((e: any) => (
-                    <PrintListItem
-                      key={e.id || e.school}
-                      leftContent={`${e.start} — ${e.end}`}
-                      title={e.degree}
-                      subtitle={`at ${e.school}`}
-                      location={e.location}
-                      description={e.description}
-                    />
-                  )),
-                )}
-              </div>
-            );
-          case 'skills':
-            if (!skillsList?.length) return null;
-            return (
-              <div key="skills">
-                {renderSection(
-                  'skills',
-                  'Skills',
-                  <div className="flex flex-wrap gap-2">
-                    {skillsList.map((skill: string) => (
-                      <span key={skill} className="text-sm text-black">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>,
-                )}
-              </div>
-            );
-          case 'contact':
-            const visibleContacts = contacts?.filter((c: any) => !c.hidden);
-            if (!visibleContacts?.length) return null;
-            return (
-              <div key="contact">
-                {renderSection(
-                  'contact',
-                  'Contact',
-                  <div className="flex flex-col gap-3">
-                    {visibleContacts.map((c: any) => (
-                      <div
-                        key={c.id || c.link}
-                        className="flex items-baseline gap-4"
-                      >
-                        <div className="w-24 shrink-0 text-sm capitalize text-black">
-                          {c.platform}:
-                        </div>
-                        <div>
-                          <a
-                            href={
-                              c.link.startsWith('mailto:') ||
-                              c.link.startsWith('tel:')
-                                ? c.link
-                                : ensureHttps(c.link)
-                            }
-                            className="text-sm text-black hover:underline hover:underline-offset-4"
-                          >
-                            {c.link
-                              .replace(/^mailto:/, '')
-                              .replace(/^tel:/, '')}
-                          </a>
-                        </div>
-                      </div>
-                    ))}
-                  </div>,
-                )}
-              </div>
-            );
-          default:
-            return null;
-        }
+        const section = sections[sectionId];
+        if (!section) return null;
+        return (
+          <React.Fragment key={sectionId}>
+            {renderSection(sectionId, section.title, section.content)}
+          </React.Fragment>
+        );
       })}
     </div>
   );
