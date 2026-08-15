@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { sortByDateDesc } from '@/lib/resume';
+import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
 
 const months = [
   'January',
@@ -102,15 +102,8 @@ export function WorkExperienceTab({
       renderList={() => (
         <>
           {sortedWork.map((w: any, index: number, sortedArray: any[]) => {
-            const prevItem = index > 0 ? sortedArray[index - 1] : null;
-            const canMoveUp =
-              prevItem &&
-              parseInt(w.start || '0') === parseInt(prevItem.start || '0');
-            const nextItem =
-              index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
-            const canMoveDown =
-              nextItem &&
-              parseInt(w.start || '0') === parseInt(nextItem.start || '0');
+            const { prevItem, nextItem, canMoveUp, canMoveDown } =
+              getListAdjacency(sortedArray, index);
             return (
               <EditorListItem
                 key={w.id || w.company}

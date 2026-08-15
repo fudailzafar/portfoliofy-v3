@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { sortByDateDesc } from '@/lib/resume';
+import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
 
 export function AwardsTab({
   years,
@@ -82,15 +82,8 @@ export function AwardsTab({
       renderList={() => (
         <>
           {sortedAwards.map((award: any, index: number, sortedArray: any[]) => {
-            const prevItem = index > 0 ? sortedArray[index - 1] : null;
-            const canMoveUp =
-              prevItem &&
-              parseInt(award.year || '0') === parseInt(prevItem.year || '0');
-            const nextItem =
-              index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
-            const canMoveDown =
-              nextItem &&
-              parseInt(award.year || '0') === parseInt(nextItem.year || '0');
+            const { prevItem, nextItem, canMoveUp, canMoveDown } =
+              getListAdjacency(sortedArray, index);
             return (
               <EditorListItem
                 key={award.id}
