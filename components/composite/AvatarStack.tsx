@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { CollaboratorSchemaType } from '@/lib/resume';
-import { useProfileUrl } from '@/app/[username]/_components/ProfileUrlContext';
+import { useProfileUrl } from '@/lib/ProfileUrlContext';
 
 interface AvatarStackProps {
   collaborators?: CollaboratorSchemaType[];
