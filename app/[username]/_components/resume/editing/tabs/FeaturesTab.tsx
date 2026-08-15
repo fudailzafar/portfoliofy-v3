@@ -258,15 +258,6 @@ export function FeaturesTab({
                 }
               />
             </div>
-            <SectionAttachments
-              attachments={currentFeature.attachments || []}
-              onChange={(val) =>
-                setCurrentFeature({
-                  ...currentFeature,
-                  attachments: val,
-                })
-              }
-            />
             <CollaboratorsField
               label="Collaborators"
               value={currentFeature.collaborators || []}
@@ -274,6 +265,15 @@ export function FeaturesTab({
                 setCurrentFeature({
                   ...currentFeature,
                   collaborators: val,
+                })
+              }
+            />
+            <SectionAttachments
+              attachments={currentFeature.attachments || []}
+              onChange={(val) =>
+                setCurrentFeature({
+                  ...currentFeature,
+                  attachments: val,
                 })
               }
             />

@@ -278,15 +278,6 @@ export function EducationTab({
                 }
               />
             </div>
-            <SectionAttachments
-              attachments={currentEdu.attachments || []}
-              onChange={(val) =>
-                setCurrentEdu({
-                  ...currentEdu,
-                  attachments: val,
-                })
-              }
-            />
             <CollaboratorsField
               label="Classmates"
               value={currentEdu.collaborators || []}
@@ -294,6 +285,15 @@ export function EducationTab({
                 setCurrentEdu({
                   ...currentEdu,
                   collaborators: val,
+                })
+              }
+            />
+            <SectionAttachments
+              attachments={currentEdu.attachments || []}
+              onChange={(val) =>
+                setCurrentEdu({
+                  ...currentEdu,
+                  attachments: val,
                 })
               }
             />

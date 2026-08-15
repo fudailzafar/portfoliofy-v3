@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AvatarPlaceholderIcon } from '@/components/composite/AvatarPlaceholderIcon';
 import { ResumeDataSchemaType } from '@/lib/resume';
 import { UserProfile } from '@/lib/server/cachedFunctions';
 import {
@@ -78,11 +79,8 @@ export function Header({
                 src={picture}
                 alt={`${header.name}'s profile picture`}
               />
-              <AvatarFallback>
-                {header.name
-                  .split(' ')
-                  .map((n) => n[0])
-                  .join('')}
+              <AvatarFallback className="bg-theme-bg">
+                <AvatarPlaceholderIcon className="text-theme-border" />
               </AvatarFallback>
             </Avatar>
 

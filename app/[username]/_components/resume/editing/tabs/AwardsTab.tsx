@@ -252,15 +252,6 @@ export function AwardsTab({
                 }
               />
             </div>
-            <SectionAttachments
-              attachments={currentAward.attachments || []}
-              onChange={(val) =>
-                setCurrentAward({
-                  ...currentAward,
-                  attachments: val,
-                })
-              }
-            />
             <CollaboratorsField
               label="Collaborators"
               value={currentAward.collaborators || []}
@@ -268,6 +259,15 @@ export function AwardsTab({
                 setCurrentAward({
                   ...currentAward,
                   collaborators: val,
+                })
+              }
+            />
+            <SectionAttachments
+              attachments={currentAward.attachments || []}
+              onChange={(val) =>
+                setCurrentAward({
+                  ...currentAward,
+                  attachments: val,
                 })
               }
             />

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AvatarPlaceholderIcon } from '@/components/composite/AvatarPlaceholderIcon';
 import {
   Tooltip,
   TooltipContent,
@@ -10,15 +11,6 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { CollaboratorSchemaType } from '@/lib/resume';
-
-function initials(name: string) {
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join('');
-}
 
 interface AvatarStackProps {
   collaborators?: CollaboratorSchemaType[];
@@ -53,8 +45,8 @@ export function AvatarStack({
               src={collaborator.image || undefined}
               alt={collaborator.name}
             />
-            <AvatarFallback className="text-[10px]">
-              {initials(collaborator.name)}
+            <AvatarFallback className="bg-theme-bg">
+              <AvatarPlaceholderIcon className="text-theme-border" />
             </AvatarFallback>
           </Avatar>
         );

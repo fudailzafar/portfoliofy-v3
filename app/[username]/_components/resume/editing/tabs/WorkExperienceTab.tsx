@@ -319,15 +319,6 @@ export function WorkExperienceTab({
                 }
               />
             </div>
-            <SectionAttachments
-              attachments={currentWork.attachments || []}
-              onChange={(val) =>
-                setCurrentWork({
-                  ...currentWork,
-                  attachments: val,
-                })
-              }
-            />
             <CollaboratorsField
               label="Coworkers"
               value={currentWork.collaborators || []}
@@ -335,6 +326,15 @@ export function WorkExperienceTab({
                 setCurrentWork({
                   ...currentWork,
                   collaborators: val,
+                })
+              }
+            />
+            <SectionAttachments
+              attachments={currentWork.attachments || []}
+              onChange={(val) =>
+                setCurrentWork({
+                  ...currentWork,
+                  attachments: val,
                 })
               }
             />
