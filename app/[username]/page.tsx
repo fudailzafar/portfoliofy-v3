@@ -8,6 +8,7 @@ import { auth } from '@/auth';
 import dynamic from 'next/dynamic';
 import { after } from 'next/server';
 import { recordPageView } from '@/lib/server/dbActions';
+import { ProfileUrlContext } from './_components/ProfileUrlContext';
 
 const EditProfileDialog = dynamic(() =>
   import('@/app/[username]/_components/resume/editing/EditProfileDialog').then(
@@ -118,63 +119,72 @@ export default async function ProfilePage({
   const isPersonalDomainView = username.includes('.') || isSubdomainView;
   const isOwner = userId === user_id && !isPersonalDomainView;
 
+  // Build the appropriate profile URL based on the current view context:
+  // - Personal domain / subdomain view → absolute subdomain URLs (username.portfoliofy.me)
+  // - Main platform view → relative paths (/username)
+  const getProfileUrl = isPersonalDomainView
+    ? (u: string) => `https://${u}.portfoliofy.me`
+    : (u: string) => `/${u}`;
+
   return (
-    <div className="flex min-h-screen flex-col font-sans">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      {/* Standard UI visible only on screen */}
-      <div className="flex flex-1 flex-col print:hidden">
-        {isOwner && resume?.resumeData && (
-          <EditProfileDialog
-            resume={resume.resumeData}
-            username={username}
-            picture={profilePicture}
-          />
-        )}
-
-        {isOwner ? (
-          <LiveResumeWrapper
-            initialResume={resume?.resumeData}
-            profilePicture={profilePicture}
-            isOwner={true}
-            userProfile={userProfile || undefined}
-            applyTheme={isPersonalDomainView}
-          />
-        ) : (
-          <div
-            className={`flex flex-1 flex-col bg-theme-bg ${
-              isPersonalDomainView
-                ? `${
-                    resume?.resumeData?.design?.typography === 'serif'
-                      ? 'font-serif'
-                      : resume?.resumeData?.design?.typography === 'mono'
-                        ? 'font-mono'
-                        : 'font-sans'
-                  } theme-${resume?.resumeData?.design?.theme || 'default'}`
-                : 'theme-default font-sans'
-            }`}
-          >
-            <FullResume
-              resume={resume?.resumeData as any}
-              profilePicture={profilePicture}
-              isOwner={false}
-              userProfile={userProfile || undefined}
-              hideSocialFeatures={
-                isPersonalDomainView &&
-                !!resume?.resumeData?.design?.hideSocialFeatures
-              }
+    <ProfileUrlContext.Provider value={getProfileUrl}>
+      <div className="flex min-h-screen flex-col font-sans">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        {/* Standard UI visible only on screen */}
+        <div className="flex flex-1 flex-col print:hidden">
+          {isOwner && resume?.resumeData && (
+            <EditProfileDialog
+              resume={resume.resumeData}
+              username={username}
+              picture={profilePicture}
             />
-          </div>
-        )}
-      </div>
+          )}
 
-      {/* Print-only layout */}
-      <PrintResumeWrapper
-        resume={resume?.resumeData}
-        isOwner={userId === user_id}
-      />
-    </div>
+          {isOwner ? (
+            <LiveResumeWrapper
+              initialResume={resume?.resumeData}
+              profilePicture={profilePicture}
+              isOwner={true}
+              userProfile={userProfile || undefined}
+              applyTheme={isPersonalDomainView}
+            />
+          ) : (
+            <div
+              className={`flex flex-1 flex-col bg-theme-bg ${
+                isPersonalDomainView
+                  ? `${
+                      resume?.resumeData?.design?.typography === 'serif'
+                        ? 'font-serif'
+                        : resume?.resumeData?.design?.typography === 'mono'
+                          ? 'font-mono'
+                          : 'font-sans'
+                    } theme-${resume?.resumeData?.design?.theme || 'default'}`
+                  : 'theme-default font-sans'
+              }`}
+            >
+              <FullResume
+                resume={resume?.resumeData as any}
+                profilePicture={profilePicture}
+                isOwner={false}
+                userProfile={userProfile || undefined}
+                hideSocialFeatures={
+                  isPersonalDomainView &&
+                  !!resume?.resumeData?.design?.hideSocialFeatures
+                }
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Print-only layout */}
+        <PrintResumeWrapper
+          resume={resume?.resumeData}
+          isOwner={userId === user_id}
+        />
+      </div>
+    </ProfileUrlContext.Provider>
   );
 }
