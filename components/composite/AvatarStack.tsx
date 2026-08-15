@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { CollaboratorSchemaType } from '@/lib/resume';
+import { useProfileUrl } from '@/app/[username]/_components/ProfileUrlContext';
 
 interface AvatarStackProps {
   collaborators?: CollaboratorSchemaType[];
@@ -32,6 +33,8 @@ export function AvatarStack({
   ringClassName = 'ring-theme-bg',
   className,
 }: AvatarStackProps) {
+  const getProfileUrl = useProfileUrl();
+
   if (!collaborators || collaborators.length === 0) {
     return null;
   }
@@ -59,7 +62,9 @@ export function AvatarStack({
           <TooltipProvider key={collaborator.id}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href={`/${collaborator.username}`}>{avatar}</Link>
+                <Link href={getProfileUrl(collaborator.username)}>
+                  {avatar}
+                </Link>
               </TooltipTrigger>
               <TooltipContent>
                 <p>{collaborator.name}</p>
