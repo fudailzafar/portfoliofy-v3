@@ -25,7 +25,7 @@ export function Education({
           title={item.degree}
           subtitle={`at ${item.school}`}
           link={item.link}
-          location={undefined}
+          location={item.location}
           description={item.description}
           attachments={item.attachments}
           collaborators={item.collaborators}

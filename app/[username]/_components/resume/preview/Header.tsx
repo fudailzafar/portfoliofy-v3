@@ -20,6 +20,7 @@ const StatusEditor = dynamic(
 );
 import { AnimatePresence } from 'framer-motion';
 import { SmilePlus } from 'lucide-react';
+import { ensureHttps } from '@/lib/utils';
 
 function getRelativeTime(dateInput: Date | string | null | undefined): string {
   if (!dateInput) return '';
@@ -150,11 +151,7 @@ export function Header({
           {/* Website Link */}
           {header.website && (
             <a
-              href={
-                header.website.startsWith('http')
-                  ? header.website
-                  : `https://${header.website}`
-              }
+              href={ensureHttps(header.website)}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-1 block text-sm text-theme-secondary transition-colors hover:text-theme-primary"
