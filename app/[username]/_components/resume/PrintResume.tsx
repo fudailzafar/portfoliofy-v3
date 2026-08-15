@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { ResumeData } from '@/lib/server/dbActions';
 import { sortByDateDesc, normalizeSectionOrder } from '@/lib/resume';
-import { cn } from '@/lib/utils';
+import { cn, ensureHttps } from '@/lib/utils';
 import { PrintListItem } from './print/PrintListItem';
 
 export const PrintResume = ({
@@ -98,7 +98,7 @@ export const PrintResume = ({
             summary &&
             summary !== '<p></p>' && (
               <div
-                className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 max-w-none text-sm leading-relaxed text-black prose-p:mb-2 prose-p:mt-0 prose-a:text-black"
+                className="prose prose-sm max-w-none text-sm leading-relaxed text-black prose-p:mb-2 prose-p:mt-0 prose-a:text-black prose-ol:pl-0 prose-ul:pl-0 prose-li:pl-0"
                 dangerouslySetInnerHTML={{ __html: summary }}
               />
             )}
@@ -270,7 +270,9 @@ export const PrintResume = ({
                       key={s.id || s.title}
                       leftContent={s.year}
                       title={s.title}
-                      subtitle={s.publication ? `, ${s.publication}` : undefined}
+                      subtitle={
+                        s.publication ? `, ${s.publication}` : undefined
+                      }
                       description={s.description}
                     />
                   )),
@@ -289,7 +291,9 @@ export const PrintResume = ({
                       key={s.id || s.title}
                       leftContent={s.year}
                       title={s.title}
-                      subtitle={s.organization ? `at ${s.organization}` : undefined}
+                      subtitle={
+                        s.organization ? `at ${s.organization}` : undefined
+                      }
                       location={s.location}
                       description={s.description}
                     />
@@ -354,15 +358,16 @@ export const PrintResume = ({
                         <div>
                           <a
                             href={
-                              c.link.startsWith('http') ||
                               c.link.startsWith('mailto:') ||
                               c.link.startsWith('tel:')
                                 ? c.link
-                                : `https://${c.link}`
+                                : ensureHttps(c.link)
                             }
                             className="text-sm text-black hover:underline hover:underline-offset-4"
                           >
-                            {c.link.replace(/^mailto:/, '').replace(/^tel:/, '')}
+                            {c.link
+                              .replace(/^mailto:/, '')
+                              .replace(/^tel:/, '')}
                           </a>
                         </div>
                       </div>

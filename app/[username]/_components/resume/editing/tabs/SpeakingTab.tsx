@@ -3,16 +3,12 @@ import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
 import { FormInput } from '@/components/ui/form-input';
-import { SortButtons } from '../SortButtons';
 import { EditorListItem } from '../shared/EditorListItem';
-import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { AvatarStack } from '@/components/composite/AvatarStack';
-import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
-import { Mic, ArrowUpRight } from 'lucide-react';
+import { Mic } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -100,93 +96,32 @@ export function SpeakingTab({
                   parseInt(nextItem.year || '0');
 
               return (
-                <div
+                <EditorListItem
                   key={engagement.id}
-                  className="group mb-5 flex flex-col gap-4 border-b border-border-subtle pb-5 last:mb-0 last:border-b-0 last:pb-0 sm:flex-row sm:gap-12"
-                >
-                  <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-24">
-                    {engagement.year}
-                  </div>
-
-                  <div className="flex flex-1 flex-col items-start justify-start">
-                    <div
-                      className={`w-full transition-all duration-200 ${engagement.hidden ? 'opacity-50 blur-[1px]' : ''}`}
-                    >
-                      {engagement.link ? (
-                        <a
-                          href={
-                            engagement.link.startsWith('http')
-                              ? engagement.link
-                              : `https://${engagement.link}`
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-block hover:underline hover:underline-offset-4"
-                        >
-                          <span className="text-sm font-semibold text-content-primary">
-                            {engagement.title}
-                            {engagement.organization
-                              ? ` at ${engagement.organization}`
-                              : ''}
-                            <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                          </span>
-                        </a>
-                      ) : (
-                        <p className="text-sm font-semibold text-content-primary">
-                          {engagement.title}
-                          {engagement.organization
-                            ? ` at ${engagement.organization}`
-                            : ''}
-                        </p>
-                      )}
-
-                      {engagement.location && (
-                        <div className="mt-1 text-sm text-content-muted">
-                          {engagement.location}
-                        </div>
-                      )}
-
-                      {engagement.description &&
-                        engagement.description !== '<p></p>' && (
-                          <div
-                            className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-content-muted prose-li:pl-0 prose-li:text-content-muted"
-                            dangerouslySetInnerHTML={{
-                              __html: engagement.description,
-                            }}
-                          />
-                        )}
-                      <div className="mt-4">
-                        <AttachmentsPreview
-                          attachments={engagement.attachments}
-                        />
-                      </div>
-                      <AvatarStack
-                        collaborators={engagement.collaborators}
-                        size="sm"
-                        ringClassName="ring-surface-1"
-                      />
-                    </div>
-
-                    <EditDeleteButtons
-                      isHidden={engagement.hidden}
-                      onToggleVisibility={() =>
-                        handleToggleVisibility(engagement)
-                      }
-                      onEdit={() => {
-                        setCurrentSpeaking(engagement);
-                        setSpeakingView('form');
-                      }}
-                      onDelete={() => setProjectToDelete(engagement.id)}
-                    >
-                      <SortButtons
-                        canMoveUp={canMoveUp}
-                        canMoveDown={canMoveDown}
-                        onMoveUp={() => handleMoveUp(engagement, prevItem)}
-                        onMoveDown={() => handleMoveUp(engagement, nextItem)}
-                      />
-                    </EditDeleteButtons>
-                  </div>
-                </div>
+                  leftContent={engagement.year}
+                  title={engagement.title}
+                  subtitle={
+                    engagement.organization
+                      ? ` at ${engagement.organization}`
+                      : undefined
+                  }
+                  link={engagement.link}
+                  location={engagement.location}
+                  description={engagement.description}
+                  attachments={engagement.attachments}
+                  collaborators={engagement.collaborators}
+                  isHidden={engagement.hidden}
+                  canMoveUp={canMoveUp}
+                  canMoveDown={canMoveDown}
+                  onMoveUp={() => handleMoveUp(engagement, prevItem)}
+                  onMoveDown={() => handleMoveUp(engagement, nextItem)}
+                  onToggleVisibility={() => handleToggleVisibility(engagement)}
+                  onEdit={() => {
+                    setCurrentSpeaking(engagement);
+                    setSpeakingView('form');
+                  }}
+                  onDelete={() => setProjectToDelete(engagement.id)}
+                />
               );
             },
           )}

@@ -185,26 +185,6 @@ export const checkUsernameAvailability = async (
   return { available: !userId };
 };
 
-export const deleteUser = async (opts: {
-  userId?: string;
-  username?: string;
-}): Promise<boolean> => {
-  try {
-    let result;
-    if (opts.userId) {
-      result = await sql`DELETE FROM users WHERE id = ${opts.userId}`;
-    } else if (opts.username) {
-      result = await sql`DELETE FROM users WHERE username = ${opts.username}`;
-    } else {
-      return false;
-    }
-    return result.count > 0;
-  } catch (error) {
-    console.error('User deletion failed:', error);
-    return false;
-  }
-};
-
 export type UpdateUsernameResult =
   | { success: true }
   | { success: false; reason: 'invalid' | 'reserved' | 'taken' | 'error' };
