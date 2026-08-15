@@ -1,13 +1,16 @@
-import { ResumeDataSchemaType } from "@/lib/resume";
-import { PreviewSection } from "./shared/PreviewSection";
-import { PreviewListItem } from "./shared/PreviewListItem";
+import { ResumeDataSchemaType } from '@/lib/resume';
+import { PreviewSection } from './shared/PreviewSection';
+import { PreviewListItem } from './shared/PreviewListItem';
 
 export function Education({
   educations,
 }: {
-  educations?: ResumeDataSchemaType["education"];
+  educations?: ResumeDataSchemaType['education'];
 }) {
-  const validItems = educations?.filter((item) => item.school && item.degree && item.end && !item.hidden) || [];
+  const validItems =
+    educations?.filter(
+      (item) => item.school && item.degree && item.end && !item.hidden,
+    ) || [];
 
   if (validItems.length === 0) {
     return null;
@@ -25,6 +28,7 @@ export function Education({
           location={undefined}
           description={item.description}
           attachments={item.attachments}
+          collaborators={item.collaborators}
         />
       ))}
     </PreviewSection>
