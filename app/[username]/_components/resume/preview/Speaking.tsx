@@ -1,11 +1,11 @@
-import { ResumeDataSchemaType } from "@/lib/resume";
-import { PreviewSection } from "./shared/PreviewSection";
-import { PreviewListItem } from "./shared/PreviewListItem";
+import { ResumeDataSchemaType } from '@/lib/resume';
+import { PreviewSection } from './shared/PreviewSection';
+import { PreviewListItem } from './shared/PreviewListItem';
 
 export function Speaking({
   speaking,
 }: {
-  speaking?: ResumeDataSchemaType["speaking"];
+  speaking?: ResumeDataSchemaType['speaking'];
 }) {
   const validItems = speaking?.filter((item) => !item.hidden) || [];
 
@@ -25,6 +25,7 @@ export function Speaking({
           location={undefined}
           description={item.description}
           attachments={item.attachments}
+          collaborators={item.collaborators}
         />
       ))}
     </PreviewSection>

@@ -1,11 +1,11 @@
-import { ResumeDataSchemaType } from "@/lib/resume";
-import { PreviewSection } from "./shared/PreviewSection";
-import { PreviewListItem } from "./shared/PreviewListItem";
+import { ResumeDataSchemaType } from '@/lib/resume';
+import { PreviewSection } from './shared/PreviewSection';
+import { PreviewListItem } from './shared/PreviewListItem';
 
 export function Volunteering({
   volunteering,
 }: {
-  volunteering?: ResumeDataSchemaType["volunteering"];
+  volunteering?: ResumeDataSchemaType['volunteering'];
 }) {
   const validItems = volunteering?.filter((item) => !item.hidden) || [];
 
@@ -18,13 +18,18 @@ export function Volunteering({
       {validItems.map((item, idx) => (
         <PreviewListItem
           key={item.id || idx}
-          leftContent={item.startYear ? `${item.startYear} — ${item.endYear || "Now"}` : item.endYear}
+          leftContent={
+            item.startYear
+              ? `${item.startYear} — ${item.endYear || 'Now'}`
+              : item.endYear
+          }
           title={item.role}
           subtitle={item.organization ? `at ${item.organization}` : undefined}
           link={item.link}
           location={undefined}
           description={item.description}
           attachments={item.attachments}
+          collaborators={item.collaborators}
         />
       ))}
     </PreviewSection>
