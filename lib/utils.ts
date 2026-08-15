@@ -24,3 +24,8 @@ export function getOptimizedImageUrl(url?: string | null): string | undefined {
 
   return url;
 }
+
+export function ensureHttps(url: string | null | undefined): string {
+  if (!url) return '';
+  return url.startsWith('http') ? url : `https://${url}`;
+}

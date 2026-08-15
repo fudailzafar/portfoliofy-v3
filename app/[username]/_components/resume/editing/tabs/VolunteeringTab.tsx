@@ -4,13 +4,9 @@ import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
 import { FormInput } from '@/components/ui/form-input';
-import { SortButtons } from '../SortButtons';
 import { EditorListItem } from '../shared/EditorListItem';
-import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { AvatarStack } from '@/components/composite/AvatarStack';
-import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import dynamic from 'next/dynamic';
@@ -29,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { HeartHandshake, ArrowUpRight } from 'lucide-react';
+import { HeartHandshake } from 'lucide-react';
 import { sortByDateDesc } from '@/lib/resume';
 
 export function VolunteeringTab({
@@ -106,81 +102,28 @@ export function VolunteeringTab({
                   parseInt(nextItem.startYear || '0');
 
               return (
-                <div
+                <EditorListItem
                   key={v.id}
-                  className="group mb-5 flex flex-col gap-4 border-b border-border-subtle pb-5 last:mb-0 last:border-b-0 last:pb-0 sm:flex-row sm:gap-12"
-                >
-                  <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-24">
-                    {v.startYear} — {v.endYear}
-                  </div>
-
-                  <div className="flex flex-1 flex-col items-start justify-start">
-                    <div
-                      className={`w-full transition-all duration-200 ${v.hidden ? 'opacity-50 blur-[1px]' : ''}`}
-                    >
-                      {v.link ? (
-                        <a
-                          href={
-                            v.link.startsWith('http')
-                              ? v.link
-                              : `https://${v.link}`
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-block hover:underline hover:underline-offset-4"
-                        >
-                          <span className="text-sm font-semibold text-content-primary">
-                            {v.role} at {v.organization}
-                            <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                          </span>
-                        </a>
-                      ) : (
-                        <p className="text-sm font-semibold text-content-primary">
-                          {v.role} at {v.organization}
-                        </p>
-                      )}
-                      {v.location && (
-                        <p className="mt-1 text-sm text-content-muted">
-                          {v.location}
-                        </p>
-                      )}
-
-                      {v.description && v.description !== '<p></p>' && (
-                        <div
-                          className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-content-muted prose-li:pl-0 prose-li:text-content-muted"
-                          dangerouslySetInnerHTML={{
-                            __html: v.description,
-                          }}
-                        />
-                      )}
-                      <div className="mt-4">
-                        <AttachmentsPreview attachments={v.attachments} />
-                      </div>
-                      <AvatarStack
-                        collaborators={v.collaborators}
-                        size="sm"
-                        ringClassName="ring-surface-1"
-                      />
-                    </div>
-
-                    <EditDeleteButtons
-                      isHidden={v.hidden}
-                      onToggleVisibility={() => handleToggleVisibility(v)}
-                      onEdit={() => {
-                        setCurrentVolunteering(v);
-                        setVolunteeringView('form');
-                      }}
-                      onDelete={() => setProjectToDelete(v.id)}
-                    >
-                      <SortButtons
-                        canMoveUp={canMoveUp}
-                        canMoveDown={canMoveDown}
-                        onMoveUp={() => handleMoveUp(v, prevItem)}
-                        onMoveDown={() => handleMoveUp(v, nextItem)}
-                      />
-                    </EditDeleteButtons>
-                  </div>
-                </div>
+                  leftContent={`${v.startYear} — ${v.endYear}`}
+                  title={v.role}
+                  subtitle={` at ${v.organization}`}
+                  link={v.link}
+                  location={v.location}
+                  description={v.description}
+                  attachments={v.attachments}
+                  collaborators={v.collaborators}
+                  isHidden={v.hidden}
+                  canMoveUp={canMoveUp}
+                  canMoveDown={canMoveDown}
+                  onMoveUp={() => handleMoveUp(v, prevItem)}
+                  onMoveDown={() => handleMoveUp(v, nextItem)}
+                  onToggleVisibility={() => handleToggleVisibility(v)}
+                  onEdit={() => {
+                    setCurrentVolunteering(v);
+                    setVolunteeringView('form');
+                  }}
+                  onDelete={() => setProjectToDelete(v.id)}
+                />
               );
             },
           )}
