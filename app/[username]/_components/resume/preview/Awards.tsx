@@ -1,11 +1,11 @@
-import { ResumeDataSchemaType } from "@/lib/resume";
-import { PreviewSection } from "./shared/PreviewSection";
-import { PreviewListItem } from "./shared/PreviewListItem";
+import { ResumeDataSchemaType } from '@/lib/resume';
+import { PreviewSection } from './shared/PreviewSection';
+import { PreviewListItem } from './shared/PreviewListItem';
 
 export function Awards({
   awards,
 }: {
-  awards?: ResumeDataSchemaType["awards"];
+  awards?: ResumeDataSchemaType['awards'];
 }) {
   const validItems = awards?.filter((item) => !item.hidden) || [];
 
@@ -25,6 +25,7 @@ export function Awards({
           location={undefined}
           description={item.description}
           attachments={item.attachments}
+          collaborators={item.collaborators}
         />
       ))}
     </PreviewSection>

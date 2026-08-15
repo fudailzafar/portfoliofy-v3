@@ -29,6 +29,18 @@ export const AttachmentSchema = z.object({
 
 export type AttachmentSchemaType = z.infer<typeof AttachmentSchema>;
 
+export const CollaboratorSchema = z.object({
+  id: z.string().describe('User id of the tagged collaborator'),
+  username: z.string().describe('Username of the tagged collaborator'),
+  name: z.string().describe('Display name of the tagged collaborator'),
+  image: z
+    .string()
+    .nullable()
+    .describe('Avatar URL of the tagged collaborator'),
+});
+
+export type CollaboratorSchemaType = z.infer<typeof CollaboratorSchema>;
+
 export const normalizeSectionOrder = (order?: string[] | null) => {
   const existingOrder = order || DEFAULT_SECTION_ORDER;
   const missingSections = DEFAULT_SECTION_ORDER.filter(
@@ -122,6 +134,7 @@ const WorkExperienceSection = z.array(
       description: z.string().describe('Job description'),
       hidden: z.boolean().optional().default(false),
       attachments: z.array(AttachmentSchema).optional().default([]),
+      collaborators: z.array(CollaboratorSchema).optional().default([]),
     })
     .refine((data) => !isReversedRange(data.start, data.end), {
       message: "End year can't be earlier than the start year",
@@ -148,6 +161,7 @@ const EducationSection = z.array(
         .describe('Rich text description of education'),
       hidden: z.boolean().optional().default(false),
       attachments: z.array(AttachmentSchema).optional().default([]),
+      collaborators: z.array(CollaboratorSchema).optional().default([]),
     })
     .refine((data) => !isReversedRange(data.start, data.end), {
       message: "End year can't be earlier than the start year",
@@ -168,6 +182,7 @@ const ProjectSection = z.array(
       .describe('Rich text description of the project'),
     hidden: z.boolean().optional().default(false),
     attachments: z.array(AttachmentSchema).optional().default([]),
+    collaborators: z.array(CollaboratorSchema).optional().default([]),
   }),
 );
 
@@ -198,6 +213,7 @@ const SideProjectSection = z.array(
       .describe('Rich text description of the side project'),
     hidden: z.boolean().optional().default(false),
     attachments: z.array(AttachmentSchema).optional().default([]),
+    collaborators: z.array(CollaboratorSchema).optional().default([]),
   }),
 );
 
@@ -218,6 +234,7 @@ const SpeakingSection = z.array(
       .describe('Rich text description of the speaking engagement'),
     hidden: z.boolean().optional().default(false),
     attachments: z.array(AttachmentSchema).optional().default([]),
+    collaborators: z.array(CollaboratorSchema).optional().default([]),
   }),
 );
 
@@ -237,6 +254,7 @@ const FeaturesSection = z.array(
       .describe('Rich text description of the feature'),
     hidden: z.boolean().optional().default(false),
     attachments: z.array(AttachmentSchema).optional().default([]),
+    collaborators: z.array(CollaboratorSchema).optional().default([]),
   }),
 );
 
@@ -259,6 +277,7 @@ const VolunteeringSection = z.array(
         .describe('Rich text description of the volunteering engagement'),
       hidden: z.boolean().optional().default(false),
       attachments: z.array(AttachmentSchema).optional().default([]),
+      collaborators: z.array(CollaboratorSchema).optional().default([]),
     })
     .refine((data) => !isReversedRange(data.startYear, data.endYear), {
       message: "End year can't be earlier than the start year",
@@ -276,6 +295,7 @@ const AwardsSection = z.array(
     description: z.string().optional().describe('Description of the award'),
     hidden: z.boolean().optional().default(false),
     attachments: z.array(AttachmentSchema).optional().default([]),
+    collaborators: z.array(CollaboratorSchema).optional().default([]),
   }),
 );
 
@@ -295,6 +315,7 @@ const CertificationsSection = z.array(
       .describe('Description of the certification'),
     hidden: z.boolean().optional().default(false),
     attachments: z.array(AttachmentSchema).optional().default([]),
+    collaborators: z.array(CollaboratorSchema).optional().default([]),
   }),
 );
 
@@ -311,6 +332,7 @@ const WritingSection = z.array(
     description: z.string().optional().describe('Rich text description'),
     hidden: z.boolean().optional().default(false),
     attachments: z.array(AttachmentSchema).optional().default([]),
+    collaborators: z.array(CollaboratorSchema).optional().default([]),
   }),
 );
 
@@ -331,6 +353,7 @@ const ExhibitionsSection = z.array(
       .describe('Rich text description of the exhibition'),
     hidden: z.boolean().optional().default(false),
     attachments: z.array(AttachmentSchema).optional().default([]),
+    collaborators: z.array(CollaboratorSchema).optional().default([]),
   }),
 );
 

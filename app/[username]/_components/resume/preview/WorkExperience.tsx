@@ -1,13 +1,16 @@
-import { ResumeDataSchemaType } from "@/lib/resume";
-import { PreviewSection } from "./shared/PreviewSection";
-import { PreviewListItem } from "./shared/PreviewListItem";
+import { ResumeDataSchemaType } from '@/lib/resume';
+import { PreviewSection } from './shared/PreviewSection';
+import { PreviewListItem } from './shared/PreviewListItem';
 
 export function WorkExperience({
   work,
 }: {
-  work?: ResumeDataSchemaType["workExperience"];
+  work?: ResumeDataSchemaType['workExperience'];
 }) {
-  const validItems = work?.filter((item) => item.company && item.title && item.start && !item.hidden) || [];
+  const validItems =
+    work?.filter(
+      (item) => item.company && item.title && item.start && !item.hidden,
+    ) || [];
 
   if (validItems.length === 0) {
     return null;
@@ -18,13 +21,14 @@ export function WorkExperience({
       {validItems.map((item, idx) => (
         <PreviewListItem
           key={item.id || idx}
-          leftContent={`${item.start} — ${item.end || "Now"}`}
+          leftContent={`${item.start} — ${item.end || 'Now'}`}
           title={item.title}
           subtitle={`at ${item.company}`}
           link={item.link}
           location={item.location}
           description={item.description}
           attachments={item.attachments}
+          collaborators={item.collaborators}
         />
       ))}
     </PreviewSection>
