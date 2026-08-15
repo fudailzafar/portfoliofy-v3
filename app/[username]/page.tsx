@@ -140,10 +140,21 @@ export default async function ProfilePage({
             profilePicture={profilePicture}
             isOwner={true}
             userProfile={userProfile || undefined}
+            applyTheme={isPersonalDomainView}
           />
         ) : (
           <div
-            className={`flex flex-1 flex-col bg-theme-bg ${resume?.resumeData?.design?.typography === 'serif' ? 'font-serif' : resume?.resumeData?.design?.typography === 'mono' ? 'font-mono' : 'font-sans'} theme-${resume?.resumeData?.design?.theme || 'default'}`}
+            className={`flex flex-1 flex-col bg-theme-bg ${
+              isPersonalDomainView
+                ? `${
+                    resume?.resumeData?.design?.typography === 'serif'
+                      ? 'font-serif'
+                      : resume?.resumeData?.design?.typography === 'mono'
+                        ? 'font-mono'
+                        : 'font-sans'
+                  } theme-${resume?.resumeData?.design?.theme || 'default'}`
+                : 'theme-default font-sans'
+            }`}
           >
             <FullResume
               resume={resume?.resumeData as any}

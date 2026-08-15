@@ -10,11 +10,13 @@ export function LiveResumeWrapper({
   profilePicture,
   isOwner,
   userProfile,
+  applyTheme = false,
 }: {
   initialResume?: ResumeData | null;
   profilePicture?: string;
   isOwner?: boolean;
   userProfile?: UserProfile;
+  applyTheme?: boolean;
 }) {
   const storeResume = useResumeStore((state) => state.resume);
 
@@ -26,13 +28,14 @@ export function LiveResumeWrapper({
 
   const typography = displayResume.design?.typography || 'sans';
   const theme = displayResume.design?.theme || 'default';
-  const fontClass =
-    typography === 'serif'
+  const fontClass = applyTheme
+    ? typography === 'serif'
       ? 'font-serif'
       : typography === 'mono'
         ? 'font-mono'
-        : 'font-sans';
-  const themeClass = `theme-${theme}`;
+        : 'font-sans'
+    : 'font-sans';
+  const themeClass = applyTheme ? `theme-${theme}` : 'theme-default';
 
   return (
     <div
