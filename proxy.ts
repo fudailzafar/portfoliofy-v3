@@ -12,10 +12,24 @@ export default async function middleware(req: NextRequest) {
     hostname === 'portfoliofy.me' || hostname === 'www.portfoliofy.me';
   const isVercelDomain = hostname.endsWith('.vercel.app');
   const isLocalhost = hostname === 'localhost';
+
+  // Exclude Vercel's own deployment preview URLs (e.g. portfoliofy-v3-fudail.portfoliofy.me,
+  // portfoliofy-v3-git-main-fudail.portfoliofy.me). These contain hyphens and the project
+  // name — they are NOT user subdomains. We detect them by checking for the project name
+  // prefix or by matching the VERCEL_URL env var that Vercel injects automatically.
+  const vercelUrl = process.env.VERCEL_URL || ''; // e.g. portfoliofy-v3-fudail.vercel.app
+  const vercelBranchUrl = process.env.VERCEL_BRANCH_URL || '';
+  const vercelProjectName = process.env.VERCEL_PROJECT_PRODUCTION_URL || '';
+  const isVercelDeploymentDomain =
+    (vercelUrl && hostname === vercelUrl.split(':')[0]) ||
+    (vercelBranchUrl && hostname === vercelBranchUrl.split(':')[0]) ||
+    (vercelProjectName && hostname === vercelProjectName.split(':')[0]);
+
   const isSubdomain =
     (hostname.endsWith('.portfoliofy.me') || hostname.endsWith('.localhost')) &&
     !isMainDomain &&
-    !isLocalhost;
+    !isLocalhost &&
+    !isVercelDeploymentDomain;
 
   let res = NextResponse.next();
 
