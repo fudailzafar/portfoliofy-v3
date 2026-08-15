@@ -267,15 +267,6 @@ export function CertificationsTab({
                 }
               />
             </div>
-            <SectionAttachments
-              attachments={currentCertification.attachments || []}
-              onChange={(val) =>
-                setCurrentCertification({
-                  ...currentCertification,
-                  attachments: val,
-                })
-              }
-            />
             <CollaboratorsField
               label="Collaborators"
               value={currentCertification.collaborators || []}
@@ -283,6 +274,15 @@ export function CertificationsTab({
                 setCurrentCertification({
                   ...currentCertification,
                   collaborators: val,
+                })
+              }
+            />
+            <SectionAttachments
+              attachments={currentCertification.attachments || []}
+              onChange={(val) =>
+                setCurrentCertification({
+                  ...currentCertification,
+                  attachments: val,
                 })
               }
             />

@@ -257,15 +257,6 @@ export function WritingTab({
                 }
               />
             </div>
-            <SectionAttachments
-              attachments={currentWriting.attachments || []}
-              onChange={(val) =>
-                setCurrentWriting({
-                  ...currentWriting,
-                  attachments: val,
-                })
-              }
-            />
             <CollaboratorsField
               label="Collaborators"
               value={currentWriting.collaborators || []}
@@ -273,6 +264,15 @@ export function WritingTab({
                 setCurrentWriting({
                   ...currentWriting,
                   collaborators: val,
+                })
+              }
+            />
+            <SectionAttachments
+              attachments={currentWriting.attachments || []}
+              onChange={(val) =>
+                setCurrentWriting({
+                  ...currentWriting,
+                  attachments: val,
                 })
               }
             />
