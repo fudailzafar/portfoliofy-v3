@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { sortByDateDesc } from '@/lib/resume';
+import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
 import dynamic from 'next/dynamic';
 
 const RichTextEditor = dynamic(
@@ -87,15 +87,8 @@ export function EducationTab({
         <>
           {sortedEducation.map(
             (edu: any, index: number, sortedArray: any[]) => {
-              const prevItem = index > 0 ? sortedArray[index - 1] : null;
-              const canMoveUp =
-                prevItem &&
-                parseInt(edu.start || '0') === parseInt(prevItem.start || '0');
-              const nextItem =
-                index < sortedArray.length - 1 ? sortedArray[index + 1] : null;
-              const canMoveDown =
-                nextItem &&
-                parseInt(edu.start || '0') === parseInt(nextItem.start || '0');
+              const { prevItem, nextItem, canMoveUp, canMoveDown } =
+                getListAdjacency(sortedArray, index);
 
               return (
                 <EditorListItem

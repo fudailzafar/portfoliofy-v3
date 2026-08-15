@@ -26,7 +26,7 @@ export function Volunteering({
           title={item.role}
           subtitle={item.organization ? `at ${item.organization}` : undefined}
           link={item.link}
-          location={undefined}
+          location={item.location}
           description={item.description}
           attachments={item.attachments}
           collaborators={item.collaborators}
