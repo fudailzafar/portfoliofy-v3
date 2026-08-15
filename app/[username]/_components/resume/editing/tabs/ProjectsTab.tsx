@@ -147,7 +147,7 @@ export function ProjectsTab({
                       {project.description &&
                         project.description !== '<p></p>' && (
                           <div
-                            className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-content-muted prose-li:pl-0 prose-li:text-content-muted"
+                            className="mt- prose prose-sm max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-content-muted prose-li:pl-0 prose-li:text-content-muted"
                             dangerouslySetInnerHTML={{
                               __html: project.description,
                             }}
@@ -268,15 +268,6 @@ export function ProjectsTab({
                 }
               />
             </div>
-            <SectionAttachments
-              attachments={currentProject.attachments || []}
-              onChange={(val) =>
-                setCurrentProject({
-                  ...currentProject,
-                  attachments: val,
-                })
-              }
-            />
             <CollaboratorsField
               label="Collaborators"
               value={currentProject.collaborators || []}
@@ -284,6 +275,15 @@ export function ProjectsTab({
                 setCurrentProject({
                   ...currentProject,
                   collaborators: val,
+                })
+              }
+            />
+            <SectionAttachments
+              attachments={currentProject.attachments || []}
+              onChange={(val) =>
+                setCurrentProject({
+                  ...currentProject,
+                  attachments: val,
                 })
               }
             />

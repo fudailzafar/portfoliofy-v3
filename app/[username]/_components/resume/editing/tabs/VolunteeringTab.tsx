@@ -324,15 +324,6 @@ export function VolunteeringTab({
                 }
               />
             </div>
-            <SectionAttachments
-              attachments={currentVolunteering.attachments || []}
-              onChange={(val) =>
-                setCurrentVolunteering({
-                  ...currentVolunteering,
-                  attachments: val,
-                })
-              }
-            />
             <CollaboratorsField
               label="Collaborators"
               value={currentVolunteering.collaborators || []}
@@ -340,6 +331,15 @@ export function VolunteeringTab({
                 setCurrentVolunteering({
                   ...currentVolunteering,
                   collaborators: val,
+                })
+              }
+            />
+            <SectionAttachments
+              attachments={currentVolunteering.attachments || []}
+              onChange={(val) =>
+                setCurrentVolunteering({
+                  ...currentVolunteering,
+                  attachments: val,
                 })
               }
             />
