@@ -3,6 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { AttachmentsPreview } from '../AttachmentsPreview';
 import { AvatarStack } from '@/components/composite/AvatarStack';
 import { CollaboratorSchemaType } from '@/lib/resume';
+import { ensureHttps } from '@/lib/utils';
 
 export interface PreviewListItemProps {
   leftContent: React.ReactNode;
@@ -35,7 +36,7 @@ export function PreviewListItem({
         <div className="group">
           {link ? (
             <a
-              href={link.startsWith('http') ? link : `https://${link}`}
+              href={ensureHttps(link)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-theme-primary hover:underline hover:decoration-1 hover:underline-offset-2"

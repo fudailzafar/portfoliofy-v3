@@ -3,13 +3,9 @@ import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
 import { FormInput } from '@/components/ui/form-input';
-import { SortButtons } from '../SortButtons';
 import { EditorListItem } from '../shared/EditorListItem';
-import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { AvatarStack } from '@/components/composite/AvatarStack';
-import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import dynamic from 'next/dynamic';
@@ -20,7 +16,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { FileBadge, ArrowUpRight } from 'lucide-react';
+import { FileBadge } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -106,81 +102,29 @@ export function CertificationsTab({
                 parseInt(certification.year || '0') ===
                   parseInt(nextItem.year || '0');
               return (
-                <div
+                <EditorListItem
                   key={certification.id}
-                  className="group mb-5 flex flex-col gap-4 border-b border-border-subtle pb-5 last:mb-0 last:border-b-0 last:pb-0 sm:flex-row sm:gap-12"
-                >
-                  <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-24">
-                    {certification.year}
-                  </div>
-
-                  <div className="flex flex-1 flex-col items-start justify-start">
-                    <div
-                      className={`w-full transition-all duration-200 ${certification.hidden ? 'opacity-50 blur-[1px]' : ''}`}
-                    >
-                      {certification.link ? (
-                        <a
-                          href={
-                            certification.link.startsWith('http')
-                              ? certification.link
-                              : `https://${certification.link}`
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-block hover:underline hover:underline-offset-4"
-                        >
-                          <span className="text-sm font-semibold text-content-primary">
-                            {certification.title} from {certification.issuer}
-                            <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
-                          </span>
-                        </a>
-                      ) : (
-                        <p className="text-sm font-semibold text-content-primary">
-                          {certification.title} from {certification.issuer}
-                        </p>
-                      )}
-
-                      {certification.description &&
-                        certification.description !== '<p></p>' && (
-                          <div
-                            className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-content-muted prose-li:pl-0 prose-li:text-content-muted"
-                            dangerouslySetInnerHTML={{
-                              __html: certification.description,
-                            }}
-                          />
-                        )}
-                      <div className="mt-4">
-                        <AttachmentsPreview
-                          attachments={certification.attachments}
-                        />
-                      </div>
-                      <AvatarStack
-                        collaborators={certification.collaborators}
-                        size="sm"
-                        ringClassName="ring-surface-1"
-                      />
-                    </div>
-
-                    <EditDeleteButtons
-                      isHidden={certification.hidden}
-                      onToggleVisibility={() =>
-                        handleToggleVisibility(certification)
-                      }
-                      onEdit={() => {
-                        setCurrentCertification(certification);
-                        setCertificationsView('form');
-                      }}
-                      onDelete={() => setProjectToDelete(certification.id)}
-                    >
-                      <SortButtons
-                        canMoveUp={canMoveUp}
-                        canMoveDown={canMoveDown}
-                        onMoveUp={() => handleMoveUp(certification, prevItem)}
-                        onMoveDown={() => handleMoveUp(certification, nextItem)}
-                      />
-                    </EditDeleteButtons>
-                  </div>
-                </div>
+                  leftContent={certification.year}
+                  title={certification.title}
+                  subtitle={` from ${certification.issuer}`}
+                  link={certification.link}
+                  description={certification.description}
+                  attachments={certification.attachments}
+                  collaborators={certification.collaborators}
+                  isHidden={certification.hidden}
+                  canMoveUp={canMoveUp}
+                  canMoveDown={canMoveDown}
+                  onMoveUp={() => handleMoveUp(certification, prevItem)}
+                  onMoveDown={() => handleMoveUp(certification, nextItem)}
+                  onToggleVisibility={() =>
+                    handleToggleVisibility(certification)
+                  }
+                  onEdit={() => {
+                    setCurrentCertification(certification);
+                    setCertificationsView('form');
+                  }}
+                  onDelete={() => setProjectToDelete(certification.id)}
+                />
               );
             },
           )}
