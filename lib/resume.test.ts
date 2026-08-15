@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ResumeDataSchema } from './resume';
+import { ResumeDataSchema, getListAdjacency } from './resume';
 
 const baseResume = {
   header: { name: 'Test User', shortAbout: 'Tester', skills: [] },
@@ -111,5 +111,42 @@ describe('ResumeDataSchema — date-range validation', () => {
       ],
     });
     expect(result.success).toBe(false);
+  });
+});
+
+describe('getListAdjacency', () => {
+  it('allows moving between entries with the same year', () => {
+    const items = [{ year: '2024' }, { year: '2024' }, { year: '2023' }];
+    expect(getListAdjacency(items, 0)).toMatchObject({
+      canMoveUp: false,
+      canMoveDown: true,
+    });
+    expect(getListAdjacency(items, 1)).toMatchObject({
+      canMoveUp: true,
+      canMoveDown: false,
+    });
+  });
+
+  it('blocks moving into an entry with a different year', () => {
+    const items = [{ year: '2024' }, { year: '2023' }];
+    expect(getListAdjacency(items, 0)).toMatchObject({
+      canMoveUp: false,
+      canMoveDown: false,
+    });
+  });
+
+  it('resolves the date field via startYear, then start, then year', () => {
+    const items = [{ start: '2020' }, { start: '2020' }];
+    expect(getListAdjacency(items, 0).canMoveDown).toBe(true);
+
+    const startYearItems = [{ startYear: '2019' }, { startYear: '2019' }];
+    expect(getListAdjacency(startYearItems, 0).canMoveDown).toBe(true);
+  });
+
+  it('returns null neighbors at the array boundaries', () => {
+    const items = [{ year: '2024' }];
+    const result = getListAdjacency(items, 0);
+    expect(result.prevItem).toBeNull();
+    expect(result.nextItem).toBeNull();
   });
 });
