@@ -29,13 +29,18 @@ export function SortButtons({
             <TooltipTrigger asChild>
               <button
                 onClick={onMoveUp}
-                className="transition-colors hover:text-content-primary"
+                className="flex items-center gap-1 hover:underline hover:underline-offset-4 sm:transition-colors sm:hover:text-content-primary sm:hover:no-underline"
                 aria-label="Move item up"
               >
-                <ArrowUpToLine className="h-[15px] w-[15px]" />
+                <ArrowUpToLine className="hidden h-[15px] w-[15px] sm:inline-block" />
+                <span className="sm:hidden">Move up</span>
               </button>
             </TooltipTrigger>
-            <TooltipContent side="top" sideOffset={8}>
+            <TooltipContent
+              side="top"
+              sideOffset={8}
+              className="hidden sm:block"
+            >
               Move up
             </TooltipContent>
           </Tooltip>
@@ -47,13 +52,18 @@ export function SortButtons({
             <TooltipTrigger asChild>
               <button
                 onClick={onMoveDown}
-                className="transition-colors hover:text-content-primary"
+                className="flex items-center gap-1 hover:underline hover:underline-offset-4 sm:transition-colors sm:hover:text-content-primary sm:hover:no-underline"
                 aria-label="Move item down"
               >
-                <ArrowDownToLine className="h-[15px] w-[15px]" />
+                <ArrowDownToLine className="hidden h-[15px] w-[15px] sm:inline-block" />
+                <span className="sm:hidden">Move down</span>
               </button>
             </TooltipTrigger>
-            <TooltipContent side="top" sideOffset={8}>
+            <TooltipContent
+              side="top"
+              sideOffset={8}
+              className="hidden sm:block"
+            >
               Move down
             </TooltipContent>
           </Tooltip>
