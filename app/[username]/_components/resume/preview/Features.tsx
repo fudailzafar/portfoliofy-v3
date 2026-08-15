@@ -14,7 +14,7 @@ export function Features({
   }
 
   return (
-    <PreviewSection id="features-section" title="Features & Awards">
+    <PreviewSection id="features-section" title="Features">
       {validItems.map((item, idx) => (
         <PreviewListItem
           key={item.id || idx}
