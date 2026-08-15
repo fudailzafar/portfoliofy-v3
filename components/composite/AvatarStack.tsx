@@ -30,7 +30,7 @@ interface AvatarStackProps {
 
 const SIZE_CLASSES = {
   sm: 'size-6',
-  md: 'size-8',
+  md: 'size-9',
 };
 
 export function AvatarStack({
@@ -45,7 +45,7 @@ export function AvatarStack({
   }
 
   return (
-    <div className={cn('mt-3 flex flex-wrap -space-x-2', className)}>
+    <div className={cn('mt-3 flex flex-wrap gap-2', className)}>
       {collaborators.map((collaborator) => {
         const avatar = (
           <Avatar className={cn(SIZE_CLASSES[size], 'ring-2', ringClassName)}>
@@ -67,12 +67,7 @@ export function AvatarStack({
           <TooltipProvider key={collaborator.id}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link
-                  href={`/${collaborator.username}`}
-                  className="transition-transform hover:z-10 hover:scale-105"
-                >
-                  {avatar}
-                </Link>
+                <Link href={`/${collaborator.username}`}>{avatar}</Link>
               </TooltipTrigger>
               <TooltipContent>
                 <p>{collaborator.name}</p>
