@@ -7,6 +7,8 @@ import { SortButtons } from '../SortButtons';
 import { EditorListItem } from '../shared/EditorListItem';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
+import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
+import { AvatarStack } from '@/components/composite/AvatarStack';
 import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
@@ -83,7 +85,7 @@ export function ExhibitionsTab({
       addButtonText="Add exhibition"
       emptyState={{
         icon: Palette,
-        buttonText: "Add an exhibition",
+        buttonText: 'Add an exhibition',
       }}
       renderList={() => (
         <>
@@ -104,7 +106,7 @@ export function ExhibitionsTab({
               return (
                 <div
                   key={exhibition.id}
-                  className="group flex flex-col gap-4 sm:flex-row sm:gap-12 border-b border-border-subtle pb-5 mb-5 last:border-b-0 last:pb-0 last:mb-0"
+                  className="group mb-5 flex flex-col gap-4 border-b border-border-subtle pb-5 last:mb-0 last:border-b-0 last:pb-0 sm:flex-row sm:gap-12"
                 >
                   <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-24">
                     {exhibition.year}
@@ -148,19 +150,25 @@ export function ExhibitionsTab({
                         </div>
                       )}
 
-                      {exhibition.description && exhibition.description !== '<p></p>' && (
-                        <div
-                          className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-4 max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ul:my-1 prose-ul:text-content-muted prose-li:text-content-muted"
-                          dangerouslySetInnerHTML={{
-                            __html: exhibition.description,
-                          }}
-                        />
-                      )}
+                      {exhibition.description &&
+                        exhibition.description !== '<p></p>' && (
+                          <div
+                            className="prose prose-sm mt-4 max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-content-muted prose-li:pl-0 prose-li:text-content-muted"
+                            dangerouslySetInnerHTML={{
+                              __html: exhibition.description,
+                            }}
+                          />
+                        )}
                       <div className="mt-4">
                         <AttachmentsPreview
                           attachments={exhibition.attachments}
                         />
                       </div>
+                      <AvatarStack
+                        collaborators={exhibition.collaborators}
+                        size="sm"
+                        ringClassName="ring-surface-1"
+                      />
                     </div>
 
                     <EditDeleteButtons
@@ -289,6 +297,16 @@ export function ExhibitionsTab({
                 setCurrentExhibition({
                   ...currentExhibition,
                   attachments: val,
+                })
+              }
+            />
+            <CollaboratorsField
+              label="Collaborators"
+              value={currentExhibition.collaborators || []}
+              onChange={(val) =>
+                setCurrentExhibition({
+                  ...currentExhibition,
+                  collaborators: val,
                 })
               }
             />

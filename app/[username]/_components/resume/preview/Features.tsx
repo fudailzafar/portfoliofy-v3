@@ -1,11 +1,11 @@
-import { ResumeDataSchemaType } from "@/lib/resume";
-import { PreviewSection } from "./shared/PreviewSection";
-import { PreviewListItem } from "./shared/PreviewListItem";
+import { ResumeDataSchemaType } from '@/lib/resume';
+import { PreviewSection } from './shared/PreviewSection';
+import { PreviewListItem } from './shared/PreviewListItem';
 
 export function Features({
   features,
 }: {
-  features?: ResumeDataSchemaType["features"];
+  features?: ResumeDataSchemaType['features'];
 }) {
   const validItems = features?.filter((item) => !item.hidden) || [];
 
@@ -25,6 +25,7 @@ export function Features({
           location={undefined}
           description={item.description}
           attachments={item.attachments}
+          collaborators={item.collaborators}
         />
       ))}
     </PreviewSection>

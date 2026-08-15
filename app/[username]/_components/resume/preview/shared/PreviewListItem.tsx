@@ -1,6 +1,8 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { AttachmentsPreview } from '../AttachmentsPreview';
+import { AvatarStack } from '@/components/composite/AvatarStack';
+import { CollaboratorSchemaType } from '@/lib/resume';
 
 export interface PreviewListItemProps {
   leftContent: React.ReactNode;
@@ -10,6 +12,7 @@ export interface PreviewListItemProps {
   location?: React.ReactNode;
   description?: string;
   attachments?: any[];
+  collaborators?: CollaboratorSchemaType[];
 }
 
 export function PreviewListItem({
@@ -20,6 +23,7 @@ export function PreviewListItem({
   location,
   description,
   attachments,
+  collaborators,
 }: PreviewListItemProps) {
   return (
     <div className="flex flex-col gap-1 min-[481px]:flex-row min-[481px]:gap-[36px] print:mb-6">
@@ -72,6 +76,7 @@ export function PreviewListItem({
         )}
 
         <AttachmentsPreview attachments={attachments} />
+        <AvatarStack collaborators={collaborators} size="md" interactive />
       </div>
     </div>
   );

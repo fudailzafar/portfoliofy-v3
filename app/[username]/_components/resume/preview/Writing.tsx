@@ -1,11 +1,11 @@
-import { ResumeDataSchemaType } from "@/lib/resume";
-import { PreviewSection } from "./shared/PreviewSection";
-import { PreviewListItem } from "./shared/PreviewListItem";
+import { ResumeDataSchemaType } from '@/lib/resume';
+import { PreviewSection } from './shared/PreviewSection';
+import { PreviewListItem } from './shared/PreviewListItem';
 
 export function Writing({
   writing,
 }: {
-  writing?: ResumeDataSchemaType["writing"];
+  writing?: ResumeDataSchemaType['writing'];
 }) {
   const validItems = writing?.filter((item) => !item.hidden) || [];
 
@@ -25,6 +25,7 @@ export function Writing({
           location={undefined}
           description={item.description}
           attachments={item.attachments}
+          collaborators={item.collaborators}
         />
       ))}
     </PreviewSection>
