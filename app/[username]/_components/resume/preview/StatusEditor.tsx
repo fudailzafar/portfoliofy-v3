@@ -171,7 +171,7 @@ export function StatusEditor({
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Looking to build something new..."
-              className="w-full bg-transparent pt-2 text-sm text-theme-primary placeholder:text-theme-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-theme-primary focus-visible:ring-offset-2"
+              className="w-full bg-transparent pt-2 text-sm text-theme-primary placeholder:text-theme-secondary focus:outline-none focus:ring-0"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleSave();
                 if (e.key === 'Escape') onClose();
