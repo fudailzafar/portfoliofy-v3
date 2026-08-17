@@ -38,6 +38,7 @@ export function SpeakingTab({
     items: speaking,
     handleSave: saveSpeaking,
     handleMoveUp,
+    handleMoveDown,
     handleToggleVisibility,
   } = useResumeList<any>('speaking');
 
@@ -105,7 +106,7 @@ export function SpeakingTab({
                   canMoveUp={canMoveUp}
                   canMoveDown={canMoveDown}
                   onMoveUp={() => handleMoveUp(engagement, prevItem)}
-                  onMoveDown={() => handleMoveUp(engagement, nextItem)}
+                  onMoveDown={() => handleMoveDown(engagement, nextItem)}
                   onToggleVisibility={() => handleToggleVisibility(engagement)}
                   onEdit={() => {
                     setCurrentSpeaking(engagement);

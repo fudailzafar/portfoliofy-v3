@@ -37,6 +37,7 @@ export function FeaturesTab({
     items: features,
     handleSave: saveFeature,
     handleMoveUp,
+    handleMoveDown,
     handleToggleVisibility,
   } = useResumeList<any>('features');
 
@@ -100,7 +101,7 @@ export function FeaturesTab({
                   canMoveUp={canMoveUp}
                   canMoveDown={canMoveDown}
                   onMoveUp={() => handleMoveUp(feature, prevItem)}
-                  onMoveDown={() => handleMoveUp(feature, nextItem)}
+                  onMoveDown={() => handleMoveDown(feature, nextItem)}
                   onToggleVisibility={() => handleToggleVisibility(feature)}
                   onEdit={() => {
                     setCurrentFeature(feature);
