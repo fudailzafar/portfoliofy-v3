@@ -37,6 +37,7 @@ export function CertificationsTab({
     items: certifications,
     handleSave: saveCertification,
     handleMoveUp,
+    handleMoveDown,
     handleToggleVisibility,
   } = useResumeList<any>('certifications');
 
@@ -106,7 +107,7 @@ export function CertificationsTab({
                   canMoveUp={canMoveUp}
                   canMoveDown={canMoveDown}
                   onMoveUp={() => handleMoveUp(certification, prevItem)}
-                  onMoveDown={() => handleMoveUp(certification, nextItem)}
+                  onMoveDown={() => handleMoveDown(certification, nextItem)}
                   onToggleVisibility={() =>
                     handleToggleVisibility(certification)
                   }

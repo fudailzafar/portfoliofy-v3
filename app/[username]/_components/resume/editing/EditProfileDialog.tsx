@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-} from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useDebounce } from 'use-debounce';
 import {
@@ -147,6 +141,10 @@ export function EditProfileDialog({
   const [isSaving, setIsSaving] = useState(false);
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
   const [localPicture, setLocalPicture] = useState<string | undefined>(picture);
+  // Tracks the last avatar that actually saved successfully — a failed
+  // upload/removal rolls back here, not to the static page-load `picture`
+  // prop, so an earlier successful change in the same session isn't lost.
+  const lastSavedPictureRef = useRef(picture);
   const [isUploadingPicture, setIsUploadingPicture] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<DeleteTarget | null>(null);
   const [showDeleteAccountWarning, setShowDeleteAccountWarning] =
@@ -372,17 +370,18 @@ export function EditProfileDialog({
         });
         if (!res.ok) throw new Error('Failed to save avatar');
         setLocalPicture(url);
+        lastSavedPictureRef.current = url;
         URL.revokeObjectURL(blobUrl);
         toast.success('Profile picture updated');
       } catch {
-        setLocalPicture(picture);
+        setLocalPicture(lastSavedPictureRef.current);
         URL.revokeObjectURL(blobUrl);
         toast.error('Failed to upload image');
       } finally {
         setIsUploadingPicture(false);
       }
     },
-    [uploadToS3, picture],
+    [uploadToS3],
   );
 
   const handleAvatarRemove = useCallback(async () => {
@@ -391,14 +390,15 @@ export function EditProfileDialog({
     try {
       const res = await fetch('/api/user/avatar', { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to remove');
+      lastSavedPictureRef.current = undefined;
       toast.success('Profile picture removed');
     } catch {
-      setLocalPicture(picture);
+      setLocalPicture(lastSavedPictureRef.current);
       toast.error('Failed to remove image');
     } finally {
       setIsUploadingPicture(false);
     }
-  }, [picture]);
+  }, []);
 
   // Stable wrapper: GeneralTab passes a ChangeEvent; we extract the File
   const handlePictureUpload = useCallback(
@@ -438,8 +438,9 @@ export function EditProfileDialog({
     setIsSaving(true);
     try {
       if (uname !== username) {
-        const unameRes = await updateUsernameMutation.mutateAsync(uname);
-        if (!unameRes) {
+        try {
+          await updateUsernameMutation.mutateAsync(uname);
+        } catch {
           toast.error('Username update failed. It might be taken.');
           setIsSaving(false);
           return;
@@ -492,38 +493,38 @@ export function EditProfileDialog({
   // ---------------------------------------------------------------------------
   const editButton = mounted
     ? createPortal(
-      <TooltipProvider delayDuration={0}>
-        <Tooltip>
-          <DialogTrigger asChild>
-            <TooltipTrigger asChild>
-              <motion.button
-                initial={false}
-                animate={{ x: isSidebarOpen ? 330 : 0 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                whileTap={{ scale: 0.9 }}
-                aria-label="Edit Profile"
-                style={{
-                  position: 'fixed',
-                  bottom: '24px',
-                  left: '80px',
-                  zIndex: 50,
-                }}
-                className="flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 print:hidden"
-              >
-                <Pencil
-                  className="h-[18px] w-[18px] text-content-primary"
-                  strokeWidth={1.5}
-                />
-              </motion.button>
-            </TooltipTrigger>
-          </DialogTrigger>
-          <TooltipContent side="top" sideOffset={12}>
-            <span>Edit profile</span>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>,
-      document.body,
-    )
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <DialogTrigger asChild>
+              <TooltipTrigger asChild>
+                <motion.button
+                  initial={false}
+                  animate={{ x: isSidebarOpen ? 330 : 0 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  whileTap={{ scale: 0.9 }}
+                  aria-label="Edit Profile"
+                  style={{
+                    position: 'fixed',
+                    bottom: '24px',
+                    left: '80px',
+                    zIndex: 50,
+                  }}
+                  className="flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 print:hidden"
+                >
+                  <Pencil
+                    className="h-[18px] w-[18px] text-content-primary"
+                    strokeWidth={1.5}
+                  />
+                </motion.button>
+              </TooltipTrigger>
+            </DialogTrigger>
+            <TooltipContent side="top" sideOffset={12}>
+              <span>Edit profile</span>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>,
+        document.body,
+      )
     : null;
 
   return (
@@ -568,6 +569,7 @@ export function EditProfileDialog({
               isSaving={isSaving}
               isValidUname={isValidUname && isValidSiteUrl}
               checkUsernameMutationIsPending={checkUsernameMutation.isPending}
+              isValidUsername={isValidUname}
               years={years}
               setProjectToDelete={(type) => (id) => {
                 const handlers: Record<string, (id: string) => void> = {
@@ -601,7 +603,10 @@ export function EditProfileDialog({
                 <Button
                   onClick={handleGlobalSave}
                   disabled={
-                    isSaving || !isValidUname || !isValidSiteUrl || checkUsernameMutation.isPending
+                    isSaving ||
+                    !isValidUname ||
+                    !isValidSiteUrl ||
+                    checkUsernameMutation.isPending
                   }
                   variant="outline"
                   className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"

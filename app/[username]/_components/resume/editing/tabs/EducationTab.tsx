@@ -41,6 +41,7 @@ export function EducationTab({
     items: education,
     handleSave: saveEdu,
     handleMoveUp,
+    handleMoveDown,
     handleToggleVisibility,
   } = useResumeList<any>('education');
 
@@ -106,7 +107,7 @@ export function EducationTab({
                   canMoveUp={canMoveUp}
                   canMoveDown={canMoveDown}
                   onMoveUp={() => handleMoveUp(edu, prevItem)}
-                  onMoveDown={() => handleMoveUp(edu, nextItem)}
+                  onMoveDown={() => handleMoveDown(edu, nextItem)}
                   onToggleVisibility={() => handleToggleVisibility(edu)}
                   onEdit={() => {
                     setCurrentEdu(edu);

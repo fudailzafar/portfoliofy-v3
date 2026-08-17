@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -13,8 +13,6 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { useUserActions } from '@/hooks/useUserActions';
-import { useDebounce } from 'use-debounce';
 import { Check, X } from 'lucide-react';
 import { isValidWebsite, normalizeWebsite } from '@/lib/validation/url';
 
@@ -25,6 +23,8 @@ export function GeneralTab({
   handlePictureUpload,
   removePicture,
   onAvatarUpload,
+  isValidUsername,
+  isCheckingUsername,
 }: {
   initialUsername: string;
   localPicture?: string;
@@ -34,37 +34,30 @@ export function GeneralTab({
   ) => Promise<void>;
   removePicture: () => Promise<void>;
   onAvatarUpload?: () => void;
+  // The debounced availability check is owned by EditProfileDialog (it needs
+  // the result for the Save button too) — GeneralTab only renders it, so
+  // there's exactly one check in flight per username, not two.
+  isValidUsername: boolean;
+  isCheckingUsername: boolean;
 }) {
   const resume = useResumeStore((state) => state.resume);
   const uname = useResumeStore((state) => state.uname);
   const setUname = useResumeStore((state) => state.setUname);
   const updateHeader = useResumeStore((state) => state.updateHeader);
   const updateResume = useResumeStore((state) => state.updateResume);
-  const { checkUsernameMutation } = useUserActions();
-  const [debouncedUname] = useDebounce(uname, 500);
 
   const isInitialUsername = uname === initialUsername;
 
-  useEffect(() => {
-    if (!isInitialUsername && debouncedUname) {
-      checkUsernameMutation.mutateAsync(debouncedUname);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedUname, isInitialUsername]);
-
   if (!resume) return null;
-
-  const isValidUname =
-    /^[a-zA-Z0-9-]+$/.test(uname) &&
-    uname.length > 0 &&
-    ((isInitialUsername || checkUsernameMutation.data?.available) ?? false);
 
   const { header, summary } = resume;
 
   return (
     <div className="mx-auto max-w-2xl space-y-8">
       <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-xl sm:text-2xl font-bold text-content-primary">General</h2>
+        <h2 className="text-xl font-bold text-content-primary sm:text-2xl">
+          General
+        </h2>
       </div>
       {/* Avatar Section */}
       <div className="flex items-center gap-6">
@@ -206,7 +199,7 @@ export function GeneralTab({
         </div>
       </div>
 
-      <div className="space-y-6 w-full min-w-0">
+      <div className="w-full min-w-0 space-y-6">
         <div className="space-y-2">
           <Label htmlFor="uname" className="text-xs text-content-secondary">
             Username*
@@ -227,9 +220,9 @@ export function GeneralTab({
               className="h-10 rounded-none border-none bg-transparent pl-[110px] shadow-none focus-visible:ring-0"
             />
             <div className="flex items-center pr-3">
-              {isInitialUsername ? null : checkUsernameMutation.isPending ? (
+              {isInitialUsername ? null : isCheckingUsername ? (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-border-strong border-t-black" />
-              ) : isValidUname ? (
+              ) : isValidUsername ? (
                 <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-green-500 p-0.5">
                   <Check className="h-3 w-3 text-surface-1" strokeWidth={3} />
                 </div>
@@ -347,7 +340,11 @@ export function GeneralTab({
                 updateHeader({ website: normalized });
               }
             }}
-            className={!isValidWebsite(header?.website || '') ? 'border-red-500 focus-visible:ring-red-500' : ''}
+            className={
+              !isValidWebsite(header?.website || '')
+                ? 'border-red-500 focus-visible:ring-red-500'
+                : ''
+            }
           />
           {!isValidWebsite(header?.website || '') && (
             <p className="text-xs text-red-500">

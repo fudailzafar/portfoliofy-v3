@@ -37,6 +37,7 @@ export function ProjectsTab({
     items: projects,
     handleSave: saveProject,
     handleMoveUp,
+    handleMoveDown,
     handleToggleVisibility,
   } = useResumeList<any>('projects');
 
@@ -100,7 +101,7 @@ export function ProjectsTab({
                   canMoveUp={canMoveUp}
                   canMoveDown={canMoveDown}
                   onMoveUp={() => handleMoveUp(project, prevItem)}
-                  onMoveDown={() => handleMoveUp(project, nextItem)}
+                  onMoveDown={() => handleMoveDown(project, nextItem)}
                   onToggleVisibility={() => handleToggleVisibility(project)}
                   onEdit={() => {
                     setCurrentProject(project);

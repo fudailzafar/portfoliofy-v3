@@ -33,6 +33,7 @@ interface ProfileContentProps {
   isSaving: boolean;
   isValidUname: boolean;
   checkUsernameMutationIsPending: boolean;
+  isValidUsername: boolean;
   years: number[];
   setProjectToDelete: (type: any) => (id: string) => void;
   handlePictureUpload: (
@@ -74,6 +75,7 @@ export function ProfileContent({
   isSaving,
   isValidUname,
   checkUsernameMutationIsPending,
+  isValidUsername,
   years,
   setProjectToDelete,
   handlePictureUpload,
@@ -123,6 +125,8 @@ export function ProfileContent({
             isUploadingPicture={isUploadingPicture}
             handlePictureUpload={handlePictureUpload}
             removePicture={removePicture}
+            isValidUsername={isValidUsername}
+            isCheckingUsername={checkUsernameMutationIsPending}
           />
         )}
         {activeTab === 'skills' && <SkillsTab />}

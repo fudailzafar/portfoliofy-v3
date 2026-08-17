@@ -38,6 +38,7 @@ export function ExhibitionsTab({
     items: exhibitions,
     handleSave: saveExhibition,
     handleMoveUp,
+    handleMoveDown,
     handleToggleVisibility,
   } = useResumeList<any>('exhibitions');
 
@@ -109,7 +110,7 @@ export function ExhibitionsTab({
                   canMoveUp={canMoveUp}
                   canMoveDown={canMoveDown}
                   onMoveUp={() => handleMoveUp(exhibition, prevItem)}
-                  onMoveDown={() => handleMoveUp(exhibition, nextItem)}
+                  onMoveDown={() => handleMoveDown(exhibition, nextItem)}
                   onToggleVisibility={() => handleToggleVisibility(exhibition)}
                   onEdit={() => {
                     setCurrentExhibition(exhibition);
