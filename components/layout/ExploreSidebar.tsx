@@ -78,7 +78,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
               placeholder="Explore people..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="h-10 w-full rounded-full bg-surface-2 px-4 text-[14px] text-content-primary transition-all placeholder:text-content-muted focus:bg-surface-3 dark:focus:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 dark:focus-visible:ring-white"
+              className="h-10 w-full rounded-full bg-surface-2 px-4 text-[14px] text-content-primary transition-colors placeholder:text-content-muted focus:outline-none focus:ring-0"
             />
             {query && (
               <button
