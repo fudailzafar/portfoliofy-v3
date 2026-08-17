@@ -49,7 +49,7 @@ export async function POST(
 
     await storeResume(session.user.id, body as Resume);
     // @ts-expect-error Next.js 16 Canary types require second profile argument
-    revalidateTag(`resume-${session.user.id}`);
+    revalidateTag(`resume-v2-${session.user.id}`);
     return NextResponse.json({ success: true });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -65,4 +65,3 @@ export async function POST(
     );
   }
 }
-
