@@ -38,6 +38,7 @@ export function WritingTab({
     items: writing,
     handleSave: saveWriting,
     handleMoveUp,
+    handleMoveDown,
     handleToggleVisibility,
   } = useResumeList<any>('writing');
 
@@ -102,7 +103,7 @@ export function WritingTab({
                   canMoveUp={canMoveUp}
                   canMoveDown={canMoveDown}
                   onMoveUp={() => handleMoveUp(piece, prevItem)}
-                  onMoveDown={() => handleMoveUp(piece, nextItem)}
+                  onMoveDown={() => handleMoveDown(piece, nextItem)}
                   onToggleVisibility={() => handleToggleVisibility(piece)}
                   onEdit={() => {
                     setCurrentWriting(piece);

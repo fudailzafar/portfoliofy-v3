@@ -39,6 +39,7 @@ export function VolunteeringTab({
     items: volunteering,
     handleSave: saveVolunteering,
     handleMoveUp,
+    handleMoveDown,
     handleToggleVisibility,
   } = useResumeList<any>('volunteering');
 
@@ -107,7 +108,7 @@ export function VolunteeringTab({
                   canMoveUp={canMoveUp}
                   canMoveDown={canMoveDown}
                   onMoveUp={() => handleMoveUp(v, prevItem)}
-                  onMoveDown={() => handleMoveUp(v, nextItem)}
+                  onMoveDown={() => handleMoveDown(v, nextItem)}
                   onToggleVisibility={() => handleToggleVisibility(v)}
                   onEdit={() => {
                     setCurrentVolunteering(v);
