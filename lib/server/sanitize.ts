@@ -44,17 +44,20 @@ export function sanitizeResumeData(resumeData: Resume['resumeData']) {
     // If it's an array of section items (like workExperience)
     else if (Array.isArray(value)) {
       sanitized[key] = value.map((item) => {
-        const sanitizedItem = { ...item };
-        // Loop through keys on the item (e.g. title, year, description)
-        for (const itemKey of Object.keys(sanitizedItem)) {
-          if (
-            typeof sanitizedItem[itemKey] === 'string' &&
-            RICH_TEXT_FIELDS.includes(itemKey)
-          ) {
-            sanitizedItem[itemKey] = sanitizeRichText(sanitizedItem[itemKey]);
+        if (typeof item === 'object' && item !== null) {
+          const sanitizedItem = { ...item };
+          // Loop through keys on the item (e.g. title, year, description)
+          for (const itemKey of Object.keys(sanitizedItem)) {
+            if (
+              typeof sanitizedItem[itemKey] === 'string' &&
+              RICH_TEXT_FIELDS.includes(itemKey)
+            ) {
+              sanitizedItem[itemKey] = sanitizeRichText(sanitizedItem[itemKey]);
+            }
           }
+          return sanitizedItem;
         }
-        return sanitizedItem;
+        return item;
       });
     }
   }
