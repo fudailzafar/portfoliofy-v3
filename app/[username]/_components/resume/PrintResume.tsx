@@ -1,6 +1,10 @@
 import React, { useMemo } from 'react';
 import { ResumeData } from '@/lib/server/dbActions';
-import { sortByDateDesc, normalizeSectionOrder } from '@/lib/resume';
+import {
+  sortByDateDesc,
+  normalizeSectionOrder,
+  SECTION_LABELS,
+} from '@/lib/resume';
 import { cn, ensureHttps } from '@/lib/utils';
 import { PrintListItem } from './print/PrintListItem';
 
@@ -88,7 +92,7 @@ export const PrintResume = ({
   const sections: Record<string, { title: string; content: React.ReactNode }> =
     {
       awards: {
-        title: 'Awards',
+        title: SECTION_LABELS['awards'],
         content: awards?.length
           ? sortedAwards.map((award: any) => (
               <PrintListItem
@@ -102,7 +106,7 @@ export const PrintResume = ({
           : null,
       },
       certifications: {
-        title: 'Certifications',
+        title: SECTION_LABELS['certifications'],
         content: certifications?.length
           ? sortedCertifications.map((cert: any) => (
               <PrintListItem
@@ -116,7 +120,7 @@ export const PrintResume = ({
           : null,
       },
       work: {
-        title: 'Work Experience',
+        title: SECTION_LABELS['work'],
         content: workExperience?.length
           ? sortedWork.map((w: any) => (
               <PrintListItem
@@ -131,7 +135,7 @@ export const PrintResume = ({
           : null,
       },
       projects: {
-        title: 'Projects',
+        title: SECTION_LABELS['projects'],
         content: projects?.length
           ? sortedProjects.map((p: any) => (
               <PrintListItem
@@ -144,7 +148,7 @@ export const PrintResume = ({
           : null,
       },
       side_projects: {
-        title: 'Side Projects',
+        title: SECTION_LABELS['side_projects'],
         content: sideProjects?.length
           ? sortedSideProjects.map((p: any) => (
               <PrintListItem
@@ -157,7 +161,7 @@ export const PrintResume = ({
           : null,
       },
       features: {
-        title: 'Features',
+        title: SECTION_LABELS['features'],
         content: features?.length
           ? sortedFeatures.map((f: any) => (
               <PrintListItem
@@ -171,7 +175,7 @@ export const PrintResume = ({
           : null,
       },
       volunteering: {
-        title: 'Volunteering',
+        title: SECTION_LABELS['volunteering'],
         content: volunteering?.length
           ? sortedVolunteering.map((v: any) => (
               <PrintListItem
@@ -185,7 +189,7 @@ export const PrintResume = ({
           : null,
       },
       speaking: {
-        title: 'Speaking',
+        title: SECTION_LABELS['speaking'],
         content: speaking?.length
           ? sortedSpeaking.map((s: any) => (
               <PrintListItem
@@ -198,7 +202,7 @@ export const PrintResume = ({
           : null,
       },
       writing: {
-        title: 'Writing',
+        title: SECTION_LABELS['writing'],
         content: writing?.length
           ? sortedWriting.map((s: any) => (
               <PrintListItem
@@ -212,7 +216,7 @@ export const PrintResume = ({
           : null,
       },
       exhibitions: {
-        title: 'Exhibitions',
+        title: SECTION_LABELS['exhibitions'],
         content: exhibitions?.length
           ? sortedExhibitions.map((s: any) => (
               <PrintListItem
@@ -227,7 +231,7 @@ export const PrintResume = ({
           : null,
       },
       education: {
-        title: 'Education',
+        title: SECTION_LABELS['education'],
         content: education?.length
           ? sortedEducation.map((e: any) => (
               <PrintListItem
@@ -242,7 +246,7 @@ export const PrintResume = ({
           : null,
       },
       skills: {
-        title: 'Skills',
+        title: SECTION_LABELS['skills'],
         content: skillsList?.length ? (
           <div className="flex flex-wrap gap-2">
             {skillsList.map((skill: string) => (
@@ -254,7 +258,7 @@ export const PrintResume = ({
         ) : null,
       },
       contact: {
-        title: 'Contact',
+        title: SECTION_LABELS['contact'],
         content: visibleContacts?.length ? (
           <div className="flex flex-col gap-3">
             {visibleContacts.map((c: any) => (
