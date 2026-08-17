@@ -384,8 +384,9 @@ export function EditProfileDialog({
           router.refresh();
         }
       }
-    } catch {
-      toast.error('Failed to update profile');
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.message || 'Failed to update profile');
     } finally {
       setIsSaving(false);
     }
