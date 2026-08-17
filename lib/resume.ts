@@ -18,6 +18,22 @@ export const DEFAULT_SECTION_ORDER = [
   'certifications',
 ];
 
+export const SECTION_LABELS: Record<string, string> = {
+  work: 'Work Experience',
+  side_projects: 'Side Projects',
+  speaking: 'Speaking',
+  writing: 'Writing',
+  exhibitions: 'Exhibitions',
+  features: 'Features',
+  volunteering: 'Volunteering',
+  projects: 'Projects',
+  skills: 'Skills',
+  education: 'Education',
+  contact: 'Contact',
+  awards: 'Awards',
+  certifications: 'Certifications',
+};
+
 export const AttachmentSchema = z.object({
   id: z.string().describe('Unique identifier for the attachment'),
   url: z.string().describe('S3 URL of the attachment'),
