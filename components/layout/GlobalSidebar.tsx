@@ -35,6 +35,9 @@ export function GlobalSidebar() {
   const displayName =
     resumeQuery.data?.resume?.resumeData?.header?.name || session?.user?.name;
 
+  const currentUsername =
+    usernameQuery.data?.username || session?.user?.username;
+
   if (isExploreMode) {
     return <ExploreSidebar onClose={() => setIsExploreMode(false)} />;
   }
@@ -48,7 +51,13 @@ export function GlobalSidebar() {
             className="flex h-10 cursor-pointer items-center justify-between rounded-full bg-surface-2 px-4 transition-all hover:bg-surface-3 dark:hover:bg-surface-2"
           >
             <span className="text-[14px] text-content-muted">Explore</span>
-            <span className="text-[12px] tracking-[0.2em] text-content-muted dark:text-content-muted" style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+            <span
+              className="text-[12px] tracking-[0.2em] text-content-muted dark:text-content-muted"
+              style={{
+                fontFamily:
+                  'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              }}
+            >
               ⌘⇧E
             </span>
           </div>
@@ -74,18 +83,25 @@ export function GlobalSidebar() {
               </div>
 
               {/* Profile */}
-              {usernameQuery.data?.username && (
-                <Link
-                  href={`/${usernameQuery.data.username}`}
-                  className="group flex w-fit items-center gap-3"
-                >
-                  <div
-                    className={`h-1 w-1 rounded-full ${pathname === `/${usernameQuery.data.username}` ? 'bg-content-primary' : 'bg-transparent'}`}
-                  />
-                  <span className="text-[14px] text-content-secondary underline-offset-4 group-hover:underline">
-                    Profile
-                  </span>
-                </Link>
+              {!currentUsername && usernameQuery.isLoading ? (
+                <div className="group flex w-fit items-center gap-3">
+                  <div className="h-1 w-1 rounded-full bg-transparent" />
+                  <div className="h-4 w-12 animate-pulse rounded bg-surface-3" />
+                </div>
+              ) : (
+                currentUsername && (
+                  <Link
+                    href={`/${currentUsername}`}
+                    className="group flex w-fit items-center gap-3"
+                  >
+                    <div
+                      className={`h-1 w-1 rounded-full ${pathname === `/${currentUsername}` ? 'bg-content-primary' : 'bg-transparent'}`}
+                    />
+                    <span className="text-[14px] text-content-secondary underline-offset-4 group-hover:underline">
+                      Profile
+                    </span>
+                  </Link>
+                )
               )}
 
               {/* About */}
@@ -99,20 +115,26 @@ export function GlobalSidebar() {
               </Link>
 
               {/* Username copy to clipboard */}
-              {usernameQuery.data?.username && (
+              {!currentUsername && usernameQuery.isLoading ? (
                 <div className="mt-2 pt-6">
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        `portfoliofy.me/${usernameQuery.data.username}`,
-                      );
-                      toast.success('Copied to clipboard');
-                    }}
-                    className="pl-4 text-left text-[14px] text-content-muted transition-colors hover:text-content-secondary dark:hover:text-gray-300"
-                  >
-                    portfoliofy.me/{usernameQuery.data.username}
-                  </button>
+                  <div className="ml-4 h-4 w-40 animate-pulse rounded bg-surface-3" />
                 </div>
+              ) : (
+                currentUsername && (
+                  <div className="mt-2 pt-6">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          `portfoliofy.me/${currentUsername}`,
+                        );
+                        toast.success('Copied to clipboard');
+                      }}
+                      className="pl-4 text-left text-[14px] text-content-muted transition-colors hover:text-content-secondary dark:hover:text-gray-300"
+                    >
+                      portfoliofy.me/{currentUsername}
+                    </button>
+                  </div>
+                )
               )}
             </div>
           ) : (
