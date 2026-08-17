@@ -9,6 +9,7 @@ declare module 'next-auth' {
       name?: string | null;
       email?: string | null;
       image?: string | null;
+      username?: string | null;
     };
   }
 }
@@ -50,12 +51,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, account }) {
       if (account?.provider === 'google') {
         token.userId = account.providerAccountId;
+        try {
+          const userRecords =
+            await sql`SELECT username FROM users WHERE id = ${account.providerAccountId}`;
+          if (userRecords.length > 0) {
+            token.username = userRecords[0].username;
+          }
+        } catch (e) {
+          console.error('Error fetching username for JWT:', e);
+        }
       }
       return token;
     },
     async session({ session, token }) {
       if (token.userId) {
         session.user.id = token.userId as string;
+      }
+      if (token.username) {
+        session.user.username = token.username as string;
       }
       return session;
     },
