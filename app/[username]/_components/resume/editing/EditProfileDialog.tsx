@@ -26,7 +26,11 @@ import { arrayMove } from '@dnd-kit/sortable';
 import { DragEndEvent } from '@dnd-kit/core';
 import { ResumeData } from '@/lib/server/dbActions';
 import { useUserActions } from '@/hooks/useUserActions';
-import { normalizeSectionOrder } from '@/lib/resume';
+import {
+  normalizeSectionOrder,
+  DEFAULT_SECTION_ORDER,
+  SECTION_LABELS,
+} from '@/lib/resume';
 import { getOptimizedImageUrl } from '@/lib/utils';
 import { useS3Upload } from 'next-s3-upload';
 import { toast } from 'sonner';
@@ -40,19 +44,12 @@ import { DeleteConfirmDialog, UnsavedChangesDialog } from './dialogs';
 // ---------------------------------------------------------------------------
 
 const TAB_DEFINITIONS: Record<string, { label: string; disabled: boolean }> = {
-  work: { label: 'Work Experience', disabled: false },
-  side_projects: { label: 'Side Projects', disabled: false },
-  speaking: { label: 'Speaking', disabled: false },
-  writing: { label: 'Writing', disabled: false },
-  exhibitions: { label: 'Exhibitions', disabled: false },
-  projects: { label: 'Projects', disabled: false },
-  skills: { label: 'Skills', disabled: false },
-  education: { label: 'Education', disabled: false },
-  contact: { label: 'Contact', disabled: false },
-  awards: { label: 'Awards', disabled: false },
-  certifications: { label: 'Certifications', disabled: false },
-  volunteering: { label: 'Volunteering', disabled: false },
-  features: { label: 'Features', disabled: false },
+  ...Object.fromEntries(
+    DEFAULT_SECTION_ORDER.map((sectionId) => [
+      sectionId,
+      { label: SECTION_LABELS[sectionId], disabled: false },
+    ]),
+  ),
   print: { label: 'Print', disabled: false },
 };
 
