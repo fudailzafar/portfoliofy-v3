@@ -1,4 +1,8 @@
-import { getResume, getUserIdByUsername, getUserIdByCustomDomain } from '@/lib/server/dbActions';
+import {
+  getResume,
+  getUserIdByUsername,
+  getUserIdByCustomDomain,
+} from '@/lib/server/dbActions';
 import sql from '@/lib/server/db';
 import { unstable_cache } from 'next/cache';
 import { cache } from 'react';
@@ -54,9 +58,9 @@ export const getCachedResume = cache(async (userId: string) => {
     async () => {
       return await getResume(userId);
     },
-    [userId],
+    ['resume-v2', userId],
     {
-      tags: ['resumes', `resume-${userId}`],
+      tags: ['resumes-v2', `resume-v2-${userId}`],
       revalidate: 86400, // 1 day
     },
   )();
