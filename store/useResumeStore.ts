@@ -19,6 +19,7 @@ interface ResumeStore {
   updateResume: (data: Partial<ResumeData>) => void;
   updateHeader: (header: Partial<ResumeData['header']>) => void;
   updateDesign: (design: Partial<ResumeData['design']>) => void;
+  deleteItemFromSection: (sectionKey: keyof ResumeData, id: string) => void;
 
   isEditingTab: boolean;
   setIsEditingTab: (editing: boolean) => void;
@@ -62,6 +63,20 @@ export const useResumeStore = create<ResumeStore>((set) => ({
       if (!state.resume) return state;
       return {
         resume: { ...state.resume, ...data },
+        hasUnsavedChanges: true,
+      };
+    }),
+
+  deleteItemFromSection: (sectionKey, id) =>
+    set((state) => {
+      if (!state.resume) return state;
+      const section = state.resume[sectionKey];
+      if (!Array.isArray(section)) return state;
+      return {
+        resume: {
+          ...state.resume,
+          [sectionKey]: section.filter((item: any) => item.id !== id),
+        },
         hasUnsavedChanges: true,
       };
     }),

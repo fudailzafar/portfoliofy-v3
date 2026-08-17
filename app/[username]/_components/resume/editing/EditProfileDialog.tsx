@@ -26,12 +26,7 @@ import { arrayMove } from '@dnd-kit/sortable';
 import { DragEndEvent } from '@dnd-kit/core';
 import { ResumeData } from '@/lib/server/dbActions';
 import { useUserActions } from '@/hooks/useUserActions';
-import {
-  ResumeDataSchemaType,
-  sortByDateDesc,
-  DEFAULT_SECTION_ORDER,
-  normalizeSectionOrder,
-} from '@/lib/resume';
+import { normalizeSectionOrder } from '@/lib/resume';
 import { getOptimizedImageUrl } from '@/lib/utils';
 import { useS3Upload } from 'next-s3-upload';
 import { toast } from 'sonner';
@@ -259,86 +254,20 @@ export function EditProfileDialog({
   // ---------------------------------------------------------------------------
   // Delete handlers — stable; reads store at call-time so no stale closure
   // ---------------------------------------------------------------------------
-  const DELETE_HANDLERS = useMemo<
-    Record<DeleteTarget['type'], (id: string) => void>
-  >(
+  const SECTION_MAP: Record<DeleteTarget['type'], any> = useMemo(
     () => ({
-      project: (id) => {
-        const s = useResumeStore.getState();
-        s.updateResume({
-          projects: s.resume?.projects?.filter((p: any) => p.id !== id),
-        });
-      },
-      sideProject: (id) => {
-        const s = useResumeStore.getState();
-        s.updateResume({
-          sideProjects: s.resume?.sideProjects?.filter((p: any) => p.id !== id),
-        });
-      },
-      speaking: (id) => {
-        const s = useResumeStore.getState();
-        s.updateResume({
-          speaking: s.resume?.speaking?.filter((p: any) => p.id !== id),
-        });
-      },
-      writing: (id) => {
-        const s = useResumeStore.getState();
-        s.updateResume({
-          writing: s.resume?.writing?.filter((p: any) => p.id !== id),
-        });
-      },
-      exhibitions: (id) => {
-        const s = useResumeStore.getState();
-        s.updateResume({
-          exhibitions: s.resume?.exhibitions?.filter((p: any) => p.id !== id),
-        });
-      },
-      work: (id) => {
-        const s = useResumeStore.getState();
-        s.updateResume({
-          workExperience: s.resume?.workExperience?.filter(
-            (p: any) => p.id !== id,
-          ),
-        });
-      },
-      contact: (id) => {
-        const s = useResumeStore.getState();
-        s.updateResume({
-          contacts: s.resume?.contacts?.filter((p: any) => p.id !== id),
-        });
-      },
-      volunteering: (id) => {
-        const s = useResumeStore.getState();
-        s.updateResume({
-          volunteering: s.resume?.volunteering?.filter((p: any) => p.id !== id),
-        });
-      },
-      feature: (id) => {
-        const s = useResumeStore.getState();
-        s.updateResume({
-          features: s.resume?.features?.filter((p: any) => p.id !== id),
-        });
-      },
-      award: (id) => {
-        const s = useResumeStore.getState();
-        s.updateResume({
-          awards: s.resume?.awards?.filter((p: any) => p.id !== id),
-        });
-      },
-      certification: (id) => {
-        const s = useResumeStore.getState();
-        s.updateResume({
-          certifications: s.resume?.certifications?.filter(
-            (p: any) => p.id !== id,
-          ),
-        });
-      },
-      education: (id) => {
-        const s = useResumeStore.getState();
-        s.updateResume({
-          education: s.resume?.education?.filter((p: any) => p.id !== id),
-        });
-      },
+      project: 'projects',
+      sideProject: 'sideProjects',
+      speaking: 'speaking',
+      writing: 'writing',
+      exhibitions: 'exhibitions',
+      work: 'workExperience',
+      contact: 'contacts',
+      volunteering: 'volunteering',
+      feature: 'features',
+      award: 'awards',
+      certification: 'certifications',
+      education: 'education',
     }),
     [],
   );
@@ -628,7 +557,10 @@ export function EditProfileDialog({
         }
         onConfirm={() => {
           if (pendingDelete) {
-            DELETE_HANDLERS[pendingDelete.type](pendingDelete.id);
+            const storeKey = SECTION_MAP[pendingDelete.type];
+            useResumeStore
+              .getState()
+              .deleteItemFromSection(storeKey, pendingDelete.id);
             setPendingDelete(null);
           }
         }}
