@@ -37,6 +37,7 @@ export function AwardsTab({
     items: awards,
     handleSave: saveAward,
     handleMoveUp,
+    handleMoveDown,
     handleToggleVisibility,
   } = useResumeList<any>('awards');
 
@@ -98,7 +99,7 @@ export function AwardsTab({
                 canMoveUp={canMoveUp}
                 canMoveDown={canMoveDown}
                 onMoveUp={() => handleMoveUp(award, prevItem)}
-                onMoveDown={() => handleMoveUp(award, nextItem)}
+                onMoveDown={() => handleMoveDown(award, nextItem)}
                 onToggleVisibility={() => handleToggleVisibility(award)}
                 onEdit={() => {
                   setCurrentAward(award);

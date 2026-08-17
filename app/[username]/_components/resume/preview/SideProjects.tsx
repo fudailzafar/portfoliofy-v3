@@ -20,7 +20,7 @@ export function SideProjects({
           key={item.id || idx}
           leftContent={item.year}
           title={item.title}
-          subtitle={undefined}
+          subtitle={item.company ? `at ${item.company}` : undefined}
           link={item.link}
           location={undefined}
           description={item.description}

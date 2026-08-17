@@ -28,6 +28,7 @@ export function ContactsTab({
     items: contacts,
     handleSave: saveContact,
     handleMoveUp,
+    handleMoveDown,
     handleToggleVisibility,
   } = useResumeList<any>('contacts');
 
@@ -61,7 +62,7 @@ export function ContactsTab({
       addButtonText="Add link"
       emptyState={{
         icon: MessageCircle,
-        buttonText: "+ Add Contact",
+        buttonText: '+ Add Contact',
       }}
       renderList={() => (
         <>
@@ -72,7 +73,7 @@ export function ContactsTab({
             return (
               <div
                 key={c.id || c.platform}
-                className="group flex flex-col gap-4 sm:flex-row sm:gap-12 border-b border-border-subtle pb-5 mb-5 last:border-b-0 last:pb-0 last:mb-0"
+                className="group mb-5 flex flex-col gap-4 border-b border-border-subtle pb-5 last:mb-0 last:border-b-0 last:pb-0 sm:flex-row sm:gap-12"
               >
                 <div className="shrink-0 pt-0.5 text-sm text-content-muted sm:w-24">
                   {c.platform}
@@ -125,7 +126,7 @@ export function ContactsTab({
                       canMoveUp={!!prevItem}
                       canMoveDown={!!nextItem}
                       onMoveUp={() => handleMoveUp(c, prevItem)}
-                      onMoveDown={() => handleMoveUp(c, nextItem)}
+                      onMoveDown={() => handleMoveDown(c, nextItem)}
                     />
                   </EditDeleteButtons>
                 </div>
@@ -280,9 +281,7 @@ export function ContactsTab({
             <TabFormActions
               onCancel={() => setContactsView('list')}
               onSave={handleSave}
-              isSaveDisabled={
-                !currentContact.platform || !currentContact.link
-              }
+              isSaveDisabled={!currentContact.platform || !currentContact.link}
             />
           </>
         ) : null

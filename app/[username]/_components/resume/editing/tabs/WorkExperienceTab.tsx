@@ -53,6 +53,7 @@ export function WorkExperienceTab({
     items: work,
     handleSave: saveWork,
     handleMoveUp,
+    handleMoveDown,
     handleToggleVisibility,
   } = useResumeList<any>('workExperience');
 
@@ -119,7 +120,7 @@ export function WorkExperienceTab({
                 canMoveUp={canMoveUp}
                 canMoveDown={canMoveDown}
                 onMoveUp={() => handleMoveUp(w, prevItem)}
-                onMoveDown={() => handleMoveUp(w, nextItem)}
+                onMoveDown={() => handleMoveDown(w, nextItem)}
                 onToggleVisibility={() => handleToggleVisibility(w)}
                 onEdit={() => {
                   setCurrentWork(w);
