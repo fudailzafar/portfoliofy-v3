@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       WHERE id = ${userId}
     `;
 
-    revalidateTag('users', 'max');
+    revalidateTag(`user-${userId}`, 'max' as any);
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -52,7 +52,7 @@ export async function DELETE() {
       WHERE id = ${userId}
     `;
 
-    revalidateTag('users', 'max');
+    revalidateTag(`user-${userId}`, 'max' as any);
 
     return NextResponse.json({ success: true });
   } catch (error) {
