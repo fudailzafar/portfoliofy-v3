@@ -41,8 +41,8 @@
     --surface-card: #ffffff;
 
     /* Text */
-    --content-primary: #111827;
-    --content-secondary: #4b5563;
+    --content-primary: #111;
+    --content-secondary: #666;
     --content-muted: #6b7280;
 
     /* Borders */
@@ -94,8 +94,8 @@
     --surface-card: #1f1f1f;
 
     /* Text */
-    --content-primary: #f3f4f6;
-    --content-secondary: #e5e7eb;
+    --content-primary: #eee;
+    --content-secondary: #aaa;
     --content-muted: #9ca3af;
 
     /* Borders */
