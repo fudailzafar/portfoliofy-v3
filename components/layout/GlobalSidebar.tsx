@@ -48,7 +48,7 @@ export function GlobalSidebar() {
         <div className="mt-2 flex-1">
           <div
             onClick={() => setIsExploreMode(true)}
-            className="flex h-10 cursor-pointer items-center justify-between rounded-full bg-surface-2 px-4 transition-all hover:bg-surface-3 dark:hover:bg-surface-2"
+            className="flex h-10 cursor-pointer items-center justify-between rounded-full bg-surface-2 px-4 transition-all dark:bg-[#333]"
           >
             <span className="text-[14px] text-content-muted">Explore</span>
             <span
@@ -129,7 +129,7 @@ export function GlobalSidebar() {
                         );
                         toast.success('Copied to clipboard');
                       }}
-                      className="pl-4 text-left text-[14px] text-content-muted transition-colors hover:text-content-secondary dark:hover:text-gray-300"
+                      className="pl-4 text-left text-[14px] text-content-muted transition-colors hover:underline hover:underline-offset-[3px]"
                     >
                       portfoliofy.me/{currentUsername}
                     </button>
@@ -144,7 +144,7 @@ export function GlobalSidebar() {
                 <div
                   className={`h-1 w-1 rounded-full ${pathname === '/' || pathname === '/about' ? 'bg-action-primary' : 'bg-transparent'}`}
                 />
-                <span className="text-[14px] text-content-secondary underline-offset-4 group-hover:underline">
+                <span className="text-[14px] text-content-primary underline-offset-4 group-hover:underline">
                   About
                 </span>
               </Link>
@@ -156,7 +156,7 @@ export function GlobalSidebar() {
                   className="group flex w-fit items-center gap-3 text-left"
                 >
                   <div className="h-1 w-1 rounded-full bg-transparent" />
-                  <span className="text-[14px] text-content-secondary underline-offset-4 group-hover:underline">
+                  <span className="text-[14px] text-content-primary underline-offset-4 group-hover:underline">
                     Login
                   </span>
                 </button>
@@ -166,7 +166,7 @@ export function GlobalSidebar() {
               <div className="pl-2 pt-3">
                 <button
                   onClick={() => openAuth('signup')}
-                  className="h-[32px] w-[130px] rounded-[8px] border border-border-strong bg-surface-1 text-[14px] font-medium text-content-primary transition-all active:bg-surface-2"
+                  className="h-[32px] w-[130px] rounded-[8px] border border-border-strong bg-surface-1 text-[14px] font-medium text-content-primary transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
                 >
                   Create a profile
                 </button>
