@@ -17,6 +17,7 @@ import { Contact } from './preview/Contact';
 import { Features } from './preview/Features';
 import { Volunteering } from './preview/Volunteering';
 import { EmptyProfileState } from './preview/EmptyProfileState';
+import { PublicEmptyProfileState } from './preview/PublicEmptyProfileState';
 import { normalizeSectionOrder } from '@/lib/resume';
 
 const SECTION_COMPONENTS: Record<string, React.FC<any>> = {
@@ -126,6 +127,9 @@ export const FullResume = ({
         <Summary summary={resume.summary} />
 
         {isOwner && isEmptyProfile && <EmptyProfileState />}
+        {!isOwner && isEmptyProfile && (
+          <PublicEmptyProfileState name={resume.header.name} />
+        )}
 
         {order.map((sectionId) => {
           const Component = SECTION_COMPONENTS[sectionId];
