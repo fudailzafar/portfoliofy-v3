@@ -71,6 +71,14 @@ export function ClientLayoutWrapper({
           <GlobalSidebar />
         </motion.div>
 
+        {/* Click-away overlay */}
+        {isOpen && (
+          <div
+            className="fixed inset-0 z-30 bg-transparent"
+            onClick={() => setIsOpen(false)}
+          />
+        )}
+
         {/* Main Content Layer */}
         <motion.div
           animate={{
