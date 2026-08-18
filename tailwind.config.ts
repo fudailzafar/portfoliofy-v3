@@ -35,6 +35,7 @@ const config: Config = {
           bg: 'var(--theme-bg)',
           primary: 'var(--theme-primary)',
           secondary: 'var(--theme-secondary)',
+          muted: 'var(--theme-muted)',
           border: 'var(--theme-border)',
           accent: 'var(--theme-accent)',
         },

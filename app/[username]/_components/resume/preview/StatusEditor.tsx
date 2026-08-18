@@ -95,28 +95,88 @@ export function StatusEditor({
   return (
     <motion.div
       initial={{ height: 0, opacity: 0, marginTop: 0 }}
-      animate={{ height: 'auto', opacity: 1, marginTop: 16 }}
+      animate={{ height: 'auto', opacity: 1, marginTop: 20 }}
       exit={{ height: 0, opacity: 0, marginTop: 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
       className="overflow-visible"
     >
       <div
         ref={containerRef}
-        className="relative flex w-full flex-col gap-1 rounded-3xl bg-theme-border p-4 shadow-sm"
+        className="relative flex w-full flex-col gap-1 rounded-3xl bg-theme-border p-4 shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000000d] dark:shadow-none"
       >
         {/* Speech Bubble Tail — centered under the status toggle button */}
         <svg
-          width="48"
+          width="26"
           height="12"
-          viewBox="0 0 48 12"
+          viewBox="0 0 26 12"
           fill="none"
-          className="absolute -top-[10px] left-[56px]"
+          xmlns="http://www.w3.org/2000/svg"
+          className="absolute -top-[11px] left-[67px]"
           aria-hidden="true"
         >
+          <mask
+            id="editor-tail-mask"
+            style={{ maskType: 'alpha' }}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="26"
+            height="10"
+          >
+            <rect width="26" height="10" fill="#C4C4C4" />
+          </mask>
+          <g mask="url(#editor-tail-mask)" className="dark:hidden">
+            <g filter="url(#editor-tail-filter)">
+              <path
+                d="M11.5858 3.41422C12.3668 2.63317 13.6332 2.63317 14.4142 3.41422L19.6569 8.65685C21.1571 10.1571 23.192 11 25.3137 11H26V12H0V11H0.686293C2.80802 11 4.84286 10.1571 6.34315 8.65685L11.5858 3.41422Z"
+                fill="#C4C4C4"
+              />
+              <path
+                d="M26.5 11V10.5H26H25.3137C23.3246 10.5 21.4169 9.70982 20.0104 8.3033L14.7678 3.06066C13.7915 2.08435 12.2085 2.08435 11.2322 3.06066L5.98959 8.3033C4.58307 9.70982 2.67542 10.5 0.686293 10.5H0H-0.5V11V12V12.5H0H26H26.5V12V11Z"
+                stroke="black"
+                strokeOpacity="0.05"
+              />
+            </g>
+          </g>
           <path
-            d="M0 12V11H6C13 11 17 1 24 1C31 1 35 11 42 11H48V12H0Z"
+            d="M11.5858 3.41422C12.3668 2.63317 13.6332 2.63317 14.4142 3.41422L19.6569 8.65685C21.1571 10.1571 23.192 11 25.3137 11H26V12H0V11H0.686293C2.80802 11 4.84286 10.1571 6.34315 8.65685L11.5858 3.41422Z"
             className="fill-theme-border"
           />
+          <defs>
+            <filter
+              id="editor-tail-filter"
+              x="-5"
+              y="-1.17157"
+              width="36"
+              height="19.1716"
+              filterUnits="userSpaceOnUse"
+              colorInterpolationFilters="sRGB"
+            >
+              <feFlood floodOpacity="0" result="BackgroundImageFix" />
+              <feColorMatrix
+                in="SourceAlpha"
+                type="matrix"
+                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+              />
+              <feOffset dy="1" />
+              <feGaussianBlur stdDeviation="2" />
+              <feColorMatrix
+                type="matrix"
+                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0"
+              />
+              <feBlend
+                mode="normal"
+                in2="BackgroundImageFix"
+                result="effect1_dropShadow"
+              />
+              <feBlend
+                mode="normal"
+                in="SourceGraphic"
+                in2="effect1_dropShadow"
+                result="shape"
+              />
+            </filter>
+          </defs>
         </svg>
 
         <div className="flex items-start gap-3">
