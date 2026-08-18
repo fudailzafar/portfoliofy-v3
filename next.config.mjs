@@ -25,6 +25,15 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/press',
+        destination: 'https://app.notion.com/p/Portfoliofy-Press-Kit-081c5b565052824990a60106e1d1c9de?source=copy_link',
+        permanent: false,
+      },
+    ];
+  },
   experimental: {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,

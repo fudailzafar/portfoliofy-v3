@@ -17,7 +17,10 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="gap-0 p-8 font-sans sm:max-w-sm">
+      <DialogContent
+        hideCloseButton
+        className="gap-0 border-none p-8 font-sans dark:bg-surface-1 sm:max-w-sm"
+      >
         <DialogTitle className="sr-only">
           {mode === 'login'
             ? 'Login to your account﻿ 👋'
@@ -40,7 +43,7 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
                     ? 'Login to your account﻿ 👋'
                     : 'Create a new profile ✨'}
                 </h2>
-                <p className="text-[14px] leading-snug text-content-muted">
+                <p className="text-[14px] leading-snug text-content-secondary">
                   By continuing you agree to our terms of service and privacy
                   policy.
                 </p>
@@ -50,7 +53,7 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={handleGoogleSignIn}
-                className="flex h-11 w-full items-center justify-center gap-3 rounded-md border border-border-strong bg-surface-1 px-4 text-sm font-medium text-content-primary shadow-sm outline-none ring-offset-background transition-colors hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="flex h-11 w-full items-center justify-center gap-3 rounded-md bg-surface-1 px-4 text-sm font-medium text-content-primary shadow-sm outline-none ring-offset-background transition-colors hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:bg-border-subtle dark:text-content-secondary dark:active:bg-border-strong"
               >
                 {/* Google SVG Icon */}
                 <svg
