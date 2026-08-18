@@ -61,7 +61,7 @@ export function HomeHero() {
           professional profiles.
         </h1>
 
-        <div className="mt-8 grid grid-cols-[repeat(6,minmax(16px,72px))] items-stretch gap-[22px]">
+        <div className="mt-8 grid grid-cols-[repeat(6,minmax(16px,72px))] items-center gap-[22px]">
           {FEATURED_PROFILE_SEEDS.map((seed) => (
             <div
               key={seed}

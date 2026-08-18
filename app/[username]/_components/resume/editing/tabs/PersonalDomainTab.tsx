@@ -127,7 +127,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
               <h4 className="text-[14px] text-content-primary">
                 Custom domain
               </h4>
-              <p className="text-[13px] text-[#888888]">
+              <p className="text-[13px] text-content-muted">
                 Optionally set a domain other than{' '}
                 <a
                   href={`https://${username}.portfoliofy.me`}
@@ -298,7 +298,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
         <div className="mt-4 space-y-4 border-t border-border-subtle pt-8">
           <div>
             <h4 className="text-[14px] text-content-primary">Typography</h4>
-            <p className="mt-1 text-[13px] text-[#888888]">
+            <p className="mt-1 text-[13px] text-content-muted">
               Change the typography shown on your personal domain.
             </p>
           </div>
@@ -352,7 +352,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   <span className="text-[14px] text-content-primary">
                     {label}
                   </span>
-                  <span className="text-[14px] text-[#737373]">
+                  <span className="text-[14px] text-content-muted">
                     {description}
                   </span>
                 </div>
@@ -365,7 +365,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
         <div className="mt-4 space-y-4 border-t border-border-subtle pt-8">
           <div>
             <h4 className="text-[14px] text-content-primary">Color palette</h4>
-            <p className="mt-1 text-[13px] text-[#888888]">
+            <p className="mt-1 text-[13px] text-content-muted">
               Change the colors shown on your personal domain.
             </p>
           </div>
@@ -469,7 +469,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   <span className="text-[14px] text-content-primary">
                     {label}
                   </span>
-                  <span className="text-[14px] text-[#737373]">
+                  <span className="text-[14px] text-content-muted">
                     {description}
                   </span>
                 </div>
@@ -484,7 +484,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
             <h4 className="text-[14px] text-content-primary">
               Hide social features
             </h4>
-            <p className="text-[13px] text-[#888888]">
+            <p className="text-[13px] text-content-muted">
               Hide your profile photo and status updates on your personal domain
               for a more minimal look.
             </p>
