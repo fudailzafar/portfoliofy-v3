@@ -32,7 +32,7 @@ export function Contact({
             className="flex flex-col gap-0 min-[481px]:flex-row min-[481px]:gap-[36px] print:mb-6"
           >
             {/* Left column: Platform */}
-            <div className="shrink-0 pt-0.5 text-sm text-theme-secondary min-[481px]:w-[94px]">
+            <div className="shrink-0 pt-0.5 text-sm text-theme-muted min-[481px]:w-[94px]">
               {contact.platform}
             </div>
 
