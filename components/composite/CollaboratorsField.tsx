@@ -75,12 +75,13 @@ export function CollaboratorsField({
             {value.map((collaborator) => (
               <div
                 key={collaborator.id}
-                className="flex items-center gap-1.5 rounded-full border border-border-strong pr-2"
+                className="flex items-center gap-0.5 rounded-full border border-border-strong pr-2"
               >
-                <Avatar className="size-9 shrink-0">
+                <Avatar className="size-8 shrink-0 p-0.5">
                   <AvatarImage
                     src={collaborator.image || undefined}
                     alt={collaborator.name}
+                    className="rounded-full"
                   />
                   <AvatarFallback className="bg-[#e5e5e5] dark:bg-[#333333]">
                     <AvatarPlaceholderIcon className="text-white dark:text-[#222222]" />
@@ -89,10 +90,10 @@ export function CollaboratorsField({
                 <button
                   type="button"
                   onClick={() => handleRemove(collaborator.id)}
-                  className="text-content-muted hover:text-content-primary"
+                  className="text-content-muted active:text-content-primary"
                   aria-label={`Remove ${collaborator.name}`}
                 >
-                  <X className="size-3.5" />
+                  <X className="size-3" />
                 </button>
               </div>
             ))}
