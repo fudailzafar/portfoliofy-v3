@@ -1,15 +1,22 @@
 import { Footer } from '@/components/layout/Footer';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+};
 
 export default function PrivacyPage() {
   return (
     <div className="flex min-h-screen flex-col bg-surface-1">
-      <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-20 font-sans">
-        <h1 className="mb-2 text-4xl font-bold tracking-tight text-content-primary">
+      <main className="mx-auto w-full max-w-[540px] flex-1 py-[72px] font-sans">
+        <h1 className="text-[20px] font-medium text-content-primary">
           Privacy Policy
         </h1>
-        <p className="mb-12 text-content-muted">Effective May 27, 2026</p>
+        <p className="mb-4 text-[14px] text-content-secondary">
+          Effective May 27, 2026
+        </p>
 
-        <div className="space-y-6 text-[15px] leading-relaxed text-content-secondary">
+        <div className="space-y-4 text-[14px] font-normal leading-relaxed text-content-secondary">
           <p>
             We care about your privacy and only collect information we deem
             necessary to providing your requested service. Accordingly we have
@@ -18,7 +25,7 @@ export default function PrivacyPage() {
             policy below.
           </p>
 
-          <ul className="list-disc space-y-6 pl-5">
+          <ul className="list-disc space-y-4 pl-5">
             <li>
               We collect basic information from you in order to set up your
               account. For example in order to sign up for an account you must
@@ -57,7 +64,7 @@ export default function PrivacyPage() {
             </li>
           </ul>
 
-          <p className="pt-2">
+          <p>
             By continuing to use our website and services you agree to our
             policy surrounding privacy and personal information.
           </p>
