@@ -5,30 +5,30 @@ export function Footer() {
     <footer className="mt-16 w-full bg-surface-1 px-6 py-12 font-sans">
       <div className="mx-auto flex w-full max-w-4xl items-center justify-center">
         {/* Navigation Links */}
-        <div className="flex flex-wrap justify-center gap-8 text-[15px] text-content-muted">
-          <Link
-            href="/"
-            className="transition-colors hover:text-content-primary"
-          >
+        <div className="flex flex-wrap justify-center gap-8 text-[14px] font-medium text-[#aaa]">
+          <Link href="/" className="underline-offset-[3px] hover:underline">
             About
+          </Link>
+          <Link href="/faq" className="underline-offset-[3px] hover:underline">
+            FAQ
           </Link>
           <Link
             href="/terms"
-            className="transition-colors hover:text-content-primary"
+            className="underline-offset-[3px] hover:underline"
           >
             Terms
           </Link>
           <Link
-            href="/privacy"
-            className="transition-colors hover:text-content-primary"
+            href="/support"
+            className="underline-offset-[3px] hover:underline"
           >
-            Privacy
+            Support
           </Link>
           <Link
-            href="/faq"
-            className="transition-colors hover:text-content-primary"
+            href="/privacy"
+            className="underline-offset-[3px] hover:underline"
           >
-            FAQ
+            Privacy
           </Link>
         </div>
       </div>
