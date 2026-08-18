@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function SupportPage() {
   return (
     <div className="flex min-h-screen flex-col bg-surface-1">
-      <main className="mx-auto w-full max-w-[540px] flex-1 py-[72px] font-sans">
+      <main className="mx-auto w-full max-w-[540px] flex-1 px-6 py-[72px] font-sans sm:px-0">
         <h1 className="mb-8 text-[20px] font-medium text-content-primary">
           Support
         </h1>
