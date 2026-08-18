@@ -106,14 +106,41 @@ export function ClientLayoutWrapper({
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Menu"
-                className="flex size-[48px] flex-col items-center justify-center gap-1 rounded-full bg-[#333] shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1"
+                className="flex size-[48px] flex-col items-center justify-center gap-1 rounded-full border border-border-strong shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 dark:border-none dark:bg-[#333]"
               >
-                {/* 3 lines menu icon */}
-                <div className="flex flex-col gap-[3px]">
-                  <div className="h-[1.5px] w-[14px] rounded-full bg-content-primary" />
-                  <div className="h-[1.5px] w-[14px] rounded-full bg-content-primary" />
-                  <div className="h-[1.5px] w-[8px] rounded-full bg-content-primary" />
-                </div>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="text-content-primary"
+                >
+                  <rect
+                    x="5"
+                    y="6.75"
+                    width="14"
+                    height="1.5"
+                    rx="0.5"
+                    fill="currentColor"
+                  />
+                  <rect
+                    x="5"
+                    y="11.25"
+                    width="14"
+                    height="1.5"
+                    rx="0.5"
+                    fill="currentColor"
+                  />
+                  <rect
+                    x="5"
+                    y="15.75"
+                    width="9"
+                    height="1.5"
+                    rx="0.5"
+                    fill="currentColor"
+                  />
+                </svg>
               </motion.button>
             </TooltipTrigger>
             <TooltipContent
@@ -123,7 +150,7 @@ export function ClientLayoutWrapper({
             >
               <span>Menu</span>
               <span className="text-[11px] tracking-tighter opacity-60">
-                ⌘E
+                ⌘ E
               </span>
             </TooltipContent>
           </Tooltip>
