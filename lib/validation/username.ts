@@ -8,7 +8,7 @@
  *   lib/server/dbActions.ts for those.
  */
 
-const USERNAME_PATTERN = /^[a-z0-9-]+$/;
+const USERNAME_PATTERN = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 const MIN_LENGTH = 2;
 const MAX_LENGTH = 30;
 
