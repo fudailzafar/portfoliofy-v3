@@ -92,18 +92,21 @@ export function ClaimDialog() {
 
   return (
     <Dialog open={true} onOpenChange={() => {}}>
-      <DialogContent className="sm:max-w-md [&>button]:hidden">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
-            Welcome to Portfoliofy👋🏻
+      <DialogContent
+        hideCloseButton
+        className="gap-6 border-none p-8 font-sans dark:bg-surface-1 sm:max-w-sm"
+      >
+        <DialogHeader className="flex flex-col gap-1.5 space-y-0 text-left">
+          <DialogTitle className="text-left text-lg font-medium tracking-tight text-content-primary">
+            Welcome to Portfoliofy 👋🏻
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-left text-[14px] leading-snug text-content-secondary">
             We just need a few details to finish creating your account. You can
             always change this later.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="mt-4 space-y-6">
+        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="username">Username</Label>
@@ -123,7 +126,7 @@ export function ClaimDialog() {
                   )
                 }
                 className={cn(
-                  'pr-10',
+                  'bg-surface-1 pr-10 dark:border-none dark:bg-border-subtle',
                   status === 'taken' &&
                     'border-red-500 focus-visible:ring-red-500',
                 )}
@@ -159,7 +162,7 @@ export function ClaimDialog() {
                 placeholder="The name on your profile"
                 maxLength={48}
                 required
-                className="pr-10"
+                className="bg-surface-1 pr-10 dark:border-none dark:bg-border-subtle"
               />
               {displayName.length > 0 && (
                 <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-green-500 p-0.5">
@@ -169,19 +172,19 @@ export function ClaimDialog() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center justify-between">
             <button
               type="button"
               onClick={async () => {
                 await signOut({ callbackUrl: '/' });
               }}
-              className="text-xs text-content-muted transition-colors hover:text-content-primary"
+              className="text-xs text-content-primary hover:underline hover:underline-offset-[3px]"
             >
               Log in with a different email
             </button>
-            <Button
+            <button
               type="submit"
-              className="bg-design-black text-surface-1 hover:bg-design-black/95 dark:bg-surface-1 dark:text-content-primary dark:hover:bg-surface-3"
+              className="h-[32px] w-[100px] rounded-[8px] border border-border-strong bg-surface-1 text-[14px] font-medium text-content-primary transition-all active:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
               disabled={
                 isSubmitting ||
                 !username ||
@@ -191,7 +194,7 @@ export function ClaimDialog() {
               }
             >
               {isSubmitting ? 'Claiming...' : 'Continue'}
-            </Button>
+            </button>
           </div>
         </form>
       </DialogContent>
