@@ -24,12 +24,12 @@ export function UnsavedChangesDialog({
 }: UnsavedChangesDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="max-w-[320px] rounded-xl p-5">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="text-left text-lg font-bold text-content-primary">
+      <AlertDialogContent className="gap-6 border-none p-8 font-sans dark:bg-surface-1 sm:max-w-sm">
+        <AlertDialogHeader className="flex flex-col gap-1.5 space-y-0">
+          <AlertDialogTitle className="text-left text-lg font-medium tracking-tight text-content-primary">
             Unsaved changes
           </AlertDialogTitle>
-          <AlertDialogDescription className="mt-1.5 text-left text-sm text-content-muted">
+          <AlertDialogDescription className="text-left text-[14px] leading-snug text-content-secondary">
             You have unsaved changes, leave anyway?
           </AlertDialogDescription>
         </AlertDialogHeader>
