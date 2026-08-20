@@ -16,6 +16,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { Pencil } from 'lucide-react';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { createPortal } from 'react-dom';
@@ -538,7 +539,13 @@ export function EditProfileDialog({
                   variant="outline"
                   className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
                 >
-                  {isSaving ? 'Saving…' : 'Save'}
+                  {isSaving ? (
+                    <div className="flex items-center gap-2">
+                      <Spinner size={14} className="text-content-primary" />
+                    </div>
+                  ) : (
+                    'Save'
+                  )}
                 </Button>
               </div>
             </div>

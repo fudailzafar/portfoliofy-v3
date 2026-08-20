@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Twemoji from 'react-twemoji';
+import { Spinner } from '@/components/ui/spinner';
 
 interface ExploreSidebarProps {
   onClose: () => void;
@@ -120,8 +121,8 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
 
       <div className="flex-1 overflow-y-auto px-2 py-2" onScroll={handleScroll}>
         {isLoading ? (
-          <div className="p-4 text-center text-[13px] text-content-muted">
-            Loading...
+          <div className="flex justify-center p-8">
+            <Spinner size={24} className="text-content-muted" />
           </div>
         ) : users?.length === 0 ? (
           <div className="p-4 text-center text-[13px] text-content-muted">
@@ -214,8 +215,8 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
           </AnimatePresence>
         )}
         {isFetchingNextPage && (
-          <div className="py-4 text-center text-[13px] text-content-muted">
-            Loading more...
+          <div className="flex justify-center py-6">
+            <Spinner size={24} className="text-content-muted" />
           </div>
         )}
       </div>
