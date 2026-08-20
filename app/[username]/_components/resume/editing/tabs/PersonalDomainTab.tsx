@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
 import { LoaderCircle } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
+import { Spinner } from '@/components/ui/spinner';
 
 export function PersonalDomainTab({ username }: { username: string }) {
   const resume = useResumeStore((state) => state.resume);
@@ -188,7 +189,13 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   onClick={handleDomainSave}
                   disabled={isVerifyingDomain || !customDomain}
                 >
-                  {isVerifyingDomain ? 'Saving…' : 'Save'}
+                  {isVerifyingDomain ? (
+                    <div className="flex items-center gap-2">
+                      <Spinner size={14} className="text-content-primary" />
+                    </div>
+                  ) : (
+                    'Save'
+                  )}
                 </Button>
               ) : (
                 <div className="flex gap-2">

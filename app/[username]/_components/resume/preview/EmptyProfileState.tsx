@@ -28,10 +28,10 @@ export function EmptyProfileState() {
         </li>
       </ol>
 
-      <div className="pt-2 flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 pt-2">
         <Button
           onClick={handleOpenEditor}
-          className="h-10 border-none bg-surface-2 px-5 font-medium text-content-primary shadow-none hover:bg-surface-3"
+          className="h-10 border-none bg-surface-2 px-5 font-medium text-content-primary shadow-none hover:bg-surface-2 active:bg-surface-3"
         >
           Add your first work experience
         </Button>
@@ -40,7 +40,7 @@ export function EmptyProfileState() {
             setActiveTab('import_data');
             window.dispatchEvent(new CustomEvent('open-editor'));
           }}
-          className="h-10 border-none bg-surface-2 px-5 font-medium text-content-primary shadow-none hover:bg-surface-3"
+          className="h-10 border-none bg-surface-2 px-5 font-medium text-content-primary shadow-none hover:bg-surface-2 active:bg-surface-3"
         >
           Upload resume
         </Button>

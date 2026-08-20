@@ -34,6 +34,10 @@ export function useExplore(query: string, sort: ExploreSort) {
       }
 
       const data = await response.json();
+
+      // Artificial delay so the loading spinner is briefly visible
+      await new Promise((resolve) => setTimeout(resolve, 600));
+
       return {
         users: data.users as ExploreUser[],
         nextCursor: data.nextCursor as string | null,

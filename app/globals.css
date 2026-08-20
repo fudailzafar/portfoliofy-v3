@@ -148,6 +148,19 @@
   animation: bounce 1s infinite;
 }
 
+@keyframes spinner-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+.animate-spinner {
+  animation: spinner-spin 1s steps(12) infinite;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
