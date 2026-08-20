@@ -42,6 +42,10 @@ const checkUsernameAvailability = async (
     const error = await response.json();
     throw new Error(error.error || 'Failed to check username availability');
   }
+
+  // Artificial delay so the loading spinner is briefly visible
+  await new Promise((resolve) => setTimeout(resolve, 600));
+
   return await response.json();
 };
 
