@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { usePresignedUpload } from 'next-s3-upload';
 import { X, Equal, LoaderCircle } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { AttachmentSchemaType } from '@/lib/resume';
 import {
   DndContext,
@@ -280,7 +281,7 @@ export function MediaUploadDialog({
         >
           {uploadingFiles.length === 0 && uploadedAttachments.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center text-center">
-              <p className="mb-2 text-lg text-content-secondary">
+              <p className="text-md mb-2 text-content-secondary">
                 Add one or more jpg, png, gif, mov, or mp4 file
                 <br />
                 that is less than 30mb.
@@ -340,7 +341,7 @@ export function MediaUploadDialog({
                       {file.file.name}
                     </p>
                   </div>
-                  <LoaderCircle className="h-4 w-4 animate-spin text-content-muted" />
+                  <Spinner size={16} />
                 </div>
               ))}
             </div>
@@ -358,13 +359,12 @@ export function MediaUploadDialog({
                 ref={fileInputRef}
                 onChange={(e) => handleFiles(e.target.files)}
               />
-              <Button
-                variant="outline"
+              <button
                 onClick={() => fileInputRef.current?.click()}
-                className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
+                className="h-9 rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
               >
                 Upload
-              </Button>
+              </button>
             </div>
             <div className="flex items-center gap-3">
               <button
@@ -373,14 +373,13 @@ export function MediaUploadDialog({
               >
                 Cancel
               </button>
-              <Button
+              <button
                 onClick={handleSave}
                 disabled={uploadingFiles.length > 0}
-                variant="outline"
-                className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
+                className="h-9 rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
               >
-                Save
-              </Button>
+                Insert
+              </button>
             </div>
           </div>
         </div>
