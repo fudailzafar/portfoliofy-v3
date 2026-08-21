@@ -114,7 +114,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
           }
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-8 items-center justify-center rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-colors active:bg-surface-3"
+          className="inline-flex h-8 items-center justify-center rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
         >
           Visit site
         </a>
@@ -177,15 +177,13 @@ export function PersonalDomainTab({ username }: { username: string }) {
                     setCustomDomain(e.target.value.toLowerCase())
                   }
                   placeholder="yourname.com"
-                  className={`h-9 w-full ${domainStatus ? 'pl-9 text-content-secondary' : ''}`}
+                  className={`h-9 w-full dark:border-none dark:bg-border-subtle ${domainStatus ? 'pl-9 text-content-secondary' : ''}`}
                   disabled={!!domainStatus}
                 />
               </div>
               {!domainStatus ? (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-10 rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-colors hover:bg-surface-3"
+                <button
+                  className="h-10 rounded-md border border-border-strong bg-surface-1 px-4 text-[14px] font-medium text-content-primary shadow-sm transition-all hover:cursor-pointer active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
                   onClick={handleDomainSave}
                   disabled={isVerifyingDomain || !customDomain}
                 >
@@ -196,7 +194,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   ) : (
                     'Save'
                   )}
-                </Button>
+                </button>
               ) : (
                 <div className="flex gap-2">
                   <Button

@@ -189,6 +189,25 @@
   background-color: var(--content-primary);
 }
 
+/* Typography scale — aligned to Read.cv's extracted --type-size / --secondary-type-size / --line-height */
+.typography-sans {
+  --type-size: 14px;
+  --secondary-type-size: 12px;
+  --line-height: 1.6;
+}
+
+.typography-serif {
+  --type-size: 15px;
+  --secondary-type-size: 13px;
+  --line-height: 1.49;
+}
+
+.typography-mono {
+  --type-size: 13.5px;
+  --secondary-type-size: 11.5px;
+  --line-height: 1.65;
+}
+
 /* Dynamic Themes for Portfolio — aligned to Read.cv's extracted CSS custom properties */
 .theme-default {
   --theme-bg: #ffffff;
