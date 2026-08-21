@@ -168,15 +168,13 @@ export function GeneralTab({
           {localPicture ? (
             /* Image exists: show Upload (replace) + Remove */
             <>
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 text-xs text-content-secondary transition-colors hover:border-red-200 hover:text-red-600"
+              <button
+                className="h-8 cursor-pointer rounded-md border border-border-strong bg-surface-1 px-4 text-[13px] text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
                 onClick={removePicture}
                 disabled={isUploadingPicture}
               >
                 Remove image
-              </Button>
+              </button>
             </>
           ) : (
             /* No image: show Upload image */
@@ -184,7 +182,7 @@ export function GeneralTab({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 text-xs"
+                className="h-8 text-xs dark:border-none dark:bg-border-subtle"
                 onClick={() =>
                   document.getElementById('avatar-upload')?.click()
                 }
@@ -205,7 +203,7 @@ export function GeneralTab({
           <Label htmlFor="uname" className="text-xs text-content-secondary">
             Username*
           </Label>
-          <div className="relative flex items-center overflow-hidden rounded-md border border-border-strong bg-surface-card focus-within:ring-1 focus-within:ring-black dark:focus-within:ring-white">
+          <div className="relative flex items-center overflow-hidden rounded-md border border-border-strong bg-surface-card dark:border-none dark:bg-border-subtle">
             <span className="absolute left-3 top-1/2 z-10 -translate-y-1/2 select-none text-sm text-content-muted">
               portfoliofy.me/
             </span>
@@ -256,6 +254,7 @@ export function GeneralTab({
             maxLength={48}
             value={header?.name || ''}
             onChange={(e) => updateHeader({ name: e.target.value })}
+            className="dark:border-none dark:bg-border-subtle"
           />
         </div>
 
@@ -277,6 +276,7 @@ export function GeneralTab({
             maxLength={32}
             value={header?.shortAbout || ''}
             onChange={(e) => updateHeader({ shortAbout: e.target.value })}
+            className="dark:border-none dark:bg-border-subtle"
           />
         </div>
 
@@ -298,6 +298,7 @@ export function GeneralTab({
             maxLength={32}
             value={header?.location || ''}
             onChange={(e) => updateHeader({ location: e.target.value })}
+            className="dark:border-none dark:bg-border-subtle"
           />
         </div>
 
@@ -319,6 +320,7 @@ export function GeneralTab({
             maxLength={12}
             value={header?.pronouns || ''}
             onChange={(e) => updateHeader({ pronouns: e.target.value })}
+            className="dark:border-none dark:bg-border-subtle"
           />
         </div>
 
@@ -345,8 +347,8 @@ export function GeneralTab({
             }}
             className={
               !isValidWebsite(header?.website || '')
-                ? 'border-red-500 focus-visible:ring-red-500'
-                : ''
+                ? 'border-red-500 focus-visible:ring-red-500 dark:border-none dark:bg-border-subtle'
+                : 'dark:border-none dark:bg-border-subtle'
             }
           />
           {!isValidWebsite(header?.website || '') && (

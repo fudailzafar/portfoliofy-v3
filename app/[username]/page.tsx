@@ -154,8 +154,8 @@ export default async function ProfilePage({
                         : resume?.resumeData?.design?.typography === 'mono'
                           ? 'font-mono'
                           : 'font-sans'
-                    } theme-${resume?.resumeData?.design?.theme || 'default'}`
-                  : 'theme-default font-sans'
+                    } typography-${resume?.resumeData?.design?.typography || 'sans'} theme-${resume?.resumeData?.design?.theme || 'default'}`
+                  : 'theme-default typography-sans font-sans'
               }`}
             >
               <FullResume

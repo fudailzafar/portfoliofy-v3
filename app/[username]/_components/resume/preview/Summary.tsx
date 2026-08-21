@@ -16,13 +16,17 @@ export function Summary({ summary }: AboutProps) {
   return (
     <section className="mb-9 print:mb-8">
       <h2
-        className="mb-6 text-sm font-bold text-theme-primary"
+        className="mb-6 text-[length:var(--type-size)] font-bold leading-[var(--line-height)] text-theme-primary"
         id="about-section"
       >
         About
       </h2>
       <div
-        className="prose prose-sm ml-4 max-w-none text-pretty text-sm text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:pl-0 prose-li:text-theme-secondary min-[481px]:ml-0 print:text-[12px]"
+        className="prose prose-sm ml-4 max-w-none text-pretty text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:pl-0 prose-li:text-theme-secondary min-[481px]:ml-0 print:!text-[12px]"
+        style={{
+          fontSize: 'var(--type-size)',
+          lineHeight: 'var(--line-height)',
+        }}
         aria-labelledby="about-section"
         dangerouslySetInnerHTML={{ __html: summary }}
       />
