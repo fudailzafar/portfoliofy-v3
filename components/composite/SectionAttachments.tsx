@@ -46,7 +46,7 @@ export function SectionAttachments({
   };
 
   return (
-    <div className="space-y-3 min-w-0 w-full">
+    <div className="w-full min-w-0 space-y-3">
       <div className="flex items-center justify-between">
         <span className="text-xs font-medium text-content-secondary">
           Attachments
@@ -55,7 +55,7 @@ export function SectionAttachments({
           type="button"
           variant="outline"
           size="sm"
-          className="h-7 text-xs rounded-full"
+          className="h-7 rounded-full text-xs dark:border-none dark:bg-border-subtle"
           onClick={() => setIsUploadOpen(true)}
         >
           Add media
@@ -92,33 +92,42 @@ export function SectionAttachments({
                   className="h-full w-auto min-w-[90px] object-cover"
                 />
               )}
-              <div className="absolute top-1.5 right-1.5 flex items-center gap-[2px] z-10">
+              <div className="absolute right-1.5 top-1.5 z-10 flex items-center gap-[2px]">
                 {(index > 0 || index < attachments.length - 1) && (
-                  <div className="flex items-stretch rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white overflow-hidden shadow-sm divide-x divide-white/20">
+                  <div className="flex items-stretch divide-x divide-white/20 overflow-hidden rounded-full border border-white/20 bg-black/60 text-white shadow-sm backdrop-blur-md">
                     {index > 0 && (
                       <button
-                        onClick={(e) => { e.preventDefault(); moveLeft(index); }}
-                        className="px-1 py-1 hover:bg-white/20 transition-colors flex items-center justify-center"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          moveLeft(index);
+                        }}
+                        className="flex items-center justify-center px-1 py-1 transition-colors hover:bg-white/20"
                       >
-                        <ArrowLeft className="w-3 h-3" />
+                        <ArrowLeft className="h-3 w-3" />
                       </button>
                     )}
                     {index < attachments.length - 1 && (
                       <button
-                        onClick={(e) => { e.preventDefault(); moveRight(index); }}
-                        className="px-1 py-1 hover:bg-white/20 transition-colors flex items-center justify-center"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          moveRight(index);
+                        }}
+                        className="flex items-center justify-center px-1 py-1 transition-colors hover:bg-white/20"
                       >
-                        <ArrowRight className="w-3 h-3" />
+                        <ArrowRight className="h-3 w-3" />
                       </button>
                     )}
                   </div>
                 )}
-                
+
                 <button
-                  onClick={(e) => { e.preventDefault(); handleDelete(index); }}
-                  className="p-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-colors shadow-sm"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleDelete(index);
+                  }}
+                  className="rounded-full border border-white/20 bg-black/60 p-1 text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20"
                 >
-                  <X className="w-3 h-3" />
+                  <X className="h-3 w-3" />
                 </button>
               </div>
             </div>
