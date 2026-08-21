@@ -7,6 +7,7 @@ import { AvatarPlaceholderIcon } from '@/components/composite/AvatarPlaceholderI
 import { Label } from '@/components/ui/label';
 import { CollaboratorSchemaType } from '@/lib/resume';
 import { useCollaboratorSearch } from '@/hooks/useCollaboratorSearch';
+import { Input } from '../ui/input';
 
 interface CollaboratorsFieldProps {
   label: string;
@@ -55,11 +56,8 @@ export function CollaboratorsField({
     <div className="w-full min-w-0 space-y-2">
       <Label className="text-xs text-content-secondary">{label}</Label>
 
-      <div
-        ref={containerRef}
-        className="relative rounded-md border border-border-strong bg-surface-card"
-      >
-        <input
+      <div ref={containerRef} className="relative bg-surface-card">
+        <Input
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -67,7 +65,7 @@ export function CollaboratorsField({
           }}
           onFocus={() => setIsOpen(true)}
           placeholder={`Tag ${label.toLowerCase()}`}
-          className="w-full bg-transparent px-3 py-2.5 text-sm text-content-primary placeholder:text-muted-foreground focus-visible:outline-none"
+          className="w-full dark:border-none dark:bg-border-subtle"
         />
 
         {value.length > 0 && (

@@ -17,13 +17,13 @@ export function Skills({ skills, className }: SkillsProps) {
   return (
     <section className={cn('mb-9 print:mb-8', className)}>
       <h2
-        className="mb-6 text-sm font-bold text-theme-primary print:mb-4"
+        className="mb-6 text-[length:var(--type-size)] font-bold leading-[var(--line-height)] text-theme-primary print:mb-4"
         id="skills-section"
       >
         Skills
       </h2>
       <div
-        className="ml-6 text-sm font-semibold leading-relaxed text-theme-primary sm:ml-0"
+        className="ml-6 text-[length:var(--type-size)] font-semibold leading-[var(--line-height)] text-theme-primary sm:ml-0"
         aria-label="List of skills"
         aria-labelledby="skills-section"
       >

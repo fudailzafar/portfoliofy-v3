@@ -135,7 +135,7 @@ export function Header({
           {/* Subtitle: {Role} in {Location}, {Pronouns} */}
           {(header.shortAbout || header.location || header.pronouns) && (
             <p
-              className="text-pretty text-sm text-theme-secondary"
+              className="text-pretty text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary"
               aria-labelledby="resume-name"
             >
               {[
@@ -154,7 +154,7 @@ export function Header({
               href={ensureHttps(header.website)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1 block text-sm text-theme-secondary transition-colors hover:text-theme-primary"
+              className="mt-1 block text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary transition-colors hover:text-theme-primary"
             >
               {header.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
             </a>
@@ -253,10 +253,10 @@ export function Header({
               </filter>
             </defs>
           </svg>
-          <span className="text-sm text-theme-secondary">
+          <span className="text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary">
             {currentStatus.text}
           </span>
-          <span className="text-xs text-theme-muted">
+          <span className="text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-muted">
             {getRelativeTime(currentStatus.updatedAt)}
           </span>
         </div>

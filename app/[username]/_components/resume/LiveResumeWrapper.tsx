@@ -36,10 +36,13 @@ export function LiveResumeWrapper({
         : 'font-sans'
     : 'font-sans';
   const themeClass = applyTheme ? `theme-${theme}` : 'theme-default';
+  const typographyClass = applyTheme
+    ? `typography-${typography}`
+    : 'typography-sans';
 
   return (
     <div
-      className={`flex flex-1 flex-col bg-theme-bg ${fontClass} ${themeClass}`}
+      className={`flex flex-1 flex-col bg-theme-bg ${fontClass} ${themeClass} ${typographyClass}`}
     >
       <FullResume
         resume={displayResume}

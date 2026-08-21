@@ -27,8 +27,7 @@ export function TabFormActions({
         <Button
           onClick={onSave}
           disabled={isSaveDisabled}
-          variant="outline"
-          className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
+          className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm hover:bg-surface-card active:bg-surface-3 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
         >
           {saveText}
         </Button>

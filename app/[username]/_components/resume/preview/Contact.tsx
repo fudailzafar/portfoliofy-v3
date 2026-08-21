@@ -16,7 +16,7 @@ export function Contact({
   return (
     <section className="mb-9 print:mb-8">
       <h2
-        className="mb-6 text-sm font-bold text-theme-primary print:mb-4"
+        className="mb-6 text-[length:var(--type-size)] font-bold leading-[var(--line-height)] text-theme-primary print:mb-4"
         id="contact-section"
       >
         Contact
@@ -32,7 +32,7 @@ export function Contact({
             className="flex flex-col gap-0 min-[481px]:flex-row min-[481px]:gap-[36px] print:mb-6"
           >
             {/* Left column: Platform */}
-            <div className="shrink-0 pt-0.5 text-sm text-theme-muted min-[481px]:w-[94px]">
+            <div className="shrink-0 pt-0.5 text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-muted min-[481px]:w-[94px]">
               {contact.platform}
             </div>
 
@@ -45,7 +45,7 @@ export function Contact({
                   rel="noopener noreferrer"
                   className="text-theme-primary hover:underline hover:decoration-1 hover:underline-offset-2"
                 >
-                  <span className="text-sm font-semibold">
+                  <span className="text-[length:var(--type-size)] font-semibold leading-[var(--line-height)]">
                     {extractUsername(contact.link, contact.platform)}
                   </span>
                 </a>

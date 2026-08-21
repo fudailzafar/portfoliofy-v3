@@ -41,7 +41,7 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          'min-h-[120px] w-full bg-transparent px-3 py-3 text-sm placeholder:text-content-muted focus:outline-none prose prose-sm dark:prose-invert max-w-none',
+          'min-h-[120px] w-full bg-transparent px-3 py-3 text-sm placeholder:text-content-muted focus:outline-none prose prose-sm dark:prose-invert max-w-none dark:border-none dark:bg-border-subtle',
       },
     },
     onUpdate: ({ editor }) => {
@@ -85,7 +85,7 @@ export function RichTextEditor({
   };
 
   return (
-    <div className="w-full overflow-hidden rounded-md border border-border-strong bg-surface-card shadow-sm focus-within:ring-1 focus-within:ring-black dark:focus-within:ring-white">
+    <div className="w-full overflow-hidden rounded-md border border-border-strong bg-surface-card shadow-sm focus-within:ring-1 focus-within:ring-black dark:border-none dark:bg-border-subtle dark:focus-within:ring-white">
       <div className="bg-surface-2/50 flex items-center border-b border-border-strong">
         <Button
           type="button"

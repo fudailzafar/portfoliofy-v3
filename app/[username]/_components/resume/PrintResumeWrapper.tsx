@@ -23,6 +23,7 @@ export function PrintResumeWrapper({
       : typography === 'mono'
         ? 'font-mono'
         : 'font-sans';
+  const typographyClass = `typography-${typography}`;
 
   return (
     // aria-hidden: this tree duplicates the on-screen resume (name, headings,
@@ -33,7 +34,11 @@ export function PrintResumeWrapper({
       <PrintResume
         resume={displayResume}
         printHiddenSections={printHiddenSections}
-        className={cn('hidden print:block print:bg-surface-1', fontClass)}
+        className={cn(
+          'hidden print:block print:bg-surface-1',
+          fontClass,
+          typographyClass,
+        )}
       />
     </div>
   );

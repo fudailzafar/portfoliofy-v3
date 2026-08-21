@@ -28,7 +28,7 @@ export function PreviewListItem({
 }: PreviewListItemProps) {
   return (
     <div className="flex flex-col gap-1 min-[481px]:flex-row min-[481px]:gap-[36px] print:mb-6">
-      <div className="shrink-0 pt-0.5 text-sm text-theme-muted min-[481px]:w-[94px]">
+      <div className="shrink-0 pt-0.5 text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-muted min-[481px]:w-[94px]">
         {leftContent}
       </div>
 
@@ -41,7 +41,7 @@ export function PreviewListItem({
               rel="noopener noreferrer"
               className="text-theme-primary hover:underline hover:decoration-1 hover:underline-offset-2"
             >
-              <span className="text-sm font-semibold">
+              <span className="text-[length:var(--type-size)] font-semibold leading-[var(--line-height)]">
                 {title}
                 {subtitle && (
                   <span className="font-normal text-theme-primary">
@@ -52,7 +52,7 @@ export function PreviewListItem({
               </span>
             </a>
           ) : (
-            <p className="text-sm font-semibold text-theme-primary">
+            <p className="text-[length:var(--type-size)] font-semibold leading-[var(--line-height)] text-theme-primary">
               {title}
               {subtitle && (
                 <span className="font-normal text-theme-primary">
@@ -67,11 +67,19 @@ export function PreviewListItem({
           )}
         </div>
 
-        {location && <p className="text-sm text-theme-secondary">{location}</p>}
+        {location && (
+          <p className="text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary">
+            {location}
+          </p>
+        )}
 
         {description && description !== '<p></p>' && (
           <div
-            className="prose prose-sm max-w-none text-sm leading-relaxed text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:pl-0 prose-li:text-theme-secondary"
+            className="prose prose-sm max-w-none text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:pl-0 prose-li:text-theme-secondary"
+            style={{
+              fontSize: 'var(--type-size)',
+              lineHeight: 'var(--line-height)',
+            }}
             dangerouslySetInnerHTML={{ __html: description }}
           />
         )}
