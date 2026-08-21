@@ -214,7 +214,7 @@
   --theme-primary: #111111; /* Read.cv --grey1 (light) */
   --theme-secondary: #555555; /* Read.cv --grey2 (light) */
   --theme-muted: #999999;
-  --theme-border: #fff; /* Read.cv --primaryBorderColor (light) */
+  --theme-border: #e5e5e5; /* Read.cv --primaryBorderColor (light) */
   --theme-accent: #0788f5; /* Read.cv --blue */
 }
 
@@ -231,7 +231,7 @@
   --theme-bg: #bbbbbb;
   --theme-primary: #000000;
   --theme-secondary: #555555;
-  --theme-muted: #888888;
+  --theme-muted: #777777;
   --theme-border: #aaaaaa;
   --theme-accent: #000000;
 }
@@ -240,7 +240,7 @@
   --theme-bg: #e25336;
   --theme-primary: #ffffff;
   --theme-secondary: #f6cbc3;
-  --theme-muted: #e6a798;
+  --theme-muted: #ee9886;
   --theme-border: #e66d54;
   --theme-accent: #ffffff;
 }
@@ -258,7 +258,7 @@
   --theme-bg: #fdf2f1;
   --theme-primary: #e50800;
   --theme-secondary: #ec4e48;
-  --theme-muted: #f28884;
+  --theme-muted: #f39491;
   --theme-border: #f9cfcd;
   --theme-accent: #e50800;
 }
@@ -285,7 +285,7 @@
   --theme-bg: #f7e3ea;
   --theme-primary: #4c3e51;
   --theme-secondary: #8b5088;
-  --theme-muted: #bf8ebc;
+  --theme-muted: #c068a0;
   --theme-border: #efc5d4;
   --theme-accent: #4c3e51;
 }
