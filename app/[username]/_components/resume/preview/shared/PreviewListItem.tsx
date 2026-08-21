@@ -28,7 +28,7 @@ export function PreviewListItem({
 }: PreviewListItemProps) {
   return (
     <div className="flex flex-col gap-1 min-[481px]:flex-row min-[481px]:gap-[36px] print:mb-6">
-      <div className="shrink-0 pt-0.5 text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-muted min-[481px]:w-[94px]">
+      <div className="shrink-0 pt-0.5 text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-muted min-[481px]:w-[94px]">
         {leftContent}
       </div>
 
@@ -68,7 +68,7 @@ export function PreviewListItem({
         </div>
 
         {location && (
-          <p className="text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary">
+          <p className="text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary">
             {location}
           </p>
         )}
