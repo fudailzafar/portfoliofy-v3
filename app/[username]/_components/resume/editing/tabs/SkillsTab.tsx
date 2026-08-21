@@ -25,10 +25,10 @@ export function SkillsTab() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col">
       <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <h2 className="text-xl sm:text-2xl font-bold">Skills</h2>
+        <h2 className="text-xl font-bold sm:text-2xl">Skills</h2>
       </div>
 
-      <div className="space-y-6 w-full min-w-0">
+      <div className="w-full min-w-0 space-y-6">
         <div className="flex gap-3">
           <Input
             value={skillInput}
@@ -40,15 +40,14 @@ export function SkillsTab() {
               }
             }}
             placeholder="e.g. Software Development"
-            className="flex-1"
+            className="flex-1 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
           />
-          <Button
+          <button
             onClick={handleAddSkill}
-            variant="outline"
-            className="h-10 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
+            className="h-10 rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
           >
             Add
-          </Button>
+          </button>
         </div>
 
         {skills.length > 0 && (
@@ -56,7 +55,7 @@ export function SkillsTab() {
             {skills.map((skill, index) => (
               <div
                 key={index}
-                className="flex items-center rounded-md border border-border-strong bg-surface-card px-3 py-1.5 text-sm text-content-primary shadow-sm"
+                className="flex items-center rounded-md border border-border-strong bg-surface-card px-3 py-1.5 text-sm text-content-primary shadow-sm dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
               >
                 <span className="mr-2">{skill}</span>
                 <button

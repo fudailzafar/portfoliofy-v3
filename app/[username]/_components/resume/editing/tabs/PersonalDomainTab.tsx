@@ -343,8 +343,8 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 <div
                   className={`flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[16px] transition-colors ${
                     typography === value
-                      ? 'border-[2.5px] border-[#3b82f6] bg-surface-1'
-                      : 'border border-border-strong bg-surface-card group-hover:border-border-strong dark:group-hover:border-border-strong'
+                      ? 'border-[2.5px] border-[#3b82f6] bg-surface-1 dark:bg-border-subtle'
+                      : 'border border-border-strong bg-surface-card group-hover:border-border-strong dark:border-none dark:bg-border-subtle dark:group-hover:border-border-strong'
                   }`}
                 >
                   <span

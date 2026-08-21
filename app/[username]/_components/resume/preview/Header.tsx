@@ -135,7 +135,7 @@ export function Header({
           {/* Subtitle: {Role} in {Location}, {Pronouns} */}
           {(header.shortAbout || header.location || header.pronouns) && (
             <p
-              className="text-pretty text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary"
+              className="text-pretty text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary"
               aria-labelledby="resume-name"
             >
               {[
@@ -154,7 +154,7 @@ export function Header({
               href={ensureHttps(header.website)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1 block text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary transition-colors hover:text-theme-primary"
+              className="mt-1 block text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary active:text-theme-primary"
             >
               {header.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
             </a>
