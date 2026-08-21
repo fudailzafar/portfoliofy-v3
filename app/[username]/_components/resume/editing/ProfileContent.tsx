@@ -218,21 +218,19 @@ export function ProfileContent({
         <div className="flex-none bg-surface-1 px-4 pb-4 sm:px-8 md:px-12 md:pb-6">
           <div className="flex w-full justify-end gap-3 border-t border-border-subtle pt-4">
             {activeTab === 'print' ? (
-              <Button
+              <button
                 onClick={() => window.print()}
-                variant="outline"
-                className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
+                className="h-9 rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
               >
                 Print
-              </Button>
+              </button>
             ) : (
-              <Button
+              <button
                 onClick={onSave}
                 disabled={
                   isSaving || !isValidUname || checkUsernameMutationIsPending
                 }
-                variant="outline"
-                className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm"
+                className="h-9 rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
               >
                 {isSaving ? (
                   <div className="flex items-center gap-2">
@@ -241,7 +239,7 @@ export function ProfileContent({
                 ) : (
                   'Save'
                 )}
-              </Button>
+              </button>
             )}
           </div>
         </div>

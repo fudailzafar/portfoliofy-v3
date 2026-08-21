@@ -12,7 +12,7 @@ export function PreviewSection({
   return (
     <section className="mb-9 print:mb-8">
       <h2
-        className="mb-6 text-sm font-bold text-theme-primary print:mb-4"
+        className="mb-6 text-[length:var(--type-size)] font-bold leading-[var(--line-height)] text-theme-primary print:mb-4"
         id={id}
       >
         {title}
