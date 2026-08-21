@@ -24,13 +24,13 @@ export function TabFormActions({
         >
           {cancelText}
         </button>
-        <Button
+        <button
           onClick={onSave}
           disabled={isSaveDisabled}
-          className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm hover:bg-surface-card active:bg-surface-3 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+          className="h-9 rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
         >
           {saveText}
-        </Button>
+        </button>
       </div>
     </div>
   );
