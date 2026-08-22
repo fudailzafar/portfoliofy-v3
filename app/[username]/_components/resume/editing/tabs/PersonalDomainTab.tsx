@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
-import { LoaderCircle } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
 
@@ -145,7 +144,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
               <div className="relative w-full flex-1 sm:max-w-[320px]">
                 {isVerifyingDomain ? (
                   <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
-                    <LoaderCircle className="h-3.5 w-3.5 animate-spin text-content-muted" />
+                    <Spinner size={14} />
                   </div>
                 ) : domainStatus?.verified ? (
                   <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
