@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { FileUp, LoaderCircle, Download } from 'lucide-react';
+import { FileUp, Download } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
 import { ResumeDataSchemaType } from '@/lib/resume';
@@ -101,7 +102,7 @@ export function ImportDataTab() {
       >
         {isParsing ? (
           <div className="flex flex-col items-center gap-3 text-content-secondary">
-            <LoaderCircle className="h-8 w-8 animate-spin text-theme-primary" />
+            <Spinner size={32} className="text-theme-primary" />
             <p>Extracting data with AI...</p>
           </div>
         ) : (

@@ -31,7 +31,10 @@ export default function FAQPage() {
             </h3>
             <p className="text-content-secondary">
               Just me,{' '}
-              <Link href="/fudail" className="underline underline-offset-2">
+              <Link
+                href="/fudailzafar"
+                className="underline underline-offset-2"
+              >
                 Fudail
               </Link>
               .
