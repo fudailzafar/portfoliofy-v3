@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { claimUsernameAndInitProfile } from '@/app/actions/claim';
 import { toast } from 'sonner';
-import { Check, LoaderCircle } from 'lucide-react';
+import { Check } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { signOut } from 'next-auth/react';
 import { cn } from '@/lib/utils';
 import {
@@ -136,7 +136,7 @@ export function ClaimDialog() {
               />
               {status === 'checking' && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <LoaderCircle className="h-4 w-4 animate-spin text-content-muted" />
+                  <Spinner size={16} />
                 </div>
               )}
               {status === 'available' && (

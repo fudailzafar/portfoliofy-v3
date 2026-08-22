@@ -7,9 +7,8 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { usePresignedUpload } from 'next-s3-upload';
-import { X, Equal, LoaderCircle } from 'lucide-react';
+import { X, Equal } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 import { AttachmentSchemaType } from '@/lib/resume';
 import {
