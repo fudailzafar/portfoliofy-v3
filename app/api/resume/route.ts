@@ -58,9 +58,9 @@ export async function POST(
         { status: 400 },
       );
     }
-    console.error('Error storing resume:', error);
+    console.error('Error in POST /api/resume:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: error instanceof Error ? error.message : String(error) },
       { status: 500 },
     );
   }
