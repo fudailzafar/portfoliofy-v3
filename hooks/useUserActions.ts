@@ -79,8 +79,10 @@ export function useUserActions() {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      return Promise.reject(new Error(error));
+      const errData = await response.json();
+      return Promise.reject(
+        new Error(errData.error || 'Unknown error occurred'),
+      );
     }
   };
 
@@ -177,13 +179,16 @@ export function useUserActions() {
       // Validate the resume data
       ResumeDataSchema.parse(newResumeData);
 
-      // If validation passes, update the resume
-      if (!resumeQuery.data?.resume) {
-        throw new Error('No resume found to update');
-      }
+      // If validation passes, construct the updated resume
+      // Fallback to a default structure if the user doesn't have a resume yet
+      const baseResume: Resume = resumeQuery.data?.resume || {
+        status: 'live',
+        file: null,
+        fileContent: null,
+      };
 
       const updatedResume: Resume = {
-        ...resumeQuery.data.resume,
+        ...baseResume,
         resumeData: newResumeData,
       };
 

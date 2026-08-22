@@ -43,6 +43,9 @@ export function ClaimDialog() {
         );
         const data = await res.json();
 
+        // Artificial delay so the loading spinner is briefly visible
+        await new Promise((resolve) => setTimeout(resolve, 600));
+
         if (data.available) {
           setStatus('available');
         } else {
@@ -193,7 +196,7 @@ export function ClaimDialog() {
                 status === 'checking'
               }
             >
-              {isSubmitting ? 'Claiming...' : 'Continue'}
+              {isSubmitting ? <Spinner size={16} /> : 'Continue'}
             </button>
           </div>
         </form>
