@@ -39,8 +39,8 @@ export function HomeHero() {
 
   return (
     <>
-      <div className="mb-8 flex flex-col">
-        <h1 className="mb-8 text-[clamp(18px,-8px+5vw,24px)] font-normal leading-[1.6] tracking-tight text-content-primary">
+      <div className="flex flex-col">
+        <h1 className="text-[clamp(18px,-8px+5vw,24px)] font-normal leading-[1.6] tracking-tight text-content-primary">
           <strong translate="no" className="font-medium">
             Portfoliofy
           </strong>{' '}
@@ -61,7 +61,7 @@ export function HomeHero() {
           professional profiles.
         </h1>
 
-        <div className="mt-8 grid grid-cols-[repeat(6,minmax(16px,72px))] items-center gap-[22px]">
+        <div className="mb-[72px] mt-8 grid grid-cols-[repeat(6,minmax(16px,72px))] items-center gap-[22px]">
           {FEATURED_PROFILE_SEEDS.map((seed) => (
             <div
               key={seed}

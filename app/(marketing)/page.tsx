@@ -8,7 +8,7 @@ import { Grab, MousePointer2 } from 'lucide-react';
 
 const ResumePaper = ({ className }: { className?: string }) => (
   <div
-    className={`flex w-[90%] flex-col gap-6 rounded-2xl border border-border-strong bg-surface-1 p-5 text-[9px] shadow-sm sm:w-[95%] sm:p-7 sm:text-[10px] ${
+    className={`flex w-[90%] flex-col gap-6 border border-border-strong bg-surface-1 p-5 text-[9px] shadow-sm sm:w-[95%] sm:p-7 sm:text-[10px] ${
       className || ''
     }`}
   >
@@ -74,11 +74,11 @@ export default async function Home() {
     <div className="flex min-h-screen flex-col bg-surface-1">
       {needsClaim && <ClaimDialog />}
       <main className="flex flex-1 flex-col items-center font-sans text-content-primary">
-        <div className="flex w-full max-w-[540px] flex-col gap-6 px-6 pb-32 pt-24">
+        <div className="flex w-full max-w-[540px] flex-col px-6 pb-32 pt-[72px] md:px-0">
           {/* Hero Section */}
           <HomeHero />
           {/* Feature 1: Create a beautiful profile */}
-          <div className="relative flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
+          <div className="relative mb-8 flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -96,7 +96,7 @@ export default async function Home() {
               <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-content-primary">
                 Create a beautiful profile
               </h3>
-              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-content-muted">
+              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-[#666]">
                 A fun and intuitive{' '}
                 <Link
                   href="/"
@@ -117,7 +117,7 @@ export default async function Home() {
                 Side Projects
               </div>
 
-              <div className="animate-drag relative z-10 mx-auto flex w-full max-w-[400px] items-center justify-between rounded-[18px] border border-border-strong bg-surface-1 p-3 shadow-xl dark:shadow-none sm:p-4">
+              <div className="animate-drag relative z-10 mx-auto flex w-full max-w-[460px] items-center justify-between rounded-[18px] border border-border-strong bg-surface-1 p-3 shadow-xl dark:shadow-none sm:p-4">
                 <span className="truncate pr-2 text-[16px] tracking-tight text-content-primary sm:text-[20px]">
                   Work Experience
                 </span>
@@ -146,7 +146,7 @@ export default async function Home() {
           </div>
 
           {/* Feature 2: Make it collaborative */}
-          <div className="relative flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
+          <div className="relative mb-8 flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -173,7 +173,7 @@ export default async function Home() {
               <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-content-primary">
                 Make it collaborative
               </h3>
-              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-content-muted">
+              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-[#666]">
                 Profiles are made even richer when you tag collaborators in
                 experiences.
               </p>
@@ -235,7 +235,7 @@ export default async function Home() {
           </div>
 
           {/* Feature 3: Print it out */}
-          <div className="relative flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
+          <div className="relative mb-8 flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -254,7 +254,7 @@ export default async function Home() {
               <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-content-primary">
                 Print it out
               </h3>
-              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-content-muted">
+              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-[#666]">
                 Profiles are print ready, with optimized typography and only the
                 relevant information shown.
               </p>
@@ -270,7 +270,7 @@ export default async function Home() {
           </div>
 
           {/* Feature 4: Find who you're looking for */}
-          <div className="relative flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
+          <div className="relative mb-8 flex h-[384px] flex-col overflow-hidden rounded-[36px] bg-surface-2 p-5 pb-0 sm:h-[384px] sm:p-8 sm:pb-0">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -288,7 +288,7 @@ export default async function Home() {
               <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-content-primary">
                 Find who you&apos;re looking for
               </h3>
-              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-content-muted">
+              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-[#666]">
                 Search by title, location, and username.
               </p>
             </div>
@@ -354,12 +354,12 @@ export default async function Home() {
               <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-content-primary">
                 Use it anywhere
               </h3>
-              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-content-muted">
+              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-[#666]">
                 Add your link wherever your audience is.
               </p>
             </div>
 
-            <div className="flex w-full flex-1 flex-col rounded-t-[16px] border border-b-0 border-border-strong bg-surface-1 p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] dark:shadow-none sm:p-8">
+            <div className="flex w-full flex-1 flex-col border border-b-0 border-border-strong bg-surface-1 p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] dark:shadow-none sm:p-8">
               <div className="mb-4 flex items-center gap-4 sm:gap-8">
                 <div className="size-[64px] shrink-0 rounded-full bg-gradient-to-b from-[#9E2692] to-[#FAA958] p-[2px] sm:size-[84px] sm:p-[3px]">
                   <div className="h-full w-full rounded-full bg-surface-1 p-0.5">
