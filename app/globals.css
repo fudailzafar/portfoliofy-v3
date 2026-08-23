@@ -4,45 +4,18 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    /* Canonical read.cv-derived palette — every other token below is an
+       alias of one of these, so there is exactly one real value per role. */
 
     /* Backgrounds */
     --surface-1: #ffffff;
     --surface-2: #f4f4f4;
     --surface-3: #f2f2f2;
-    --surface-card: #ffffff;
+    --surface-card: var(--surface-1);
 
     /* Text */
-    --content-primary: #111;
-    --content-secondary: #666;
+    --content-primary: #111111;
+    --content-secondary: #666666;
     --content-muted: #6b7280;
 
     /* Borders */
@@ -56,59 +29,68 @@
     --action-danger: #dc2626;
     --action-danger-hover: #b91c1c;
     --action-danger-foreground: #ffffff;
+
+    /* shadcn/ui slot names, aliased to the canonical tokens above so every
+       bg-, text-, and border- utility that already depends on them resolves
+       to one of the real colors instead of an independently-declared value. */
+    --background: var(--surface-1);
+    --foreground: var(--content-primary);
+    --popover: var(--surface-1);
+    --popover-foreground: var(--content-primary);
+    --primary: var(--action-primary);
+    --primary-foreground: var(--action-foreground);
+    --secondary: var(--surface-2);
+    --secondary-foreground: var(--content-primary);
+    --muted: var(--surface-2);
+    --muted-foreground: var(--content-secondary);
+    --accent: var(--surface-2);
+    --accent-foreground: var(--content-primary);
+    --destructive: var(--action-danger);
+    --destructive-foreground: var(--action-danger-foreground);
+    --border: var(--border-strong);
+    --input: var(--border-strong);
+    --ring: var(--content-primary);
+
+    --radius: 0.5rem;
   }
 
   .dark {
-    --background: 0 0% 7%;
-    --foreground: 0 0% 98%;
-
-    --card: 0 0% 9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
-
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 0 0% 84%;
-
-    /* Backgrounds */
     --surface-1: #222222;
     --surface-2: #1f1f1f;
     --surface-3: #2c2c2c;
     --surface-card: #1f1f1f;
 
-    /* Text */
-    --content-primary: #eee;
-    --content-secondary: #aaa;
+    --content-primary: #eeeeee;
+    --content-secondary: #aaaaaa;
     --content-muted: #9ca3af;
 
-    /* Borders */
     --border-subtle: #333333;
     --border-strong: #444444;
 
-    /* Actions */
     --action-primary: #ffffff;
     --action-primary-hover: #e5e7eb;
     --action-foreground: #111827;
     --action-danger: rgba(220, 38, 38, 0.9);
     --action-danger-hover: #dc2626;
     --action-danger-foreground: #ffffff;
+
+    --background: var(--surface-1);
+    --foreground: var(--content-primary);
+    --popover: var(--surface-1);
+    --popover-foreground: var(--content-primary);
+    --primary: var(--action-primary);
+    --primary-foreground: var(--action-foreground);
+    --secondary: var(--surface-2);
+    --secondary-foreground: var(--content-primary);
+    --muted: var(--surface-2);
+    --muted-foreground: var(--content-secondary);
+    --accent: var(--surface-2);
+    --accent-foreground: var(--content-primary);
+    --destructive: var(--action-danger);
+    --destructive-foreground: var(--action-danger-foreground);
+    --border: var(--border-strong);
+    --input: var(--border-strong);
+    --ring: var(--content-primary);
   }
 }
 
