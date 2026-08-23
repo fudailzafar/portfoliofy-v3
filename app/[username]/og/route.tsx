@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 import { getUserData } from '../utils';
-import { getOptimizedImageUrl } from '@/lib/utils';
+import { getOptimizedImageUrl, isOwnS3ImageUrl } from '@/lib/utils';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -30,8 +30,15 @@ export async function GET(request: NextRequest) {
       subtitle = `Based in ${location}`;
     }
 
-    // Use profile image from Postgres users table
-    const rawProfileImage = userProfile?.customImage || userProfile?.image;
+    // Use profile image from Postgres users table. This route is public and
+    // unauthenticated, and ImageResponse fetches `src` server-side, so only
+    // trust customImage when it's our own S3 URL — anything else (e.g. an
+    // internal/metadata-service URL from before the write-side check existed)
+    // falls back to the OAuth-provided image instead of being fetched here.
+    const rawProfileImage =
+      (userProfile?.customImage && isOwnS3ImageUrl(userProfile.customImage)
+        ? userProfile.customImage
+        : null) || userProfile?.image;
     const profileImageUrl =
       getOptimizedImageUrl(rawProfileImage) ||
       `${request.nextUrl.origin}/placeholder.svg`;
