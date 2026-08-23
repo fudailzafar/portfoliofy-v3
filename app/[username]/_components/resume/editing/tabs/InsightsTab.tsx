@@ -48,7 +48,9 @@ const verticalGridGenerator = ({
   offset: { left: number; width: number };
 }) => {
   const { left, width } = offset;
-  return GRID_COLUMN_START_FRACTIONS.slice(1).map((f) => left + f * width);
+  return [0, ...GRID_COLUMN_START_FRACTIONS.slice(1), 1].map(
+    (f) => left + f * width,
+  );
 };
 
 // The X-axis tick under each gridline (including the plot's left edge) —
@@ -110,7 +112,7 @@ export function InsightsTab() {
 
       <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h3 className="text-[20px] font-medium text-content-primary">
+          <h3 className="text-[18px] font-medium text-content-primary">
             {isLoading ? '—' : (data?.total ?? 0)} page views
           </h3>
 
@@ -181,18 +183,20 @@ export function InsightsTab() {
                     (i) => data.series[i].date,
                   )}
                   tickFormatter={formatAxisDate}
-                  tickLine={false}
+                  tickLine={{ stroke: 'var(--border-subtle)' }}
+                  tickSize={12}
                   axisLine={false}
-                  tickMargin={8}
-                  padding={{ left: 16, right: 16 }}
-                  className="fill-content-muted text-[12px]"
+                  tickMargin={16}
+                  className="fill-content-muted"
+                  style={{ fontSize: 14 }}
                 />
                 <YAxis
                   allowDecimals={false}
                   tickLine={false}
                   axisLine={false}
                   width={36}
-                  className="fill-content-muted text-[12px]"
+                  className="fill-content-muted"
+                  style={{ fontSize: 14 }}
                 />
                 <Tooltip
                   formatter={(value) => [String(value ?? 0), 'Views']}

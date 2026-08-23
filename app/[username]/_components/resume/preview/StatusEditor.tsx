@@ -246,23 +246,19 @@ export function StatusEditor({
                 Cancel
               </button>
               {!text.trim() ? (
-                <Button
-                  variant="outline"
-                  size="sm"
+                <button
                   onClick={handleClear}
-                  className="bg-theme-bg-hover hover:bg-theme-bg-hover/80 h-9 rounded-md border border-theme-border px-6 font-medium text-theme-primary shadow-sm"
+                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-strong dark:active:bg-[#555]"
                 >
                   Clear status
-                </Button>
+                </button>
               ) : (
-                <Button
-                  size="sm"
+                <button
                   onClick={handleSave}
-                  variant="outline"
-                  className="bg-theme-bg-hover hover:bg-theme-bg-hover/80 h-9 rounded-md border border-theme-border px-6 font-medium text-theme-primary shadow-sm"
+                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-strong dark:active:bg-[#555]"
                 >
                   Set status
-                </Button>
+                </button>
               )}
             </div>
           </div>

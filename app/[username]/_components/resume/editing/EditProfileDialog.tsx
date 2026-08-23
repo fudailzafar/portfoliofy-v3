@@ -469,7 +469,10 @@ export function EditProfileDialog({
       >
         {editButton}
 
-        <DialogContent className="flex h-[85vh] max-w-4xl flex-col gap-0 overflow-hidden overscroll-contain bg-surface-1 p-0">
+        <DialogContent
+          hideCloseButton
+          className="flex h-[85vh] max-w-4xl flex-col gap-0 overflow-hidden overscroll-contain bg-surface-1 p-0"
+        >
           <DialogTitle className="sr-only">Edit Profile</DialogTitle>
 
           <div className="flex flex-1 flex-col overflow-hidden sm:flex-row">
