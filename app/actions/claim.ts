@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { createUsernameLookup, storeResume } from '@/lib/server/dbActions';
 import { ResumeDataSchemaType, ResumeDataSchema } from '@/lib/resume';
 import { revalidateTag } from 'next/cache';
+import { normalizeUsername } from '@/lib/validation/username';
 
 export async function claimUsernameAndInitProfile(
   username: string,
@@ -58,9 +59,9 @@ export async function claimUsernameAndInitProfile(
   });
 
   // @ts-expect-error Next.js 16 Canary types
-  revalidateTag(`username-${username}`);
+  revalidateTag(`username-${normalizeUsername(username)}`);
   // @ts-expect-error Next.js 16 Canary types
-  revalidateTag(`resume-${userId}`);
+  revalidateTag(`resume-v2-${userId}`);
   // @ts-expect-error Next.js 16 Canary types
   revalidateTag(`user-${userId}`);
 

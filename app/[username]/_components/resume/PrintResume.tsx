@@ -41,31 +41,54 @@ export const PrintResume = ({
     [sectionOrder],
   );
 
+  // Print/export must respect the same per-item `hidden` flag the live public
+  // preview honors (see e.g. preview/WorkExperience.tsx) — otherwise an item a
+  // user explicitly hid still leaks into their printed/exported resume. The
+  // filter runs inside each memo (keyed on the original, reference-stable
+  // array) rather than as a separate pre-computed variable, so it doesn't
+  // produce a new array identity on every render and defeat the memoization.
+  const notHidden = (item: any) => !item.hidden;
   const sortedWork = useMemo(
-    () => sortByDateDesc(workExperience),
+    () => sortByDateDesc(workExperience?.filter(notHidden)),
     [workExperience],
   );
-  const sortedAwards = sortByDateDesc(awards);
-  const sortedCertifications = sortByDateDesc(certifications);
-  const sortedProjects = useMemo(() => sortByDateDesc(projects), [projects]);
+  const sortedAwards = sortByDateDesc(awards?.filter(notHidden));
+  const sortedCertifications = sortByDateDesc(
+    certifications?.filter(notHidden),
+  );
+  const sortedProjects = useMemo(
+    () => sortByDateDesc(projects?.filter(notHidden)),
+    [projects],
+  );
   const sortedSideProjects = useMemo(
-    () => sortByDateDesc(sideProjects),
+    () => sortByDateDesc(sideProjects?.filter(notHidden)),
     [sideProjects],
   );
-  const sortedFeatures = useMemo(() => sortByDateDesc(features), [features]);
+  const sortedFeatures = useMemo(
+    () => sortByDateDesc(features?.filter(notHidden)),
+    [features],
+  );
   const sortedVolunteering = useMemo(
-    () => sortByDateDesc(volunteering),
+    () => sortByDateDesc(volunteering?.filter(notHidden)),
     [volunteering],
   );
-  const sortedSpeaking = useMemo(() => sortByDateDesc(speaking), [speaking]);
-  const sortedWriting = useMemo(() => sortByDateDesc(writing), [writing]);
+  const sortedSpeaking = useMemo(
+    () => sortByDateDesc(speaking?.filter(notHidden)),
+    [speaking],
+  );
+  const sortedWriting = useMemo(
+    () => sortByDateDesc(writing?.filter(notHidden)),
+    [writing],
+  );
   const sortedExhibitions = useMemo(
-    () => sortByDateDesc(exhibitions),
+    () => sortByDateDesc(exhibitions?.filter(notHidden)),
     [exhibitions],
   );
-  const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
-
-  const visibleContacts = contacts?.filter((c: any) => !c.hidden);
+  const sortedEducation = useMemo(
+    () => sortByDateDesc(education?.filter(notHidden)),
+    [education],
+  );
+  const visibleContacts = contacts?.filter(notHidden);
 
   if (!resume) return null;
 
@@ -93,7 +116,7 @@ export const PrintResume = ({
     {
       awards: {
         title: SECTION_LABELS['awards'],
-        content: awards?.length
+        content: sortedAwards.length
           ? sortedAwards.map((award: any) => (
               <PrintListItem
                 key={award.id || award.title}
@@ -107,7 +130,7 @@ export const PrintResume = ({
       },
       certifications: {
         title: SECTION_LABELS['certifications'],
-        content: certifications?.length
+        content: sortedCertifications.length
           ? sortedCertifications.map((cert: any) => (
               <PrintListItem
                 key={cert.id || cert.title}
@@ -121,7 +144,7 @@ export const PrintResume = ({
       },
       work: {
         title: SECTION_LABELS['work'],
-        content: workExperience?.length
+        content: sortedWork.length
           ? sortedWork.map((w: any) => (
               <PrintListItem
                 key={w.id || w.company}
@@ -136,7 +159,7 @@ export const PrintResume = ({
       },
       projects: {
         title: SECTION_LABELS['projects'],
-        content: projects?.length
+        content: sortedProjects.length
           ? sortedProjects.map((p: any) => (
               <PrintListItem
                 key={p.id || p.title}
@@ -149,7 +172,7 @@ export const PrintResume = ({
       },
       side_projects: {
         title: SECTION_LABELS['side_projects'],
-        content: sideProjects?.length
+        content: sortedSideProjects.length
           ? sortedSideProjects.map((p: any) => (
               <PrintListItem
                 key={p.id || p.title}
@@ -162,7 +185,7 @@ export const PrintResume = ({
       },
       features: {
         title: SECTION_LABELS['features'],
-        content: features?.length
+        content: sortedFeatures.length
           ? sortedFeatures.map((f: any) => (
               <PrintListItem
                 key={f.id || f.title}
@@ -176,7 +199,7 @@ export const PrintResume = ({
       },
       volunteering: {
         title: SECTION_LABELS['volunteering'],
-        content: volunteering?.length
+        content: sortedVolunteering.length
           ? sortedVolunteering.map((v: any) => (
               <PrintListItem
                 key={v.id || v.organization}
@@ -190,7 +213,7 @@ export const PrintResume = ({
       },
       speaking: {
         title: SECTION_LABELS['speaking'],
-        content: speaking?.length
+        content: sortedSpeaking.length
           ? sortedSpeaking.map((s: any) => (
               <PrintListItem
                 key={s.id || s.title}
@@ -203,7 +226,7 @@ export const PrintResume = ({
       },
       writing: {
         title: SECTION_LABELS['writing'],
-        content: writing?.length
+        content: sortedWriting.length
           ? sortedWriting.map((s: any) => (
               <PrintListItem
                 key={s.id || s.title}
@@ -217,7 +240,7 @@ export const PrintResume = ({
       },
       exhibitions: {
         title: SECTION_LABELS['exhibitions'],
-        content: exhibitions?.length
+        content: sortedExhibitions.length
           ? sortedExhibitions.map((s: any) => (
               <PrintListItem
                 key={s.id || s.title}
@@ -232,7 +255,7 @@ export const PrintResume = ({
       },
       education: {
         title: SECTION_LABELS['education'],
-        content: education?.length
+        content: sortedEducation.length
           ? sortedEducation.map((e: any) => (
               <PrintListItem
                 key={e.id || e.school}
