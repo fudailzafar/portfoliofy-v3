@@ -45,7 +45,7 @@ export function Contact({
                   rel="noopener noreferrer"
                   className="text-theme-primary hover:underline hover:decoration-1 hover:underline-offset-2"
                 >
-                  <span className="text-[length:var(--type-size)] font-semibold leading-[var(--line-height)]">
+                  <span className="font-regular text-[length:var(--type-size)] leading-[var(--line-height)]">
                     {extractUsername(contact.link, contact.platform)}
                   </span>
                 </a>

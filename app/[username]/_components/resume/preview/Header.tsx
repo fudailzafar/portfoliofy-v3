@@ -126,7 +126,7 @@ export function Header({
 
         <div className="flex-1 space-y-1">
           <h1
-            className="text-xl font-semibold leading-[26px] text-theme-primary"
+            className="font-regular text-xl leading-[26px] text-theme-primary"
             id="resume-name"
           >
             {header.name}
