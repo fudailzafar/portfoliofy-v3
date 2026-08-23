@@ -203,7 +203,7 @@ export function GeneralTab({
           <Label htmlFor="uname" className="text-xs text-content-secondary">
             Username*
           </Label>
-          <div className="relative flex items-center overflow-hidden rounded-md border border-border-strong bg-surface-card dark:border-none dark:bg-border-subtle">
+          <div className="relative flex items-center overflow-hidden rounded-md bg-surface-3 dark:border-none dark:bg-border-subtle">
             <span className="absolute left-3 top-1/2 z-10 -translate-y-1/2 select-none text-sm text-content-muted">
               portfoliofy.me/
             </span>

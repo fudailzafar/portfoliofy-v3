@@ -85,7 +85,7 @@ export function RichTextEditor({
   };
 
   return (
-    <div className="w-full overflow-hidden rounded-md border border-border-strong bg-surface-card shadow-sm focus-within:ring-1 focus-within:ring-black dark:border-none dark:bg-border-subtle dark:focus-within:ring-white">
+    <div className="w-full overflow-hidden rounded-md bg-surface-3 shadow-sm focus-within:ring-1 focus-within:ring-black dark:border-none dark:bg-border-subtle dark:focus-within:ring-white">
       <div className="bg-surface-2/50 flex items-center border-b border-border-strong">
         <Button
           type="button"
