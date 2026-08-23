@@ -6,7 +6,6 @@ import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
@@ -25,6 +24,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
+
+const isCertificationValid = (item: any) =>
+  !!item?.title && !!item?.year && !!item?.issuer;
 
 export function CertificationsTab({
   years,
@@ -46,24 +48,16 @@ export function CertificationsTab({
     setView: setCertificationsView,
     current: currentCertification,
     setCurrent: setCurrentCertification,
-  } = useTabEditor<any>();
+    commit: commitCertification,
+  } = useTabEditor<any>({
+    isValid: isCertificationValid,
+    onCommit: saveCertification,
+  });
 
   const sortedCertifications = useMemo(
     () => sortByDateDesc(certifications),
     [certifications],
   );
-
-  const handleSave = () => {
-    if (
-      !currentCertification?.title ||
-      !currentCertification?.year ||
-      !currentCertification?.issuer
-    )
-      return;
-    saveCertification(currentCertification);
-    setCertificationsView('list');
-    setCurrentCertification(null);
-  };
 
   const currentYear = new Date().getFullYear();
 
@@ -86,6 +80,10 @@ export function CertificationsTab({
       emptyState={{
         icon: FileBadge,
         buttonText: 'Add an certification you received',
+      }}
+      onBack={() => {
+        commitCertification();
+        setCertificationsView('list');
       }}
       renderList={() => (
         <>
@@ -220,16 +218,6 @@ export function CertificationsTab({
                   ...currentCertification,
                   attachments: val,
                 })
-              }
-            />
-
-            <TabFormActions
-              onCancel={() => setCertificationsView('list')}
-              onSave={handleSave}
-              isSaveDisabled={
-                !currentCertification?.title ||
-                !currentCertification?.year ||
-                !currentCertification?.issuer
               }
             />
           </>

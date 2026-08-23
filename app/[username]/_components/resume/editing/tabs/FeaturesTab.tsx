@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
@@ -6,7 +6,6 @@ import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
@@ -25,6 +24,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
+
+const isFeatureValid = (item: any) => !!item?.title && !!item?.year;
 
 export function FeaturesTab({
   years,
@@ -46,16 +47,10 @@ export function FeaturesTab({
     setView: setFeaturesView,
     current: currentFeature,
     setCurrent: setCurrentFeature,
-  } = useTabEditor<any>();
+    commit: commitFeature,
+  } = useTabEditor<any>({ isValid: isFeatureValid, onCommit: saveFeature });
 
   const sortedFeatures = useMemo(() => sortByDateDesc(features), [features]);
-
-  const handleSave = () => {
-    if (!currentFeature?.title || !currentFeature?.year) return;
-    saveFeature(currentFeature);
-    setFeaturesView('list');
-    setCurrentFeature(null);
-  };
 
   const currentYear = new Date().getFullYear();
 
@@ -78,6 +73,10 @@ export function FeaturesTab({
       emptyState={{
         icon: FolderCode,
         buttonText: 'Add a feature',
+      }}
+      onBack={() => {
+        commitFeature();
+        setFeaturesView('list');
       }}
       renderList={() => (
         <>
@@ -214,12 +213,6 @@ export function FeaturesTab({
                   attachments: val,
                 })
               }
-            />
-
-            <TabFormActions
-              onCancel={() => setFeaturesView('list')}
-              onSave={handleSave}
-              isSaveDisabled={!currentFeature?.title || !currentFeature?.year}
             />
           </>
         ) : null

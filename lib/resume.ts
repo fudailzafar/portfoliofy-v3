@@ -102,7 +102,13 @@ export const sortByDateDesc = <
 // Manual reordering only makes sense as a tie-breaker between entries that
 // share the same date, since everything else is auto-sorted by date.
 export const getListAdjacency = <
-  T extends { startYear?: string; start?: string; year?: string },
+  T extends {
+    startYear?: string;
+    start?: string;
+    year?: string;
+    endYear?: string;
+    end?: string | null;
+  },
 >(
   items: T[],
   index: number,
@@ -112,18 +118,34 @@ export const getListAdjacency = <
   canMoveUp: boolean;
   canMoveDown: boolean;
 } => {
-  const getYear = (item: T) =>
-    parseInt(item.startYear || item.start || item.year || '0');
+  const getEndYear = (item: T) => {
+    const y = item.endYear || item.end;
+    if (y === 'Now' || y === 'Ongoing' || !y) return 9999;
+    return parseInt(y) || 0;
+  };
+
+  const getStartYear = (item: T) => {
+    const y = item.startYear || item.start || item.year;
+    if (y === 'Now' || y === 'Ongoing') return 9999;
+    return parseInt(y || '0') || 0;
+  };
 
   const prevItem = index > 0 ? items[index - 1] : null;
   const nextItem = index < items.length - 1 ? items[index + 1] : null;
-  const currentYear = getYear(items[index]);
+  const currentStart = getStartYear(items[index]);
+  const currentEnd = getEndYear(items[index]);
 
   return {
     prevItem,
     nextItem,
-    canMoveUp: !!prevItem && getYear(prevItem) === currentYear,
-    canMoveDown: !!nextItem && getYear(nextItem) === currentYear,
+    canMoveUp:
+      !!prevItem &&
+      getStartYear(prevItem) === currentStart &&
+      getEndYear(prevItem) === currentEnd,
+    canMoveDown:
+      !!nextItem &&
+      getStartYear(nextItem) === currentStart &&
+      getEndYear(nextItem) === currentEnd,
   };
 };
 

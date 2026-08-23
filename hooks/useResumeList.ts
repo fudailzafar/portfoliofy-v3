@@ -37,8 +37,12 @@ export function useResumeList<T extends BaseListItem>(storeKey: ArrayKeys) {
 
   const handleMoveUp = (currentItem: T, prevItem: T) => {
     const newItems = [...items];
-    const idx1 = newItems.findIndex((i) => i.id === currentItem.id);
-    const idx2 = newItems.findIndex((i) => i.id === prevItem.id);
+    const idx1 = newItems.findIndex(
+      (i) => (i.id && i.id === currentItem.id) || i === currentItem,
+    );
+    const idx2 = newItems.findIndex(
+      (i) => (i.id && i.id === prevItem.id) || i === prevItem,
+    );
 
     if (idx1 !== -1 && idx2 !== -1) {
       [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
@@ -48,8 +52,12 @@ export function useResumeList<T extends BaseListItem>(storeKey: ArrayKeys) {
 
   const handleMoveDown = (currentItem: T, nextItem: T) => {
     const newItems = [...items];
-    const idx1 = newItems.findIndex((i) => i.id === currentItem.id);
-    const idx2 = newItems.findIndex((i) => i.id === nextItem.id);
+    const idx1 = newItems.findIndex(
+      (i) => (i.id && i.id === currentItem.id) || i === currentItem,
+    );
+    const idx2 = newItems.findIndex(
+      (i) => (i.id && i.id === nextItem.id) || i === nextItem,
+    );
 
     if (idx1 !== -1 && idx2 !== -1) {
       [newItems[idx1], newItems[idx2]] = [newItems[idx2], newItems[idx1]];
@@ -59,7 +67,7 @@ export function useResumeList<T extends BaseListItem>(storeKey: ArrayKeys) {
 
   const handleToggleVisibility = (item: T) => {
     const newItems = items.map((p) =>
-      p.id === item.id ? { ...p, hidden: !p.hidden } : p
+      p.id === item.id ? { ...p, hidden: !p.hidden } : p,
     );
     updateResume({ [storeKey]: newItems } as any);
   };

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
@@ -6,7 +6,6 @@ import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import { Pen } from 'lucide-react';
 import {
@@ -26,6 +25,8 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
+
+const isWritingValid = (item: any) => !!item?.title && !!item?.year;
 
 export function WritingTab({
   years,
@@ -47,16 +48,10 @@ export function WritingTab({
     setView: setWritingView,
     current: currentWriting,
     setCurrent: setCurrentWriting,
-  } = useTabEditor<any>();
+    commit: commitWriting,
+  } = useTabEditor<any>({ isValid: isWritingValid, onCommit: saveWriting });
 
   const sortedWriting = useMemo(() => sortByDateDesc(writing), [writing]);
-
-  const handleSave = () => {
-    if (!currentWriting?.title || !currentWriting?.year) return;
-    saveWriting(currentWriting);
-    setWritingView('list');
-    setCurrentWriting(null);
-  };
 
   const currentYear = new Date().getFullYear();
 
@@ -79,6 +74,10 @@ export function WritingTab({
       emptyState={{
         icon: Pen,
         buttonText: "Add a piece you've written",
+      }}
+      onBack={() => {
+        commitWriting();
+        setWritingView('list');
       }}
       renderList={() => (
         <>
@@ -216,12 +215,6 @@ export function WritingTab({
                   attachments: val,
                 })
               }
-            />
-
-            <TabFormActions
-              onCancel={() => setWritingView('list')}
-              onSave={handleSave}
-              isSaveDisabled={!currentWriting?.title || !currentWriting?.year}
             />
           </>
         ) : null

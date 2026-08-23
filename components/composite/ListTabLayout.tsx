@@ -16,6 +16,7 @@ interface ListTabLayoutProps {
   };
   renderList: () => React.ReactNode;
   renderForm: () => React.ReactNode;
+  onBack?: () => void;
 }
 
 export function ListTabLayout({
@@ -27,6 +28,7 @@ export function ListTabLayout({
   emptyState,
   renderList,
   renderForm,
+  onBack,
 }: ListTabLayoutProps) {
   return (
     <div className="mx-auto flex max-w-3xl flex-col">
@@ -35,6 +37,8 @@ export function ListTabLayout({
         showAddButton={view === 'list'}
         onAdd={onAdd}
         addButtonText={addButtonText}
+        showBackButton={view === 'form'}
+        onBack={onBack}
       />
 
       {view === 'list' && itemsLength === 0 && (
@@ -50,7 +54,7 @@ export function ListTabLayout({
       )}
 
       {view === 'form' && (
-        <div className="space-y-6 w-full min-w-0">{renderForm()}</div>
+        <div className="w-full min-w-0 space-y-6">{renderForm()}</div>
       )}
     </div>
   );
