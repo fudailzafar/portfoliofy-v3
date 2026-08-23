@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Resume, ResumeData } from '@/lib/server/dbActions';
-import { useS3Upload } from 'next-s3-upload';
 type PublishStatuses = 'live' | 'draft';
 import { ResumeDataSchema } from '@/lib/resume';
 
@@ -53,7 +52,6 @@ import { useSession } from 'next-auth/react';
 
 export function useUserActions() {
   const queryClient = useQueryClient();
-  const { uploadToS3 } = useS3Upload();
   const { status } = useSession();
 
   // Query for fetching resume data
@@ -105,39 +103,6 @@ export function useUserActions() {
     };
   };
 
-  // Update resume data in Upstash
-  const uploadFileResume = async (file: File) => {
-    const fileOnS3 = await uploadToS3(file);
-
-    const newResume: Resume = {
-      file: {
-        name: file.name,
-        url: fileOnS3.url,
-        size: file.size,
-        bucket: fileOnS3.bucket,
-        key: fileOnS3.key,
-      },
-      resumeData: undefined,
-      status: 'draft',
-    };
-
-    queryClient.setQueryData(['resume'], (oldData: any) => ({
-      ...oldData,
-      ...newResume,
-    }));
-
-    await internalResumeUpdate(newResume);
-  };
-
-  // Mutation for updating resume
-  const uploadResumeMutation = useMutation({
-    mutationFn: uploadFileResume,
-    onSuccess: () => {
-      // Invalidate and refetch resume data
-      queryClient.invalidateQueries({ queryKey: ['resume'] });
-    },
-  });
-
   // Mutation for toggling status of publishment
   const toggleStatusMutation = useMutation({
     mutationFn: async (newPublishStatus: PublishStatuses) => {
@@ -183,8 +148,6 @@ export function useUserActions() {
       // Fallback to a default structure if the user doesn't have a resume yet
       const baseResume: Resume = resumeQuery.data?.resume || {
         status: 'live',
-        file: null,
-        fileContent: null,
       };
 
       const updatedResume: Resume = {
@@ -214,7 +177,6 @@ export function useUserActions() {
 
   return {
     resumeQuery,
-    uploadResumeMutation,
     usernameQuery,
     updateUsernameMutation,
     checkUsernameMutation,
