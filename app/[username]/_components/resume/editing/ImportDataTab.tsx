@@ -5,6 +5,46 @@ import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
 import { ResumeDataSchemaType } from '@/lib/resume';
 
+type ExtraFields = { collaborators?: unknown[]; attachments?: unknown[] };
+
+// The AI-parsed re-import has no idea about collaborators/attachments tagged
+// on the existing entries (they're portfoliofy-specific fields it never
+// sees), so a naive whole-array replace would silently wipe them. Instead,
+// match each freshly-parsed item back to an existing one by a stable-ish
+// identity key and carry those fields over when there's a match. Items with
+// no match (genuinely new entries) simply start with none, same as today.
+function mergeSectionPreservingExtras<T extends ExtraFields>(
+  parsedItems: T[] | undefined,
+  existingItems: T[] | undefined,
+  getKey: (item: T) => string,
+): T[] | undefined {
+  if (!parsedItems) return existingItems;
+  if (!existingItems?.length) return parsedItems;
+
+  const existingByKey = new Map(
+    existingItems.map((item) => [getKey(item), item]),
+  );
+
+  return parsedItems.map((item) => {
+    const match = existingByKey.get(getKey(item));
+    if (!match) return item;
+    return {
+      ...item,
+      collaborators: match.collaborators?.length
+        ? match.collaborators
+        : item.collaborators,
+      attachments: match.attachments?.length
+        ? match.attachments
+        : item.attachments,
+    };
+  });
+}
+
+const lower = (v: unknown) =>
+  String(v ?? '')
+    .trim()
+    .toLowerCase();
+
 export function ImportDataTab() {
   const [isParsing, setIsParsing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -53,17 +93,72 @@ export function ImportDataTab() {
               resume.header.skills,
           },
           summary: parsedData.summary || resume.summary,
-          workExperience: parsedData.workExperience || resume.workExperience,
-          education: parsedData.education || resume.education,
-          projects: parsedData.projects || resume.projects,
-          sideProjects: parsedData.sideProjects || resume.sideProjects,
-          speaking: parsedData.speaking || resume.speaking,
-          writing: parsedData.writing || resume.writing,
-          exhibitions: parsedData.exhibitions || resume.exhibitions,
-          features: parsedData.features || resume.features,
-          volunteering: parsedData.volunteering || resume.volunteering,
-          awards: parsedData.awards || resume.awards,
-          certifications: parsedData.certifications || resume.certifications,
+          workExperience:
+            mergeSectionPreservingExtras(
+              parsedData.workExperience,
+              resume.workExperience,
+              (w) => `${lower(w.company)}|${lower(w.title)}`,
+            ) || resume.workExperience,
+          education:
+            mergeSectionPreservingExtras(
+              parsedData.education,
+              resume.education,
+              (e) => `${lower(e.school)}|${lower(e.degree)}`,
+            ) || resume.education,
+          projects:
+            mergeSectionPreservingExtras(
+              parsedData.projects,
+              resume.projects,
+              (p) => lower(p.title),
+            ) || resume.projects,
+          sideProjects:
+            mergeSectionPreservingExtras(
+              parsedData.sideProjects,
+              resume.sideProjects,
+              (p) => lower(p.title),
+            ) || resume.sideProjects,
+          speaking:
+            mergeSectionPreservingExtras(
+              parsedData.speaking,
+              resume.speaking,
+              (s) => lower(s.title),
+            ) || resume.speaking,
+          writing:
+            mergeSectionPreservingExtras(
+              parsedData.writing,
+              resume.writing,
+              (w) => lower(w.title),
+            ) || resume.writing,
+          exhibitions:
+            mergeSectionPreservingExtras(
+              parsedData.exhibitions,
+              resume.exhibitions,
+              (e) => lower(e.title),
+            ) || resume.exhibitions,
+          features:
+            mergeSectionPreservingExtras(
+              parsedData.features,
+              resume.features,
+              (f) => lower(f.title),
+            ) || resume.features,
+          volunteering:
+            mergeSectionPreservingExtras(
+              parsedData.volunteering,
+              resume.volunteering,
+              (v) => `${lower(v.organization)}|${lower(v.role)}`,
+            ) || resume.volunteering,
+          awards:
+            mergeSectionPreservingExtras(
+              parsedData.awards,
+              resume.awards,
+              (a) => lower(a.title),
+            ) || resume.awards,
+          certifications:
+            mergeSectionPreservingExtras(
+              parsedData.certifications,
+              resume.certifications,
+              (c) => lower(c.title),
+            ) || resume.certifications,
         };
 
         updateResume(mergedData);
