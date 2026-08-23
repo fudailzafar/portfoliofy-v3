@@ -24,7 +24,7 @@ export function UnsavedChangesDialog({
 }: UnsavedChangesDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="gap-6 border-none p-8 font-sans dark:bg-surface-1 sm:max-w-sm">
+      <AlertDialogContent className="gap-6 border border-border-subtle p-8 font-sans dark:bg-surface-1 sm:max-w-sm">
         <AlertDialogHeader className="flex flex-col gap-1.5 space-y-0">
           <AlertDialogTitle className="text-left text-lg font-medium tracking-tight text-content-primary">
             Unsaved changes
@@ -34,12 +34,12 @@ export function UnsavedChangesDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="mt-5 flex !flex-row justify-end gap-2 space-x-0">
-          <AlertDialogCancel className="m-0 h-8 rounded-md border border-border-strong bg-surface-card px-4 text-xs font-medium text-content-secondary hover:bg-surface-3">
+          <AlertDialogCancel className="m-0 border-none bg-surface-1 px-4 py-2 text-sm font-medium text-content-primary hover:bg-surface-1 hover:underline hover:underline-offset-4">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onLeaveAnyway}
-            className="m-0 h-8 rounded-md border-none bg-action-primary px-4 text-xs font-medium text-surface-1 hover:bg-action-primary hover:text-surface-2 dark:text-surface-1 dark:hover:bg-action-primary dark:hover:text-surface-2"
+            className="m-0 h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
           >
             Okay
           </AlertDialogAction>

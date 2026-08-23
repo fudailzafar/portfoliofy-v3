@@ -6,6 +6,7 @@ import {
   getCustomDomainByUserId,
   getUserIdByCustomDomain,
 } from '@/lib/server/dbActions';
+import { isValidDomainFormat, normalizeDomain } from '@/lib/validation/domain';
 
 const VERCEL_API_TOKEN = process.env.VERCEL_API_TOKEN;
 const VERCEL_PROJECT_ID = process.env.VERCEL_PROJECT_ID;
@@ -43,7 +44,7 @@ export async function GET() {
 
     // Fetch domain project status from Vercel
     const { ok: projectOk, data: projectData } = await fetchVercelAPI(
-      `/v9/projects/${VERCEL_PROJECT_ID}/domains/${domain}`,
+      `/v9/projects/${VERCEL_PROJECT_ID}/domains/${encodeURIComponent(domain)}`,
     );
 
     if (!projectOk) {
@@ -52,7 +53,7 @@ export async function GET() {
 
     // Fetch domain DNS configuration status
     const { ok: configOk, data: configData } = await fetchVercelAPI(
-      `/v6/domains/${domain}/config`,
+      `/v6/domains/${encodeURIComponent(domain)}/config`,
     );
 
     let isVerified = projectData.verified && !configData?.misconfigured;
@@ -113,7 +114,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid domain' }, { status: 400 });
     }
 
-    const cleanDomain = domain.toLowerCase().trim();
+    const cleanDomain = normalizeDomain(domain);
+    if (!isValidDomainFormat(cleanDomain)) {
+      return NextResponse.json(
+        { error: 'Invalid domain format' },
+        { status: 400 },
+      );
+    }
 
     // Reject up front if the domain is already claimed by a different
     // account — fails fast, before we spend a Vercel API call on it.
@@ -129,7 +136,7 @@ export async function POST(req: Request) {
     const existingDomain = await getCustomDomainByUserId(session.user.id);
     if (existingDomain && existingDomain !== cleanDomain) {
       await fetchVercelAPI(
-        `/v9/projects/${VERCEL_PROJECT_ID}/domains/${existingDomain}`,
+        `/v9/projects/${VERCEL_PROJECT_ID}/domains/${encodeURIComponent(existingDomain)}`,
         {
           method: 'DELETE',
         },
@@ -201,7 +208,7 @@ export async function DELETE() {
     // Remove from Vercel
     if (VERCEL_API_TOKEN && VERCEL_PROJECT_ID) {
       await fetchVercelAPI(
-        `/v9/projects/${VERCEL_PROJECT_ID}/domains/${domain}`,
+        `/v9/projects/${VERCEL_PROJECT_ID}/domains/${encodeURIComponent(domain)}`,
         {
           method: 'DELETE',
         },
