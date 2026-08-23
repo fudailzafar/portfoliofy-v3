@@ -264,6 +264,20 @@ export default async function Home() {
 
           {/* Feature 3: Print it out */}
           <div className="relative mb-8 flex h-[384px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
+            <style
+              dangerouslySetInnerHTML={{
+                __html: `
+              @keyframes print-slide {
+                0% { transform: translateY(100%); opacity: 1; }
+                60% { transform: translateY(0%); opacity: 1; }
+                100% { transform: translateY(0%); opacity: 1; }
+              }
+              .animate-print {
+                animation: print-slide 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+              }
+            `,
+              }}
+            />
             <div className="mb-8">
               <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-[#111] dark:text-[#eee]">
                 Print it out
@@ -274,12 +288,12 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="relative flex w-full flex-1 items-center justify-center overflow-hidden">
-              <img
-                src="/images/feature-card.jpg"
-                alt="Print feature preview"
-                className="h-full w-full object-cover object-top sm:object-center"
-              />
+            <div className="relative flex w-full flex-1 justify-center overflow-hidden">
+              {/* Sheet underneath, peeking out slightly */}
+              <ResumePaper className="absolute top-1 z-10 shadow-sm" />
+
+              {/* Printing Paper (animated) */}
+              <ResumePaper className="animate-print absolute top-0 z-20 shadow-md" />
             </div>
           </div>
 
@@ -308,8 +322,8 @@ export default async function Home() {
             </div>
 
             <div className="flex w-full flex-1 flex-col">
-              <div className="mb-6 flex max-w-[95%] items-center rounded-lg border bg-[rgb(255,255,255,0.05)] px-3 py-2 text-[#111] shadow-sm dark:text-[#eee] dark:shadow-none sm:px-5 sm:py-3">
-                <span className="flex items-center text-[15px] font-medium tracking-tight text-[#111] dark:text-[#eee] sm:text-[18px]">
+              <div className="mb-6 flex max-w-full items-center rounded-3xl bg-[#fff] px-3 py-2 text-[#111] shadow-sm dark:text-[#eee] dark:shadow-none sm:px-5 sm:py-3">
+                <span className="font-regular flex items-center text-[15px] tracking-tight text-[#111] dark:text-[#eee] sm:text-[30px]">
                   Art director
                   <span className="animate-blink ml-0.5 inline-block h-[1.1em] w-[2px] bg-[#0085FF]"></span>
                 </span>
@@ -317,7 +331,7 @@ export default async function Home() {
 
               <div className="space-y-4 px-1 sm:px-2">
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-12">
+                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-16">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="https://api.dicebear.com/10.x/glyphs/svg?seed=Lauren"
@@ -326,10 +340,10 @@ export default async function Home() {
                     />
                   </div>
                   <div className="leading-tight">
-                    <div className="text-[14px] text-content-muted dark:text-content-muted sm:text-[16px]">
+                    <div className="text-[14px] text-content-muted opacity-30 dark:text-content-muted sm:text-[28px]">
                       Lauren Jochum
                     </div>
-                    <div className="text-[13px] text-content-muted dark:text-content-muted sm:text-[15px]">
+                    <div className="text-[13px] text-content-muted opacity-30 dark:text-content-muted sm:text-[28px]">
                       <strong className="text-[#111] dark:text-[#eee]">
                         Art director
                       </strong>{' '}
@@ -338,7 +352,7 @@ export default async function Home() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3 opacity-30 sm:gap-4">
-                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-12">
+                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-16">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="https://api.dicebear.com/10.x/glyphs/svg?seed=Skip"
@@ -347,10 +361,10 @@ export default async function Home() {
                     />
                   </div>
                   <div className="leading-tight">
-                    <div className="text-[14px] text-content-muted dark:text-content-muted sm:text-[16px]">
+                    <div className="text-[14px] text-content-muted dark:text-content-muted sm:text-[28px]">
                       Skip Hursh
                     </div>
-                    <div className="text-[13px] text-content-muted dark:text-content-muted sm:text-[15px]">
+                    <div className="text-[13px] text-content-muted dark:text-content-muted sm:text-[28px]">
                       <strong className="text-[#111] dark:text-[#eee]">
                         Art director
                       </strong>{' '}
