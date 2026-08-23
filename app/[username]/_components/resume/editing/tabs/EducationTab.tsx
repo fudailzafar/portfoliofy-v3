@@ -9,7 +9,6 @@ import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import { GraduationCap } from 'lucide-react';
 import {
@@ -29,6 +28,12 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
+
+const isEducationValid = (item: any) =>
+  !!item?.school &&
+  !!item?.degree &&
+  !!item?.end &&
+  !isReversedRange(item?.start, item?.end);
 
 export function EducationTab({
   years,
@@ -50,16 +55,10 @@ export function EducationTab({
     setView: setEduView,
     current: currentEdu,
     setCurrent: setCurrentEdu,
-  } = useTabEditor<any>();
+    commit: commitEdu,
+  } = useTabEditor<any>({ isValid: isEducationValid, onCommit: saveEdu });
 
   const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
-
-  const handleSave = () => {
-    if (!currentEdu?.school || !currentEdu?.degree) return;
-    saveEdu(currentEdu);
-    setEduView('list');
-    setCurrentEdu(null);
-  };
 
   const currentYear = new Date().getFullYear();
 
@@ -83,6 +82,10 @@ export function EducationTab({
       emptyState={{
         icon: GraduationCap,
         buttonText: 'Add education',
+      }}
+      onBack={() => {
+        commitEdu();
+        setEduView('list');
       }}
       renderList={() => (
         <>
@@ -254,17 +257,6 @@ export function EducationTab({
                   ...currentEdu,
                   attachments: val,
                 })
-              }
-            />
-
-            <TabFormActions
-              onCancel={() => setEduView('list')}
-              onSave={handleSave}
-              isSaveDisabled={
-                !currentEdu?.school ||
-                !currentEdu?.degree ||
-                !currentEdu?.end ||
-                isReversedRange(currentEdu?.start, currentEdu?.end)
               }
             />
           </>

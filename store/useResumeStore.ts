@@ -23,10 +23,21 @@ interface ResumeStore {
 
   isEditingTab: boolean;
   setIsEditingTab: (editing: boolean) => void;
+  // Bumped whenever the global Cancel button discards changes — tabs key
+  // their rendering on this so an in-progress add/edit form fully remounts
+  // (and its local draft is dropped) instead of showing stale state.
   saveTrigger: number;
   triggerSave: () => void;
   isSaveDisabled: boolean;
   setIsSaveDisabled: (disabled: boolean) => void;
+
+  // The currently-open tab form (if any) registers a commit function here so
+  // the global Save button can flush an in-progress item into the resume
+  // before persisting — there's only ever one form open at a time.
+  activeFormCommit: (() => boolean) | null;
+  setActiveFormCommit: (fn: (() => boolean) | null) => void;
+  activeFormValid: boolean;
+  setActiveFormValid: (valid: boolean) => void;
 
   printHiddenSections: string[];
   togglePrintSection: (sectionId: string) => void;
@@ -49,6 +60,11 @@ export const useResumeStore = create<ResumeStore>((set) => ({
   triggerSave: () => set((state) => ({ saveTrigger: state.saveTrigger + 1 })),
   isSaveDisabled: false,
   setIsSaveDisabled: (disabled) => set({ isSaveDisabled: disabled }),
+
+  activeFormCommit: null,
+  setActiveFormCommit: (fn) => set({ activeFormCommit: fn }),
+  activeFormValid: true,
+  setActiveFormValid: (valid) => set({ activeFormValid: valid }),
 
   printHiddenSections: [],
   togglePrintSection: (sectionId) =>

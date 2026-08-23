@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
@@ -6,7 +6,6 @@ import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
@@ -25,6 +24,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
+
+const isProjectValid = (item: any) => !!item?.title && !!item?.year;
 
 export function ProjectsTab({
   years,
@@ -46,16 +47,10 @@ export function ProjectsTab({
     setView: setProjectsView,
     current: currentProject,
     setCurrent: setCurrentProject,
-  } = useTabEditor<any>();
+    commit: commitProject,
+  } = useTabEditor<any>({ isValid: isProjectValid, onCommit: saveProject });
 
   const sortedProjects = useMemo(() => sortByDateDesc(projects), [projects]);
-
-  const handleSave = () => {
-    if (!currentProject?.title || !currentProject?.year) return;
-    saveProject(currentProject);
-    setProjectsView('list');
-    setCurrentProject(null);
-  };
 
   const currentYear = new Date().getFullYear();
 
@@ -78,6 +73,10 @@ export function ProjectsTab({
       emptyState={{
         icon: FolderCode,
         buttonText: "Add a work project you're proud of",
+      }}
+      onBack={() => {
+        commitProject();
+        setProjectsView('list');
       }}
       renderList={() => (
         <>
@@ -214,12 +213,6 @@ export function ProjectsTab({
                   attachments: val,
                 })
               }
-            />
-
-            <TabFormActions
-              onCancel={() => setProjectsView('list')}
-              onSave={handleSave}
-              isSaveDisabled={!currentProject?.title || !currentProject?.year}
             />
           </>
         ) : null

@@ -111,6 +111,14 @@ export async function storeResume(
         resume_data = EXCLUDED.resume_data,
         updated_at = NOW()
     `;
+
+    if (safeResumeData?.header?.name) {
+      await sql`
+        UPDATE users 
+        SET name = ${safeResumeData.header.name}
+        WHERE id = ${userId}
+      `;
+    }
   } catch (error) {
     if (error instanceof z.ZodError) {
       throw error;

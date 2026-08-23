@@ -16,8 +16,9 @@ import {
 } from '@/components/ui/select';
 import { buildContactUrl, extractUsername } from '@/utils/extractUsername';
 import { EditDeleteButtons } from '../EditDeleteButtons';
-import { TabFormActions } from '../TabFormActions';
 import { SortButtons } from '../SortButtons';
+
+const isContactValid = (item: any) => !!item?.platform && !!item?.link;
 
 export function ContactsTab({
   setProjectToDelete,
@@ -37,14 +38,8 @@ export function ContactsTab({
     setView: setContactsView,
     current: currentContact,
     setCurrent: setCurrentContact,
-  } = useTabEditor<any>();
-
-  const handleSave = () => {
-    if (!currentContact?.platform || !currentContact?.link) return;
-    saveContact(currentContact);
-    setContactsView('list');
-    setCurrentContact(null);
-  };
+    commit: commitContact,
+  } = useTabEditor<any>({ isValid: isContactValid, onCommit: saveContact });
 
   return (
     <ListTabLayout
@@ -63,6 +58,10 @@ export function ContactsTab({
       emptyState={{
         icon: MessageCircle,
         buttonText: '+ Add Contact',
+      }}
+      onBack={() => {
+        commitContact();
+        setContactsView('list');
       }}
       renderList={() => (
         <>
@@ -277,12 +276,6 @@ export function ContactsTab({
                 </div>
               )}
             </div>
-
-            <TabFormActions
-              onCancel={() => setContactsView('list')}
-              onSave={handleSave}
-              isSaveDisabled={!currentContact.platform || !currentContact.link}
-            />
           </>
         ) : null
       }

@@ -5,7 +5,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import { Button } from '@/components/ui/button';
 import { List, ListOrdered, Link as LinkIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, ensureHttps } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
 
 export function RichTextEditor({
@@ -80,8 +80,21 @@ export function RichTextEditor({
       return;
     }
 
-    // update link
-    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+    // update link — normalize to an absolute URL first, otherwise a scheme-less
+    // value like "google.com" is a relative link and resolves against the
+    // current page (portfoliofy.me/google.com) instead of the real target.
+    // mailto:/tel: are already absolute and must be left alone — ensureHttps
+    // would otherwise mangle them into "https://mailto:...".
+    const normalizedUrl =
+      url.startsWith('mailto:') || url.startsWith('tel:')
+        ? url
+        : ensureHttps(url);
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange('link')
+      .setLink({ href: normalizedUrl })
+      .run();
   };
 
   return (
