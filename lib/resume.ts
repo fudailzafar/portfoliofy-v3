@@ -434,6 +434,14 @@ export const ResumeDataSchema = z.object({
         .optional()
         .default('default'),
       hideSocialFeatures: z.boolean().optional().default(false),
+      ogImage: z
+        .string()
+        .optional()
+        .describe('Custom Open Graph image URL, must be 1200x630'),
+      favicon: z
+        .string()
+        .optional()
+        .describe('Custom favicon URL, must be 32x32'),
     })
     .optional()
     .default({

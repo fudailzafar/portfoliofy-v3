@@ -3,7 +3,7 @@ import { PrintResumeWrapper } from '@/app/[username]/_components/resume/PrintRes
 import { FullResume } from '@/app/[username]/_components/resume/FullResume';
 import { Metadata } from 'next';
 import { getUserData } from './utils';
-import { getOptimizedImageUrl } from '@/lib/utils';
+import { getOptimizedImageUrl, isOwnS3ImageUrl } from '@/lib/utils';
 import { auth } from '@/auth';
 import dynamic from 'next/dynamic';
 import { after } from 'next/server';
@@ -49,15 +49,26 @@ export async function generateMetadata({
     html ? html.replace(/<[^>]*>?/gm, '') : '';
   const plainSummary = stripHtml(resume.resumeData.summary);
 
+  const design = resume.resumeData.design;
+  const customOgImage =
+    design?.ogImage && isOwnS3ImageUrl(design.ogImage)
+      ? design.ogImage
+      : undefined;
+  const customFavicon =
+    design?.favicon && isOwnS3ImageUrl(design.favicon)
+      ? design.favicon
+      : undefined;
+
   return {
     title: `${resume.resumeData.header.name}`,
     description: plainSummary,
+    icons: customFavicon ? { icon: customFavicon } : undefined,
     openGraph: {
       title: `${resume.resumeData.header.name}`,
       description: plainSummary,
       images: [
         {
-          url: `https://portfoliofy.me/${username}/og`,
+          url: customOgImage || `https://portfoliofy.me/${username}/og`,
           width: 1200,
           height: 630,
           alt: 'Portfoliofy User Open Graph Image',
