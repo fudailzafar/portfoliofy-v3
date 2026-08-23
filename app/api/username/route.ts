@@ -2,6 +2,7 @@ import { getUsernameById, updateUsername } from '@/lib/server/dbActions';
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
+import { normalizeUsername } from '@/lib/validation/username';
 
 export type GetResponse = { username?: string | null } | { error: string };
 export type PostResponse = { success: true } | { error: string };
@@ -60,10 +61,10 @@ export async function POST(
 
     if (oldUsername) {
       // @ts-expect-error Next.js 16 Canary types
-      revalidateTag(`username-${oldUsername}`);
+      revalidateTag(`username-${normalizeUsername(oldUsername)}`);
     }
     // @ts-expect-error Next.js 16 Canary types
-    revalidateTag(`username-${username}`);
+    revalidateTag(`username-${normalizeUsername(username)}`);
 
     return NextResponse.json({ success: true });
   } catch (error) {

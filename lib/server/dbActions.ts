@@ -57,6 +57,18 @@ export async function getResume(userId: string): Promise<Resume | undefined> {
       }
     }
 
+    // Run the row through the schema so zod defaults (e.g. `collaborators`/
+    // `attachments` arrays defaulting to `[]`) actually apply on read, not
+    // just on write — otherwise a legacy row predating a field genuinely has
+    // it as `undefined` at runtime, relying on every consumer to individually
+    // guard against that. Fall back to the raw cast on failure (rather than
+    // throwing) so a row that doesn't perfectly conform doesn't take down the
+    // whole profile — same tolerance the old bare-cast behavior had.
+    const parsed = ResumeSchema.safeParse(row);
+    if (parsed.success) {
+      return parsed.data;
+    }
+    console.error('Resume row failed schema validation on read:', parsed.error);
     return row as Resume;
   } catch (error) {
     console.error('Error retrieving resume:', error);

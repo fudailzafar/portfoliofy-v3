@@ -6,6 +6,7 @@ import {
 import sql from '@/lib/server/db';
 import { unstable_cache } from 'next/cache';
 import { cache } from 'react';
+import { normalizeUsername } from '@/lib/validation/username';
 
 export interface UserProfile {
   name: string | null;
@@ -68,13 +69,18 @@ export const getCachedResume = cache(async (userId: string) => {
 
 export const getCachedUserIdByUsername = cache(
   async (username: string): Promise<string | null> => {
+    // Normalize before it's used as the cache key/tag — getUserIdByUsername
+    // normalizes internally too, so two calls that differ only in casing must
+    // resolve to the same cache entry, or a revalidation keyed on one casing
+    // would leave a stale entry under the other.
+    const normalized = normalizeUsername(username);
     return unstable_cache(
       async () => {
-        return await getUserIdByUsername(username);
+        return await getUserIdByUsername(normalized);
       },
-      [username],
+      [normalized],
       {
-        tags: ['usernames', `username-${username}`],
+        tags: ['usernames', `username-${normalized}`],
         revalidate: 86400, // 1 day
       },
     )();
