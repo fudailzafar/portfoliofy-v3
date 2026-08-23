@@ -14,13 +14,13 @@ const ResumePaper = ({ className }: { className?: string }) => (
   >
     <div className="flex gap-4 sm:gap-8">
       <div className="w-[35%] shrink-0">
-        <div className="mb-0.5 text-[10px] font-semibold text-[#111] dark:text-[#eee] sm:text-[12px]">
+        <div className="font-regular mb-0.5 text-[10px] text-[#111] dark:text-[#eee] sm:text-[12px]">
           Jeff Hamada
         </div>
         <div className="text-content-muted">Artist in Vancouver, He/Him</div>
       </div>
       <div className="w-full">
-        <div className="mb-4 text-[10px] font-semibold text-[#111] dark:text-[#eee] sm:text-[12px]">
+        <div className="font-regular mb-4 text-[10px] text-[#111] dark:text-[#eee] sm:text-[12px]">
           Work Experience
         </div>
 
@@ -29,7 +29,7 @@ const ResumePaper = ({ className }: { className?: string }) => (
             2008 — Now
           </div>
           <div className="flex-1">
-            <div className="mb-0.5 text-[10px] font-semibold text-[#111] dark:text-[#eee] sm:text-[12px]">
+            <div className="font-regular mb-0.5 text-[10px] text-[#111] dark:text-[#eee] sm:text-[12px]">
               Founder at Booooooom
             </div>
             <div className="mb-1.5 text-content-muted">Vancouver, Canada</div>
@@ -46,7 +46,7 @@ const ResumePaper = ({ className }: { className?: string }) => (
             2004 — 2005
           </div>
           <div className="flex-1">
-            <div className="mb-0.5 text-[10px] font-semibold text-[#111] dark:text-[#eee] sm:text-[12px]">
+            <div className="font-regular mb-0.5 text-[10px] text-[#111] dark:text-[#eee] sm:text-[12px]">
               Graphic Designer at Electronic Arts
             </div>
             <div className="mb-1.5 text-content-muted">Vancouver, Canada</div>
@@ -210,7 +210,7 @@ export default async function Home() {
             <div className="relative flex w-full flex-1 items-center justify-center overflow-hidden">
               <div className="relative flex w-full max-w-[400px] flex-col justify-between gap-6 rounded-[18px] border border-border-strong p-4 text-[#111] shadow-xl dark:text-[#eee] dark:shadow-none sm:p-5">
                 <div className="relative">
-                  <div className="text-[16px] font-semibold tracking-tight text-[#111] dark:text-[#eee] sm:text-[20px]">
+                  <div className="font-regular text-[16px] tracking-tight text-[#111] dark:text-[#eee] sm:text-[20px]">
                     Product Designer at Quip
                   </div>
                   <div className="text-[14px] text-content-muted sm:text-[16px]">
@@ -264,20 +264,6 @@ export default async function Home() {
 
           {/* Feature 3: Print it out */}
           <div className="relative mb-8 flex h-[384px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
-            <style
-              dangerouslySetInnerHTML={{
-                __html: `
-              @keyframes print-slide {
-                0% { transform: translateY(100%); opacity: 1; }
-                60% { transform: translateY(0%); opacity: 1; }
-                100% { transform: translateY(0%); opacity: 1; }
-              }
-              .animate-print {
-                animation: print-slide 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-              }
-            `,
-              }}
-            />
             <div className="mb-8">
               <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-[#111] dark:text-[#eee]">
                 Print it out
@@ -288,12 +274,12 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="relative flex w-full flex-1 justify-center overflow-hidden">
-              {/* Sheet underneath, peeking out slightly */}
-              <ResumePaper className="absolute top-1 z-10 shadow-sm" />
-
-              {/* Printing Paper (animated) */}
-              <ResumePaper className="animate-print absolute top-0 z-20 shadow-md" />
+            <div className="relative flex w-full flex-1 items-center justify-center overflow-hidden">
+              <img
+                src="/images/feature-card.jpg"
+                alt="Print feature preview"
+                className="h-full w-full object-cover object-top sm:object-center"
+              />
             </div>
           </div>
 
@@ -322,7 +308,7 @@ export default async function Home() {
             </div>
 
             <div className="flex w-full flex-1 flex-col">
-              <div className="mb-6 flex max-w-[95%] items-center rounded-full border px-3 py-2 text-[#111] shadow-sm dark:text-[#eee] dark:shadow-none sm:px-5 sm:py-3">
+              <div className="mb-6 flex max-w-[95%] items-center rounded-lg border bg-[rgb(255,255,255,0.05)] px-3 py-2 text-[#111] shadow-sm dark:text-[#eee] dark:shadow-none sm:px-5 sm:py-3">
                 <span className="flex items-center text-[15px] font-medium tracking-tight text-[#111] dark:text-[#eee] sm:text-[18px]">
                   Art director
                   <span className="animate-blink ml-0.5 inline-block h-[1.1em] w-[2px] bg-[#0085FF]"></span>

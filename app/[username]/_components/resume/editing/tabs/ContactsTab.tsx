@@ -89,7 +89,7 @@ export function ContactsTab({
                       rel="noopener noreferrer"
                       className="inline-block hover:underline hover:underline-offset-4"
                     >
-                      <span className="text-sm font-semibold text-content-primary">
+                      <span className="font-regular text-sm text-content-primary">
                         {extractUsername(c.link, c.platform)}
                         <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                       </span>

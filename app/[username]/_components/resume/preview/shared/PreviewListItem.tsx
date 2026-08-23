@@ -41,7 +41,7 @@ export function PreviewListItem({
               rel="noopener noreferrer"
               className="text-theme-primary hover:underline hover:decoration-1 hover:underline-offset-2"
             >
-              <span className="text-[length:var(--type-size)] font-semibold leading-[var(--line-height)]">
+              <span className="font-regular text-[length:var(--type-size)] leading-[var(--line-height)]">
                 {title}
                 {subtitle && (
                   <span className="font-normal text-theme-primary">
@@ -52,7 +52,7 @@ export function PreviewListItem({
               </span>
             </a>
           ) : (
-            <p className="text-[length:var(--type-size)] font-semibold leading-[var(--line-height)] text-theme-primary">
+            <p className="font-regular text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-primary">
               {title}
               {subtitle && (
                 <span className="font-normal text-theme-primary">
