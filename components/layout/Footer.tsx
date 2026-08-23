@@ -5,7 +5,7 @@ export function Footer() {
     <footer className="mt-16 w-full bg-surface-1 px-6 py-12 font-sans">
       <div className="mx-auto flex w-full max-w-4xl items-center justify-center">
         {/* Navigation Links */}
-        <div className="grid grid-cols-3 gap-x-12 gap-y-3 text-[14px] font-medium text-content-secondary">
+        <div className="grid grid-cols-3 gap-x-12 gap-y-0 text-[14px] font-medium text-[#aaa] dark:text-[#777]">
           <Link href="/" className="underline-offset-[3px] hover:underline">
             About
           </Link>
