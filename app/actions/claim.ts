@@ -20,7 +20,7 @@ export async function claimUsernameAndInitProfile(
   const success = await createUsernameLookup({
     userId,
     username,
-    name: session?.user?.name,
+    name: displayName,
     email: session?.user?.email,
     image: session?.user?.image,
   });

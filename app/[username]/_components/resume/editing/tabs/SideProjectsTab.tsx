@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
@@ -6,7 +6,6 @@ import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
@@ -25,6 +24,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
+
+const isSideProjectValid = (item: any) => !!item?.title && !!item?.year;
 
 export function SideProjectsTab({
   years,
@@ -46,19 +47,16 @@ export function SideProjectsTab({
     setView: setSideProjectsView,
     current: currentSideProject,
     setCurrent: setCurrentSideProject,
-  } = useTabEditor<any>();
+    commit: commitSideProject,
+  } = useTabEditor<any>({
+    isValid: isSideProjectValid,
+    onCommit: saveSideProject,
+  });
 
   const sortedSideProjects = useMemo(
     () => sortByDateDesc(sideProjects),
     [sideProjects],
   );
-
-  const handleSave = () => {
-    if (!currentSideProject?.title || !currentSideProject?.year) return;
-    saveSideProject(currentSideProject);
-    setSideProjectsView('list');
-    setCurrentSideProject(null);
-  };
 
   const currentYear = new Date().getFullYear();
 
@@ -80,6 +78,10 @@ export function SideProjectsTab({
       emptyState={{
         icon: FolderCode,
         buttonText: "Add a side project you're proud of",
+      }}
+      onBack={() => {
+        commitSideProject();
+        setSideProjectsView('list');
       }}
       renderList={() => (
         <>
@@ -212,14 +214,6 @@ export function SideProjectsTab({
                   ...currentSideProject,
                   attachments: val,
                 })
-              }
-            />
-
-            <TabFormActions
-              onCancel={() => setSideProjectsView('list')}
-              onSave={handleSave}
-              isSaveDisabled={
-                !currentSideProject?.title || !currentSideProject?.year
               }
             />
           </>

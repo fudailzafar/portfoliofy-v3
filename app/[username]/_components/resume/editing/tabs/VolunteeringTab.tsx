@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { isReversedRange } from '@/lib/validation/dates';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
@@ -7,7 +7,6 @@ import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import dynamic from 'next/dynamic';
 
@@ -27,6 +26,11 @@ import {
 } from '@/components/ui/select';
 import { HeartHandshake } from 'lucide-react';
 import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
+
+const isVolunteeringValid = (item: any) =>
+  !!item?.role &&
+  !!item?.organization &&
+  !isReversedRange(item?.startYear, item?.endYear);
 
 export function VolunteeringTab({
   years,
@@ -48,20 +52,16 @@ export function VolunteeringTab({
     setView: setVolunteeringView,
     current: currentVolunteering,
     setCurrent: setCurrentVolunteering,
-  } = useTabEditor<any>();
+    commit: commitVolunteering,
+  } = useTabEditor<any>({
+    isValid: isVolunteeringValid,
+    onCommit: saveVolunteering,
+  });
 
   const sortedVolunteering = useMemo(
     () => sortByDateDesc(volunteering),
     [volunteering],
   );
-
-  const handleSave = () => {
-    if (!currentVolunteering?.role || !currentVolunteering?.organization)
-      return;
-    saveVolunteering(currentVolunteering);
-    setVolunteeringView('list');
-    setCurrentVolunteering(null);
-  };
 
   const currentYear = new Date().getFullYear();
 
@@ -85,6 +85,10 @@ export function VolunteeringTab({
       emptyState={{
         icon: HeartHandshake,
         buttonText: 'Add volunteering',
+      }}
+      onBack={() => {
+        commitVolunteering();
+        setVolunteeringView('list');
       }}
       renderList={() => (
         <>
@@ -276,19 +280,6 @@ export function VolunteeringTab({
                   ...currentVolunteering,
                   attachments: val,
                 })
-              }
-            />
-
-            <TabFormActions
-              onCancel={() => setVolunteeringView('list')}
-              onSave={handleSave}
-              isSaveDisabled={
-                !currentVolunteering?.role ||
-                !currentVolunteering?.organization ||
-                isReversedRange(
-                  currentVolunteering.startYear,
-                  currentVolunteering.endYear,
-                )
               }
             />
           </>

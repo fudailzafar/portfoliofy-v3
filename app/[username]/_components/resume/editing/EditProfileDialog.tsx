@@ -112,7 +112,8 @@ export function EditProfileDialog({
     hasUnsavedChanges,
     setHasUnsavedChanges,
     initResume,
-    isEditingTab,
+    triggerSave,
+    activeFormValid,
   } = useResumeStore();
 
   const {
@@ -143,6 +144,7 @@ export function EditProfileDialog({
   const [showDeleteAccountWarning, setShowDeleteAccountWarning] =
     useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -364,6 +366,11 @@ export function EditProfileDialog({
   const handleGlobalSave = useCallback(async () => {
     setIsSaving(true);
     try {
+      // Flush whatever item is currently being added/edited (if any) into
+      // the resume before persisting — there's no separate per-item commit
+      // step anymore, Save always captures everything on screen.
+      useResumeStore.getState().activeFormCommit?.();
+
       if (uname !== username) {
         try {
           await updateUsernameMutation.mutateAsync(uname);
@@ -377,13 +384,7 @@ export function EditProfileDialog({
       if (newResumeData) {
         await saveResumeDataMutation.mutateAsync(newResumeData);
         setHasUnsavedChanges(false);
-        toast.success('Profile updated successfully');
-        setOpen(false);
-        if (uname !== username) {
-          router.push(`/${uname}`);
-        } else {
-          router.refresh();
-        }
+        triggerSave();
       }
     } catch (error: any) {
       console.error(error);
@@ -397,8 +398,34 @@ export function EditProfileDialog({
     updateUsernameMutation,
     saveResumeDataMutation,
     setHasUnsavedChanges,
-    router,
+    triggerSave,
   ]);
+
+  const handleDone = useCallback(() => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setOpen(false);
+      setIsClosing(false);
+      if (uname !== username) {
+        router.push(`/${uname}`);
+      } else {
+        router.refresh();
+      }
+    }, 600);
+  }, [uname, username, router]);
+
+  // ---------------------------------------------------------------------------
+  // Global cancel — discards every unsaved change (including whatever item
+  // is currently being added/edited) back to the last-saved-on-server state.
+  // ---------------------------------------------------------------------------
+  const handleGlobalCancel = useCallback(() => {
+    setHasUnsavedChanges(false);
+    initResume(resume, username);
+    setSectionOrder(normalizeSectionOrder(resume.sectionOrder));
+    // Remounts the currently-active tab so any in-progress add/edit form
+    // (and its local draft) is dropped along with everything else.
+    triggerSave();
+  }, [resume, username, initResume, setHasUnsavedChanges, triggerSave]);
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
@@ -496,7 +523,6 @@ export function EditProfileDialog({
               username={username}
               localPicture={getOptimizedImageUrl(localPicture) || localPicture}
               isUploadingPicture={isUploadingPicture}
-              isEditingTab={isEditingTab}
               isSaving={isSaving}
               isValidUname={isValidUname && isValidSiteUrl}
               checkUsernameMutationIsPending={checkUsernameMutation.isPending}
@@ -522,6 +548,9 @@ export function EditProfileDialog({
               handlePictureUpload={handlePictureUpload}
               removePicture={handleAvatarRemove}
               onSave={handleGlobalSave}
+              onCancel={handleGlobalCancel}
+              onDone={handleDone}
+              isClosing={isClosing}
               onDeleteAccount={handleDeleteAccount}
               setShowDeleteAccountWarning={setShowDeleteAccountWarning}
             />
@@ -530,26 +559,53 @@ export function EditProfileDialog({
           {/* Mobile Sidebar Action Bar */}
           {showMobileMenu && (
             <div className="flex-none bg-surface-1 px-4 pb-4 sm:hidden">
-              <div className="flex w-full justify-end gap-3 border-t border-border-subtle pt-4">
-                <Button
-                  onClick={handleGlobalSave}
-                  disabled={
-                    isSaving ||
-                    !isValidUname ||
-                    !isValidSiteUrl ||
-                    checkUsernameMutation.isPending
-                  }
-                  variant="outline"
-                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
-                >
-                  {isSaving ? (
-                    <div className="flex items-center gap-2">
-                      <Spinner size={14} className="text-content-primary" />
-                    </div>
-                  ) : (
-                    'Save'
-                  )}
-                </Button>
+              <div className="flex w-full items-center justify-end gap-3 border-t border-border-subtle pt-4">
+                {hasUnsavedChanges ? (
+                  <>
+                    <button
+                      onClick={handleGlobalCancel}
+                      disabled={isSaving}
+                      className="px-4 text-[14px] font-medium text-content-primary hover:underline hover:underline-offset-4 disabled:opacity-50"
+                    >
+                      Cancel
+                    </button>
+                    <Button
+                      onClick={handleGlobalSave}
+                      disabled={
+                        isSaving ||
+                        !isValidUname ||
+                        !isValidSiteUrl ||
+                        checkUsernameMutation.isPending ||
+                        !activeFormValid
+                      }
+                      variant="outline"
+                      className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+                    >
+                      {isSaving ? (
+                        <div className="flex items-center gap-2">
+                          <Spinner size={14} className="text-content-primary" />
+                        </div>
+                      ) : (
+                        'Save'
+                      )}
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    onClick={handleDone}
+                    disabled={isClosing}
+                    variant="outline"
+                    className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+                  >
+                    {isClosing ? (
+                      <div className="flex items-center gap-2">
+                        <Spinner size={14} className="text-content-primary" />
+                      </div>
+                    ) : (
+                      'Done'
+                    )}
+                  </Button>
+                )}
               </div>
             </div>
           )}

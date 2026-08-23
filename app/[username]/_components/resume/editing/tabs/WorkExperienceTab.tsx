@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { isReversedRange } from '@/lib/validation/dates';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
@@ -7,7 +7,6 @@ import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
@@ -42,6 +41,9 @@ const months = [
   'December',
 ];
 
+const isWorkValid = (item: any) =>
+  !!item?.title && !!item?.company && !isReversedRange(item?.start, item?.end);
+
 export function WorkExperienceTab({
   years,
   setProjectToDelete,
@@ -62,16 +64,10 @@ export function WorkExperienceTab({
     setView: setWorkView,
     current: currentWork,
     setCurrent: setCurrentWork,
-  } = useTabEditor<any>();
+    commit: commitWork,
+  } = useTabEditor<any>({ isValid: isWorkValid, onCommit: saveWork });
 
   const sortedWork = useMemo(() => sortByDateDesc(work), [work]);
-
-  const handleSave = () => {
-    if (!currentWork?.title || !currentWork?.company) return;
-    saveWork(currentWork);
-    setWorkView('list');
-    setCurrentWork(null);
-  };
 
   const currentYear = new Date().getFullYear();
 
@@ -99,6 +95,10 @@ export function WorkExperienceTab({
       emptyState={{
         icon: Briefcase,
         buttonText: 'Add workplace',
+      }}
+      onBack={() => {
+        commitWork();
+        setWorkView('list');
       }}
       renderList={() => (
         <>
@@ -273,16 +273,6 @@ export function WorkExperienceTab({
                   ...currentWork,
                   attachments: val,
                 })
-              }
-            />
-
-            <TabFormActions
-              onCancel={() => setWorkView('list')}
-              onSave={handleSave}
-              isSaveDisabled={
-                !currentWork?.title ||
-                !currentWork?.company ||
-                isReversedRange(currentWork.start, currentWork.end)
               }
             />
           </>

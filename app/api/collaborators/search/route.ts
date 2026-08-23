@@ -21,16 +21,17 @@ export async function GET(request: Request) {
 
     const users = await sql`
       SELECT
-        id,
-        username,
-        name,
-        COALESCE(custom_image, image) as image
-      FROM users
-      WHERE id != ${session.user.id}
-        AND username IS NOT NULL
+        u.id,
+        u.username,
+        COALESCE((r.resume_data#>>'{}')::jsonb->'header'->>'name', u.name) as name,
+        COALESCE(u.custom_image, u.image) as image
+      FROM users u
+      LEFT JOIN resumes r ON u.id = r.user_id
+      WHERE u.id != ${session.user.id}
+        AND u.username IS NOT NULL
         AND (
-          username ILIKE ${searchQuery}
-          OR name ILIKE ${searchQuery}
+          u.username ILIKE ${searchQuery}
+          OR COALESCE((r.resume_data#>>'{}')::jsonb->'header'->>'name', u.name) ILIKE ${searchQuery}
         )
       ORDER BY name ASC
       LIMIT ${limit}

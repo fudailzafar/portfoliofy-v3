@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
@@ -6,7 +6,6 @@ import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import { Mic } from 'lucide-react';
 import {
@@ -26,6 +25,8 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
+
+const isSpeakingValid = (item: any) => !!item?.title && !!item?.year;
 
 export function SpeakingTab({
   years,
@@ -47,16 +48,10 @@ export function SpeakingTab({
     setView: setSpeakingView,
     current: currentSpeaking,
     setCurrent: setCurrentSpeaking,
-  } = useTabEditor<any>();
+    commit: commitSpeaking,
+  } = useTabEditor<any>({ isValid: isSpeakingValid, onCommit: saveSpeaking });
 
   const sortedSpeaking = useMemo(() => sortByDateDesc(speaking), [speaking]);
-
-  const handleSave = () => {
-    if (!currentSpeaking?.title || !currentSpeaking?.year) return;
-    saveSpeaking(currentSpeaking);
-    setSpeakingView('list');
-    setCurrentSpeaking(null);
-  };
 
   const currentYear = new Date().getFullYear();
 
@@ -79,6 +74,10 @@ export function SpeakingTab({
       emptyState={{
         icon: Mic,
         buttonText: "Add a talk you've given",
+      }}
+      onBack={() => {
+        commitSpeaking();
+        setSpeakingView('list');
       }}
       renderList={() => (
         <>
@@ -232,12 +231,6 @@ export function SpeakingTab({
                   attachments: val,
                 })
               }
-            />
-
-            <TabFormActions
-              onCancel={() => setSpeakingView('list')}
-              onSave={handleSave}
-              isSaveDisabled={!currentSpeaking?.title || !currentSpeaking?.year}
             />
           </>
         ) : null

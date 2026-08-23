@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
@@ -6,7 +6,6 @@ import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import { Palette } from 'lucide-react';
 import {
@@ -26,6 +25,8 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
+
+const isExhibitionValid = (item: any) => !!item?.title && !!item?.year;
 
 export function ExhibitionsTab({
   years,
@@ -47,19 +48,16 @@ export function ExhibitionsTab({
     setView: setExhibitionsView,
     current: currentExhibition,
     setCurrent: setCurrentExhibition,
-  } = useTabEditor<any>();
+    commit: commitExhibition,
+  } = useTabEditor<any>({
+    isValid: isExhibitionValid,
+    onCommit: saveExhibition,
+  });
 
   const sortedExhibitions = useMemo(
     () => sortByDateDesc(exhibitions),
     [exhibitions],
   );
-
-  const handleSave = () => {
-    if (!currentExhibition?.title || !currentExhibition?.year) return;
-    saveExhibition(currentExhibition);
-    setExhibitionsView('list');
-    setCurrentExhibition(null);
-  };
 
   const currentYear = new Date().getFullYear();
 
@@ -83,6 +81,10 @@ export function ExhibitionsTab({
       emptyState={{
         icon: Palette,
         buttonText: 'Add an exhibition',
+      }}
+      onBack={() => {
+        commitExhibition();
+        setExhibitionsView('list');
       }}
       renderList={() => (
         <>
@@ -235,14 +237,6 @@ export function ExhibitionsTab({
                   ...currentExhibition,
                   attachments: val,
                 })
-              }
-            />
-
-            <TabFormActions
-              onCancel={() => setExhibitionsView('list')}
-              onSave={handleSave}
-              isSaveDisabled={
-                !currentExhibition?.title || !currentExhibition?.year
               }
             />
           </>

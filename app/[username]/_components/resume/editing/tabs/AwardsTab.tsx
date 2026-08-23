@@ -6,7 +6,6 @@ import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
-import { TabFormActions } from '../TabFormActions';
 import { Label } from '@/components/ui/label';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
@@ -25,6 +24,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
+
+const isAwardValid = (item: any) =>
+  !!item?.title && !!item?.year && !!item?.issuer;
 
 export function AwardsTab({
   years,
@@ -46,17 +48,10 @@ export function AwardsTab({
     setView: setAwardsView,
     current: currentAward,
     setCurrent: setCurrentAward,
-  } = useTabEditor<any>();
+    commit: commitAward,
+  } = useTabEditor<any>({ isValid: isAwardValid, onCommit: saveAward });
 
   const sortedAwards = useMemo(() => sortByDateDesc(awards), [awards]);
-
-  const handleSave = () => {
-    if (!currentAward?.title || !currentAward?.year || !currentAward?.issuer)
-      return;
-    saveAward(currentAward);
-    setAwardsView('list');
-    setCurrentAward(null);
-  };
 
   const currentYear = new Date().getFullYear();
 
@@ -79,6 +74,10 @@ export function AwardsTab({
       emptyState={{
         icon: Award,
         buttonText: 'Add an award you received',
+      }}
+      onBack={() => {
+        commitAward();
+        setAwardsView('list');
       }}
       renderList={() => (
         <>
@@ -210,16 +209,6 @@ export function AwardsTab({
                   ...currentAward,
                   attachments: val,
                 })
-              }
-            />
-
-            <TabFormActions
-              onCancel={() => setAwardsView('list')}
-              onSave={handleSave}
-              isSaveDisabled={
-                !currentAward?.title ||
-                !currentAward?.year ||
-                !currentAward?.issuer
               }
             />
           </>
