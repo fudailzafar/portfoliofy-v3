@@ -76,7 +76,7 @@ export function CollaboratorsField({
             {value.map((collaborator) => (
               <div
                 key={collaborator.id}
-                className="flex items-center gap-0.5 rounded-full bg-border-strong pr-2 dark:bg-[#333]"
+                className="flex items-center gap-0.5 rounded-full border border-border-strong pr-2 dark:bg-[#333] dark:bg-border-strong"
               >
                 <Avatar className="size-8 shrink-0 p-0.5">
                   <AvatarImage
@@ -84,6 +84,7 @@ export function CollaboratorsField({
                     alt={collaborator.name}
                     className="rounded-full"
                   />
+                  <div className="pointer-events-none absolute inset-0.5 rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] ring-[0.5px] ring-inset ring-border-strong" />
                   <AvatarFallback className="bg-[#e5e5e5] dark:bg-[#333333]">
                     <AvatarPlaceholderIcon className="text-white dark:text-[#222222]" />
                   </AvatarFallback>
