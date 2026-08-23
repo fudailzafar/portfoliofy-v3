@@ -61,7 +61,7 @@ export function EditorListItem({
                 rel="noopener noreferrer"
                 className="inline-block hover:underline hover:underline-offset-4"
               >
-                <span className="text-sm font-semibold text-content-primary">
+                <span className="font-regular text-sm text-content-primary">
                   {title}
                   {subtitle && (
                     <span className="font-normal text-content-primary">
@@ -72,7 +72,7 @@ export function EditorListItem({
                 </span>
               </a>
             ) : (
-              <p className="text-sm font-semibold text-content-primary">
+              <p className="font-regular text-sm text-content-primary">
                 {title}
                 {subtitle && (
                   <span className="font-normal text-content-primary">
