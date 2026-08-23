@@ -14,7 +14,7 @@ declare module 'next-auth' {
   }
 }
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, auth } = NextAuth({
   trustHost: true, // Required for Netlify / Vercel / reverse proxies
   providers: [
     Google({
