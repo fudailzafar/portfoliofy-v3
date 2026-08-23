@@ -7,6 +7,19 @@ import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
 import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
+import { X } from 'lucide-react';
+import { useS3Upload } from 'next-s3-upload';
+import { getOptimizedImageUrl, readImageDimensions } from '@/lib/utils';
+
+type AssetKey = 'ogImage' | 'favicon';
+
+const ASSET_REQUIREMENTS: Record<
+  AssetKey,
+  { width: number; height: number; label: string }
+> = {
+  ogImage: { width: 1200, height: 630, label: 'OG image (1200 × 630)' },
+  favicon: { width: 32, height: 32, label: 'Favicon (32 × 32)' },
+};
 
 export function PersonalDomainTab({ username }: { username: string }) {
   const resume = useResumeStore((state) => state.resume);
@@ -14,9 +27,45 @@ export function PersonalDomainTab({ username }: { username: string }) {
   const setHasUnsavedChanges = useResumeStore(
     (state) => state.setHasUnsavedChanges,
   );
+  const { uploadToS3 } = useS3Upload();
 
   const typography = resume?.design?.typography ?? 'sans';
   const theme = resume?.design?.theme ?? 'default';
+
+  const [uploadingAsset, setUploadingAsset] = useState<AssetKey | null>(null);
+
+  const handleAssetUpload = async (key: AssetKey, file: File) => {
+    const { width, height, label } = ASSET_REQUIREMENTS[key];
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+    setUploadingAsset(key);
+    try {
+      const dimensions = await readImageDimensions(file);
+      if (dimensions.width !== width || dimensions.height !== height) {
+        toast.error(
+          `${label.split(' (')[0]} must be exactly ${width}×${height}px (got ${dimensions.width}×${dimensions.height})`,
+        );
+        return;
+      }
+      const { url } = await uploadToS3(file, {
+        endpoint: { request: { url: '/api/s3-upload' } },
+      });
+      updateDesign({ [key]: url });
+      setHasUnsavedChanges(true);
+      toast.success(`${label.split(' (')[0]} updated`);
+    } catch {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploadingAsset(null);
+    }
+  };
+
+  const handleAssetRemove = (key: AssetKey) => {
+    updateDesign({ [key]: undefined });
+    setHasUnsavedChanges(true);
+  };
 
   const [customDomain, setCustomDomain] = useState('');
   const [domainStatus, setDomainStatus] = useState<any>(null);
@@ -295,6 +344,82 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 )}
               </>
             )}
+          </div>
+        </div>
+
+        {/* Assets */}
+        <div className="mt-4 space-y-4 border-t border-border-subtle pt-8">
+          <div>
+            <h4 className="text-[14px] text-content-primary">Assets</h4>
+            <p className="mt-1 text-[13px] text-content-muted">
+              Change the assets shown on your personal domain.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-6 sm:flex-row">
+            {(['ogImage', 'favicon'] as const).map((key) => {
+              const { width, height, label } = ASSET_REQUIREMENTS[key];
+              const value = resume?.design?.[key];
+              const isUploading = uploadingAsset === key;
+              const inputId = `asset-upload-${key}`;
+
+              return (
+                <div key={key} className="flex-1 space-y-2">
+                  <p className="text-[13px] text-content-muted">{label}</p>
+                  <input
+                    id={inputId}
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleAssetUpload(key, file);
+                      e.target.value = '';
+                    }}
+                  />
+                  <div
+                    className="relative overflow-hidden rounded-lg border border-border-strong bg-surface-card"
+                    style={{ aspectRatio: '1200 / 630' }}
+                  >
+                    {value ? (
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={getOptimizedImageUrl(value)}
+                          alt={label}
+                          className={
+                            key === 'favicon'
+                              ? 'absolute inset-0 m-auto h-8 w-8 object-contain'
+                              : 'h-full w-full object-cover'
+                          }
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleAssetRemove(key)}
+                          aria-label={`Remove ${label}`}
+                          disabled={isUploading}
+                          className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-white transition-colors hover:bg-black/90"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </>
+                    ) : (
+                      <label
+                        htmlFor={inputId}
+                        className="flex h-full w-full cursor-pointer items-center justify-center text-[13px] text-content-muted hover:bg-surface-2"
+                      >
+                        Click to upload
+                      </label>
+                    )}
+                    {isUploading && (
+                      <div className="bg-surface-card/80 absolute inset-0 flex items-center justify-center">
+                        <Spinner size={16} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
