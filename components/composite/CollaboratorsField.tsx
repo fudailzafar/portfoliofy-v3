@@ -56,7 +56,10 @@ export function CollaboratorsField({
     <div className="w-full min-w-0 space-y-2">
       <Label className="text-xs text-content-secondary">{label}</Label>
 
-      <div ref={containerRef} className="relative bg-surface-card">
+      <div
+        ref={containerRef}
+        className="relative rounded-md border border-border-subtle bg-surface-card"
+      >
         <Input
           value={query}
           onChange={(e) => {
@@ -65,15 +68,15 @@ export function CollaboratorsField({
           }}
           onFocus={() => setIsOpen(true)}
           placeholder={`Tag ${label.toLowerCase()}`}
-          className="w-full dark:border-none dark:bg-border-subtle"
+          className="w-full rounded dark:border-none dark:bg-border-subtle"
         />
 
         {value.length > 0 && (
-          <div className="flex flex-wrap gap-2 border-t border-border-strong px-3 py-2.5">
+          <div className="flex flex-wrap gap-2 px-3 py-2.5">
             {value.map((collaborator) => (
               <div
                 key={collaborator.id}
-                className="flex items-center gap-0.5 rounded-full border border-border-strong pr-2"
+                className="flex items-center gap-0.5 rounded-full bg-border-strong pr-2 dark:bg-[#333]"
               >
                 <Avatar className="size-8 shrink-0 p-0.5">
                   <AvatarImage

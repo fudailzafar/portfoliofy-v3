@@ -7,28 +7,12 @@ import {
   getUserIdByCustomDomain,
 } from '@/lib/server/dbActions';
 import { isValidDomainFormat, normalizeDomain } from '@/lib/validation/domain';
-
-const VERCEL_API_TOKEN = process.env.VERCEL_API_TOKEN;
-const VERCEL_PROJECT_ID = process.env.VERCEL_PROJECT_ID;
-const TEAM_ID_PARAM = process.env.VERCEL_TEAM_ID
-  ? `?teamId=${process.env.VERCEL_TEAM_ID}`
-  : '';
-
-// Helper to handle Vercel API Requests
-async function fetchVercelAPI(endpoint: string, options: RequestInit = {}) {
-  const url = `https://api.vercel.com${endpoint}${TEAM_ID_PARAM}`;
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${VERCEL_API_TOKEN}`,
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
-
-  const data = await response.json().catch(() => null);
-  return { ok: response.ok, status: response.status, data };
-}
+import {
+  VERCEL_API_TOKEN,
+  VERCEL_PROJECT_ID,
+  fetchVercelAPI,
+  releaseUserDomainFromVercel,
+} from '@/lib/server/vercelDomains';
 
 export async function GET() {
   try {
@@ -135,12 +119,7 @@ export async function POST(req: Request) {
     // Check if user already has a domain, if so, remove it first from Vercel
     const existingDomain = await getCustomDomainByUserId(session.user.id);
     if (existingDomain && existingDomain !== cleanDomain) {
-      await fetchVercelAPI(
-        `/v9/projects/${VERCEL_PROJECT_ID}/domains/${encodeURIComponent(existingDomain)}`,
-        {
-          method: 'DELETE',
-        },
-      );
+      await releaseUserDomainFromVercel(session.user.id);
       await removeCustomDomain(session.user.id);
     }
 
@@ -206,14 +185,7 @@ export async function DELETE() {
     }
 
     // Remove from Vercel
-    if (VERCEL_API_TOKEN && VERCEL_PROJECT_ID) {
-      await fetchVercelAPI(
-        `/v9/projects/${VERCEL_PROJECT_ID}/domains/${encodeURIComponent(domain)}`,
-        {
-          method: 'DELETE',
-        },
-      );
-    }
+    await releaseUserDomainFromVercel(session.user.id);
 
     // Remove from DB
     await removeCustomDomain(session.user.id);
