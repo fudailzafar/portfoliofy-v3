@@ -7,15 +7,15 @@ export const metadata: Metadata = {
 
 export default function SupportPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-surface-1">
+    <div className="flex min-h-screen flex-col bg-[#fff] dark:bg-[#222]">
       <main className="mx-auto w-full max-w-[540px] flex-1 px-6 py-[72px] font-sans sm:px-0">
-        <h1 className="mb-8 text-[20px] font-medium text-content-primary">
+        <h1 className="mb-8 text-[20px] font-medium text-[#111] dark:text-[#eee]">
           Support
         </h1>
 
-        <div className="space-y-8 text-[14px] font-normal leading-relaxed text-content-secondary">
+        <div className="space-y-8 text-[14px] font-normal leading-relaxed text-[#666] dark:text-[#aaa]">
           <div>
-            <h3 className="text-[14px] text-content-primary">
+            <h3 className="text-[14px] text-[#111] dark:text-[#eee]">
               How does the status feature work?
             </h3>
             <p>
@@ -32,7 +32,7 @@ export default function SupportPage() {
           </div>
 
           <div>
-            <h3 className="text-[14px] text-content-primary">
+            <h3 className="text-[14px] text-[#111] dark:text-[#eee]">
               How do I edit my profile?
             </h3>
             <p>
@@ -42,7 +42,7 @@ export default function SupportPage() {
           </div>
 
           <div>
-            <h3 className="text-[14px] text-content-primary">
+            <h3 className="text-[14px] text-[#111] dark:text-[#eee]">
               How do I tag other people in my profile?
             </h3>
             <p>
@@ -55,7 +55,7 @@ export default function SupportPage() {
           </div>
 
           <div>
-            <h3 className="text-[14px] text-content-primary">
+            <h3 className="text-[14px] text-[#111] dark:text-[#eee]">
               How do I reorder sections?
             </h3>
             <p>
@@ -67,7 +67,7 @@ export default function SupportPage() {
           </div>
 
           <div>
-            <h3 className="text-[14px] text-content-primary">
+            <h3 className="text-[14px] text-[#111] dark:text-[#eee]">
               How do I reorder items published in the same year?
             </h3>
             <p>
@@ -80,7 +80,7 @@ export default function SupportPage() {
           </div>
 
           <div>
-            <h3 className="text-[14px] text-content-primary">
+            <h3 className="text-[14px] text-[#111] dark:text-[#eee]">
               Does Portfoliofy support printing?
             </h3>
             <p>
@@ -91,7 +91,7 @@ export default function SupportPage() {
           </div>
 
           <div>
-            <h3 className="text-[14px] text-content-primary">
+            <h3 className="text-[14px] text-[#111] dark:text-[#eee]">
               How can I hide certain sections when printing my portfolio?
             </h3>
             <p>
@@ -103,7 +103,7 @@ export default function SupportPage() {
           </div>
 
           <div>
-            <h3 className="text-[14px] text-content-primary">
+            <h3 className="text-[14px] text-[#111] dark:text-[#eee]">
               How do I change my email?
             </h3>
             <p>
@@ -117,7 +117,7 @@ export default function SupportPage() {
           </div>
 
           <div>
-            <h3 className="text-[14px] text-content-primary">
+            <h3 className="text-[14px] text-[#111] dark:text-[#eee]">
               How do I turn off email notifications?
             </h3>
             <p>
@@ -130,7 +130,7 @@ export default function SupportPage() {
           </div>
 
           <div>
-            <h3 className="text-[14px] text-content-primary">
+            <h3 className="text-[14px] text-[#111] dark:text-[#eee]">
               How do I delete my account?
             </h3>
             <p>
@@ -144,7 +144,7 @@ export default function SupportPage() {
           </div>
 
           <div>
-            <h3 className="text-[14px] text-content-primary">
+            <h3 className="text-[14px] text-[#111] dark:text-[#eee]">
               I&apos;d like to report a profile for inappropriate content or
               harassment, who can I reach out to?
             </h3>
@@ -161,7 +161,7 @@ export default function SupportPage() {
           </div>
 
           <div>
-            <h3 className="text-[14px] text-content-primary">
+            <h3 className="text-[14px] text-[#111] dark:text-[#eee]">
               I have more questions, who should I call?
             </h3>
             <p>
