@@ -7,16 +7,16 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-surface-1">
+    <div className="flex min-h-screen flex-col bg-[#fff] dark:bg-[#222]">
       <main className="mx-auto w-full max-w-[540px] flex-1 px-6 py-[72px] font-sans sm:px-0">
-        <h1 className="text-[20px] font-medium text-content-primary">
+        <h1 className="text-[20px] font-medium text-[#111] dark:text-[#eee]">
           Privacy Policy
         </h1>
-        <p className="mb-4 text-[14px] text-content-secondary">
+        <p className="mb-4 text-[14px] text-[#666] dark:text-[#aaa]">
           Effective May 27, 2026
         </p>
 
-        <div className="space-y-4 text-[14px] font-normal leading-relaxed text-content-secondary">
+        <div className="space-y-4 text-[14px] font-normal leading-relaxed text-[#666] dark:text-[#aaa]">
           <p>
             We care about your privacy and only collect information we deem
             necessary to providing your requested service. Accordingly we have
