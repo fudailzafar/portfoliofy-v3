@@ -10,20 +10,9 @@ import {
 
 const FORBIDDEN_USERNAMES = RESERVED_USERNAMES;
 
-// Define the file schema
-const FileSchema = z.object({
-  name: z.string(),
-  url: z.string().nullish(),
-  size: z.number(),
-  bucket: z.string(),
-  key: z.string(),
-});
-
 // Define the complete resume schema
 const ResumeSchema = z.object({
   status: z.enum(['live', 'draft']).default('draft'),
-  file: FileSchema.nullish(),
-  fileContent: z.string().nullish(),
   resumeData: ResumeDataSchema.nullish(),
 });
 
@@ -34,7 +23,7 @@ export type Resume = z.infer<typeof ResumeSchema>;
 export async function getResume(userId: string): Promise<Resume | undefined> {
   try {
     const [row] = await sql`
-      SELECT status, file, file_content as "fileContent", resume_data as "resumeData"
+      SELECT status, resume_data as "resumeData"
       FROM resumes
       WHERE user_id = ${userId}
     `;
@@ -47,13 +36,6 @@ export async function getResume(userId: string): Promise<Resume | undefined> {
         row.resumeData = JSON.parse(row.resumeData);
       } catch (e) {
         console.error('Failed to parse resumeData', e);
-      }
-    }
-    if (typeof row.file === 'string') {
-      try {
-        row.file = JSON.parse(row.file);
-      } catch (e) {
-        console.error('Failed to parse file JSON', e);
       }
     }
 
@@ -87,27 +69,19 @@ export async function storeResume(
     // render path (public profile, print view, editor preview) is safe.
     const safeResumeData = sanitizeResumeData(validatedData.resumeData);
 
-    // We stringify the JSON parts
-    const fileJson = validatedData.file
-      ? JSON.stringify(validatedData.file)
-      : null;
     const resumeDataJson = safeResumeData
       ? JSON.stringify(safeResumeData)
       : null;
 
     await sql`
-      INSERT INTO resumes (user_id, status, file, file_content, resume_data)
+      INSERT INTO resumes (user_id, status, resume_data)
       VALUES (
-        ${userId}, 
-        ${validatedData.status}, 
-        ${fileJson}::jsonb, 
-        ${validatedData.fileContent || null}, 
+        ${userId},
+        ${validatedData.status},
         ${resumeDataJson}::jsonb
       )
       ON CONFLICT (user_id) DO UPDATE SET
         status = EXCLUDED.status,
-        file = EXCLUDED.file,
-        file_content = EXCLUDED.file_content,
         resume_data = EXCLUDED.resume_data,
         updated_at = NOW()
     `;
