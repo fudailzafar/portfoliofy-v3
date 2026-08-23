@@ -53,8 +53,6 @@ export async function claimUsernameAndInitProfile(
 
   await storeResume(userId, {
     status: 'live',
-    file: null,
-    fileContent: null,
     resumeData: emptyResumeData,
   });
 
