@@ -22,7 +22,7 @@ export function Contact({
         Contact
       </h2>
       <div
-        className="ml-6 flex flex-col gap-6 sm:ml-0 sm:gap-3"
+        className="ml-4 flex flex-col gap-6 sm:ml-0 sm:gap-3"
         role="feed"
         aria-labelledby="contact-section"
       >
