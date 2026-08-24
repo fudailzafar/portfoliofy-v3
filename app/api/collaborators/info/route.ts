@@ -1,14 +1,18 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import sql from '@/lib/server/db';
+
+// Deliberately public, no auth check: this resolves collaborator avatars
+// (username/name/image) rendered on a public profile via AvatarStack ->
+// useLiveCollaborators, which anonymous visitors hit on every page view.
+// Requiring auth here breaks that for anyone not logged in. The data
+// returned is exactly what's already public the moment a user is tagged as
+// a collaborator on any live profile, so this isn't a new disclosure — it's
+// just a batch lookup by id instead of by username. MAX_IDS bounds it so a
+// single request can't be used to scrape the user table wholesale.
+const MAX_IDS = 50;
 
 export async function GET(request: Request) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const { searchParams } = new URL(request.url);
     const idsParam = searchParams.get('ids');
 
@@ -19,7 +23,8 @@ export async function GET(request: Request) {
     const ids = idsParam
       .split(',')
       .map((id) => id.trim())
-      .filter(Boolean);
+      .filter(Boolean)
+      .slice(0, MAX_IDS);
 
     if (ids.length === 0) {
       return NextResponse.json({ users: [] });
