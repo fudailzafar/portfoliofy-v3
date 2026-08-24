@@ -53,10 +53,15 @@ export default async function middleware(req: NextRequest) {
   } else {
     // Run NextAuth middleware for normal requests
     const authMiddleware = auth((req) => {
-      // Always allow NextAuth's own API routes and the public explore route
+      // Always allow NextAuth's own API routes and routes the public,
+      // logged-out profile view depends on: /api/explore (the explore feed)
+      // and /api/collaborators/info (collaborator avatars rendered on any
+      // public profile via AvatarStack/useLiveCollaborators — blocking this
+      // silently breaks that feature for every anonymous visitor).
       if (
         req.nextUrl.pathname.startsWith('/api/auth') ||
-        req.nextUrl.pathname.startsWith('/api/explore')
+        req.nextUrl.pathname.startsWith('/api/explore') ||
+        req.nextUrl.pathname.startsWith('/api/collaborators/info')
       ) {
         return;
       }
@@ -95,6 +100,7 @@ export default async function middleware(req: NextRequest) {
     ...(process.env.NODE_ENV === 'development' ? [`'unsafe-eval'`] : []),
     'https://accounts.google.com',
     'https://*.vercel-insights.com',
+    'https://va.vercel-scripts.com',
     'https://vercel.live',
     'https://www.googletagmanager.com',
   ].join(' ');
