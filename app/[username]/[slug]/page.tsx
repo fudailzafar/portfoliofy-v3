@@ -85,7 +85,7 @@ export default async function PageDetail({
             : 'font-sans'
       } typography-${design?.typography || 'sans'} theme-${design?.theme || 'default'}`}
     >
-      <div className="mx-auto w-full max-w-[540px] flex-1 px-6 py-16 sm:py-[72px]">
+      <div className="mx-auto w-full max-w-[540px] flex-1 px-6 py-16 sm:px-0 sm:py-[72px]">
         {/* Avatar sits above the name, not beside it — matches read.cv's
             own layout (confirmed by inspecting several archived pages:
             avatar and name share the same left edge, stacked vertically). */}
