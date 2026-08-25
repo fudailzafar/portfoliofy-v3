@@ -60,7 +60,7 @@ export function AttachmentsPreview({
 
   return (
     <>
-      <div className="custom-scrollbar mb-2 mt-4 flex snap-x gap-3 overflow-x-auto pb-2">
+      <div className="custom-scrollbar mb-2 mt-4 flex w-full snap-x gap-3 overflow-x-auto pb-2">
         {attachments.map((attachment) =>
           attachment.type === 'page' ? (
             <button

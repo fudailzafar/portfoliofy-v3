@@ -32,7 +32,7 @@ export function PreviewListItem({
         {leftContent}
       </div>
 
-      <div className="flex flex-1 flex-col items-start justify-start">
+      <div className="flex min-w-0 flex-1 flex-col items-start justify-start">
         <div className="group">
           {link ? (
             <a
