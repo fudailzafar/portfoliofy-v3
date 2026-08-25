@@ -26,20 +26,7 @@ export function PageContent({ html }: { html: string }) {
   return (
     <div
       ref={ref}
-      // Tailwind's `prose` plugin has its own default color palette and
-      // typographic choices (bold headings, italic quotes, backticked
-      // inline code) — none of which read.cv actually uses. These overrides
-      // are calibrated against several archived read.cv pages (computed
-      // styles pulled directly from the DOM): 14px/22.4px body text at full
-      // primary-color contrast (not muted), headings at font-weight 400,
-      // not italic/bold blockquotes with just a left border, and inline
-      // code/links with no decoration of their own.
-      // Fixed sizes at every viewport (no prose-sm/sm:prose-base split) —
-      // matches the editor (PageEditorView) exactly, so what you write is
-      // what publishes. List indentation/spacing/line-height (pl-0, my-1,
-      // leading-[1.6]) matched to the profile's own lists (Summary.tsx /
-      // PreviewListItem.tsx) for the same reason.
-      className="prose prose-sm max-w-none text-theme-primary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-headings:font-normal prose-headings:text-theme-primary prose-h1:text-[20px] prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-[18px] prose-h3:text-[16px] prose-p:text-[14px] prose-p:text-theme-primary prose-a:text-theme-primary prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-2 prose-blockquote:border-theme-primary prose-blockquote:pl-4 prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:text-theme-primary prose-strong:text-theme-primary prose-code:font-normal prose-code:text-theme-primary prose-code:before:content-none prose-code:after:content-none prose-pre:rounded-2xl prose-pre:bg-[#2F2F2F] prose-pre:px-4 prose-pre:py-2 prose-pre:font-mono prose-pre:text-theme-primary prose-ol:pl-0 prose-ol:text-theme-primary prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-primary prose-li:pl-0 prose-li:leading-[1.6] prose-li:text-theme-primary [&_blockquote_p]:before:content-none [&_blockquote_p]:after:content-none"
+      className="blog-prose prose prose-sm max-w-none text-theme-primary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-headings:font-normal prose-headings:text-theme-primary prose-h1:text-[20px] prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-[20px] prose-h3:text-[16px] prose-p:text-[14px] prose-p:text-theme-primary prose-a:border-b prose-a:border-theme-muted prose-a:text-theme-primary prose-a:no-underline prose-blockquote:mx-0 prose-blockquote:my-6 prose-blockquote:ml-[1em] prose-blockquote:border-l-2 prose-blockquote:border-theme-primary prose-blockquote:pl-[1em] prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:text-theme-primary prose-strong:font-medium prose-strong:text-theme-primary prose-code:mx-[2px] prose-code:rounded-[2px] prose-code:bg-[#2F2F2F] prose-code:px-[2px] prose-code:font-mono prose-code:font-normal prose-code:text-theme-primary prose-code:before:content-none prose-code:after:content-none prose-pre:rounded-lg prose-pre:bg-[#2F2F2F] prose-pre:px-4 prose-pre:py-2 prose-pre:font-mono prose-pre:text-[14px] prose-pre:text-theme-primary prose-ol:pl-0 prose-ol:text-theme-primary prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-primary prose-li:pl-0 prose-li:leading-[1.6] prose-li:text-theme-primary prose-hr:my-12 prose-hr:border-theme-border [&_blockquote_p]:before:content-none [&_blockquote_p]:after:content-none [&_h2_code]:text-[20px] [&_h3_code]:text-[16px]"
       // Sanitized server-side (sanitizePageContent) before ever being
       // persisted — see lib/server/sanitize.ts.
       dangerouslySetInnerHTML={{ __html: html }}

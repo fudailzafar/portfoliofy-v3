@@ -106,7 +106,7 @@
 }
 
 /* Custom prose link styling */
-.prose a {
+.prose:not(.blog-prose) a {
   color: inherit !important;
   font-weight: inherit !important;
   text-decoration: underline !important;
