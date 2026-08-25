@@ -38,7 +38,6 @@ export function ContactsTab({
     setView: setContactsView,
     current: currentContact,
     setCurrent: setCurrentContact,
-    commit: commitContact,
   } = useTabEditor<any>({ isValid: isContactValid, onCommit: saveContact });
 
   return (
@@ -57,11 +56,7 @@ export function ContactsTab({
       addButtonText="Add link"
       emptyState={{
         icon: MessageCircle,
-        buttonText: '+ Add Contact',
-      }}
-      onBack={() => {
-        commitContact();
-        setContactsView('list');
+        buttonText: 'Let others know how to reach you',
       }}
       renderList={() => (
         <>

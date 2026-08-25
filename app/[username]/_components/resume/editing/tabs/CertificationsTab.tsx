@@ -48,7 +48,6 @@ export function CertificationsTab({
     setView: setCertificationsView,
     current: currentCertification,
     setCurrent: setCurrentCertification,
-    commit: commitCertification,
   } = useTabEditor<any>({
     isValid: isCertificationValid,
     onCommit: saveCertification,
@@ -79,11 +78,7 @@ export function CertificationsTab({
       addButtonText="Add certification"
       emptyState={{
         icon: FileBadge,
-        buttonText: 'Add an certification you received',
-      }}
-      onBack={() => {
-        commitCertification();
-        setCertificationsView('list');
+        buttonText: 'Add a certification you received',
       }}
       renderList={() => (
         <>

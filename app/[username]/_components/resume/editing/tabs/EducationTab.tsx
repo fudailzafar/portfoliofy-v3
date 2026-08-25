@@ -55,7 +55,6 @@ export function EducationTab({
     setView: setEduView,
     current: currentEdu,
     setCurrent: setCurrentEdu,
-    commit: commitEdu,
   } = useTabEditor<any>({ isValid: isEducationValid, onCommit: saveEdu });
 
   const sortedEducation = useMemo(() => sortByDateDesc(education), [education]);
@@ -81,11 +80,7 @@ export function EducationTab({
       addButtonText="Add education"
       emptyState={{
         icon: GraduationCap,
-        buttonText: 'Add education',
-      }}
-      onBack={() => {
-        commitEdu();
-        setEduView('list');
+        buttonText: 'Add a school you attended',
       }}
       renderList={() => (
         <>
@@ -192,7 +187,7 @@ export function EducationTab({
                 onChange={(e) =>
                   setCurrentEdu({ ...currentEdu, degree: e.target.value })
                 }
-                placeholder="Bachelor's in Graphic Design"
+                placeholder="Bachelor of Design"
               />
               <FormInput
                 id="school"
@@ -213,7 +208,7 @@ export function EducationTab({
                 onChange={(e) =>
                   setCurrentEdu({ ...currentEdu, location: e.target.value })
                 }
-                placeholder="New York"
+                placeholder="Where was it"
               />
               <FormInput
                 id="link"
@@ -225,6 +220,17 @@ export function EducationTab({
                 placeholder="https://example.com"
               />
             </div>
+
+            <CollaboratorsField
+              label="Classmates"
+              value={currentEdu.collaborators || []}
+              onChange={(val) =>
+                setCurrentEdu({
+                  ...currentEdu,
+                  collaborators: val,
+                })
+              }
+            />
 
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">
@@ -240,16 +246,7 @@ export function EducationTab({
                 }
               />
             </div>
-            <CollaboratorsField
-              label="Classmates"
-              value={currentEdu.collaborators || []}
-              onChange={(val) =>
-                setCurrentEdu({
-                  ...currentEdu,
-                  collaborators: val,
-                })
-              }
-            />
+
             <SectionAttachments
               attachments={currentEdu.attachments || []}
               onChange={(val) =>

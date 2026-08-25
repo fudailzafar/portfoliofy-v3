@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { useDebounce } from 'use-debounce';
 import {
@@ -31,6 +32,7 @@ import {
   normalizeSectionOrder,
   DEFAULT_SECTION_ORDER,
   SECTION_LABELS,
+  getUsedPageSlugs,
 } from '@/lib/resume';
 import { getOptimizedImageUrl } from '@/lib/utils';
 import { useS3Upload } from 'next-s3-upload';
@@ -39,6 +41,14 @@ import { isValidWebsite } from '@/lib/validation/url';
 import { ProfileSidebar } from './ProfileSidebar';
 import { ProfileContent } from './ProfileContent';
 import { DeleteConfirmDialog, UnsavedChangesDialog } from './dialogs';
+
+const PageEditorView = dynamic(
+  () =>
+    import('@/components/composite/PageEditorView').then(
+      (mod) => mod.PageEditorView,
+    ),
+  { ssr: false },
+);
 
 // ---------------------------------------------------------------------------
 // Constants — hoisted outside the component so they are never reallocated
@@ -94,16 +104,16 @@ const DELETE_DESCRIPTIONS: Record<DeleteTarget['type'], string> = {
     'This will permanently delete this education entry. This action cannot be undone.',
 };
 
-// ---------------------------------------------------------------------------
-
 export function EditProfileDialog({
   resume,
   username,
   picture,
+  createdAt,
 }: {
   resume: ResumeData;
   username: string;
   picture?: string;
+  createdAt?: Date | null;
 }) {
   const {
     uname,
@@ -114,7 +124,15 @@ export function EditProfileDialog({
     initResume,
     triggerSave,
     activeFormValid,
+    editingPage,
+    setEditingPage,
   } = useResumeStore();
+
+  const currentResume = useResumeStore((state) => state.resume);
+  const usedPageSlugs = useMemo(
+    () => getUsedPageSlugs(currentResume, editingPage?.attachment?.id),
+    [currentResume, editingPage],
+  );
 
   const {
     saveResumeDataMutation,
@@ -141,8 +159,6 @@ export function EditProfileDialog({
   const lastSavedPictureRef = useRef(picture);
   const [isUploadingPicture, setIsUploadingPicture] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<DeleteTarget | null>(null);
-  const [showDeleteAccountWarning, setShowDeleteAccountWarning] =
-    useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -320,7 +336,6 @@ export function EditProfileDialog({
       const res = await fetch('/api/user/avatar', { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to remove');
       lastSavedPictureRef.current = undefined;
-      toast.success('Profile picture removed');
     } catch {
       setLocalPicture(lastSavedPictureRef.current);
       toast.error('Failed to remove image');
@@ -354,10 +369,11 @@ export function EditProfileDialog({
     } catch (error) {
       toast.error('Failed to delete account');
       console.error(error);
-    } finally {
       setIsDeletingAccount(false);
-      setShowDeleteAccountWarning(false);
     }
+    // No `finally` resetting isDeletingAccount on success — the tab is about
+    // to navigate away (signOut + redirect), so it should stay disabled
+    // rather than flash back to normal for the instant before that happens.
   }, []);
 
   // ---------------------------------------------------------------------------
@@ -502,7 +518,31 @@ export function EditProfileDialog({
         >
           <DialogTitle className="sr-only">Edit Profile</DialogTitle>
 
-          <div className="flex flex-1 flex-col overflow-hidden sm:flex-row">
+          {/* The page editor renders as an overlay, not a ternary swap —
+              the sidebar/content tree (and whichever tab's in-progress
+              local draft, e.g. an item mid-edit with the form still open)
+              stays mounted underneath the whole time. Unmounting it while
+              the page editor was open used to reset the tab back to its
+              list view and drop the very draft the new page was just
+              added to. */}
+          {editingPage && (
+            <div className="flex flex-1 flex-col overflow-hidden">
+              <PageEditorView
+                page={editingPage.attachment}
+                usedSlugs={usedPageSlugs}
+                onSave={editingPage.onSave}
+                onClose={() => setEditingPage(null)}
+              />
+            </div>
+          )}
+
+          <div
+            className={
+              editingPage
+                ? 'hidden'
+                : 'flex flex-1 flex-col overflow-hidden sm:flex-row'
+            }
+          >
             {/* Sidebar */}
             <ProfileSidebar
               activeTab={activeTab}
@@ -551,13 +591,15 @@ export function EditProfileDialog({
               onCancel={handleGlobalCancel}
               onDone={handleDone}
               isClosing={isClosing}
-              onDeleteAccount={handleDeleteAccount}
-              setShowDeleteAccountWarning={setShowDeleteAccountWarning}
+              onConfirmDeleteAccount={handleDeleteAccount}
+              isDeletingAccount={isDeletingAccount}
+              createdAt={createdAt}
             />
           </div>
 
-          {/* Mobile Sidebar Action Bar */}
-          {showMobileMenu && (
+          {/* Mobile Sidebar Action Bar — hidden while the page editor is
+              open, since it has its own Close/Save bar. */}
+          {!editingPage && showMobileMenu && (
             <div className="flex-none bg-surface-1 px-4 pb-4 sm:hidden">
               <div className="flex w-full items-center justify-end gap-3 border-t border-border-subtle pt-4">
                 {hasUnsavedChanges ? (
@@ -629,16 +671,6 @@ export function EditProfileDialog({
           }
         }}
         isLoading={isSaving}
-      />
-
-      <DeleteConfirmDialog
-        open={showDeleteAccountWarning}
-        onOpenChange={setShowDeleteAccountWarning}
-        description="Are you absolutely sure? This will permanently delete your account, resume data, and username. This action cannot be undone."
-        onConfirm={handleDeleteAccount}
-        isLoading={isDeletingAccount}
-        confirmLabel="Delete Account"
-        loadingLabel="Deleting…"
       />
 
       <UnsavedChangesDialog

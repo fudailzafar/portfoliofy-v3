@@ -47,7 +47,6 @@ export function ProjectsTab({
     setView: setProjectsView,
     current: currentProject,
     setCurrent: setCurrentProject,
-    commit: commitProject,
   } = useTabEditor<any>({ isValid: isProjectValid, onCommit: saveProject });
 
   const sortedProjects = useMemo(() => sortByDateDesc(projects), [projects]);
@@ -73,10 +72,6 @@ export function ProjectsTab({
       emptyState={{
         icon: FolderCode,
         buttonText: "Add a work project you're proud of",
-      }}
-      onBack={() => {
-        commitProject();
-        setProjectsView('list');
       }}
       renderList={() => (
         <>
@@ -181,6 +176,17 @@ export function ProjectsTab({
               />
             </div>
 
+            <CollaboratorsField
+              label="Collaborators"
+              value={currentProject.collaborators || []}
+              onChange={(val) =>
+                setCurrentProject({
+                  ...currentProject,
+                  collaborators: val,
+                })
+              }
+            />
+
             <div className="space-y-2 pt-2">
               <Label className="text-xs text-content-secondary">
                 Description
@@ -195,16 +201,6 @@ export function ProjectsTab({
                 }
               />
             </div>
-            <CollaboratorsField
-              label="Collaborators"
-              value={currentProject.collaborators || []}
-              onChange={(val) =>
-                setCurrentProject({
-                  ...currentProject,
-                  collaborators: val,
-                })
-              }
-            />
             <SectionAttachments
               attachments={currentProject.attachments || []}
               onChange={(val) =>

@@ -32,7 +32,7 @@ export function DeleteConfirmDialog({
 }: DeleteConfirmDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="gap-6 border border-border-subtle p-8 font-sans dark:bg-surface-1 sm:max-w-sm">
+      <AlertDialogContent className="gap-4 border border-border-subtle p-6 font-sans dark:border-none dark:bg-surface-1 sm:max-w-sm">
         <AlertDialogHeader className="flex flex-col gap-1.5 space-y-0">
           <AlertDialogTitle className="text-left text-lg font-medium tracking-tight text-content-primary">
             Are you sure?
@@ -41,7 +41,7 @@ export function DeleteConfirmDialog({
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="mt-5 flex !flex-row justify-end gap-2 space-x-0">
+        <AlertDialogFooter className="mt-3 flex !flex-row justify-end gap-2 space-x-0">
           <AlertDialogCancel
             disabled={isLoading}
             className="border-none bg-surface-1 px-4 py-2 text-sm font-medium text-content-primary hover:bg-surface-1 hover:underline hover:underline-offset-4"
@@ -51,7 +51,7 @@ export function DeleteConfirmDialog({
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isLoading}
-            className="w-[120px] shrink-0 border-red-200 bg-red-50 text-red-600 transition-colors active:bg-red-100 active:text-red-700 dark:border-red-900/60 dark:bg-red-900/20 dark:text-red-400 dark:active:border-red-800 dark:active:bg-red-900/40 dark:active:text-red-300"
+            className="h-9 whitespace-nowrap rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:text-red-600 dark:active:bg-border-strong"
           >
             {isLoading ? loadingLabel : confirmLabel}
           </AlertDialogAction>

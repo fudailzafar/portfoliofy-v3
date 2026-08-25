@@ -48,7 +48,6 @@ export function ExhibitionsTab({
     setView: setExhibitionsView,
     current: currentExhibition,
     setCurrent: setCurrentExhibition,
-    commit: commitExhibition,
   } = useTabEditor<any>({
     isValid: isExhibitionValid,
     onCommit: saveExhibition,
@@ -80,11 +79,7 @@ export function ExhibitionsTab({
       addButtonText="Add exhibition"
       emptyState={{
         icon: Palette,
-        buttonText: 'Add an exhibition',
-      }}
-      onBack={() => {
-        commitExhibition();
-        setExhibitionsView('list');
+        buttonText: 'Add an exhibition you were in',
       }}
       renderList={() => (
         <>
@@ -131,7 +126,7 @@ export function ExhibitionsTab({
             <div className="grid grid-cols-2 gap-6">
               <FormInput
                 id="title"
-                label="Title*"
+                label="Exhibition title*"
                 value={currentExhibition.title}
                 onChange={(e) =>
                   setCurrentExhibition({
@@ -189,13 +184,13 @@ export function ExhibitionsTab({
                     location: e.target.value,
                   })
                 }
-                placeholder="Vancouver"
+                placeholder="City or country"
               />
             </div>
 
             <FormInput
               id="link"
-              label="Link"
+              label="URL"
               value={currentExhibition.link || ''}
               onChange={(e) =>
                 setCurrentExhibition({
@@ -205,7 +200,16 @@ export function ExhibitionsTab({
               }
               placeholder="https://example.com"
             />
-
+            <CollaboratorsField
+              label="Collaborators"
+              value={currentExhibition.collaborators || []}
+              onChange={(val) =>
+                setCurrentExhibition({
+                  ...currentExhibition,
+                  collaborators: val,
+                })
+              }
+            />
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">
                 Description
@@ -220,16 +224,6 @@ export function ExhibitionsTab({
                 }
               />
             </div>
-            <CollaboratorsField
-              label="Collaborators"
-              value={currentExhibition.collaborators || []}
-              onChange={(val) =>
-                setCurrentExhibition({
-                  ...currentExhibition,
-                  collaborators: val,
-                })
-              }
-            />
             <SectionAttachments
               attachments={currentExhibition.attachments || []}
               onChange={(val) =>

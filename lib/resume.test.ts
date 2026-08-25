@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { ResumeDataSchema, getListAdjacency } from './resume';
+import {
+  ResumeDataSchema,
+  getListAdjacency,
+  findPageBySlug,
+  getUsedPageSlugs,
+  slugify,
+  dedupeSlug,
+  estimateReadMinutes,
+} from './resume';
 
 const baseResume = {
   header: { name: 'Test User', shortAbout: 'Tester', skills: [] },
@@ -148,5 +156,106 @@ describe('getListAdjacency', () => {
     const result = getListAdjacency(items, 0);
     expect(result.prevItem).toBeNull();
     expect(result.nextItem).toBeNull();
+  });
+});
+
+describe('findPageBySlug / getUsedPageSlugs', () => {
+  const pageAttachment = {
+    id: 'page-1',
+    url: 'https://example.com/thumb.png',
+    type: 'page' as const,
+    title: 'My Deep Dive',
+    slug: 'my-deep-dive',
+    content: '<p>hello</p>',
+    createdAt: '2026-01-01T00:00:00.000Z',
+  };
+
+  const resumeWithPage = {
+    ...baseResume,
+    workExperience: [
+      {
+        id: 'work-1',
+        company: 'Acme',
+        location: 'Remote',
+        title: 'Engineer',
+        start: '2020',
+        end: 'Now',
+        description: 'desc',
+        attachments: [pageAttachment],
+      },
+    ],
+  };
+
+  it('finds a page by its slug and reports the owning item', () => {
+    const found = findPageBySlug(resumeWithPage as any, 'my-deep-dive');
+    expect(found).toMatchObject({
+      sectionKey: 'workExperience',
+      itemId: 'work-1',
+    });
+    expect(found?.page.id).toBe('page-1');
+  });
+
+  it('returns undefined for a slug that does not exist', () => {
+    expect(findPageBySlug(resumeWithPage as any, 'nope')).toBeUndefined();
+  });
+
+  it('returns undefined for empty resume data or slug', () => {
+    expect(findPageBySlug(null, 'my-deep-dive')).toBeUndefined();
+    expect(findPageBySlug(resumeWithPage as any, '')).toBeUndefined();
+  });
+
+  it('collects every used slug, excluding a given attachment id', () => {
+    const used = getUsedPageSlugs(resumeWithPage as any);
+    expect(used.has('my-deep-dive')).toBe(true);
+
+    const usedExcludingSelf = getUsedPageSlugs(resumeWithPage as any, 'page-1');
+    expect(usedExcludingSelf.has('my-deep-dive')).toBe(false);
+  });
+});
+
+describe('slugify / dedupeSlug', () => {
+  it('lowercases, hyphenates, and trims', () => {
+    expect(slugify('  My Deep Dive!! ')).toBe('my-deep-dive');
+    expect(slugify('Hello   World')).toBe('hello-world');
+    expect(slugify('---leading and trailing---')).toBe('leading-and-trailing');
+  });
+
+  it('returns the base slug unchanged when unused', () => {
+    expect(dedupeSlug('hello-world', new Set())).toBe('hello-world');
+  });
+
+  it('appends -2, -3, etc. on collision', () => {
+    const used = new Set(['hello-world', 'hello-world-2']);
+    expect(dedupeSlug('hello-world', used)).toBe('hello-world-3');
+  });
+
+  it('treats a reserved slug as a collision', () => {
+    expect(dedupeSlug('og', new Set())).toBe('og-2');
+  });
+
+  it('falls back to "untitled" for an empty base', () => {
+    expect(dedupeSlug('', new Set())).toBe('untitled');
+  });
+});
+
+describe('estimateReadMinutes', () => {
+  it('strips HTML before counting words', () => {
+    const html = '<p>' + Array(200).fill('word').join(' ') + '</p>';
+    expect(estimateReadMinutes(html)).toBe(1);
+  });
+
+  it('rounds up to the next minute', () => {
+    const html = Array(201).fill('word').join(' ');
+    expect(estimateReadMinutes(html)).toBe(2);
+  });
+
+  it('never returns less than 1 minute, even for empty content', () => {
+    expect(estimateReadMinutes('')).toBe(1);
+    expect(estimateReadMinutes('<p></p>')).toBe(1);
+  });
+
+  it('matches the read.cv-derived 200-words-per-minute formula', () => {
+    const html = Array(650).fill('word').join(' ');
+    expect(estimateReadMinutes(html)).toBe(4); // ceil(650 / 200)
   });
 });

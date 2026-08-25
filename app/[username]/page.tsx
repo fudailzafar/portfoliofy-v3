@@ -144,6 +144,7 @@ export default async function ProfilePage({
               resume={resume.resumeData}
               username={username}
               picture={profilePicture}
+              createdAt={userProfile?.createdAt}
             />
           )}
 

@@ -45,8 +45,9 @@ interface ProfileContentProps {
   onCancel: () => void;
   onDone: () => void;
   isClosing: boolean;
-  onDeleteAccount: () => void;
-  setShowDeleteAccountWarning: (show: boolean) => void;
+  onConfirmDeleteAccount: () => void;
+  isDeletingAccount: boolean;
+  createdAt?: Date | null;
 }
 
 const TAB_TITLES: Record<string, string> = {
@@ -87,11 +88,19 @@ export function ProfileContent({
   onCancel,
   onDone,
   isClosing,
-  onDeleteAccount,
-  setShowDeleteAccountWarning,
+  onConfirmDeleteAccount,
+  isDeletingAccount,
+  createdAt,
 }: ProfileContentProps) {
   const hasUnsavedChanges = useResumeStore((state) => state.hasUnsavedChanges);
   const activeFormValid = useResumeStore((state) => state.activeFormValid);
+  // Whether a list-tab form (Work Experience, Awards, etc.) is currently
+  // open — while it is, the bottom bar shows that form's own Cancel/Save
+  // pair instead of the resume-wide one, per the "chevron-back is gone,
+  // Cancel does that job now" flow.
+  const isEditingTab = useResumeStore((state) => state.isEditingTab);
+  const activeFormDirty = useResumeStore((state) => state.activeFormDirty);
+  const activeFormCancel = useResumeStore((state) => state.activeFormCancel);
   // Bumped by the global Cancel button — used as a remount key on each list
   // tab so an in-progress add/edit form (and its local draft) is dropped
   // along with the rest of the discarded changes.
@@ -228,7 +237,10 @@ export function ProfileContent({
         {activeTab === 'insights' && <InsightsTab />}
         {activeTab === 'settings' && (
           <SettingsTab
-            onDeleteAccount={() => setShowDeleteAccountWarning(true)}
+            username={username}
+            onConfirmDelete={onConfirmDeleteAccount}
+            isDeletingAccount={isDeletingAccount}
+            createdAt={createdAt}
           />
         )}
         {activeTab === 'import_data' && <ImportDataTab />}
@@ -247,6 +259,35 @@ export function ProfileContent({
             >
               Print
             </button>
+          ) : isEditingTab ? (
+            <>
+              <button
+                onClick={() => activeFormCancel?.()}
+                disabled={isSaving}
+                className="px-4 text-[14px] font-medium text-content-primary hover:underline hover:underline-offset-4 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={onSave}
+                disabled={
+                  isSaving ||
+                  !isValidUname ||
+                  checkUsernameMutationIsPending ||
+                  !activeFormValid ||
+                  !activeFormDirty
+                }
+                className="h-9 rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 disabled:opacity-50 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+              >
+                {isSaving ? (
+                  <div className="flex items-center gap-2">
+                    <Spinner size={14} className="text-content-primary" />
+                  </div>
+                ) : (
+                  'Save'
+                )}
+              </button>
+            </>
           ) : hasUnsavedChanges ? (
             <>
               <button
