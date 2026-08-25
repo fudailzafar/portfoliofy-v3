@@ -20,6 +20,62 @@ export function sanitizeRichText(html: string): string {
   return sanitizeHtml(html, RICH_TEXT_OPTIONS);
 }
 
+// Broader allowlist for an embedded page's body — mirrors what
+// PageEditorView's richer Tiptap instance (headings, images, YouTube/Vimeo/
+// Figma embeds) can actually produce. Iframes are locked to those three
+// hostnames so this can't be used to embed arbitrary third-party content.
+const PAGE_CONTENT_OPTIONS: sanitizeHtml.IOptions = {
+  allowedTags: [
+    ...(RICH_TEXT_OPTIONS.allowedTags as string[]),
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'blockquote',
+    'pre',
+    'code',
+    'hr',
+    'img',
+    'iframe',
+    'div',
+    'button',
+  ],
+  allowedAttributes: {
+    a: ['href', 'target', 'rel', 'class', 'data-embed-provider'],
+    img: ['src', 'alt', 'width', 'height', 'class', 'data-content-image'],
+    iframe: [
+      'src',
+      'width',
+      'height',
+      'allow',
+      'allowfullscreen',
+      'frameborder',
+      'class',
+      'data-embed-provider',
+    ],
+    div: ['data-gallery', 'data-images', 'class'],
+    button: ['type', 'data-src', 'class'],
+  },
+  allowedIframeHostnames: [
+    'www.youtube.com',
+    'player.vimeo.com',
+    'www.figma.com',
+  ],
+  allowedSchemes: ['http', 'https', 'mailto'],
+  transformTags: {
+    a: sanitizeHtml.simpleTransform('a', {
+      target: '_blank',
+      rel: 'noopener noreferrer nofollow',
+    }),
+  },
+};
+
+export function sanitizePageContent(html: string): string {
+  return sanitizeHtml(html, PAGE_CONTENT_OPTIONS);
+}
+
 const RICH_TEXT_FIELDS = ['summary', 'description'];
 
 /**
@@ -54,6 +110,22 @@ export function sanitizeResumeData(resumeData: Resume['resumeData']) {
             ) {
               sanitizedItem[itemKey] = sanitizeRichText(sanitizedItem[itemKey]);
             }
+          }
+          // An item's attachments can include an embedded page — its body
+          // allows a broader set of tags (headings, images, embeds) than
+          // plain rich-text fields, so it gets the stricter/broader
+          // PAGE_CONTENT_OPTIONS allowlist instead of sanitizeRichText.
+          if (Array.isArray(sanitizedItem.attachments)) {
+            sanitizedItem.attachments = sanitizedItem.attachments.map(
+              (attachment: any) =>
+                attachment?.type === 'page' &&
+                typeof attachment.content === 'string'
+                  ? {
+                      ...attachment,
+                      content: sanitizePageContent(attachment.content),
+                    }
+                  : attachment,
+            );
           }
           return sanitizedItem;
         }

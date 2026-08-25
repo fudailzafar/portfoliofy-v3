@@ -48,7 +48,6 @@ export function AwardsTab({
     setView: setAwardsView,
     current: currentAward,
     setCurrent: setCurrentAward,
-    commit: commitAward,
   } = useTabEditor<any>({ isValid: isAwardValid, onCommit: saveAward });
 
   const sortedAwards = useMemo(() => sortByDateDesc(awards), [awards]);
@@ -74,10 +73,6 @@ export function AwardsTab({
       emptyState={{
         icon: Award,
         buttonText: 'Add an award you received',
-      }}
-      onBack={() => {
-        commitAward();
-        setAwardsView('list');
       }}
       renderList={() => (
         <>

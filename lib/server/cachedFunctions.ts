@@ -17,6 +17,7 @@ export interface UserProfile {
   statusEmoji?: string | null;
   statusText?: string | null;
   statusUpdatedAt?: Date | null;
+  createdAt?: Date | null;
 }
 
 export const getCachedUserProfile = cache(
@@ -25,7 +26,7 @@ export const getCachedUserProfile = cache(
       async () => {
         try {
           const [row] =
-            await sql`SELECT name, email, image, custom_image, status_emoji, status_text, status_updated_at FROM users WHERE id = ${userId}`;
+            await sql`SELECT name, email, image, custom_image, status_emoji, status_text, status_updated_at, created_at FROM users WHERE id = ${userId}`;
           if (!row) return null;
 
           const profile: UserProfile = {
@@ -36,6 +37,7 @@ export const getCachedUserProfile = cache(
             statusEmoji: row.statusEmoji,
             statusText: row.statusText,
             statusUpdatedAt: row.statusUpdatedAt,
+            createdAt: row.createdAt,
           };
 
           profile.avatarUrl = profile.customImage ?? profile.image ?? undefined;

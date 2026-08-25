@@ -35,3 +35,15 @@ export function useProfileUrl(): (username: string) => string {
       ? `https://${username}.portfoliofy.me`
       : `/${username}`;
 }
+
+/**
+ * Whether the current view is already scoped to one profile's own personal
+ * domain/subdomain — needed for links to a page *within that same profile*
+ * (e.g. an embedded page). On a personal domain, proxy.ts already rewrites
+ * `/slug` to `/{username}/slug` internally, so a link built with the
+ * `/{username}/slug` prefix (useProfileUrl's shape, meant for cross-profile
+ * links) would self-nest into a broken path there instead.
+ */
+export function usePersonalDomainView(): boolean {
+  return useContext(ProfileUrlContext);
+}

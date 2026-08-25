@@ -64,7 +64,6 @@ export function WorkExperienceTab({
     setView: setWorkView,
     current: currentWork,
     setCurrent: setCurrentWork,
-    commit: commitWork,
   } = useTabEditor<any>({ isValid: isWorkValid, onCommit: saveWork });
 
   const sortedWork = useMemo(() => sortByDateDesc(work), [work]);
@@ -94,11 +93,7 @@ export function WorkExperienceTab({
       addButtonText="Add workplace"
       emptyState={{
         icon: Briefcase,
-        buttonText: 'Add workplace',
-      }}
-      onBack={() => {
-        commitWork();
-        setWorkView('list');
+        buttonText: "Add a job you've had",
       }}
       renderList={() => (
         <>
@@ -214,7 +209,7 @@ export function WorkExperienceTab({
                     company: e.target.value,
                   })
                 }
-                placeholder="Acme Design Studio"
+                placeholder="Acme inc."
               />
             </div>
 
@@ -229,7 +224,7 @@ export function WorkExperienceTab({
                     location: e.target.value,
                   })
                 }
-                placeholder="San Francisco, CA"
+                placeholder="Where was it"
               />
               <FormInput
                 id="link"
@@ -245,6 +240,17 @@ export function WorkExperienceTab({
               />
             </div>
 
+            <CollaboratorsField
+              label="Coworkers"
+              value={currentWork.collaborators || []}
+              onChange={(val) =>
+                setCurrentWork({
+                  ...currentWork,
+                  collaborators: val,
+                })
+              }
+            />
+
             <div className="space-y-2 pt-2">
               <Label className="text-xs text-content-secondary">
                 Description
@@ -256,16 +262,7 @@ export function WorkExperienceTab({
                 }
               />
             </div>
-            <CollaboratorsField
-              label="Coworkers"
-              value={currentWork.collaborators || []}
-              onChange={(val) =>
-                setCurrentWork({
-                  ...currentWork,
-                  collaborators: val,
-                })
-              }
-            />
+
             <SectionAttachments
               attachments={currentWork.attachments || []}
               onChange={(val) =>

@@ -74,32 +74,9 @@ export function GeneralTab({
           }}
         />
 
-        {localPicture ? (
-          /* ── Has image: static avatar (not clickable) ── */
+        {localPicture && !isUploadingPicture ? (
+          /* ── Has image and not uploading: static avatar (not clickable) ── */
           <div className="relative size-20 shrink-0 overflow-hidden rounded-full">
-            {isUploadingPicture && (
-              <div className="bg-action-primary/40 absolute inset-0 z-10 flex items-center justify-center rounded-full">
-                <svg
-                  className="size-5 animate-spin text-surface-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v8H4z"
-                  />
-                </svg>
-              </div>
-            )}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               width={300}
@@ -116,25 +93,7 @@ export function GeneralTab({
             className="group relative flex size-20 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-surface-2"
           >
             {isUploadingPicture ? (
-              <svg
-                className="size-6 animate-spin text-content-muted"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8H4z"
-                />
-              </svg>
+              <Spinner size={20} className="text-content-secondary" />
             ) : (
               <>
                 <svg
@@ -179,17 +138,15 @@ export function GeneralTab({
           ) : (
             /* No image: show Upload image */
             <>
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 text-xs dark:border-none dark:bg-border-subtle"
+              <button
+                className="h-8 cursor-pointer rounded-md border border-border-strong bg-surface-1 px-4 text-[13px] text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
                 onClick={() =>
                   document.getElementById('avatar-upload')?.click()
                 }
                 disabled={isUploadingPicture}
               >
                 {isUploadingPicture ? 'Removing…' : 'Upload image'}
-              </Button>
+              </button>
               <p className="text-[11px] leading-tight text-content-muted">
                 JPG, PNG or GIF · max 5MB
               </p>
@@ -267,13 +224,13 @@ export function GeneralTab({
               What do you do?
             </Label>
             <span className="text-xs text-content-muted">
-              {(header?.shortAbout || '').length} of 32
+              {(header?.shortAbout || '').length} of 36
             </span>
           </div>
           <Input
             id="shortAbout"
             placeholder="Architect, painter, etc"
-            maxLength={32}
+            maxLength={36}
             value={header?.shortAbout || ''}
             onChange={(e) => updateHeader({ shortAbout: e.target.value })}
             className="dark:border-none dark:bg-border-subtle"
@@ -289,13 +246,13 @@ export function GeneralTab({
               Location
             </Label>
             <span className="text-xs text-content-muted">
-              {(header?.location || '').length} of 32
+              {(header?.location || '').length} of 24
             </span>
           </div>
           <Input
             id="location"
             placeholder="Where you're based"
-            maxLength={32}
+            maxLength={24}
             value={header?.location || ''}
             onChange={(e) => updateHeader({ location: e.target.value })}
             className="dark:border-none dark:bg-border-subtle"
@@ -316,7 +273,7 @@ export function GeneralTab({
           </div>
           <Input
             id="pronouns"
-            placeholder="He/Him, etc"
+            placeholder="He/him, etc"
             maxLength={12}
             value={header?.pronouns || ''}
             onChange={(e) => updateHeader({ pronouns: e.target.value })}
@@ -330,13 +287,13 @@ export function GeneralTab({
               Website
             </Label>
             <span className="text-xs text-content-muted">
-              {(header?.website || '').length} of 200
+              {(header?.website || '').length} of 96
             </span>
           </div>
           <Input
             id="website"
             placeholder="https://example.com"
-            maxLength={200}
+            maxLength={96}
             value={header?.website || ''}
             onChange={(e) => updateHeader({ website: e.target.value })}
             onBlur={(e) => {

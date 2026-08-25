@@ -108,7 +108,7 @@ export function ProfileSidebar({
         </div>
       </div>
 
-      <div className="scrollbar-hide flex flex-1 flex-col overflow-y-auto py-4">
+      <div className="scrollbar-hide flex flex-1 flex-col overflow-y-auto py-1">
         {activeGroup === 'profile' ? (
           <>
             <SidebarButton

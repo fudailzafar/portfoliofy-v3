@@ -1,9 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { sanitizeRichText, sanitizeResumeData } from './sanitize';
+import {
+  sanitizeRichText,
+  sanitizePageContent,
+  sanitizeResumeData,
+} from './sanitize';
 
 describe('sanitizeRichText', () => {
   it('strips script tags', () => {
-    expect(sanitizeRichText('<script>alert(document.cookie)</script>')).toBe('');
+    expect(sanitizeRichText('<script>alert(document.cookie)</script>')).toBe(
+      '',
+    );
   });
 
   it('strips event handler attributes', () => {
@@ -17,7 +23,9 @@ describe('sanitizeRichText', () => {
   });
 
   it('strips iframes and svg-based vectors', () => {
-    expect(sanitizeRichText('<iframe src="https://evil.com"></iframe>')).toBe('');
+    expect(sanitizeRichText('<iframe src="https://evil.com"></iframe>')).toBe(
+      '',
+    );
     expect(sanitizeRichText('<svg onload=alert(1)>')).toBe('');
   });
 
@@ -38,7 +46,7 @@ describe('sanitizeRichText', () => {
 });
 
 describe('sanitizeResumeData', () => {
-  it('sanitizes summary and every list section\'s description', () => {
+  it("sanitizes summary and every list section's description", () => {
     const result = sanitizeResumeData({
       summary: '<script>alert(1)</script>Safe summary',
       workExperience: [
@@ -61,7 +69,8 @@ describe('sanitizeResumeData', () => {
       ],
     } as any);
 
-    if (!result) throw new Error('expected sanitizeResumeData to return a value');
+    if (!result)
+      throw new Error('expected sanitizeResumeData to return a value');
 
     expect(result.summary).toBe('Safe summary');
     expect(result.workExperience?.[0].description).toBe('Built things');
@@ -73,5 +82,87 @@ describe('sanitizeResumeData', () => {
   it('passes through nullish resumeData unchanged', () => {
     expect(sanitizeResumeData(undefined as any)).toBeUndefined();
     expect(sanitizeResumeData(null as any)).toBeNull();
+  });
+
+  it("sanitizes an embedded page's content with the broader page allowlist", () => {
+    const result = sanitizeResumeData({
+      workExperience: [
+        {
+          company: 'Acme',
+          title: 'Engineer',
+          location: 'Remote',
+          start: '2020',
+          description: '',
+          hidden: false,
+          attachments: [
+            {
+              id: 'page-1',
+              url: 'https://example.com/thumb.png',
+              type: 'page',
+              title: 'My Deep Dive',
+              slug: 'my-deep-dive',
+              content:
+                '<h1>Title</h1><script>alert(1)</script><img src=x onerror=alert(1)>',
+            },
+            {
+              id: 'img-1',
+              url: 'https://example.com/photo.png',
+              type: 'image',
+            },
+          ],
+        },
+      ],
+    } as any);
+
+    if (!result)
+      throw new Error('expected sanitizeResumeData to return a value');
+    const attachments = result.workExperience?.[0].attachments as any[];
+    const page = attachments.find((a) => a.type === 'page');
+    const image = attachments.find((a) => a.type === 'image');
+
+    expect(page.content).toContain('<h1>Title</h1>');
+    expect(page.content).not.toContain('<script>');
+    expect(page.content).not.toContain('onerror');
+    // Image attachments are untouched — they have no `content` to sanitize.
+    expect(image.url).toBe('https://example.com/photo.png');
+  });
+});
+
+describe('sanitizePageContent', () => {
+  it('allows headings, images, and hostname-locked iframes', () => {
+    const out = sanitizePageContent(
+      '<h1>Title</h1><img src="https://example.com/a.png" alt="a">' +
+        '<iframe src="https://www.youtube.com/embed/abc" data-embed-provider="youtube"></iframe>',
+    );
+    expect(out).toContain('<h1>Title</h1>');
+    expect(out).toContain('<img');
+    expect(out).toContain('youtube.com/embed/abc');
+  });
+
+  it('strips iframes from non-allowlisted hosts', () => {
+    const out = sanitizePageContent('<iframe src="https://evil.com"></iframe>');
+    expect(out).not.toContain('evil.com');
+  });
+
+  it('strips script tags and event handlers', () => {
+    expect(sanitizePageContent('<script>alert(1)</script>')).toBe('');
+    expect(sanitizePageContent('<img src=x onerror=alert(1)>')).not.toContain(
+      'onerror',
+    );
+  });
+
+  it('strips javascript: URLs', () => {
+    const out = sanitizePageContent('<a href="javascript:alert(1)">click</a>');
+    expect(out).not.toContain('javascript:');
+  });
+
+  it('preserves gallery/embed markup produced by the Tiptap nodes', () => {
+    const out = sanitizePageContent(
+      '<div data-gallery="true" class="content-gallery" data-images="[&quot;a.png&quot;]">' +
+        '<button type="button" class="content-gallery-item" data-src="a.png"><img src="a.png" alt=""></button>' +
+        '</div>',
+    );
+    expect(out).toContain('data-gallery');
+    expect(out).toContain('content-gallery-item');
   });
 });

@@ -47,7 +47,6 @@ export function SideProjectsTab({
     setView: setSideProjectsView,
     current: currentSideProject,
     setCurrent: setCurrentSideProject,
-    commit: commitSideProject,
   } = useTabEditor<any>({
     isValid: isSideProjectValid,
     onCommit: saveSideProject,
@@ -78,10 +77,6 @@ export function SideProjectsTab({
       emptyState={{
         icon: FolderCode,
         buttonText: "Add a side project you're proud of",
-      }}
-      onBack={() => {
-        commitSideProject();
-        setSideProjectsView('list');
       }}
       renderList={() => (
         <>

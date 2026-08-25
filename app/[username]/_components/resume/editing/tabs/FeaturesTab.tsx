@@ -47,7 +47,6 @@ export function FeaturesTab({
     setView: setFeaturesView,
     current: currentFeature,
     setCurrent: setCurrentFeature,
-    commit: commitFeature,
   } = useTabEditor<any>({ isValid: isFeatureValid, onCommit: saveFeature });
 
   const sortedFeatures = useMemo(() => sortByDateDesc(features), [features]);
@@ -73,10 +72,6 @@ export function FeaturesTab({
       emptyState={{
         icon: FolderCode,
         buttonText: 'Add a feature',
-      }}
-      onBack={() => {
-        commitFeature();
-        setFeaturesView('list');
       }}
       renderList={() => (
         <>

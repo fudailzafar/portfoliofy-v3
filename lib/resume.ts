@@ -3,19 +3,19 @@ import { isReversedRange } from './validation/dates';
 import { isValidWebsite } from './validation/url';
 
 export const DEFAULT_SECTION_ORDER = [
-  'work',
+  'projects',
   'side_projects',
+  'exhibitions',
   'speaking',
   'writing',
-  'exhibitions',
+  'awards',
   'features',
+  'work',
   'volunteering',
-  'projects',
   'skills',
   'education',
-  'contact',
-  'awards',
   'certifications',
+  'contact',
 ];
 
 export const SECTION_LABELS: Record<string, string> = {
@@ -36,14 +36,154 @@ export const SECTION_LABELS: Record<string, string> = {
 
 export const AttachmentSchema = z.object({
   id: z.string().describe('Unique identifier for the attachment'),
-  url: z.string().describe('S3 URL of the attachment'),
-  type: z.enum(['image', 'video']).describe('Type of media'),
+  url: z
+    .string()
+    .describe(
+      'S3 URL of the attachment (image/video source, or a page thumbnail)',
+    ),
+  type: z.enum(['image', 'video', 'page']).describe('Type of attachment'),
   filename: z.string().optional().describe('Original filename'),
   width: z.number().optional().describe('Width of the media'),
   height: z.number().optional().describe('Height of the media'),
+  // Page-only fields — optional so image/video attachments are unaffected.
+  title: z.string().optional().describe('Title of the embedded page'),
+  slug: z
+    .string()
+    .optional()
+    .describe('URL slug of the embedded page, unique per user'),
+  content: z
+    .string()
+    .optional()
+    .describe('Sanitized rich-text HTML body of the embedded page'),
+  createdAt: z
+    .string()
+    .optional()
+    .describe('ISO timestamp the page was created'),
 });
 
 export type AttachmentSchemaType = z.infer<typeof AttachmentSchema>;
+
+// Ported from the writing-panel branch's read-time calculation, used on both
+// the editor and public attachment cards for a page.
+export function estimateReadMinutes(html: string): number {
+  const words = html
+    .replace(/<[^>]*>?/gm, '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  return Math.max(1, Math.ceil(words.length / 200));
+}
+
+// Static segments that already exist under /[username]/ (e.g. the OG image
+// route) — Next.js resolves these before the dynamic /[username]/[slug]
+// page route, so a page slug matching one of these would be unreachable.
+export const RESERVED_PAGE_SLUGS = ['og'];
+
+// Every item across every section that has an embedded page, scanned once
+// instead of each caller hand-rolling the same sections -> items ->
+// attachments walk.
+export function findPageBySlug(
+  resumeData: ResumeDataSchemaType | null | undefined,
+  slug: string,
+):
+  | { page: AttachmentSchemaType; sectionKey: string; itemId: string }
+  | undefined {
+  if (!resumeData || !slug) return undefined;
+
+  const sectionKeys: (keyof ResumeDataSchemaType)[] = [
+    'workExperience',
+    'education',
+    'projects',
+    'sideProjects',
+    'speaking',
+    'exhibitions',
+    'features',
+    'volunteering',
+    'awards',
+    'certifications',
+  ];
+
+  for (const sectionKey of sectionKeys) {
+    const items = resumeData[sectionKey];
+    if (!Array.isArray(items)) continue;
+    for (const item of items as any[]) {
+      const page = item.attachments?.find(
+        (a: AttachmentSchemaType) => a.type === 'page' && a.slug === slug,
+      );
+      if (page) {
+        return { page, sectionKey: sectionKey as string, itemId: item.id };
+      }
+    }
+  }
+  return undefined;
+}
+
+// Every slug currently in use across the whole resume, for uniqueness
+// checks — excludes the given attachment id so editing a page doesn't
+// collide with itself.
+export function getUsedPageSlugs(
+  resumeData: ResumeDataSchemaType | null | undefined,
+  excludeAttachmentId?: string,
+): Set<string> {
+  const used = new Set<string>();
+  if (!resumeData) return used;
+
+  const sectionKeys: (keyof ResumeDataSchemaType)[] = [
+    'workExperience',
+    'education',
+    'projects',
+    'sideProjects',
+    'speaking',
+    'exhibitions',
+    'features',
+    'volunteering',
+    'awards',
+    'certifications',
+  ];
+
+  for (const sectionKey of sectionKeys) {
+    const items = resumeData[sectionKey];
+    if (!Array.isArray(items)) continue;
+    for (const item of items as any[]) {
+      for (const attachment of item.attachments || []) {
+        if (
+          attachment.type === 'page' &&
+          attachment.slug &&
+          attachment.id !== excludeAttachmentId
+        ) {
+          used.add(attachment.slug);
+        }
+      }
+    }
+  }
+  return used;
+}
+
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+// Appends -2, -3, etc. until the slug no longer collides with an existing
+// one or a reserved route segment — never blocks the user with an error,
+// just quietly picks an available slug.
+export function dedupeSlug(base: string, used: Set<string>): string {
+  const safeBase = base || 'untitled';
+  if (!used.has(safeBase) && !RESERVED_PAGE_SLUGS.includes(safeBase)) {
+    return safeBase;
+  }
+  let n = 2;
+  while (
+    used.has(`${safeBase}-${n}`) ||
+    RESERVED_PAGE_SLUGS.includes(`${safeBase}-${n}`)
+  ) {
+    n += 1;
+  }
+  return `${safeBase}-${n}`;
+}
 
 export const CollaboratorSchema = z.object({
   id: z.string().describe('User id of the tagged collaborator'),
