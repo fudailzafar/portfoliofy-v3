@@ -154,9 +154,6 @@ export function PageEditorView({
       StarterKit,
       Link.configure({
         openOnClick: false,
-        HTMLAttributes: {
-          class: 'text-blue-500 underline underline-offset-4',
-        },
       }),
       Embed,
       ContentImage,
@@ -165,14 +162,8 @@ export function PageEditorView({
     content: content,
     editorProps: {
       attributes: {
-        // Fixed sizes, not the prose-sm/sm:prose-base responsive split —
-        // matches the public rendering (PageContent) exactly, at every
-        // viewport, so what you see while writing is what publishes.
-        // List indentation/spacing/marker-color and line-height matched to
-        // the public profile's own lists (Summary.tsx / PreviewListItem.tsx)
-        // so what you write here looks the same as what publishes.
         class:
-          'min-h-[300px] w-full bg-transparent outline-none prose prose-sm dark:prose-invert max-w-none pt-4 prose-p:text-[14px] prose-h1:text-[20px] prose-h2:text-[18px] prose-h3:text-[16px] prose-pre:bg-[#2F2F2F] prose-ol:pl-0 prose-ul:pl-0 prose-li:pl-0 prose-ul:my-1 prose-li:leading-[1.6] [--tw-prose-bullets:var(--content-secondary)] [--tw-prose-counters:var(--content-secondary)]',
+          'min-h-[300px] w-full bg-transparent outline-none prose blog-prose prose-sm dark:prose-invert max-w-none pt-4 prose-p:text-[14px] prose-h1:text-[20px] prose-h2:text-[20px] prose-h3:text-[16px] prose-a:no-underline prose-a:border-b prose-a:border-content-muted prose-blockquote:mx-0 prose-blockquote:my-6 prose-blockquote:ml-[1em] prose-blockquote:pl-[1em] prose-strong:font-medium prose-code:font-mono prose-code:bg-[#2F2F2F] prose-code:rounded-[2px] prose-code:px-[2px] prose-code:mx-[2px] [&_h2_code]:text-[20px] [&_h3_code]:text-[16px] prose-pre:rounded-lg prose-pre:bg-[#2F2F2F] prose-pre:font-mono prose-pre:text-[14px] prose-hr:my-12 prose-ol:pl-0 prose-ul:pl-0 prose-li:pl-0 prose-ul:my-1 prose-li:leading-[1.6] [--tw-prose-bullets:var(--content-secondary)] [--tw-prose-counters:var(--content-secondary)]',
       },
     },
     onUpdate: ({ editor }) => {
