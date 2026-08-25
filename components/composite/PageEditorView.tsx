@@ -165,8 +165,14 @@ export function PageEditorView({
     content: content,
     editorProps: {
       attributes: {
+        // Fixed sizes, not the prose-sm/sm:prose-base responsive split —
+        // matches the public rendering (PageContent) exactly, at every
+        // viewport, so what you see while writing is what publishes.
+        // List indentation/spacing/marker-color and line-height matched to
+        // the public profile's own lists (Summary.tsx / PreviewListItem.tsx)
+        // so what you write here looks the same as what publishes.
         class:
-          'min-h-[300px] w-full bg-transparent outline-none prose prose-sm sm:prose-base dark:prose-invert max-w-none pt-4',
+          'min-h-[300px] w-full bg-transparent outline-none prose prose-sm dark:prose-invert max-w-none pt-4 prose-p:text-[14px] prose-h1:text-[20px] prose-h2:text-[18px] prose-h3:text-[16px] prose-pre:bg-[#2F2F2F] prose-ol:pl-0 prose-ul:pl-0 prose-li:pl-0 prose-ul:my-1 prose-li:leading-[1.6] [--tw-prose-bullets:var(--content-secondary)] [--tw-prose-counters:var(--content-secondary)]',
       },
     },
     onUpdate: ({ editor }) => {
