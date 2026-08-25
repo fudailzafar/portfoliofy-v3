@@ -114,11 +114,10 @@ export function SectionAttachments({
             <div
               key={attachment.id}
               className={cn(
-                'group relative h-[90px] shrink-0 snap-center overflow-hidden rounded-lg border border-border-strong bg-surface-2',
-                // Page cards use the same fixed-width wide layout as the
-                // list view (AttachmentsPreview) instead of the generic
-                // shrink-to-content sizing image/video attachments use.
-                attachment.type === 'page' && 'flex w-[415px] gap-3',
+                'group relative shrink-0 snap-center',
+                attachment.type === 'page'
+                  ? 'w-full max-w-[415px]'
+                  : 'h-[90px] overflow-hidden rounded-lg border border-border-strong bg-surface-2',
               )}
             >
               {attachment.type === 'video' ? (
@@ -135,12 +134,9 @@ export function SectionAttachments({
                 <button
                   type="button"
                   onClick={openPageEditor}
-                  className="flex h-full flex-1 gap-3 overflow-hidden text-left"
+                  className="block w-full text-left"
                 >
-                  <PageAttachmentCard
-                    attachment={attachment}
-                    variant="editor"
-                  />
+                  <PageAttachmentCard attachment={attachment} />
                 </button>
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element

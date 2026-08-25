@@ -56,8 +56,6 @@ export function AttachmentsPreview({
     router.push(href);
   };
 
-  const isEditor = variant === 'editor';
-
   return (
     <>
       <div className="custom-scrollbar mb-2 mt-4 flex w-full snap-x gap-3 overflow-x-auto pb-2">
@@ -67,24 +65,14 @@ export function AttachmentsPreview({
               key={attachment.id}
               type="button"
               onClick={() => handleOpenPage(attachment)}
-              className={cn(
-                'group flex h-[90px] w-[415px] shrink-0 snap-center gap-3 overflow-hidden rounded-[8px] border text-left transition-colors',
-                isEditor
-                  ? 'border-border-strong bg-surface-2'
-                  : 'bg-theme-border/40 border-theme-border',
-              )}
+              className="w-full max-w-[415px] shrink-0 snap-center text-left"
             >
-              <PageAttachmentCard attachment={attachment} variant={variant} />
+              <PageAttachmentCard attachment={attachment} />
             </button>
           ) : (
             <div
               key={attachment.id}
-              className={cn(
-                'group relative h-[90px] shrink-0 cursor-pointer snap-center overflow-hidden rounded-lg border',
-                isEditor
-                  ? 'border-border-strong bg-surface-2'
-                  : 'border-theme-border bg-theme-bg',
-              )}
+              className="group relative h-[90px] shrink-0 cursor-pointer snap-center overflow-hidden rounded-lg border"
               onClick={() => handleOpenLightbox(attachment)}
             >
               {attachment.type === 'video' ? (
