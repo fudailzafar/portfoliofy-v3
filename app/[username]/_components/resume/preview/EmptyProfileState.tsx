@@ -10,12 +10,12 @@ export function EmptyProfileState() {
   };
 
   return (
-    <div className="mt-8 flex flex-col space-y-6 px-4">
+    <div className="mt-8 flex flex-col space-y-6 rounded-2xl border border-border-subtle bg-surface-1 p-10">
       <h2 className="text-base font-medium text-content-primary">
         Welcome to your new profile! ✨
       </h2>
 
-      <ol className="space-y-4 text-sm text-content-secondary">
+      <ol className="space-y-1 text-sm text-content-secondary">
         <li className="flex gap-2">
           1. Add the basics, like work experience or education.
         </li>
@@ -24,26 +24,26 @@ export function EmptyProfileState() {
           writing.
         </li>
         <li className="flex gap-2">
-          3. Add images or videos to any experiences that needs more details.
+          3. Add images or videos to any experiences that need more detail.
         </li>
       </ol>
 
       <div className="flex flex-wrap gap-4 pt-2">
-        <Button
+        <button
           onClick={handleOpenEditor}
-          className="h-10 border-none bg-surface-2 px-5 font-medium text-content-primary shadow-none hover:bg-surface-2 active:bg-surface-3"
+          className="h-8 items-center justify-center rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
         >
           Add your first work experience
-        </Button>
-        <Button
+        </button>
+        <button
           onClick={() => {
             setActiveTab('import_data');
             window.dispatchEvent(new CustomEvent('open-editor'));
           }}
-          className="h-10 border-none bg-surface-2 px-5 font-medium text-content-primary shadow-none hover:bg-surface-2 active:bg-surface-3"
+          className="h-8 items-center justify-center rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
         >
           Upload resume
-        </Button>
+        </button>
       </div>
     </div>
   );

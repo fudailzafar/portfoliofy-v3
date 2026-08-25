@@ -183,11 +183,11 @@ export function MediaUploadDialog({
     if (!files || files.length === 0) return;
 
     const newUploads = Array.from(files).filter(
-      (file) => file.size <= 30 * 1024 * 1024,
+      (file) => file.size <= 5 * 1024 * 1024,
     );
 
     if (newUploads.length < files.length) {
-      alert('Some files are larger than 30MB and were ignored.');
+      alert('Some files are larger than 5MB and were ignored.');
     }
 
     const newUploadingFiles: UploadingFile[] = newUploads.map((file) => ({
@@ -283,7 +283,7 @@ export function MediaUploadDialog({
               <p className="text-md mb-2 text-content-secondary">
                 Add one or more jpg, png, gif, mov, or mp4 file
                 <br />
-                that is less than 30mb.
+                that is less than 5mb.
               </p>
             </div>
           ) : (

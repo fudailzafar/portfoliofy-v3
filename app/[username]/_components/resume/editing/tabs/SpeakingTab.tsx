@@ -48,7 +48,6 @@ export function SpeakingTab({
     setView: setSpeakingView,
     current: currentSpeaking,
     setCurrent: setCurrentSpeaking,
-    commit: commitSpeaking,
   } = useTabEditor<any>({ isValid: isSpeakingValid, onCommit: saveSpeaking });
 
   const sortedSpeaking = useMemo(() => sortByDateDesc(speaking), [speaking]);
@@ -74,10 +73,6 @@ export function SpeakingTab({
       emptyState={{
         icon: Mic,
         buttonText: "Add a talk you've given",
-      }}
-      onBack={() => {
-        commitSpeaking();
-        setSpeakingView('list');
       }}
       renderList={() => (
         <>
@@ -124,7 +119,7 @@ export function SpeakingTab({
             <div className="grid grid-cols-2 gap-6">
               <FormInput
                 id="title"
-                label="Title*"
+                label="Talk title*"
                 value={currentSpeaking.title}
                 onChange={(e) =>
                   setCurrentSpeaking({
@@ -162,7 +157,7 @@ export function SpeakingTab({
             <div className="grid grid-cols-2 gap-6">
               <FormInput
                 id="organization"
-                label="Organization"
+                label="Event"
                 value={currentSpeaking.organization || ''}
                 onChange={(e) =>
                   setCurrentSpeaking({
@@ -182,13 +177,13 @@ export function SpeakingTab({
                     location: e.target.value,
                   })
                 }
-                placeholder="Paris"
+                placeholder="City or country"
               />
             </div>
 
             <FormInput
               id="link"
-              label="Link"
+              label="URL"
               value={currentSpeaking.link || ''}
               onChange={(e) =>
                 setCurrentSpeaking({
@@ -198,7 +193,16 @@ export function SpeakingTab({
               }
               placeholder="https://example.com"
             />
-
+            <CollaboratorsField
+              label="Collaborators"
+              value={currentSpeaking.collaborators || []}
+              onChange={(val) =>
+                setCurrentSpeaking({
+                  ...currentSpeaking,
+                  collaborators: val,
+                })
+              }
+            />
             <div className="space-y-2">
               <Label className="text-xs text-content-secondary">
                 Description
@@ -213,16 +217,6 @@ export function SpeakingTab({
                 }
               />
             </div>
-            <CollaboratorsField
-              label="Collaborators"
-              value={currentSpeaking.collaborators || []}
-              onChange={(val) =>
-                setCurrentSpeaking({
-                  ...currentSpeaking,
-                  collaborators: val,
-                })
-              }
-            />
             <SectionAttachments
               attachments={currentSpeaking.attachments || []}
               onChange={(val) =>

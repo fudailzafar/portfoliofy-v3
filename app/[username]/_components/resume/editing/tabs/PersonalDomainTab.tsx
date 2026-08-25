@@ -180,7 +180,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 Optionally set a domain other than{' '}
                 <a
                   href={`https://${username}.portfoliofy.me`}
-                  className="text-content-primary underline-offset-4 hover:underline"
+                  className="font-mono text-content-primary underline-offset-4 hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -348,7 +348,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
         </div>
 
         {/* Assets */}
-        <div className="mt-4 space-y-4 border-t border-border-subtle pt-8">
+        <div className="mt-4 space-y-4">
           <div>
             <h4 className="text-[14px] text-content-primary">Assets</h4>
             <p className="mt-1 text-[13px] text-content-muted">
@@ -424,7 +424,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
         </div>
 
         {/* Typography */}
-        <div className="mt-4 space-y-4 border-t border-border-subtle pt-8">
+        <div className="mt-4 space-y-4">
           <div>
             <h4 className="text-[14px] text-content-primary">Typography</h4>
             <p className="mt-1 text-[13px] text-content-muted">
@@ -452,7 +452,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   value: 'mono',
                   label: 'Mono',
                   description: 'Diatype Mono, designed by Dinamo in 2020.',
-                  fontClass: '',
+                  fontClass: 'font-mono',
                 },
               ] as const
             ).map(({ value, label, description, fontClass }) => (
@@ -491,7 +491,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
         </div>
 
         {/* Theme */}
-        <div className="mt-4 space-y-4 border-t border-border-subtle pt-8">
+        <div className="mt-4 space-y-4">
           <div>
             <h4 className="text-[14px] text-content-primary">Color palette</h4>
             <p className="mt-1 text-[13px] text-content-muted">
@@ -588,7 +588,13 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   }}
                 >
                   <span
-                    className="text-[22px] tracking-tight"
+                    className={`text-[22px] tracking-tight ${
+                      typography === 'serif'
+                        ? 'font-serif'
+                        : typography === 'mono'
+                          ? 'font-mono'
+                          : 'font-sans'
+                    }`}
                     style={{ color: fg }}
                   >
                     Aa
@@ -608,7 +614,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
         </div>
 
         {/* Hide Social Features */}
-        <div className="mt-4 flex items-center justify-between border-t border-border-subtle pt-8">
+        <div className="mt-4 flex items-center justify-between">
           <div className="flex flex-col gap-1 pr-4">
             <h4 className="text-[14px] text-content-primary">
               Hide social features

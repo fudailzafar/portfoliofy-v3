@@ -4,7 +4,10 @@ import React, { useState } from 'react';
 import { AttachmentSchemaType } from '@/lib/resume';
 import { Button } from '@/components/ui/button';
 import { MediaUploadDialog } from './MediaUploadDialog';
-import { ArrowLeft, ArrowRight, X } from 'lucide-react';
+import { PageAttachmentCard } from './PageAttachmentCard';
+import { useResumeStore } from '@/store/useResumeStore';
+import { ArrowLeft, ArrowRight, Pencil, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface SectionAttachmentsProps {
   attachments: AttachmentSchemaType[];
@@ -16,9 +19,37 @@ export function SectionAttachments({
   onChange,
 }: SectionAttachmentsProps) {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const setEditingPage = useResumeStore((state) => state.setEditingPage);
 
-  const handleSaveUploads = (newAttachments: AttachmentSchemaType[]) => {
-    onChange(newAttachments);
+  const existingPage = attachments.find((a) => a.type === 'page');
+
+  // MediaUploadDialog only knows about image/video attachments — it has no
+  // concept of a page (undefined width/height/filename would render oddly,
+  // and its own remove button would let someone delete the page from the
+  // wrong dialog). Keep it entirely out of that dialog's world: strip it out
+  // going in, splice it back in unchanged coming out.
+  const handleSaveUploads = (newMediaAttachments: AttachmentSchemaType[]) => {
+    onChange(
+      existingPage
+        ? [...newMediaAttachments, existingPage]
+        : newMediaAttachments,
+    );
+  };
+
+  // Opens the full-page editor for this item's one page. With no existing
+  // page, "Add a page" creates a new one; with one, it (and its pencil icon)
+  // always reopens that same page — never a second one.
+  const openPageEditor = () => {
+    setEditingPage({
+      attachment: existingPage,
+      onSave: (savedPage) => {
+        const newAttachments = existingPage
+          ? attachments.map((a) => (a.id === existingPage.id ? savedPage : a))
+          : [...attachments, savedPage];
+        onChange(newAttachments);
+        setEditingPage(null);
+      },
+    });
   };
 
   const moveLeft = (index: number) => {
@@ -51,15 +82,26 @@ export function SectionAttachments({
         <span className="text-xs font-medium text-content-secondary">
           Attachments
         </span>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="h-7 rounded-full text-xs dark:border-none dark:bg-border-subtle"
-          onClick={() => setIsUploadOpen(true)}
-        >
-          Add media
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-7 rounded-full text-xs dark:border-none dark:bg-border-subtle"
+            onClick={() => setIsUploadOpen(true)}
+          >
+            Add media
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-7 rounded-full text-xs dark:border-none dark:bg-border-subtle"
+            onClick={openPageEditor}
+          >
+            {existingPage ? 'Edit page' : 'Add a page'}
+          </Button>
+        </div>
       </div>
 
       {attachments.length === 0 ? (
@@ -71,7 +113,13 @@ export function SectionAttachments({
           {attachments.map((attachment, index) => (
             <div
               key={attachment.id}
-              className="group relative h-[90px] shrink-0 snap-center overflow-hidden rounded-lg border border-border-strong bg-surface-2"
+              className={cn(
+                'group relative h-[90px] shrink-0 snap-center overflow-hidden rounded-lg border border-border-strong bg-surface-2',
+                // Page cards use the same fixed-width wide layout as the
+                // list view (AttachmentsPreview) instead of the generic
+                // shrink-to-content sizing image/video attachments use.
+                attachment.type === 'page' && 'flex w-[415px] gap-3',
+              )}
             >
               {attachment.type === 'video' ? (
                 <video
@@ -83,6 +131,17 @@ export function SectionAttachments({
                   className="h-full w-auto min-w-[90px] object-cover"
                   preload="metadata"
                 />
+              ) : attachment.type === 'page' ? (
+                <button
+                  type="button"
+                  onClick={openPageEditor}
+                  className="flex h-full flex-1 gap-3 overflow-hidden text-left"
+                >
+                  <PageAttachmentCard
+                    attachment={attachment}
+                    variant="editor"
+                  />
+                </button>
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -93,6 +152,17 @@ export function SectionAttachments({
                 />
               )}
               <div className="absolute right-1.5 top-1.5 z-10 flex items-center gap-[2px]">
+                {attachment.type === 'page' && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      openPageEditor();
+                    }}
+                    className="rounded-full border border-white/20 bg-black/60 p-1 text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20"
+                  >
+                    <Pencil className="h-3 w-3" />
+                  </button>
+                )}
                 {(index > 0 || index < attachments.length - 1) && (
                   <div className="flex items-stretch divide-x divide-white/20 overflow-hidden rounded-full border border-white/20 bg-black/60 text-white shadow-sm backdrop-blur-md">
                     {index > 0 && (
@@ -138,7 +208,7 @@ export function SectionAttachments({
       <MediaUploadDialog
         open={isUploadOpen}
         onOpenChange={setIsUploadOpen}
-        existingAttachments={attachments}
+        existingAttachments={attachments.filter((a) => a.type !== 'page')}
         onSave={handleSaveUploads}
       />
     </div>

@@ -271,3 +271,82 @@
   --theme-border: #efc5d4;
   --theme-accent: #4c3e51;
 }
+
+/* Embedded page content — Embed/ContentImage/Gallery Tiptap nodes */
+.embed-iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.75rem;
+  border: 1px solid var(--theme-border, #e5e5e5);
+  margin: 1.5rem 0;
+}
+
+.embed-tweet-card {
+  display: block;
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--theme-border, #e5e5e5);
+  background: color-mix(in srgb, var(--theme-border, #e5e5e5) 30%, transparent);
+  color: var(--theme-secondary, inherit);
+  font-size: 0.875rem;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.embed-tweet-card:hover {
+  color: var(--theme-primary, inherit);
+}
+
+.content-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+}
+
+/* Square corners, no border — matches read.cv's own content images
+   (computed styles pulled directly from several archived pages showed
+   border-radius: 0 and no border on every content image found). */
+.content-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 1.5rem 0;
+}
+
+.content-gallery-item {
+  flex: 1 1 200px;
+  max-width: 260px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  padding: 0;
+  background: none;
+  cursor: zoom-in;
+  transition:
+    flex-basis 0.3s ease,
+    max-width 0.3s ease;
+}
+
+.content-gallery-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    height 0.3s ease,
+    object-fit 0.3s ease;
+}
+
+.content-gallery-item.expanded {
+  flex-basis: 100%;
+  max-width: 100%;
+  aspect-ratio: auto;
+  cursor: zoom-out;
+}
+
+.content-gallery-item.expanded img {
+  height: auto;
+  object-fit: contain;
+}

@@ -1,62 +1,120 @@
 'use client';
 
 import { useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { AttachmentSchemaType } from '@/lib/resume';
 import { Lightbox } from '@/components/composite/Lightbox';
+import { PageAttachmentCard } from '@/components/composite/PageAttachmentCard';
+import { usePersonalDomainView } from '@/lib/ProfileUrlContext';
+import { cn } from '@/lib/utils';
 
 export function AttachmentsPreview({
   attachments,
+  // EditorListItem renders this inside the editor's own dialog chrome, which
+  // never wraps itself in the public profile's `.theme-{name}` class — so
+  // `--theme-*` custom properties are undefined there and fall back to their
+  // CSS-invalid behavior (border-color -> currentColor), which is what was
+  // producing a bright white border in the dark editor UI. The editor has
+  // its own separate, always-defined token set (content-*/border-strong/
+  // surface-*, same ones EditorListItem already uses for everything else
+  // around this component) — this picks the right one per context instead
+  // of guessing a fallback color that would be wrong in at least one of them.
+  variant = 'public',
 }: {
   attachments?: AttachmentSchemaType[];
+  variant?: 'public' | 'editor';
 }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const router = useRouter();
+  const params = useParams();
+  const isPersonalDomainView = usePersonalDomainView();
 
   if (!attachments || attachments.length === 0) {
     return null;
   }
 
-  const handleOpenLightbox = (index: number) => {
-    setCurrentIndex(index);
+  // The lightbox only knows about image/video — a page attachment gets its
+  // own thumbnail card below and navigates to its own URL on click instead.
+  const mediaAttachments = attachments.filter((a) => a.type !== 'page');
+
+  const handleOpenLightbox = (attachment: AttachmentSchemaType) => {
+    const mediaIndex = mediaAttachments.findIndex(
+      (a) => a.id === attachment.id,
+    );
+    if (mediaIndex === -1) return;
+    setCurrentIndex(mediaIndex);
     setLightboxOpen(true);
   };
+
+  const handleOpenPage = (attachment: AttachmentSchemaType) => {
+    if (!attachment.slug) return;
+    const username = params?.username as string | undefined;
+    const href = isPersonalDomainView
+      ? `/${attachment.slug}`
+      : `/${username}/${attachment.slug}`;
+    router.push(href);
+  };
+
+  const isEditor = variant === 'editor';
 
   return (
     <>
       <div className="custom-scrollbar mb-2 mt-4 flex snap-x gap-3 overflow-x-auto pb-2">
-        {attachments.map((attachment, index) => (
-          <div
-            key={attachment.id}
-            className="group relative h-[90px] shrink-0 cursor-pointer snap-center overflow-hidden rounded-lg border border-theme-border bg-theme-bg"
-            onClick={() => handleOpenLightbox(index)}
-          >
-            {attachment.type === 'video' ? (
-              <video
-                src={attachment.url}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="h-full w-auto object-cover"
-                preload="metadata"
-              />
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={attachment.url}
-                alt={attachment.filename || 'Attachment'}
-                loading="lazy"
-                className="h-full w-auto object-cover"
-              />
-            )}
-            {/* Subtle hover overlay to indicate clickability */}
-            <div className="absolute inset-0" />
-          </div>
-        ))}
+        {attachments.map((attachment) =>
+          attachment.type === 'page' ? (
+            <button
+              key={attachment.id}
+              type="button"
+              onClick={() => handleOpenPage(attachment)}
+              className={cn(
+                'group flex h-[90px] w-[415px] shrink-0 snap-center gap-3 overflow-hidden rounded-[8px] border text-left transition-colors',
+                isEditor
+                  ? 'border-border-strong bg-surface-2'
+                  : 'bg-theme-border/40 border-theme-border',
+              )}
+            >
+              <PageAttachmentCard attachment={attachment} variant={variant} />
+            </button>
+          ) : (
+            <div
+              key={attachment.id}
+              className={cn(
+                'group relative h-[90px] shrink-0 cursor-pointer snap-center overflow-hidden rounded-lg border',
+                isEditor
+                  ? 'border-border-strong bg-surface-2'
+                  : 'border-theme-border bg-theme-bg',
+              )}
+              onClick={() => handleOpenLightbox(attachment)}
+            >
+              {attachment.type === 'video' ? (
+                <video
+                  src={attachment.url}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="h-full w-auto object-cover"
+                  preload="metadata"
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={attachment.url}
+                  alt={attachment.filename || 'Attachment'}
+                  loading="lazy"
+                  className="h-full w-auto object-cover"
+                />
+              )}
+              {/* Subtle hover overlay to indicate clickability */}
+              <div className="absolute inset-0" />
+            </div>
+          ),
+        )}
       </div>
 
       <Lightbox
-        attachments={attachments}
+        attachments={mediaAttachments}
         currentIndex={currentIndex}
         open={lightboxOpen}
         onOpenChange={setLightboxOpen}
