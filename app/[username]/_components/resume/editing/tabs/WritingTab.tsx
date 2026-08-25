@@ -48,7 +48,6 @@ export function WritingTab({
     setView: setWritingView,
     current: currentWriting,
     setCurrent: setCurrentWriting,
-    commit: commitWriting,
   } = useTabEditor<any>({ isValid: isWritingValid, onCommit: saveWriting });
 
   const sortedWriting = useMemo(() => sortByDateDesc(writing), [writing]);
@@ -70,14 +69,10 @@ export function WritingTab({
         });
         setWritingView('form');
       }}
-      addButtonText="Add writing piece"
+      addButtonText="Add piece"
       emptyState={{
         icon: Pen,
-        buttonText: "Add a piece you've written",
-      }}
-      onBack={() => {
-        commitWriting();
-        setWritingView('list');
+        buttonText: "Add something great you've written",
       }}
       renderList={() => (
         <>

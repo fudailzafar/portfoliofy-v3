@@ -96,7 +96,7 @@ export function EditorListItem({
 
           {attachments && attachments.length > 0 && (
             <div className="mt-4">
-              <AttachmentsPreview attachments={attachments} />
+              <AttachmentsPreview attachments={attachments} variant="editor" />
             </div>
           )}
 

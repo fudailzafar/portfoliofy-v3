@@ -16,7 +16,6 @@ interface ListTabLayoutProps {
   };
   renderList: () => React.ReactNode;
   renderForm: () => React.ReactNode;
-  onBack?: () => void;
 }
 
 export function ListTabLayout({
@@ -28,17 +27,17 @@ export function ListTabLayout({
   emptyState,
   renderList,
   renderForm,
-  onBack,
 }: ListTabLayoutProps) {
   return (
     <div className="mx-auto flex max-w-3xl flex-col">
+      {/* No back chevron in the form view — the bottom bar's Cancel button
+          (rendered by ProfileContent, driven by activeFormCancel) is the
+          only way back to the list now. */}
       <TabHeader
         title={title}
         showAddButton={view === 'list'}
         onAdd={onAdd}
         addButtonText={addButtonText}
-        showBackButton={view === 'form'}
-        onBack={onBack}
       />
 
       {view === 'list' && itemsLength === 0 && (

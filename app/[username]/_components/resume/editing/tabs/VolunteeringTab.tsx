@@ -52,7 +52,6 @@ export function VolunteeringTab({
     setView: setVolunteeringView,
     current: currentVolunteering,
     setCurrent: setCurrentVolunteering,
-    commit: commitVolunteering,
   } = useTabEditor<any>({
     isValid: isVolunteeringValid,
     onCommit: saveVolunteering,
@@ -85,10 +84,6 @@ export function VolunteeringTab({
       emptyState={{
         icon: HeartHandshake,
         buttonText: 'Add volunteering',
-      }}
-      onBack={() => {
-        commitVolunteering();
-        setVolunteeringView('list');
       }}
       renderList={() => (
         <>
