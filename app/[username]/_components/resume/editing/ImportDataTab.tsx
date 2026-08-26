@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { FileUp, Download } from 'lucide-react';
+import { FileUp } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';

@@ -26,21 +26,6 @@ import {
 } from '@/components/ui/select';
 import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
 
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
 const isWorkValid = (item: any) =>
   !!item?.title && !!item?.company && !isReversedRange(item?.start, item?.end);
 

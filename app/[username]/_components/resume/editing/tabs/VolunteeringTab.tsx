@@ -62,8 +62,6 @@ export function VolunteeringTab({
     [volunteering],
   );
 
-  const currentYear = new Date().getFullYear();
-
   return (
     <ListTabLayout
       title="Volunteering"
