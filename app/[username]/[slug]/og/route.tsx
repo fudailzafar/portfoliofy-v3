@@ -13,12 +13,19 @@ const graphikRegular = readFileSync(
   join(process.cwd(), 'public/fonts/Graphik-Regular.woff'),
 );
 
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ username: string; slug: string }> },
+) {
   try {
-    // Path is /{username}/{slug}/og — username may itself be a custom
-    // domain string (see getUserData), same convention as the profile OG
-    // route at /[username]/og.
-    const [, username, slug] = request.nextUrl.pathname.split('/');
+    // Read the route's own matched params rather than parsing
+    // request.nextUrl.pathname — on a subdomain, proxy.ts rewrites the
+    // browser-visible path (e.g. /hello-world/og) to /{username}/hello-world/og
+    // for routing purposes, but nextUrl.pathname inside the handler still
+    // reflects the original, un-prefixed path. Parsing that manually reads
+    // the slug as the username and 'og' as the slug. params is populated
+    // from the actual matched route and isn't affected by that.
+    const { username, slug } = await params;
 
     const { resume, userProfile } = await getUserData(username);
     const found = resume?.resumeData
