@@ -231,7 +231,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
               </div>
               {!domainStatus ? (
                 <button
-                  className="h-10 rounded-md border border-border-strong bg-surface-1 px-4 text-[14px] font-medium text-content-primary shadow-sm transition-all hover:cursor-pointer active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+                  className="h-9 rounded-md border border-border-strong bg-surface-1 px-4 text-[14px] font-medium text-content-primary shadow-sm transition-all hover:cursor-pointer active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong sm:h-10"
                   onClick={handleDomainSave}
                   disabled={isVerifyingDomain || !customDomain}
                 >
@@ -245,23 +245,19 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 </button>
               ) : (
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-9 rounded-lg border-border-strong text-[13px] font-normal text-content-muted dark:text-content-muted"
+                  <button
+                    className="h-9 rounded-lg border-border-strong text-[13px] font-normal text-content-muted dark:text-content-muted sm:h-10"
                     disabled
                   >
                     Save
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-9 rounded-lg border-border-strong text-[13px] font-normal text-content-muted hover:text-content-primary"
+                  </button>
+                  <button
+                    className="h-9 rounded-lg border-border-strong text-[13px] font-normal text-content-muted hover:text-content-primary sm:h-10"
                     onClick={handleDomainRemove}
                     disabled={isVerifyingDomain}
                   >
                     Reset
-                  </Button>
+                  </button>
                 </div>
               )}
             </div>

@@ -6,23 +6,11 @@ import { AttachmentSchemaType } from '@/lib/resume';
 import { Lightbox } from '@/components/composite/Lightbox';
 import { PageAttachmentCard } from '@/components/composite/PageAttachmentCard';
 import { usePersonalDomainView } from '@/lib/ProfileUrlContext';
-import { cn } from '@/lib/utils';
 
 export function AttachmentsPreview({
   attachments,
-  // EditorListItem renders this inside the editor's own dialog chrome, which
-  // never wraps itself in the public profile's `.theme-{name}` class — so
-  // `--theme-*` custom properties are undefined there and fall back to their
-  // CSS-invalid behavior (border-color -> currentColor), which is what was
-  // producing a bright white border in the dark editor UI. The editor has
-  // its own separate, always-defined token set (content-*/border-strong/
-  // surface-*, same ones EditorListItem already uses for everything else
-  // around this component) — this picks the right one per context instead
-  // of guessing a fallback color that would be wrong in at least one of them.
-  variant = 'public',
 }: {
   attachments?: AttachmentSchemaType[];
-  variant?: 'public' | 'editor';
 }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);

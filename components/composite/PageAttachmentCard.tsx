@@ -6,8 +6,8 @@ export function PageAttachmentCard({
   attachment: AttachmentSchemaType;
 }) {
   return (
-    <div className="flex h-[90px] w-full max-w-[415px] shrink-0 overflow-hidden rounded-lg bg-theme-bg dark:bg-[#333]">
-      <div className="h-full w-[152px] shrink-0 overflow-hidden rounded-l-lg border border-theme-border bg-black/5 dark:border-[#383838] dark:bg-[#222]">
+    <div className="flex h-[90px] w-full max-w-[415px] shrink-0 overflow-hidden rounded-lg border border-surface-3 bg-theme-bg dark:border-none dark:bg-[#333]">
+      <div className="h-full w-[152px] shrink-0 overflow-hidden rounded-l-md border-none bg-black/5 dark:border dark:border-[#383838] dark:bg-[#222]">
         {attachment.url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
