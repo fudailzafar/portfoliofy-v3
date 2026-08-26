@@ -607,11 +607,11 @@ export function EditProfileDialog({
                     <button
                       onClick={handleGlobalCancel}
                       disabled={isSaving}
-                      className="px-4 text-[14px] font-medium text-content-primary hover:underline hover:underline-offset-4 disabled:opacity-50"
+                      className="px-4 text-sm font-medium text-content-primary hover:underline hover:underline-offset-4 disabled:opacity-50"
                     >
                       Cancel
                     </button>
-                    <Button
+                    <button
                       onClick={handleGlobalSave}
                       disabled={
                         isSaving ||
@@ -620,8 +620,7 @@ export function EditProfileDialog({
                         checkUsernameMutation.isPending ||
                         !activeFormValid
                       }
-                      variant="outline"
-                      className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+                      className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
                     >
                       {isSaving ? (
                         <div className="flex items-center gap-2">
@@ -630,14 +629,13 @@ export function EditProfileDialog({
                       ) : (
                         'Save'
                       )}
-                    </Button>
+                    </button>
                   </>
                 ) : (
-                  <Button
+                  <button
                     onClick={handleDone}
                     disabled={isClosing}
-                    variant="outline"
-                    className="h-9 rounded-md border border-border-strong bg-surface-card px-6 font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+                    className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
                   >
                     {isClosing ? (
                       <div className="flex items-center gap-2">
@@ -646,7 +644,7 @@ export function EditProfileDialog({
                     ) : (
                       'Done'
                     )}
-                  </Button>
+                  </button>
                 )}
               </div>
             </div>
