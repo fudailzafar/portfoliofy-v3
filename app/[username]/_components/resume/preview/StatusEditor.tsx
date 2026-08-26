@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import EmojiPicker, { EmojiStyle } from 'emoji-picker-react';
 import Twemoji from 'react-twemoji';
-import { Button } from '@/components/ui/button';
 import {
   Tooltip,
   TooltipContent,
