@@ -351,59 +351,122 @@
   object-fit: contain;
 }
 
+/* Code block syntax highlighting — colors match read.cv's own theme
+   (extracted from an archived post: Prism.js's "Material Light"/"Material
+   Dark" presets, one per color scheme) mapped onto highlight.js's class
+   names instead of Prism's, since highlight.js is what actually runs the
+   highlighting here (chosen for its built-in language auto-detection —
+   see PageContent.tsx/PageEditorView.tsx, which call
+   hljs.highlightElement() with no language specified). Different
+   library, same token->color mapping. Light values are the default;
+   .dark overrides below swap in the dark-theme mapping, following the
+   same convention as the .dark .theme-default block above. */
 .hljs-keyword,
 .hljs-literal,
 .hljs-symbol,
 .hljs-bullet,
+.hljs-boolean,
 .hljs-title.function_,
 .hljs-section {
-  color: #c792ea;
+  color: #7c4dff;
 }
 .hljs-title.class_,
 .hljs-title.class_.inherited__ {
-  color: #f2ff00;
+  color: #6182b8;
 }
 .hljs-string,
 .hljs-attribute,
 .hljs-addition,
 .hljs-selector-class {
-  color: #a5e844;
+  color: #f6a434;
 }
 .hljs-number {
-  color: #fd9170;
+  color: #f76d47;
 }
 .hljs-comment,
 .hljs-quote,
 .hljs-meta {
-  color: #616161;
+  color: #aabfc9;
 }
 .hljs-built_in,
 .hljs-type,
 .hljs-attr {
-  color: #ffcb6b;
+  color: #39adb5;
 }
 .hljs-property {
-  color: #80cbc4;
+  color: #39adb5;
 }
 .hljs-punctuation,
 .hljs-operator,
 .hljs-link {
-  color: #89ddff;
+  color: #39adb5;
 }
 .hljs-tag,
 .hljs-name,
 .hljs-variable,
 .hljs-template-variable,
 .hljs-deletion {
-  color: #f66;
+  color: #e53935;
 }
 .hljs-doctag {
-  color: #616161;
+  color: #aabfc9;
   font-weight: 700;
 }
 .hljs-emphasis {
   font-style: italic;
 }
 .hljs-strong {
+  font-weight: 700;
+}
+
+.dark .hljs-keyword,
+.dark .hljs-literal,
+.dark .hljs-symbol,
+.dark .hljs-bullet,
+.dark .hljs-boolean,
+.dark .hljs-title.function_,
+.dark .hljs-section {
+  color: #c792ea;
+}
+.dark .hljs-title.class_,
+.dark .hljs-title.class_.inherited__ {
+  color: #f2ff00;
+}
+.dark .hljs-string,
+.dark .hljs-attribute,
+.dark .hljs-addition,
+.dark .hljs-selector-class {
+  color: #a5e844;
+}
+.dark .hljs-number {
+  color: #fd9170;
+}
+.dark .hljs-comment,
+.dark .hljs-quote,
+.dark .hljs-meta {
+  color: #616161;
+}
+.dark .hljs-built_in,
+.dark .hljs-type,
+.dark .hljs-attr {
+  color: #ffcb6b;
+}
+.dark .hljs-property {
+  color: #80cbc4;
+}
+.dark .hljs-punctuation,
+.dark .hljs-operator,
+.dark .hljs-link {
+  color: #89ddff;
+}
+.dark .hljs-tag,
+.dark .hljs-name,
+.dark .hljs-variable,
+.dark .hljs-template-variable,
+.dark .hljs-deletion {
+  color: #f66;
+}
+.dark .hljs-doctag {
+  color: #616161;
   font-weight: 700;
 }
