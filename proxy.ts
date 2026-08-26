@@ -33,9 +33,18 @@ export default async function middleware(req: NextRequest) {
 
   let res = NextResponse.next();
 
+  // sitemap.ts/robots.ts live at the root and read the Host header themselves
+  // to scope their output per-domain — rewriting them into /{subdomain}/... or
+  // /{domain}/... below would send them through the [username]/[slug] route
+  // instead (404, since no such slug exists), so every hostname must reach
+  // these two routes unrewritten.
+  const isMetadataRoute =
+    req.nextUrl.pathname === '/robots.txt' ||
+    req.nextUrl.pathname === '/sitemap.xml';
+
   if (isSubdomain) {
     // Treat subdomains like username.portfoliofy.me as user profiles
-    if (!req.nextUrl.pathname.startsWith('/api/')) {
+    if (!req.nextUrl.pathname.startsWith('/api/') && !isMetadataRoute) {
       const subdomain = hostname
         .replace('.portfoliofy.me', '')
         .replace('.localhost', '');
@@ -45,7 +54,7 @@ export default async function middleware(req: NextRequest) {
     }
   } else if (!isMainDomain && !isVercelDomain && !isLocalhost) {
     // If this is a custom domain (e.g. abaan.lol), rewrite to /[domain]
-    if (!req.nextUrl.pathname.startsWith('/api/')) {
+    if (!req.nextUrl.pathname.startsWith('/api/') && !isMetadataRoute) {
       const url = req.nextUrl.clone();
       url.pathname = `/${hostname}${url.pathname === '/' ? '' : url.pathname}`;
       res = NextResponse.rewrite(url);
