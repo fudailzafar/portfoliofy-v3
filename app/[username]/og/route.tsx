@@ -12,9 +12,19 @@ const graphikRegular = readFileSync(
   join(process.cwd(), 'public/fonts/Graphik-Regular.woff'),
 );
 
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ username: string }> },
+) {
   try {
-    const username = request.nextUrl.pathname.split('/')[1];
+    // Read the route's own matched param rather than parsing
+    // request.nextUrl.pathname — on a subdomain, proxy.ts rewrites the
+    // browser-visible path (e.g. /og) to /{username}/og for routing
+    // purposes, but nextUrl.pathname inside the handler still reflects the
+    // original, un-prefixed path, so pathname.split('/')[1] reads 'og'
+    // itself as the username. params is populated from the actual matched
+    // route and isn't affected by that.
+    const { username } = await params;
 
     const { user_id, resume, userProfile } = await getUserData(username);
 
