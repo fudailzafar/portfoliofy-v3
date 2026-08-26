@@ -40,10 +40,13 @@ export function Lightbox({
     onIndexChange((currentIndex + 1) % attachments.length);
   }, [currentIndex, attachments.length, onIndexChange]);
 
-  const handleDotClick = useCallback((idx: number) => {
-    setDirection(idx > currentIndex ? 1 : -1);
-    onIndexChange(idx);
-  }, [currentIndex, onIndexChange]);
+  const handleDotClick = useCallback(
+    (idx: number) => {
+      setDirection(idx > currentIndex ? 1 : -1);
+      onIndexChange(idx);
+    },
+    [currentIndex, onIndexChange],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -60,7 +63,8 @@ export function Lightbox({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [open, handlePrevious, handleNext]);
 
-  if (!currentAttachment || !attachments || attachments.length === 0) return null;
+  if (!currentAttachment || !attachments || attachments.length === 0)
+    return null;
 
   const variants = {
     enter: (direction: number) => ({
@@ -145,7 +149,7 @@ export function Lightbox({
                 drag={attachments.length > 1 ? 'x' : false}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={1}
-                onDragEnd={(e, { offset, velocity }) => {
+                onDragEnd={(_e, { offset, velocity }) => {
                   const swipe = swipePower(offset.x, velocity.x);
                   if (swipe < -swipeConfidenceThreshold) {
                     handleNext();
@@ -179,7 +183,7 @@ export function Lightbox({
         </div>
 
         {/* Mobile controls (Bottom) */}
-        <div className="fixed bottom-6 left-4 right-4 z-50 flex items-center justify-between sm:hidden pointer-events-none">
+        <div className="pointer-events-none fixed bottom-6 left-4 right-4 z-50 flex items-center justify-between sm:hidden">
           <button
             onClick={() => onOpenChange(false)}
             className="pointer-events-auto rounded-full bg-black/10 px-5 py-2 text-sm font-medium text-content-primary backdrop-blur-md dark:bg-white/10"

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
@@ -130,11 +129,6 @@ export function PersonalDomainTab({ username }: { username: string }) {
     }
     setIsVerifyingDomain(false);
   };
-
-  const siteLabel =
-    domainStatus?.verified && customDomain
-      ? customDomain
-      : `portfoliofy.me/${username}`;
 
   const copyValue = (value: string) => {
     navigator.clipboard.writeText(value);
@@ -354,7 +348,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
 
           <div className="flex flex-col gap-6 sm:flex-row">
             {(['ogImage', 'favicon'] as const).map((key) => {
-              const { width, height, label } = ASSET_REQUIREMENTS[key];
+              const { label } = ASSET_REQUIREMENTS[key];
               const value = resume?.design?.[key];
               const isUploading = uploadingAsset === key;
               const inputId = `asset-upload-${key}`;

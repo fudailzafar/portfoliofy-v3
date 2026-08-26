@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AttachmentSchemaType } from '@/lib/resume';
 import { Button } from '@/components/ui/button';
 import { MediaUploadDialog } from './MediaUploadDialog';

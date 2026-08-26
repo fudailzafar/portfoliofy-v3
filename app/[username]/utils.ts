@@ -3,7 +3,6 @@ import {
   getCachedUserIdByUsername,
   getCachedUserIdByCustomDomain,
   getCachedResume,
-  UserProfile,
 } from '@/lib/server/cachedFunctions';
 
 export async function getUserData(username: string) {

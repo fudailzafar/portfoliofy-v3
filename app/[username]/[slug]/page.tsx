@@ -138,7 +138,7 @@ export default async function PageDetail({
         <div className="mt-16 flex items-center justify-center gap-8 pt-6">
           <Link
             href={profileHref}
-            className="text-sm font-medium text-theme-muted hover:underline hover:underline-offset-4"
+            className="font-regular text-sm text-theme-muted hover:underline hover:underline-offset-4"
           >
             Back to profile
           </Link>

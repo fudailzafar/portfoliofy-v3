@@ -19,7 +19,6 @@ import { cn } from '@/lib/utils';
 import { SortableSidebarItem } from './SortableSidebarItem';
 import { SidebarButton } from './SidebarButton';
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 
 interface ProfileSidebarProps {
   activeTab: string;

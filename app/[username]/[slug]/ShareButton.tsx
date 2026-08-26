@@ -27,7 +27,7 @@ export function ShareButton() {
   return (
     <button
       onClick={handleShare}
-      className="text-sm font-medium text-theme-muted hover:underline hover:underline-offset-4"
+      className="font-regular text-sm text-theme-muted hover:underline hover:underline-offset-4"
     >
       {copied ? 'Copied!' : 'Share'}
     </button>

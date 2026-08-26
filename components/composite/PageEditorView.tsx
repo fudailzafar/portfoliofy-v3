@@ -11,14 +11,13 @@ import {
   Bold,
   Italic,
   Strikethrough,
-  Code,
   Link as LinkIcon,
-  Loader2,
   Image as ImageIcon,
   Figma,
   Film,
   Youtube,
   Twitter,
+  CodeXml,
 } from 'lucide-react';
 import { cn, getOptimizedImageUrl } from '@/lib/utils';
 import { useS3Upload } from 'next-s3-upload';
@@ -37,11 +36,6 @@ const EMBED_PROVIDER_LABELS: Record<EmbedProvider, string> = {
   twitter: 'X/Twitter',
 };
 
-// Converts the block the cursor is in to a different type — matches
-// read.cv's own "Turn into" menu (Heading 1/2, Paragraph, Blockquote, Code
-// block, Ordered/Bulleted list). All of these commands already come from
-// StarterKit, which PageEditorView loads in full (unlike the base
-// RichTextEditor, which disables everything but paragraphs/lists/links).
 const BLOCK_TYPE_OPTIONS: {
   label: string;
   isActive: (editor: NonNullable<ReturnType<typeof useEditor>>) => boolean;
@@ -163,7 +157,7 @@ export function PageEditorView({
     editorProps: {
       attributes: {
         class:
-          'min-h-[300px] w-full bg-transparent outline-none prose blog-prose prose-sm dark:prose-invert max-w-none pt-4 prose-p:text-[14px] prose-h1:text-[20px] prose-h2:text-[20px] prose-h3:text-[16px] prose-a:no-underline prose-a:border-b prose-a:border-content-muted prose-blockquote:mx-0 prose-blockquote:my-6 prose-blockquote:ml-[1em] prose-blockquote:pl-[1em] prose-strong:font-medium prose-code:font-mono prose-code:bg-[#FAFAFA] dark:prose-code:bg-[#2F2F2F] prose-code:rounded-[2px] prose-code:px-[2px] prose-code:mx-[2px] [&_h2_code]:text-[20px] [&_h3_code]:text-[16px] prose-pre:rounded-lg prose-pre:bg-[#FAFAFA] dark:prose-pre:bg-[#2F2F2F] prose-pre:font-mono prose-pre:text-[14px] prose-hr:my-12 prose-ol:pl-0 prose-ul:pl-0 prose-li:pl-0 prose-ul:my-1 prose-li:leading-[1.6] [--tw-prose-bullets:var(--content-secondary)] [--tw-prose-counters:var(--content-secondary)]',
+          'min-h-[300px] w-full bg-transparent outline-none prose blog-prose prose-sm dark:prose-invert max-w-none pt-4 prose-headings:font-normal prose-p:text-[14px] prose-h1:text-[20px] prose-h2:text-[16px] prose-a:font-normal prose-a:text-content-primary prose-a:no-underline prose-a:border-b prose-a:border-content-muted prose-blockquote:mx-0 prose-blockquote:my-6 prose-blockquote:ml-[1em] prose-blockquote:pl-[1em] prose-blockquote:font-normal prose-blockquote:not-italic [&_blockquote_p]:before:content-none [&_blockquote_p]:after:content-none prose-strong:font-medium prose-code:font-mono prose-code:text-[14px] prose-code:bg-[#F2F2F2] dark:prose-code:bg-[#2F2F2F] prose-code:rounded-[2px] prose-code:px-[2px] prose-code:mx-[2px] [&_h1_code]:text-[20px] [&_h2_code]:text-[16px] prose-pre:rounded-lg prose-pre:bg-[#FAFAFA] dark:prose-pre:bg-[#2F2F2F] prose-pre:font-mono prose-pre:text-[14px] prose-hr:my-12 prose-ol:pl-0 prose-ul:pl-0 prose-li:pl-0 prose-ul:my-1 prose-li:leading-[1.6] [--tw-prose-bullets:var(--content-secondary)] [--tw-prose-counters:var(--content-secondary)]',
       },
     },
     onUpdate: ({ editor }) => {
@@ -171,11 +165,20 @@ export function PageEditorView({
     },
   });
 
+  // Pushes a newly-opened page's content into the editor. Keyed on the
+  // page's identity (not the mirrored `content` state, which onUpdate below
+  // already keeps in sync) — keying on `content` instead re-fires on every
+  // keystroke and races the editor's own input rules: typing a closing
+  // backtick strips both delimiters and applies the mono mark in one
+  // transaction, but this effect would immediately overwrite that with a
+  // one-tick-stale `content` snapshot still holding the raw, un-stripped
+  // backticks (and reset the cursor to the end, since setContent collapses
+  // the selection).
   useEffect(() => {
-    if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content);
-    }
-  }, [content, editor]);
+    if (!editor) return;
+    editor.commands.setContent(page?.content || '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page?.id, editor]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -457,7 +460,7 @@ export function PageEditorView({
             editor?.isActive('code') && 'bg-surface-2 text-content-primary',
           )}
         >
-          <Code className="h-4 w-4" />
+          <CodeXml className="h-4 w-4" />
         </button>
 
         <button

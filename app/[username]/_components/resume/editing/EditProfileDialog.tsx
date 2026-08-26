@@ -16,7 +16,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { Pencil } from 'lucide-react';
 import { useSidebarStore } from '@/store/useSidebarStore';
@@ -173,7 +172,6 @@ export function EditProfileDialog({
 
   const { isOpen: isSidebarOpen } = useSidebarStore();
 
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isInitialUsername = uname === username;
 
   const isValidUname =

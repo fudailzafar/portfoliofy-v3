@@ -4,7 +4,6 @@ import React from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(
@@ -23,7 +22,6 @@ export function GeneralTab({
   isUploadingPicture,
   handlePictureUpload,
   removePicture,
-  onAvatarUpload,
   isValidUsername,
   isCheckingUsername,
 }: {
