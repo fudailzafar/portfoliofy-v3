@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 
 export function SkillsTab() {
   const resume = useResumeStore((state) => state.resume);

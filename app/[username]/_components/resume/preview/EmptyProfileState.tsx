@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { useResumeStore } from '@/store/useResumeStore';
 
 export function EmptyProfileState() {

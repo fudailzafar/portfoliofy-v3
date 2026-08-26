@@ -3,7 +3,6 @@
 import React from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
 
 export function PrintTab() {
   const printHiddenSections = useResumeStore(

@@ -36,7 +36,7 @@ export async function GET() {
     }
 
     // Fetch domain DNS configuration status
-    const { ok: configOk, data: configData } = await fetchVercelAPI(
+    const { data: configData } = await fetchVercelAPI(
       `/v6/domains/${encodeURIComponent(domain)}/config`,
     );
 

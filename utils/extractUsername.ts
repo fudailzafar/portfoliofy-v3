@@ -61,7 +61,7 @@ export function buildContactUrl(link: string, platform: string): string {
   }
 }
 
-export function extractUsername(url: string, platform?: string): string {
+export function extractUsername(url: string, _platform?: string): string {
   if (!url) return '';
 
   // Clean up the URL

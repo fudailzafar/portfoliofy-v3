@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 import { useResumeStore } from '@/store/useResumeStore';
@@ -49,25 +48,6 @@ interface ProfileContentProps {
   isDeletingAccount: boolean;
   createdAt?: Date | null;
 }
-
-const TAB_TITLES: Record<string, string> = {
-  general: 'Personal Domain',
-  insights: 'Insights',
-  workExperience: 'Work Experience',
-  education: 'Education',
-  projects: 'Projects',
-  sideProjects: 'Side Projects',
-  speaking: 'Speaking',
-  writing_published: 'Writing',
-  writing_drafts: 'Writing',
-  exhibitions: 'Exhibitions',
-  features: 'Features',
-  volunteering: 'Volunteering',
-  awards: 'Awards',
-  certifications: 'Certifications',
-  contacts: 'Contacts',
-  settings: 'Settings',
-};
 
 export function ProfileContent({
   activeTab,

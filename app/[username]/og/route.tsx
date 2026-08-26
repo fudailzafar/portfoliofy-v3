@@ -26,7 +26,7 @@ export async function GET(
     // route and isn't affected by that.
     const { username } = await params;
 
-    const { user_id, resume, userProfile } = await getUserData(username);
+    const { resume, userProfile } = await getUserData(username);
 
     // Get data from resume
     const name = resume?.resumeData?.header?.name || username;
