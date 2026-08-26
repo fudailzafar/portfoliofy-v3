@@ -79,6 +79,22 @@ export function estimateReadMinutes(html: string): number {
 // page route, so a page slug matching one of these would be unreachable.
 export const RESERVED_PAGE_SLUGS = ['og'];
 
+// Shared by every helper below that walks sections -> items -> attachments
+// looking for embedded pages.
+const PAGE_ATTACHMENT_SECTION_KEYS: (keyof ResumeDataSchemaType)[] = [
+  'workExperience',
+  'education',
+  'projects',
+  'sideProjects',
+  'speaking',
+  'writing',
+  'exhibitions',
+  'features',
+  'volunteering',
+  'awards',
+  'certifications',
+];
+
 // Every item across every section that has an embedded page, scanned once
 // instead of each caller hand-rolling the same sections -> items ->
 // attachments walk.
@@ -90,21 +106,7 @@ export function findPageBySlug(
   | undefined {
   if (!resumeData || !slug) return undefined;
 
-  const sectionKeys: (keyof ResumeDataSchemaType)[] = [
-    'workExperience',
-    'education',
-    'projects',
-    'sideProjects',
-    'speaking',
-    'writing',
-    'exhibitions',
-    'features',
-    'volunteering',
-    'awards',
-    'certifications',
-  ];
-
-  for (const sectionKey of sectionKeys) {
+  for (const sectionKey of PAGE_ATTACHMENT_SECTION_KEYS) {
     const items = resumeData[sectionKey];
     if (!Array.isArray(items)) continue;
     for (const item of items as any[]) {
@@ -129,21 +131,7 @@ export function getUsedPageSlugs(
   const used = new Set<string>();
   if (!resumeData) return used;
 
-  const sectionKeys: (keyof ResumeDataSchemaType)[] = [
-    'workExperience',
-    'education',
-    'projects',
-    'sideProjects',
-    'speaking',
-    'writing',
-    'exhibitions',
-    'features',
-    'volunteering',
-    'awards',
-    'certifications',
-  ];
-
-  for (const sectionKey of sectionKeys) {
+  for (const sectionKey of PAGE_ATTACHMENT_SECTION_KEYS) {
     const items = resumeData[sectionKey];
     if (!Array.isArray(items)) continue;
     for (const item of items as any[]) {
@@ -159,6 +147,29 @@ export function getUsedPageSlugs(
     }
   }
   return used;
+}
+
+// Every embedded page across the whole resume, for sitemap generation —
+// same section walk as findPageBySlug/getUsedPageSlugs, but collecting all
+// of them at once instead of matching a single slug.
+export function getAllPageAttachments(
+  resumeData: ResumeDataSchemaType | null | undefined,
+): AttachmentSchemaType[] {
+  const pages: AttachmentSchemaType[] = [];
+  if (!resumeData) return pages;
+
+  for (const sectionKey of PAGE_ATTACHMENT_SECTION_KEYS) {
+    const items = resumeData[sectionKey];
+    if (!Array.isArray(items)) continue;
+    for (const item of items as any[]) {
+      for (const attachment of item.attachments || []) {
+        if (attachment.type === 'page' && attachment.slug) {
+          pages.push(attachment);
+        }
+      }
+    }
+  }
+  return pages;
 }
 
 export function slugify(text: string): string {

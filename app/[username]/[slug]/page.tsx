@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getUserData } from '../utils';
 import { findPageBySlug } from '@/lib/resume';
-import { getOptimizedImageUrl } from '@/lib/utils';
+import { getOptimizedImageUrl, isOwnS3ImageUrl } from '@/lib/utils';
 import { PageContent } from './PageContent';
 import { ShareButton } from './ShareButton';
 
@@ -33,13 +33,27 @@ export async function generateMetadata({
   const stripHtml = (html?: string) =>
     html ? html.replace(/<[^>]*>?/gm, '').trim() : '';
 
+  const design = resolved.resumeData.design;
+  const customFavicon =
+    design?.favicon && isOwnS3ImageUrl(design.favicon)
+      ? design.favicon
+      : undefined;
+
   return {
     title: `${resolved.page.title} · ${resolved.resumeData.header.name}`,
     description: stripHtml(resolved.page.content).slice(0, 200),
+    icons: customFavicon ? { icon: customFavicon } : undefined,
     openGraph: {
       title: resolved.page.title,
       description: stripHtml(resolved.page.content).slice(0, 200),
-      images: resolved.page.url ? [{ url: resolved.page.url }] : undefined,
+      images: [
+        {
+          url: `https://portfoliofy.me/${username}/${slug}/og`,
+          width: 1200,
+          height: 630,
+          alt: `${resolved.page.title} · ${resolved.resumeData.header.name}`,
+        },
+      ],
     },
   };
 }
