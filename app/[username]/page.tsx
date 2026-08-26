@@ -8,6 +8,7 @@ import { auth } from '@/auth';
 import dynamic from 'next/dynamic';
 import { after } from 'next/server';
 import { recordPageView } from '@/lib/server/dbActions';
+import { getVisitorKey } from '@/lib/server/visitorKey';
 import { ProfileUrlProvider } from '@/lib/ProfileUrlContext';
 
 const EditProfileDialog = dynamic(() =>
@@ -96,7 +97,8 @@ export default async function ProfilePage({
   if (!resume?.resumeData || resume.status !== 'live')
     redirect(`/?idNotFound=${user_id}`);
 
-  after(() => recordPageView(user_id, username.includes('.')));
+  const visitorKey = await getVisitorKey();
+  after(() => recordPageView(user_id, username.includes('.'), visitorKey));
 
   const rawProfilePicture = userProfile?.avatarUrl || userProfile?.image;
   const profilePicture = getOptimizedImageUrl(rawProfilePicture) || '';

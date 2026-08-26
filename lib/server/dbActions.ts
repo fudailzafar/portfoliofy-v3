@@ -280,11 +280,14 @@ export const getUserIdByCustomDomain = async (
 export const recordPageView = async (
   userId: string,
   viaCustomDomain: boolean,
+  visitorKey: string | null,
 ): Promise<void> => {
   try {
     await sql`
-      INSERT INTO page_views (user_id, via_custom_domain)
-      VALUES (${userId}, ${viaCustomDomain})
+      INSERT INTO page_views (user_id, via_custom_domain, visitor_key)
+      VALUES (${userId}, ${viaCustomDomain}, ${visitorKey})
+      ON CONFLICT (user_id, via_custom_domain, visitor_key, ((viewed_at AT TIME ZONE 'UTC')::date))
+      DO NOTHING
     `;
   } catch (error) {
     // Best-effort; a tracking write should never break the page render.
