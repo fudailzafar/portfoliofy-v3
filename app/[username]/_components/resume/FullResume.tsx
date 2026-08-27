@@ -1,3 +1,7 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { ResumeData } from '@/lib/server/dbActions';
 import { UserProfile } from '@/lib/server/cachedFunctions';
 import { sortByDateDesc } from '@/lib/resume';
@@ -18,7 +22,9 @@ import { Features } from './preview/Features';
 import { Volunteering } from './preview/Volunteering';
 import { EmptyProfileState } from './preview/EmptyProfileState';
 import { PublicEmptyProfileState } from './preview/PublicEmptyProfileState';
+import { PublicWritingList } from './preview/PublicWritingList';
 import { normalizeSectionOrder } from '@/lib/resume';
+import { ResumePagesProvider } from '@/lib/ResumePagesContext';
 
 const SECTION_COMPONENTS: Record<string, React.FC<any>> = {
   work: WorkExperience,
@@ -41,14 +47,17 @@ export const FullResume = ({
   profilePicture,
   isOwner,
   userProfile,
+  username,
   hideSocialFeatures = false,
 }: {
   resume: ResumeData;
   profilePicture?: string;
   isOwner?: boolean;
   userProfile?: UserProfile;
+  username: string;
   hideSocialFeatures?: boolean;
 }) => {
+  const [activeTab, setActiveTab] = useState<'about' | 'writing'>('about');
   const order = normalizeSectionOrder(resume.sectionOrder);
 
   const sortedWork = sortByDateDesc(resume.workExperience);
@@ -110,33 +119,109 @@ export const FullResume = ({
     }
   };
 
+  const isWritingEnabled =
+    resume.preferences?.writingEnabled !== false &&
+    (resume.pages || []).some((p) => !p.hidden);
+
+  // Same emptiness check as Summary.tsx itself — kept in sync here so the
+  // tab bar's own visibility decision matches what Summary would actually
+  // render, without duplicating that component's render logic.
+  const hasSummary = !(
+    !resume.summary ||
+    resume.summary === '' ||
+    resume.summary === '<p></p>'
+  );
+
+  // If writing gets disabled (or its last published page is removed) while
+  // the writing tab is selected, its button disappears from the row below —
+  // fall back to About rather than leaving the user stuck on a tab with no
+  // way back to it.
+  useEffect(() => {
+    if (!isWritingEnabled && activeTab === 'writing') {
+      setActiveTab('about');
+    }
+  }, [isWritingEnabled, activeTab]);
+
   return (
-    <section
-      className="mx-auto my-8 w-full max-w-[540px] space-y-8 bg-theme-bg px-4 min-[481px]:px-12 min-[637px]:px-0 print:space-y-4"
-      aria-label="Resume Content"
-    >
-      <Header
-        header={resume.header}
-        picture={profilePicture}
-        isOwner={isOwner}
-        userProfile={userProfile}
-        hideSocialFeatures={hideSocialFeatures}
-      />
+    <ResumePagesProvider pages={resume.pages || []}>
+      <section
+        className="mx-auto my-8 w-full max-w-[540px] space-y-8 bg-theme-bg px-4 min-[481px]:px-12 min-[637px]:px-0 print:space-y-4"
+        aria-label="Resume Content"
+      >
+        <Header
+          header={resume.header}
+          picture={profilePicture}
+          isOwner={isOwner}
+          userProfile={userProfile}
+          hideSocialFeatures={hideSocialFeatures}
+        />
 
-      <div className="flex flex-col gap-6">
-        <Summary summary={resume.summary} />
+        {isWritingEnabled ? (
+          <div className="flex w-full items-center gap-6 pt-2 print:hidden">
+            <button
+              onClick={() => setActiveTab('about')}
+              className={`relative pb-1 text-sm transition-all ${
+                activeTab === 'about'
+                  ? 'text-theme-primary'
+                  : 'text-theme-secondary'
+              }`}
+            >
+              About
+              {activeTab === 'about' && (
+                <motion.div
+                  layoutId="publicProfileTabIndicator"
+                  className="absolute -bottom-[1px] left-0 right-0 h-[1.5px] bg-theme-primary"
+                />
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab('writing')}
+              className={`relative pb-1 text-sm transition-all ${
+                activeTab === 'writing'
+                  ? 'text-theme-primary'
+                  : 'text-theme-secondary'
+              }`}
+            >
+              Writing
+              {activeTab === 'writing' && (
+                <motion.div
+                  layoutId="publicProfileTabIndicator"
+                  className="absolute -bottom-[1px] left-0 right-0 h-[1.5px] bg-theme-primary"
+                />
+              )}
+            </button>
+          </div>
+        ) : hasSummary ? (
+          // Writing isn't available, so there's nothing to switch between —
+          // show "About" as a plain label, not an interactive tab (no
+          // underline indicator, since there's no other tab it distinguishes
+          // this one from).
+          <div className="flex w-full items-center gap-6 pt-2 print:hidden">
+            <span className="pb-1 text-sm text-theme-primary">About</span>
+          </div>
+        ) : null}
 
-        {isOwner && isEmptyProfile && <EmptyProfileState />}
-        {!isOwner && isEmptyProfile && (
-          <PublicEmptyProfileState name={resume.header.name} />
+        {activeTab === 'about' ? (
+          <div className="flex flex-col gap-6">
+            <Summary summary={resume.summary} />
+
+            {isOwner && isEmptyProfile && <EmptyProfileState />}
+            {!isOwner && isEmptyProfile && (
+              <PublicEmptyProfileState name={resume.header.name} />
+            )}
+
+            {order.map((sectionId) => {
+              const Component = SECTION_COMPONENTS[sectionId];
+              if (!Component) return null;
+              return (
+                <Component key={sectionId} {...getSectionProps(sectionId)} />
+              );
+            })}
+          </div>
+        ) : (
+          <PublicWritingList resume={resume} username={username} />
         )}
-
-        {order.map((sectionId) => {
-          const Component = SECTION_COMPONENTS[sectionId];
-          if (!Component) return null;
-          return <Component key={sectionId} {...getSectionProps(sectionId)} />;
-        })}
-      </div>
-    </section>
+      </section>
+    </ResumePagesProvider>
   );
 };
