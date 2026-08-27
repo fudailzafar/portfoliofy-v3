@@ -211,7 +211,7 @@ export function VolunteeringTab({
                     organization: e.target.value,
                   })
                 }
-                placeholder="Non-profit Org."
+                placeholder="Acme inc."
               />
             </div>
 
@@ -226,7 +226,7 @@ export function VolunteeringTab({
                     location: e.target.value,
                   })
                 }
-                placeholder="Paris"
+                placeholder="City or country"
               />
               <FormInput
                 id="link"

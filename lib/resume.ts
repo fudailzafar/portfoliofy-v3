@@ -36,8 +36,13 @@ export const SECTION_LABELS: Record<string, string> = {
 
 export const AttachmentSchema = z.object({
   id: z.string().describe('Unique identifier for the attachment'),
+  // Optional: a page-type entry inside an item's `attachments` array is a
+  // lightweight reference stub (just `{id, type: 'page'}`) once pages moved
+  // to the top-level `pages` array below — the real url/title/etc. live on
+  // the canonical entry there, resolved via resolveAttachedPages().
   url: z
     .string()
+    .optional()
     .describe(
       'S3 URL of the attachment (image/video source, or a page thumbnail)',
     ),
@@ -46,22 +51,122 @@ export const AttachmentSchema = z.object({
   width: z.number().optional().describe('Width of the media'),
   height: z.number().optional().describe('Height of the media'),
   // Page-only fields — optional so image/video attachments are unaffected.
-  title: z.string().optional().describe('Title of the embedded page'),
-  slug: z
-    .string()
-    .optional()
-    .describe('URL slug of the embedded page, unique per user'),
+  title: z.string().optional().describe('Title of the page'),
+  slug: z.string().optional().describe('URL slug of the page, unique per user'),
   content: z
     .string()
     .optional()
-    .describe('Sanitized rich-text HTML body of the embedded page'),
+    .describe('Sanitized rich-text HTML body of the page'),
   createdAt: z
     .string()
     .optional()
-    .describe('ISO timestamp the page was created'),
+    .describe(
+      'ISO timestamp for the page, shown as its date and used for sorting — defaults to creation time but is user-editable',
+    ),
+  hidden: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe('Whether the page is a draft (unpublished)'),
+  isBlurred: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe('Whether the page is hidden/blurred from public view'),
 });
 
 export type AttachmentSchemaType = z.infer<typeof AttachmentSchema>;
+
+// A page-type entry inside an item's `attachments` array is just a
+// `{id, type: 'page'}` reference stub — the canonical page (title, slug,
+// content, hidden, etc.) lives in the top-level `pages` array. This resolves
+// an item's stubs to their full page objects for rendering, silently
+// dropping any stub whose target page was deleted.
+export function resolveAttachedPages(
+  attachments: AttachmentSchemaType[] | undefined,
+  pages: AttachmentSchemaType[] | undefined,
+): AttachmentSchemaType[] {
+  if (!attachments?.length || !pages?.length) return [];
+  const byId = new Map(pages.map((p) => [p.id, p]));
+  return attachments
+    .filter((a) => a.type === 'page')
+    .map((stub) => byId.get(stub.id))
+    .filter((p): p is AttachmentSchemaType => !!p);
+}
+
+const PAGE_ATTACHMENT_SECTION_KEYS: (keyof ResumeDataSchemaType)[] = [
+  'workExperience',
+  'education',
+  'projects',
+  'sideProjects',
+  'speaking',
+  'writing',
+  'exhibitions',
+  'features',
+  'volunteering',
+  'awards',
+  'certifications',
+];
+
+// Before pages became their own top-level list, a page was a full object
+// embedded directly in whichever item's `attachments` array it was attached
+// to. Older resumes on read still have that shape — this pulls every
+// embedded full page object into resume.pages and replaces it in place with
+// a lightweight {id, type:'page'} reference stub, so nothing that already
+// existed silently disappears just because the storage shape changed.
+// Idempotent: a no-op once a resume has already been migrated.
+export function migrateEmbeddedPages(
+  resumeData: ResumeDataSchemaType | null | undefined,
+): ResumeDataSchemaType | null | undefined {
+  if (!resumeData) return resumeData;
+
+  const existingPageIds = new Set((resumeData.pages || []).map((p) => p.id));
+  const migratedPages: AttachmentSchemaType[] = [];
+  let changed = false;
+
+  const migrated: any = { ...resumeData };
+
+  for (const sectionKey of PAGE_ATTACHMENT_SECTION_KEYS) {
+    const items = resumeData[sectionKey];
+    if (!Array.isArray(items)) continue;
+
+    migrated[sectionKey] = items.map((item: any) => {
+      if (!Array.isArray(item.attachments) || item.attachments.length === 0) {
+        return item;
+      }
+
+      let itemChanged = false;
+      const newAttachments = item.attachments.map((a: AttachmentSchemaType) => {
+        // A reference stub only ever has {id, type}. content/slug being
+        // present (even an empty string) means it's the old embedded shape.
+        const isEmbeddedPage =
+          a.type === 'page' &&
+          (a.content !== undefined || a.slug !== undefined);
+        if (!isEmbeddedPage) return a;
+
+        itemChanged = true;
+        changed = true;
+        if (!existingPageIds.has(a.id)) {
+          existingPageIds.add(a.id);
+          migratedPages.push(a);
+        }
+        return {
+          id: a.id,
+          type: 'page' as const,
+          hidden: a.hidden ?? false,
+          isBlurred: a.isBlurred ?? false,
+        };
+      });
+
+      return itemChanged ? { ...item, attachments: newAttachments } : item;
+    });
+  }
+
+  if (!changed) return resumeData;
+
+  migrated.pages = [...(resumeData.pages || []), ...migratedPages];
+  return migrated;
+}
 
 // Ported from the writing-panel branch's read-time calculation, used on both
 // the editor and public attachment cards for a page.
@@ -79,97 +184,39 @@ export function estimateReadMinutes(html: string): number {
 // page route, so a page slug matching one of these would be unreachable.
 export const RESERVED_PAGE_SLUGS = ['og'];
 
-// Shared by every helper below that walks sections -> items -> attachments
-// looking for embedded pages.
-const PAGE_ATTACHMENT_SECTION_KEYS: (keyof ResumeDataSchemaType)[] = [
-  'workExperience',
-  'education',
-  'projects',
-  'sideProjects',
-  'speaking',
-  'writing',
-  'exhibitions',
-  'features',
-  'volunteering',
-  'awards',
-  'certifications',
-];
-
-// Every item across every section that has an embedded page, scanned once
-// instead of each caller hand-rolling the same sections -> items ->
-// attachments walk.
+// Pages are their own top-level list (resume.pages) — a page can be attached
+// to more than one section item at once, so it can no longer be "owned" by
+// a single item's attachments array. Items keep {id, type:'page'} reference
+// stubs (see resolveAttachedPages above); these three helpers are the only
+// places that need the canonical page, so they read resume.pages directly.
 export function findPageBySlug(
   resumeData: ResumeDataSchemaType | null | undefined,
   slug: string,
-):
-  | { page: AttachmentSchemaType; sectionKey: string; itemId: string }
-  | undefined {
+): AttachmentSchemaType | undefined {
   if (!resumeData || !slug) return undefined;
-
-  for (const sectionKey of PAGE_ATTACHMENT_SECTION_KEYS) {
-    const items = resumeData[sectionKey];
-    if (!Array.isArray(items)) continue;
-    for (const item of items as any[]) {
-      const page = item.attachments?.find(
-        (a: AttachmentSchemaType) => a.type === 'page' && a.slug === slug,
-      );
-      if (page) {
-        return { page, sectionKey: sectionKey as string, itemId: item.id };
-      }
-    }
-  }
-  return undefined;
+  return resumeData.pages?.find((p) => p.slug === slug);
 }
 
 // Every slug currently in use across the whole resume, for uniqueness
-// checks — excludes the given attachment id so editing a page doesn't
-// collide with itself.
+// checks — excludes the given page id so editing a page doesn't collide
+// with itself.
 export function getUsedPageSlugs(
   resumeData: ResumeDataSchemaType | null | undefined,
-  excludeAttachmentId?: string,
+  excludePageId?: string,
 ): Set<string> {
   const used = new Set<string>();
   if (!resumeData) return used;
-
-  for (const sectionKey of PAGE_ATTACHMENT_SECTION_KEYS) {
-    const items = resumeData[sectionKey];
-    if (!Array.isArray(items)) continue;
-    for (const item of items as any[]) {
-      for (const attachment of item.attachments || []) {
-        if (
-          attachment.type === 'page' &&
-          attachment.slug &&
-          attachment.id !== excludeAttachmentId
-        ) {
-          used.add(attachment.slug);
-        }
-      }
-    }
+  for (const page of resumeData.pages || []) {
+    if (page.slug && page.id !== excludePageId) used.add(page.slug);
   }
   return used;
 }
 
-// Every embedded page across the whole resume, for sitemap generation —
-// same section walk as findPageBySlug/getUsedPageSlugs, but collecting all
-// of them at once instead of matching a single slug.
+// Every page on the resume, for sitemap generation.
 export function getAllPageAttachments(
   resumeData: ResumeDataSchemaType | null | undefined,
 ): AttachmentSchemaType[] {
-  const pages: AttachmentSchemaType[] = [];
-  if (!resumeData) return pages;
-
-  for (const sectionKey of PAGE_ATTACHMENT_SECTION_KEYS) {
-    const items = resumeData[sectionKey];
-    if (!Array.isArray(items)) continue;
-    for (const item of items as any[]) {
-      for (const attachment of item.attachments || []) {
-        if (attachment.type === 'page' && attachment.slug) {
-          pages.push(attachment);
-        }
-      }
-    }
-  }
-  return pages;
+  return (resumeData?.pages || []).filter((p) => p.slug);
 }
 
 export function slugify(text: string): string {
@@ -591,6 +638,18 @@ export const ResumeDataSchema = z.object({
   awards: AwardsSection.optional().default([]),
   certifications: CertificationsSection.optional().default([]),
   contacts: ContactSection.optional().default([]),
+  // Every page on the resume — the single source of truth for a page's
+  // title/slug/content/hidden state. Section items reference pages by id
+  // via {id, type:'page'} stubs in their own `attachments` array (see
+  // resolveAttachedPages), so the same page can be attached to more than
+  // one item.
+  pages: z.array(AttachmentSchema).optional().default([]),
+  preferences: z
+    .object({
+      writingEnabled: z.boolean().optional().default(true),
+    })
+    .optional()
+    .default({ writingEnabled: true }),
   sectionOrder: z.array(z.string()).optional().default(DEFAULT_SECTION_ORDER),
   design: z
     .object({

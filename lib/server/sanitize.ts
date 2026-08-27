@@ -100,6 +100,17 @@ export function sanitizeResumeData(resumeData: Resume['resumeData']) {
     if (typeof value === 'string' && RICH_TEXT_FIELDS.includes(key)) {
       sanitized[key] = sanitizeRichText(value);
     }
+    // pages is its own top-level array now (a page can be attached to more
+    // than one section item, so it's no longer nested under any one item's
+    // attachments) — its body gets the broader PAGE_CONTENT_OPTIONS
+    // allowlist (headings, images, embeds) instead of sanitizeRichText.
+    else if (key === 'pages' && Array.isArray(value)) {
+      sanitized.pages = value.map((page: any) =>
+        page && typeof page.content === 'string'
+          ? { ...page, content: sanitizePageContent(page.content) }
+          : page,
+      );
+    }
     // If it's an array of section items (like workExperience)
     else if (Array.isArray(value)) {
       sanitized[key] = value.map((item) => {
@@ -113,22 +124,6 @@ export function sanitizeResumeData(resumeData: Resume['resumeData']) {
             ) {
               sanitizedItem[itemKey] = sanitizeRichText(sanitizedItem[itemKey]);
             }
-          }
-          // An item's attachments can include an embedded page — its body
-          // allows a broader set of tags (headings, images, embeds) than
-          // plain rich-text fields, so it gets the stricter/broader
-          // PAGE_CONTENT_OPTIONS allowlist instead of sanitizeRichText.
-          if (Array.isArray(sanitizedItem.attachments)) {
-            sanitizedItem.attachments = sanitizedItem.attachments.map(
-              (attachment: any) =>
-                attachment?.type === 'page' &&
-                typeof attachment.content === 'string'
-                  ? {
-                      ...attachment,
-                      content: sanitizePageContent(attachment.content),
-                    }
-                  : attachment,
-            );
           }
           return sanitizedItem;
         }

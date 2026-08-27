@@ -11,10 +11,10 @@ async function resolvePage(username: string, slug: string) {
   const { resume, userProfile } = await getUserData(username);
   if (!resume?.resumeData) return null;
 
-  const found = findPageBySlug(resume.resumeData, slug);
-  if (!found) return null;
+  const page = findPageBySlug(resume.resumeData, slug);
+  if (!page || page.hidden) return null;
 
-  return { page: found.page, resumeData: resume.resumeData, userProfile };
+  return { page, resumeData: resume.resumeData, userProfile };
 }
 
 export async function generateMetadata({
