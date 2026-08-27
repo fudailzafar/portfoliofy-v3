@@ -56,6 +56,30 @@ export function SectionAttachments({
     );
   };
 
+  // Reorders within the pages-only sub-list (pageStubs and attachedPages
+  // share the same relative order, both derived by filtering `attachments`
+  // in place), then splices back in after the media attachments — matching
+  // the same media-first convention handleAttachPagesSave already uses.
+  const movePageLeft = (index: number) => {
+    if (index === 0) return;
+    const newPageStubs = [...pageStubs];
+    [newPageStubs[index - 1], newPageStubs[index]] = [
+      newPageStubs[index],
+      newPageStubs[index - 1],
+    ];
+    onChange([...mediaAttachments, ...newPageStubs]);
+  };
+
+  const movePageRight = (index: number) => {
+    if (index === pageStubs.length - 1) return;
+    const newPageStubs = [...pageStubs];
+    [newPageStubs[index], newPageStubs[index + 1]] = [
+      newPageStubs[index + 1],
+      newPageStubs[index],
+    ];
+    onChange([...mediaAttachments, ...newPageStubs]);
+  };
+
   const moveLeft = (index: number) => {
     if (index === 0) return;
     const newAttachments = [...attachments];
@@ -105,19 +129,51 @@ export function SectionAttachments({
       </div>
 
       {attachedPages.length > 0 && (
-        <div className="flex flex-col gap-2">
-          {attachedPages.map((page) => (
-            <div key={page.id} className="group relative w-full max-w-[415px]">
+        <div className="custom-scrollbar mb-2 flex max-w-full snap-x gap-3 overflow-x-auto pb-2">
+          {attachedPages.map((page, index) => (
+            <div
+              key={page.id}
+              className="group relative w-[300px] shrink-0 snap-center"
+            >
               <PageAttachmentCard attachment={page} />
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleRemovePage(page.id);
-                }}
-                className="absolute right-1.5 top-1.5 z-10 rounded-full border border-white/20 bg-black/60 p-1 text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20"
-              >
-                <X className="h-3 w-3" />
-              </button>
+              <div className="absolute right-1.5 top-1.5 z-10 flex items-center gap-[2px]">
+                {(index > 0 || index < attachedPages.length - 1) && (
+                  <div className="flex items-stretch divide-x divide-white/20 overflow-hidden rounded-full border border-white/20 bg-black/60 text-white shadow-sm backdrop-blur-md">
+                    {index > 0 && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          movePageLeft(index);
+                        }}
+                        className="flex items-center justify-center px-1 py-1 transition-colors hover:bg-white/20"
+                      >
+                        <ArrowLeft className="h-3 w-3" />
+                      </button>
+                    )}
+                    {index < attachedPages.length - 1 && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          movePageRight(index);
+                        }}
+                        className="flex items-center justify-center px-1 py-1 transition-colors hover:bg-white/20"
+                      >
+                        <ArrowRight className="h-3 w-3" />
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleRemovePage(page.id);
+                  }}
+                  className="rounded-full border border-white/20 bg-black/60 p-1 text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
             </div>
           ))}
         </div>
