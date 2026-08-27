@@ -1,5 +1,5 @@
 import sql from './db';
-import { ResumeDataSchema } from '@/lib/resume';
+import { ResumeDataSchema, migrateEmbeddedPages } from '@/lib/resume';
 import { z } from 'zod';
 import { RESERVED_USERNAMES } from '../routes';
 import { sanitizeResumeData } from './sanitize';
@@ -48,7 +48,15 @@ export async function getResume(userId: string): Promise<Resume | undefined> {
     // whole profile — same tolerance the old bare-cast behavior had.
     const parsed = ResumeSchema.safeParse(row);
     if (parsed.success) {
-      return parsed.data;
+      // Self-healing: a resume saved before pages became their own
+      // top-level list may still have full page objects embedded directly
+      // in a section item's attachments — surface them under `pages` on
+      // every read so they don't just vanish because the storage shape
+      // changed. No-op (returns the same object) once already migrated.
+      return {
+        ...parsed.data,
+        resumeData: migrateEmbeddedPages(parsed.data.resumeData),
+      };
     }
     console.error('Resume row failed schema validation on read:', parsed.error);
     return row as Resume;
@@ -65,9 +73,13 @@ export async function storeResume(
   try {
     const validatedData = ResumeSchema.parse(resumeData);
 
+    // Defensive: heal any embedded-page-in-attachments data a stale client
+    // might still send, so a save always persists the current shape.
+    const migratedResumeData = migrateEmbeddedPages(validatedData.resumeData);
+
     // Strip untrusted markup before it ever reaches the database, so every
     // render path (public profile, print view, editor preview) is safe.
-    const safeResumeData = sanitizeResumeData(validatedData.resumeData);
+    const safeResumeData = sanitizeResumeData(migratedResumeData);
 
     const resumeDataJson = safeResumeData
       ? JSON.stringify(safeResumeData)

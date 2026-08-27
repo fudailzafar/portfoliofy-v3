@@ -11,12 +11,14 @@ export function LiveResumeWrapper({
   isOwner,
   userProfile,
   applyTheme = false,
+  username,
 }: {
   initialResume?: ResumeData | null;
   profilePicture?: string;
   isOwner?: boolean;
   userProfile?: UserProfile;
   applyTheme?: boolean;
+  username: string;
 }) {
   const storeResume = useResumeStore((state) => state.resume);
 
@@ -49,6 +51,7 @@ export function LiveResumeWrapper({
         profilePicture={profilePicture}
         isOwner={isOwner}
         userProfile={userProfile}
+        username={username}
       />
     </div>
   );

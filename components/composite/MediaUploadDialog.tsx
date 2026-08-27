@@ -220,6 +220,8 @@ export function MediaUploadDialog({
             filename: item.file.name,
             width: dimensions.width,
             height: dimensions.height,
+            hidden: false,
+            isBlurred: false,
           },
         ]);
       } catch (error) {

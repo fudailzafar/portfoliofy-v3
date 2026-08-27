@@ -29,6 +29,22 @@ import {
 import { ContentImage, Gallery } from '@/components/composite/tiptap-media';
 import { Spinner } from '../ui/spinner';
 
+// `createdAt` is stored as a full ISO timestamp but edited as a plain
+// YYYY-MM-DD via <input type="date">. Anchoring to noon (rather than
+// midnight) when converting back keeps the calendar day stable across
+// almost all timezones, since local midnight can otherwise round to the
+// previous UTC day.
+function toDateInputValue(isoString?: string): string {
+  if (!isoString) return '';
+  const parsed = new Date(isoString);
+  if (isNaN(parsed.getTime())) return '';
+  return parsed.toISOString().slice(0, 10);
+}
+
+function fromDateInputValue(dateValue: string): string {
+  return new Date(`${dateValue}T12:00:00`).toISOString();
+}
+
 const EMBED_PROVIDER_LABELS: Record<EmbedProvider, string> = {
   youtube: 'YouTube',
   vimeo: 'Vimeo',
@@ -92,6 +108,7 @@ export function PageEditorView({
   onClose: () => void;
 }) {
   const [slug, setSlug] = useState('');
+  const [date, setDate] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [thumbnailUrl, setThumbnailUrl] = useState('');
@@ -130,12 +147,17 @@ export function PageEditorView({
   useEffect(() => {
     if (page) {
       setSlug(page.slug || '');
+      setDate(
+        toDateInputValue(page.createdAt) ||
+          toDateInputValue(new Date().toISOString()),
+      );
       setTitle(page.title || '');
       setContent(page.content || '');
       setThumbnailUrl(page.url || '');
       slugTouchedRef.current = true;
     } else {
       setSlug('');
+      setDate(toDateInputValue(new Date().toISOString()));
       setTitle('');
       setContent('');
       setThumbnailUrl('');
@@ -208,7 +230,11 @@ export function PageEditorView({
       slug: finalSlug,
       title,
       content,
-      createdAt: page?.createdAt || new Date().toISOString(),
+      createdAt: date
+        ? fromDateInputValue(date)
+        : page?.createdAt || new Date().toISOString(),
+      hidden: page?.hidden ?? false,
+      isBlurred: page?.isBlurred ?? false,
     };
     onSave(savedPage);
   };
@@ -486,17 +512,6 @@ export function PageEditorView({
           <div className="flex items-start justify-between">
             <div className="flex flex-1 flex-col gap-6">
               <div className="flex items-center gap-6">
-                <span className="w-12 text-sm text-content-muted">Title</span>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={handleTitleChange}
-                  className="flex-1 bg-transparent text-sm font-medium tracking-wide text-content-primary outline-none placeholder:text-content-muted"
-                  placeholder="My new post"
-                />
-              </div>
-
-              <div className="flex items-center gap-6">
                 <span className="w-12 text-sm text-content-muted">Slug</span>
                 <div className="flex flex-1 items-center gap-0.5 text-sm">
                   <span className="font-mono text-content-muted">/</span>
@@ -505,9 +520,28 @@ export function PageEditorView({
                     value={slug}
                     onChange={handleSlugChange}
                     className="flex-1 bg-transparent font-mono tracking-wide text-content-primary outline-none placeholder:text-content-muted"
-                    placeholder="hello-world"
+                    placeholder="my-unique-url"
                   />
                 </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <span className="w-12 text-sm text-content-muted">Date</span>
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="font-regular flex-1 bg-transparent text-sm tracking-wide text-content-primary outline-none [color-scheme:light] dark:[color-scheme:dark] [&::-webkit-calendar-picker-indicator]:pointer-events-none [&::-webkit-calendar-picker-indicator]:hidden"
+                />
+              </div>
+              <div className="flex items-center gap-6">
+                <span className="w-12 text-sm text-content-muted">Title</span>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={handleTitleChange}
+                  className="font-regular flex-1 bg-transparent text-sm tracking-wide text-content-primary outline-none placeholder:text-content-muted"
+                  placeholder="Untitled"
+                />
               </div>
             </div>
 

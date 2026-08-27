@@ -32,9 +32,9 @@ export async function GET(
       ? findPageBySlug(resume.resumeData, slug)
       : undefined;
 
-    const title = found?.page.title || 'Untitled';
+    const title = found?.title || 'Untitled';
     const name = resume?.resumeData?.header?.name || username;
-    const readMinutes = estimateReadMinutes(found?.page.content || '');
+    const readMinutes = estimateReadMinutes(found?.content || '');
 
     // Same trust rule as app/[username]/og/route.tsx: this route is public
     // and unauthenticated, and ImageResponse fetches `src` server-side, so

@@ -157,6 +157,7 @@ export default async function ProfilePage({
               isOwner={true}
               userProfile={userProfile || undefined}
               applyTheme={isPersonalDomainView}
+              username={username}
             />
           ) : (
             <div
@@ -177,6 +178,7 @@ export default async function ProfilePage({
                 profilePicture={profilePicture}
                 isOwner={false}
                 userProfile={userProfile || undefined}
+                username={username}
                 hideSocialFeatures={
                   isPersonalDomainView &&
                   !!resume?.resumeData?.design?.hideSocialFeatures
