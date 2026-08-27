@@ -115,6 +115,21 @@
   text-decoration-thickness: 1px !important;
 }
 
+/* Graphik has no dedicated italic font file (see the localFont() call in
+   app/layout.tsx — only Regular/Medium, both style: 'normal'), so browsers
+   fall back to synthetic oblique. That synthesis silently no-ops at the
+   Regular weight in Chromium (likely metadata baked into the woff file
+   itself) while working fine at Medium weight — meaning italic text visibly
+   renders only when it's also bold. Forcing a real skew here makes italic
+   render consistently regardless of weight or browser synthesis quirks.
+   inline-block is required for the transform to apply at all; italic spans
+   in body copy are short enough that this doesn't disrupt line wrapping. */
+.blog-prose em,
+.blog-prose i {
+  display: inline-block;
+  transform: skewX(-10deg);
+}
+
 /* Custom animations */
 @keyframes bounce {
   0%,
