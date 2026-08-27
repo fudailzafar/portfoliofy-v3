@@ -84,8 +84,19 @@ describe('sanitizeResumeData', () => {
     expect(sanitizeResumeData(null as any)).toBeNull();
   });
 
-  it("sanitizes an embedded page's content with the broader page allowlist", () => {
+  it("sanitizes a page's content with the broader page allowlist", () => {
     const result = sanitizeResumeData({
+      pages: [
+        {
+          id: 'page-1',
+          url: 'https://example.com/thumb.png',
+          type: 'page',
+          title: 'My Deep Dive',
+          slug: 'my-deep-dive',
+          content:
+            '<h1>Title</h1><script>alert(1)</script><img src=x onerror=alert(1)>',
+        },
+      ],
       workExperience: [
         {
           company: 'Acme',
@@ -94,37 +105,24 @@ describe('sanitizeResumeData', () => {
           start: '2020',
           description: '',
           hidden: false,
-          attachments: [
-            {
-              id: 'page-1',
-              url: 'https://example.com/thumb.png',
-              type: 'page',
-              title: 'My Deep Dive',
-              slug: 'my-deep-dive',
-              content:
-                '<h1>Title</h1><script>alert(1)</script><img src=x onerror=alert(1)>',
-            },
-            {
-              id: 'img-1',
-              url: 'https://example.com/photo.png',
-              type: 'image',
-            },
-          ],
+          // A page-type entry here is just a reference stub — no content
+          // to sanitize, so it should pass through untouched.
+          attachments: [{ id: 'page-1', type: 'page' }],
         },
       ],
     } as any);
 
     if (!result)
       throw new Error('expected sanitizeResumeData to return a value');
-    const attachments = result.workExperience?.[0].attachments as any[];
-    const page = attachments.find((a) => a.type === 'page');
-    const image = attachments.find((a) => a.type === 'image');
+    const page = result.pages?.[0] as any;
 
     expect(page.content).toContain('<h1>Title</h1>');
     expect(page.content).not.toContain('<script>');
     expect(page.content).not.toContain('onerror');
-    // Image attachments are untouched — they have no `content` to sanitize.
-    expect(image.url).toBe('https://example.com/photo.png');
+    // The reference stub in the item's attachments is untouched.
+    expect(result.workExperience?.[0].attachments).toEqual([
+      { id: 'page-1', type: 'page' },
+    ]);
   });
 });
 

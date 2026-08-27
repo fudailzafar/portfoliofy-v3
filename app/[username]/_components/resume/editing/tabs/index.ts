@@ -14,5 +14,6 @@ export { WorkExperienceTab } from './WorkExperienceTab';
 export { AwardsTab } from './AwardsTab';
 export { CertificationsTab } from './CertificationsTab';
 export { WritingTab } from './WritingTab';
+export { WritingPiecesTab } from './WritingPiecesTab';
 export { ExhibitionsTab } from './ExhibitionsTab';
 export * from './PrintTab';

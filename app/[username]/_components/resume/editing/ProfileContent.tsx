@@ -19,6 +19,7 @@ import {
   AwardsTab,
   CertificationsTab,
   WritingTab,
+  WritingPiecesTab,
   ExhibitionsTab,
 } from './tabs';
 import { ImportDataTab } from './ImportDataTab';
@@ -184,11 +185,14 @@ export function ProfileContent({
           />
         )}
         {activeTab === 'writing' && (
-          <WritingTab
+          <WritingPiecesTab
             key={saveTrigger}
             years={years}
             setProjectToDelete={setProjectToDelete('writing')}
           />
+        )}
+        {activeTab.startsWith('writing_') && (
+          <WritingTab filter={activeTab.split('_')[1] as any} />
         )}
         {activeTab === 'exhibitions' && (
           <ExhibitionsTab

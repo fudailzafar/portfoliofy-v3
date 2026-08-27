@@ -40,6 +40,7 @@ import { isValidWebsite } from '@/lib/validation/url';
 import { ProfileSidebar } from './ProfileSidebar';
 import { ProfileContent } from './ProfileContent';
 import { DeleteConfirmDialog, UnsavedChangesDialog } from './dialogs';
+import { ResumePagesProvider } from '@/lib/ResumePagesContext';
 
 const PageEditorView = dynamic(
   () =>
@@ -143,9 +144,18 @@ export function EditProfileDialog({
   // Use React Query's fresh data if available, otherwise fallback to server component's initial data
   const freshResume = resumeQuery.data?.resume?.resumeData || resume;
 
+  // Guarded on hasUnsavedChanges: resumeQuery has no custom staleTime, so it
+  // refetches on every window focus. Without this guard, a refetch completing
+  // while the user has an in-progress local edit (anywhere in the editor,
+  // not just Pages) would silently overwrite the store with the older,
+  // pre-edit server snapshot — discarding the edit before Save is ever
+  // clicked. Once hasUnsavedChanges flips back to false (after a successful
+  // save), this re-fires and picks up the now-current freshResume normally.
   useEffect(() => {
-    initResume(freshResume, username);
-  }, [freshResume, username, initResume]);
+    if (!hasUnsavedChanges) {
+      initResume(freshResume, username);
+    }
+  }, [freshResume, username, initResume, hasUnsavedChanges]);
 
   const [open, setOpen] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(true);
@@ -516,137 +526,144 @@ export function EditProfileDialog({
         >
           <DialogTitle className="sr-only">Edit Profile</DialogTitle>
 
-          {/* The page editor renders as an overlay, not a ternary swap —
+          <ResumePagesProvider pages={currentResume?.pages || []}>
+            {/* The page editor renders as an overlay, not a ternary swap —
               the sidebar/content tree (and whichever tab's in-progress
               local draft, e.g. an item mid-edit with the form still open)
               stays mounted underneath the whole time. Unmounting it while
               the page editor was open used to reset the tab back to its
               list view and drop the very draft the new page was just
               added to. */}
-          {editingPage && (
-            <div className="flex flex-1 flex-col overflow-hidden">
-              <PageEditorView
-                page={editingPage.attachment}
-                usedSlugs={usedPageSlugs}
-                onSave={editingPage.onSave}
-                onClose={() => setEditingPage(null)}
+            {editingPage && (
+              <div className="flex flex-1 flex-col overflow-hidden">
+                <PageEditorView
+                  page={editingPage.attachment}
+                  usedSlugs={usedPageSlugs}
+                  onSave={editingPage.onSave}
+                  onClose={() => setEditingPage(null)}
+                />
+              </div>
+            )}
+
+            <div
+              className={
+                editingPage
+                  ? 'hidden'
+                  : 'flex flex-1 flex-col overflow-hidden sm:flex-row'
+              }
+            >
+              {/* Sidebar */}
+              <ProfileSidebar
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                setShowMobileMenu={setShowMobileMenu}
+                showMobileMenu={showMobileMenu}
+                sectionOrder={sectionOrder}
+                setSectionOrder={setSectionOrder}
+                tabDefinitions={TAB_DEFINITIONS}
+                onDragEnd={handleDragEnd}
+              />
+
+              {/* Content Area */}
+              <ProfileContent
+                activeTab={activeTab}
+                showMobileMenu={showMobileMenu}
+                setShowMobileMenu={setShowMobileMenu}
+                username={username}
+                localPicture={
+                  getOptimizedImageUrl(localPicture) || localPicture
+                }
+                isUploadingPicture={isUploadingPicture}
+                isSaving={isSaving}
+                isValidUname={isValidUname && isValidSiteUrl}
+                checkUsernameMutationIsPending={checkUsernameMutation.isPending}
+                isValidUsername={isValidUname}
+                years={years}
+                setProjectToDelete={(type) => (id) => {
+                  const handlers: Record<string, (id: string) => void> = {
+                    project: setDeleteProject,
+                    sideProject: setDeleteSideProject,
+                    speaking: setDeleteSpeaking,
+                    writing: setDeleteWriting,
+                    exhibitions: setDeleteExhibitions,
+                    work: setDeleteWork,
+                    education: setDeleteEducation,
+                    volunteering: setDeleteVolunteering,
+                    feature: setDeleteFeature,
+                    award: setDeleteAward,
+                    certification: setDeleteCertification,
+                    contact: setDeleteContact,
+                  };
+                  return handlers[type]?.(id);
+                }}
+                handlePictureUpload={handlePictureUpload}
+                removePicture={handleAvatarRemove}
+                onSave={handleGlobalSave}
+                onCancel={handleGlobalCancel}
+                onDone={handleDone}
+                isClosing={isClosing}
+                onConfirmDeleteAccount={handleDeleteAccount}
+                isDeletingAccount={isDeletingAccount}
+                createdAt={createdAt}
               />
             </div>
-          )}
 
-          <div
-            className={
-              editingPage
-                ? 'hidden'
-                : 'flex flex-1 flex-col overflow-hidden sm:flex-row'
-            }
-          >
-            {/* Sidebar */}
-            <ProfileSidebar
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              setShowMobileMenu={setShowMobileMenu}
-              showMobileMenu={showMobileMenu}
-              sectionOrder={sectionOrder}
-              setSectionOrder={setSectionOrder}
-              tabDefinitions={TAB_DEFINITIONS}
-              onDragEnd={handleDragEnd}
-            />
-
-            {/* Content Area */}
-            <ProfileContent
-              activeTab={activeTab}
-              showMobileMenu={showMobileMenu}
-              setShowMobileMenu={setShowMobileMenu}
-              username={username}
-              localPicture={getOptimizedImageUrl(localPicture) || localPicture}
-              isUploadingPicture={isUploadingPicture}
-              isSaving={isSaving}
-              isValidUname={isValidUname && isValidSiteUrl}
-              checkUsernameMutationIsPending={checkUsernameMutation.isPending}
-              isValidUsername={isValidUname}
-              years={years}
-              setProjectToDelete={(type) => (id) => {
-                const handlers: Record<string, (id: string) => void> = {
-                  project: setDeleteProject,
-                  sideProject: setDeleteSideProject,
-                  speaking: setDeleteSpeaking,
-                  writing: setDeleteWriting,
-                  exhibitions: setDeleteExhibitions,
-                  work: setDeleteWork,
-                  education: setDeleteEducation,
-                  volunteering: setDeleteVolunteering,
-                  feature: setDeleteFeature,
-                  award: setDeleteAward,
-                  certification: setDeleteCertification,
-                  contact: setDeleteContact,
-                };
-                return handlers[type]?.(id);
-              }}
-              handlePictureUpload={handlePictureUpload}
-              removePicture={handleAvatarRemove}
-              onSave={handleGlobalSave}
-              onCancel={handleGlobalCancel}
-              onDone={handleDone}
-              isClosing={isClosing}
-              onConfirmDeleteAccount={handleDeleteAccount}
-              isDeletingAccount={isDeletingAccount}
-              createdAt={createdAt}
-            />
-          </div>
-
-          {/* Mobile Sidebar Action Bar — hidden while the page editor is
+            {/* Mobile Sidebar Action Bar — hidden while the page editor is
               open, since it has its own Close/Save bar. */}
-          {!editingPage && showMobileMenu && (
-            <div className="flex-none bg-surface-1 px-4 pb-4 sm:hidden">
-              <div className="flex w-full items-center justify-end gap-3 border-t border-border-subtle pt-4">
-                {hasUnsavedChanges ? (
-                  <>
+            {!editingPage && showMobileMenu && (
+              <div className="flex-none bg-surface-1 px-4 pb-4 sm:hidden">
+                <div className="flex w-full items-center justify-end gap-3 border-t border-border-subtle pt-4">
+                  {hasUnsavedChanges ? (
+                    <>
+                      <button
+                        onClick={handleGlobalCancel}
+                        disabled={isSaving}
+                        className="px-4 text-sm font-medium text-content-primary hover:underline hover:underline-offset-4 disabled:opacity-50"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleGlobalSave}
+                        disabled={
+                          isSaving ||
+                          !isValidUname ||
+                          !isValidSiteUrl ||
+                          checkUsernameMutation.isPending ||
+                          !activeFormValid
+                        }
+                        className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+                      >
+                        {isSaving ? (
+                          <div className="flex items-center gap-2">
+                            <Spinner
+                              size={14}
+                              className="text-content-primary"
+                            />
+                          </div>
+                        ) : (
+                          'Save'
+                        )}
+                      </button>
+                    </>
+                  ) : (
                     <button
-                      onClick={handleGlobalCancel}
-                      disabled={isSaving}
-                      className="px-4 text-sm font-medium text-content-primary hover:underline hover:underline-offset-4 disabled:opacity-50"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleGlobalSave}
-                      disabled={
-                        isSaving ||
-                        !isValidUname ||
-                        !isValidSiteUrl ||
-                        checkUsernameMutation.isPending ||
-                        !activeFormValid
-                      }
+                      onClick={handleDone}
+                      disabled={isClosing}
                       className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
                     >
-                      {isSaving ? (
+                      {isClosing ? (
                         <div className="flex items-center gap-2">
                           <Spinner size={14} className="text-content-primary" />
                         </div>
                       ) : (
-                        'Save'
+                        'Done'
                       )}
                     </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={handleDone}
-                    disabled={isClosing}
-                    className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
-                  >
-                    {isClosing ? (
-                      <div className="flex items-center gap-2">
-                        <Spinner size={14} className="text-content-primary" />
-                      </div>
-                    ) : (
-                      'Done'
-                    )}
-                  </button>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </ResumePagesProvider>
         </DialogContent>
       </Dialog>
 

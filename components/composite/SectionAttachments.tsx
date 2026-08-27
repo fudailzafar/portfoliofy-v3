@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { AttachmentSchemaType } from '@/lib/resume';
+import { AttachmentSchemaType, resolveAttachedPages } from '@/lib/resume';
 import { Button } from '@/components/ui/button';
 import { MediaUploadDialog } from './MediaUploadDialog';
+import { AttachPagesDialog } from './AttachPagesDialog';
 import { PageAttachmentCard } from './PageAttachmentCard';
 import { useResumeStore } from '@/store/useResumeStore';
-import { ArrowLeft, ArrowRight, Pencil, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SectionAttachmentsProps {
@@ -19,37 +20,40 @@ export function SectionAttachments({
   onChange,
 }: SectionAttachmentsProps) {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
-  const setEditingPage = useResumeStore((state) => state.setEditingPage);
+  const [isAttachPagesOpen, setIsAttachPagesOpen] = useState(false);
+  const resumePages = useResumeStore((state) => state.resume?.pages) || [];
 
-  const existingPage = attachments.find((a) => a.type === 'page');
+  const pageStubs = attachments.filter((a) => a.type === 'page');
+  const attachedPages = resolveAttachedPages(attachments, resumePages);
 
   // MediaUploadDialog only knows about image/video attachments — it has no
   // concept of a page (undefined width/height/filename would render oddly,
-  // and its own remove button would let someone delete the page from the
-  // wrong dialog). Keep it entirely out of that dialog's world: strip it out
-  // going in, splice it back in unchanged coming out.
+  // and its own remove button would let someone delete a page stub from the
+  // wrong dialog). Keep it entirely out of that dialog's world: strip page
+  // stubs out going in, splice them back in unchanged coming out.
   const handleSaveUploads = (newMediaAttachments: AttachmentSchemaType[]) => {
-    onChange(
-      existingPage
-        ? [...newMediaAttachments, existingPage]
-        : newMediaAttachments,
-    );
+    onChange([...newMediaAttachments, ...pageStubs]);
   };
 
-  // Opens the full-page editor for this item's one page. With no existing
-  // page, "Add a page" creates a new one; with one, it (and its pencil icon)
-  // always reopens that same page — never a second one.
-  const openPageEditor = () => {
-    setEditingPage({
-      attachment: existingPage,
-      onSave: (savedPage) => {
-        const newAttachments = existingPage
-          ? attachments.map((a) => (a.id === existingPage.id ? savedPage : a))
-          : [...attachments, savedPage];
-        onChange(newAttachments);
-        setEditingPage(null);
-      },
-    });
+  // "Add a page" only attaches already-published pages — creating/editing a
+  // page's actual content happens in the Writing tab. Saving here just
+  // rewrites this item's set of {id, type:'page'} reference stubs; media
+  // attachments are untouched.
+  const handleAttachPagesSave = (pageIds: string[]) => {
+    const mediaAttachments = attachments.filter((a) => a.type !== 'page');
+    const newStubs = pageIds.map((id) => ({
+      id,
+      type: 'page' as const,
+      hidden: false,
+      isBlurred: false,
+    }));
+    onChange([...mediaAttachments, ...newStubs]);
+  };
+
+  const handleRemovePage = (pageId: string) => {
+    onChange(
+      attachments.filter((a) => !(a.type === 'page' && a.id === pageId)),
+    );
   };
 
   const moveLeft = (index: number) => {
@@ -76,6 +80,8 @@ export function SectionAttachments({
     onChange(newAttachments);
   };
 
+  const mediaAttachments = attachments.filter((a) => a.type !== 'page');
+
   return (
     <div className="w-full min-w-0 space-y-3">
       <div className="flex items-center justify-between">
@@ -83,129 +89,131 @@ export function SectionAttachments({
           Attachments
         </span>
         <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="h-7 rounded-full text-xs dark:border-none dark:bg-border-subtle"
+          <button
+            className="flex h-5 items-center justify-center rounded-full p-4 text-xs font-medium dark:border-none dark:bg-border-subtle"
+            onClick={() => setIsAttachPagesOpen(true)}
+          >
+            Add a page
+          </button>
+          <button
+            className="flex h-5 items-center justify-center rounded-full p-4 text-xs font-medium dark:border-none dark:bg-border-subtle"
             onClick={() => setIsUploadOpen(true)}
           >
             Add media
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="h-7 rounded-full text-xs dark:border-none dark:bg-border-subtle"
-            onClick={openPageEditor}
-          >
-            {existingPage ? 'Edit page' : 'Add a page'}
-          </Button>
+          </button>
         </div>
       </div>
 
-      {attachments.length === 0 ? (
-        <div className="bg-surface-2/30 flex items-center justify-center rounded-lg border border-dashed border-border-strong p-6">
-          <p className="text-sm text-content-muted">No attachments yet</p>
+      {attachedPages.length > 0 && (
+        <div className="flex flex-col gap-2">
+          {attachedPages.map((page) => (
+            <div key={page.id} className="group relative w-full max-w-[415px]">
+              <PageAttachmentCard attachment={page} />
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleRemovePage(page.id);
+                }}
+                className="absolute right-1.5 top-1.5 z-10 rounded-full border border-white/20 bg-black/60 p-1 text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+          ))}
         </div>
-      ) : (
+      )}
+
+      {mediaAttachments.length === 0 ? null : (
         <div className="custom-scrollbar mb-2 flex max-w-full snap-x gap-3 overflow-x-auto pb-2">
-          {attachments.map((attachment, index) => (
-            <div
-              key={attachment.id}
-              className={cn(
-                'group relative shrink-0 snap-center',
-                attachment.type === 'page'
-                  ? 'w-full max-w-[415px]'
-                  : 'h-[90px] overflow-hidden rounded-lg border border-border-strong bg-surface-2',
-              )}
-            >
-              {attachment.type === 'video' ? (
-                <video
-                  src={attachment.url}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="h-full w-auto min-w-[90px] object-cover"
-                  preload="metadata"
-                />
-              ) : attachment.type === 'page' ? (
-                <button
-                  type="button"
-                  onClick={openPageEditor}
-                  className="block w-full text-left"
-                >
-                  <PageAttachmentCard attachment={attachment} />
-                </button>
-              ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={attachment.url}
-                  alt={attachment.filename || 'Attachment'}
-                  loading="lazy"
-                  className="h-full w-auto min-w-[90px] object-cover"
-                />
-              )}
-              <div className="absolute right-1.5 top-1.5 z-10 flex items-center gap-[2px]">
-                {attachment.type === 'page' && (
+          {mediaAttachments.map((attachment) => {
+            const index = attachments.indexOf(attachment);
+            return (
+              <div
+                key={attachment.id}
+                className="group relative h-[90px] shrink-0 snap-center overflow-hidden rounded-lg border border-border-strong bg-surface-2"
+              >
+                {attachment.type === 'video' ? (
+                  <video
+                    src={attachment.url}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="h-full w-auto min-w-[90px] object-cover"
+                    preload="metadata"
+                  />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={attachment.url}
+                    alt={attachment.filename || 'Attachment'}
+                    loading="lazy"
+                    className="h-full w-auto min-w-[90px] object-cover"
+                  />
+                )}
+                <div className="absolute right-1.5 top-1.5 z-10 flex items-center gap-[2px]">
+                  {(index > 0 || index < attachments.length - 1) && (
+                    <div className="flex items-stretch divide-x divide-white/20 overflow-hidden rounded-full border border-white/20 bg-black/60 text-white shadow-sm backdrop-blur-md">
+                      {index > 0 && (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            moveLeft(index);
+                          }}
+                          className="flex items-center justify-center px-1 py-1 transition-colors hover:bg-white/20"
+                        >
+                          <ArrowLeft className="h-3 w-3" />
+                        </button>
+                      )}
+                      {index < attachments.length - 1 && (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            moveRight(index);
+                          }}
+                          className="flex items-center justify-center px-1 py-1 transition-colors hover:bg-white/20"
+                        >
+                          <ArrowRight className="h-3 w-3" />
+                        </button>
+                      )}
+                    </div>
+                  )}
+
                   <button
                     onClick={(e) => {
                       e.preventDefault();
-                      openPageEditor();
+                      handleDelete(index);
                     }}
                     className="rounded-full border border-white/20 bg-black/60 p-1 text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20"
                   >
-                    <Pencil className="h-3 w-3" />
+                    <X className="h-3 w-3" />
                   </button>
-                )}
-                {(index > 0 || index < attachments.length - 1) && (
-                  <div className="flex items-stretch divide-x divide-white/20 overflow-hidden rounded-full border border-white/20 bg-black/60 text-white shadow-sm backdrop-blur-md">
-                    {index > 0 && (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          moveLeft(index);
-                        }}
-                        className="flex items-center justify-center px-1 py-1 transition-colors hover:bg-white/20"
-                      >
-                        <ArrowLeft className="h-3 w-3" />
-                      </button>
-                    )}
-                    {index < attachments.length - 1 && (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          moveRight(index);
-                        }}
-                        className="flex items-center justify-center px-1 py-1 transition-colors hover:bg-white/20"
-                      >
-                        <ArrowRight className="h-3 w-3" />
-                      </button>
-                    )}
-                  </div>
-                )}
-
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleDelete(index);
-                  }}
-                  className="rounded-full border border-white/20 bg-black/60 p-1 text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20"
-                >
-                  <X className="h-3 w-3" />
-                </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
+        </div>
+      )}
+
+      {attachments.length === 0 && (
+        <div className="bg-surface-2/30 flex items-center justify-center rounded-lg border border-dashed border-border-strong p-6">
+          <p className="text-sm text-content-muted">No attachments yet</p>
         </div>
       )}
 
       <MediaUploadDialog
         open={isUploadOpen}
         onOpenChange={setIsUploadOpen}
-        existingAttachments={attachments.filter((a) => a.type !== 'page')}
+        existingAttachments={mediaAttachments}
         onSave={handleSaveUploads}
+      />
+
+      <AttachPagesDialog
+        open={isAttachPagesOpen}
+        onOpenChange={setIsAttachPagesOpen}
+        pages={resumePages}
+        attachedPageIds={pageStubs.map((s) => s.id)}
+        onSave={handleAttachPagesSave}
       />
     </div>
   );

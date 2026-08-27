@@ -4,6 +4,8 @@ import {
   getListAdjacency,
   findPageBySlug,
   getUsedPageSlugs,
+  resolveAttachedPages,
+  migrateEmbeddedPages,
   slugify,
   dedupeSlug,
   estimateReadMinutes,
@@ -172,6 +174,7 @@ describe('findPageBySlug / getUsedPageSlugs', () => {
 
   const resumeWithPage = {
     ...baseResume,
+    pages: [pageAttachment],
     workExperience: [
       {
         id: 'work-1',
@@ -181,18 +184,15 @@ describe('findPageBySlug / getUsedPageSlugs', () => {
         start: '2020',
         end: 'Now',
         description: 'desc',
-        attachments: [pageAttachment],
+        attachments: [{ id: 'page-1', type: 'page' as const }],
       },
     ],
   };
 
-  it('finds a page by its slug and reports the owning item', () => {
+  it('finds a page by its slug', () => {
     const found = findPageBySlug(resumeWithPage as any, 'my-deep-dive');
-    expect(found).toMatchObject({
-      sectionKey: 'workExperience',
-      itemId: 'work-1',
-    });
-    expect(found?.page.id).toBe('page-1');
+    expect(found?.id).toBe('page-1');
+    expect(found?.title).toBe('My Deep Dive');
   });
 
   it('returns undefined for a slug that does not exist', () => {
@@ -204,12 +204,162 @@ describe('findPageBySlug / getUsedPageSlugs', () => {
     expect(findPageBySlug(resumeWithPage as any, '')).toBeUndefined();
   });
 
-  it('collects every used slug, excluding a given attachment id', () => {
+  it('collects every used slug, excluding a given page id', () => {
     const used = getUsedPageSlugs(resumeWithPage as any);
     expect(used.has('my-deep-dive')).toBe(true);
 
     const usedExcludingSelf = getUsedPageSlugs(resumeWithPage as any, 'page-1');
     expect(usedExcludingSelf.has('my-deep-dive')).toBe(false);
+  });
+});
+
+describe('resolveAttachedPages', () => {
+  const pages = [
+    { id: 'p1', type: 'page' as const, title: 'First', slug: 'first' },
+    { id: 'p2', type: 'page' as const, title: 'Second', slug: 'second' },
+  ];
+
+  it('resolves reference stubs to their full page objects', () => {
+    const attachments = [
+      { id: 'p1', type: 'page' as const },
+      { id: 'p2', type: 'page' as const },
+    ];
+    const resolved = resolveAttachedPages(attachments as any, pages as any);
+    expect(resolved.map((p) => p.title)).toEqual(['First', 'Second']);
+  });
+
+  it('silently drops a stub whose target page was deleted', () => {
+    const attachments = [
+      { id: 'p1', type: 'page' as const },
+      { id: 'missing', type: 'page' as const },
+    ];
+    const resolved = resolveAttachedPages(attachments as any, pages as any);
+    expect(resolved.map((p) => p.id)).toEqual(['p1']);
+  });
+
+  it('ignores non-page attachments', () => {
+    const attachments = [
+      { id: 'img1', type: 'image' as const, url: 'x.png' },
+      { id: 'p1', type: 'page' as const },
+    ];
+    const resolved = resolveAttachedPages(attachments as any, pages as any);
+    expect(resolved.map((p) => p.id)).toEqual(['p1']);
+  });
+
+  it('returns an empty array for empty attachments or pages', () => {
+    expect(resolveAttachedPages(undefined, pages as any)).toEqual([]);
+    expect(resolveAttachedPages([], pages as any)).toEqual([]);
+    expect(
+      resolveAttachedPages([{ id: 'p1', type: 'page' as const }] as any, []),
+    ).toEqual([]);
+  });
+});
+
+describe('migrateEmbeddedPages', () => {
+  it('pulls a full embedded page into resume.pages and leaves a stub behind', () => {
+    const resumeData = {
+      ...baseResume,
+      workExperience: [
+        {
+          id: 'work-1',
+          company: 'Acme',
+          location: 'Remote',
+          title: 'Engineer',
+          start: '2020',
+          end: 'Now',
+          description: 'desc',
+          attachments: [
+            {
+              id: 'page-1',
+              type: 'page' as const,
+              url: 'https://example.com/thumb.png',
+              title: 'Old Post',
+              slug: 'old-post',
+              content: '<p>hello</p>',
+            },
+          ],
+        },
+      ],
+    };
+
+    const migrated = migrateEmbeddedPages(resumeData as any)!;
+
+    expect(migrated.pages).toHaveLength(1);
+    expect(migrated.pages?.[0]).toMatchObject({
+      id: 'page-1',
+      title: 'Old Post',
+      slug: 'old-post',
+      content: '<p>hello</p>',
+    });
+    expect(migrated.workExperience[0].attachments).toEqual([
+      { id: 'page-1', type: 'page', hidden: false, isBlurred: false },
+    ]);
+  });
+
+  it('is a no-op once already migrated (stub-only attachments, no matching content field)', () => {
+    const resumeData = {
+      ...baseResume,
+      pages: [
+        {
+          id: 'page-1',
+          type: 'page' as const,
+          title: 'Old Post',
+          slug: 'old-post',
+          content: '<p>hello</p>',
+        },
+      ],
+      workExperience: [
+        {
+          id: 'work-1',
+          company: 'Acme',
+          location: 'Remote',
+          title: 'Engineer',
+          start: '2020',
+          end: 'Now',
+          description: 'desc',
+          attachments: [{ id: 'page-1', type: 'page' as const }],
+        },
+      ],
+    };
+
+    const migrated = migrateEmbeddedPages(resumeData as any);
+    expect(migrated).toBe(resumeData);
+  });
+
+  it('does not duplicate a page already present in resume.pages', () => {
+    const embeddedPage = {
+      id: 'page-1',
+      type: 'page' as const,
+      title: 'Old Post',
+      slug: 'old-post',
+      content: '<p>hello</p>',
+    };
+    const resumeData = {
+      ...baseResume,
+      pages: [embeddedPage],
+      workExperience: [
+        {
+          id: 'work-1',
+          company: 'Acme',
+          location: 'Remote',
+          title: 'Engineer',
+          start: '2020',
+          end: 'Now',
+          description: 'desc',
+          // Still the old embedded shape here even though `pages` already
+          // has an entry with the same id (e.g. a partially-migrated row).
+          attachments: [embeddedPage],
+        },
+      ],
+    };
+
+    const migrated = migrateEmbeddedPages(resumeData as any)!;
+    expect(migrated.pages).toHaveLength(1);
+  });
+
+  it('passes through nullish resumeData unchanged', () => {
+    expect(migrateEmbeddedPages(undefined as any)).toBeUndefined();
+    expect(migrateEmbeddedPages(null as any)).toBeNull();
   });
 });
 
