@@ -23,6 +23,16 @@ const graphik = localFont({
       weight: '500',
       style: 'normal',
     },
+    {
+      path: '../public/fonts/Graphik-RegularItalic.otf',
+      weight: '400',
+      style: 'italic',
+    },
+    {
+      path: '../public/fonts/Graphik-MediumItalic.otf',
+      weight: '500',
+      style: 'italic',
+    },
   ],
   variable: '--font-graphik',
 });
