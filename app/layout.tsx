@@ -49,6 +49,16 @@ const signifier = localFont({
       weight: '500',
       style: 'normal',
     },
+    {
+      path: '../public/fonts/Signifier-RegularItalic.otf',
+      weight: '400',
+      style: 'italic',
+    },
+    {
+      path: '../public/fonts/Signifier-MediumItalic.otf',
+      weight: '500',
+      style: 'italic',
+    },
   ],
   variable: '--font-signifier',
 });
