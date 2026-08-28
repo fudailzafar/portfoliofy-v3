@@ -43,6 +43,17 @@ export function ensureHttps(url: string | null | undefined): string {
   return url.startsWith('http') ? url : `https://${url}`;
 }
 
+export function getCanonicalUrl(
+  username: string,
+  customDomain: string | null | undefined,
+  slug?: string,
+): string {
+  const base = customDomain
+    ? `https://${customDomain}`
+    : `https://portfoliofy.me/${username}`;
+  return slug ? `${base}/${slug}` : base;
+}
+
 export function readImageDimensions(
   file: File,
 ): Promise<{ width: number; height: number }> {
