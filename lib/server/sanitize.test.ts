@@ -166,12 +166,14 @@ describe('sanitizePageContent', () => {
 
   it('preserves video markup produced by the ContentVideo Tiptap node', () => {
     const out = sanitizePageContent(
-      '<video src="https://example.com/a.mp4" controls playsinline preload="metadata" ' +
-        'class="content-video" data-content-video="true"></video>',
+      '<video src="https://example.com/a.mp4" autoplay muted loop playsinline ' +
+        'preload="metadata" class="content-video" data-content-video="true"></video>',
     );
     expect(out).toContain('<video');
     expect(out).toContain('src="https://example.com/a.mp4"');
-    expect(out).toContain('controls');
+    expect(out).toContain('autoplay');
+    expect(out).toContain('muted');
+    expect(out).toContain('loop');
     expect(out).toContain('data-content-video');
   });
 });
