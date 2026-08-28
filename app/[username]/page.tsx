@@ -183,6 +183,7 @@ export default async function ProfilePage({
                   isPersonalDomainView &&
                   !!resume?.resumeData?.design?.hideSocialFeatures
                 }
+                isPersonalDomainView={isPersonalDomainView}
               />
             </div>
           )}

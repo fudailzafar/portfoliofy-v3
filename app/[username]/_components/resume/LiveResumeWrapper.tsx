@@ -52,6 +52,7 @@ export function LiveResumeWrapper({
         isOwner={isOwner}
         userProfile={userProfile}
         username={username}
+        isPersonalDomainView={applyTheme}
       />
     </div>
   );
