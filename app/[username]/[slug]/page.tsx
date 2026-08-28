@@ -83,17 +83,12 @@ export default async function PageDetail({
 
   if (!resolved) notFound();
 
-  const { page, resumeData, userProfile } = resolved;
+  const { user_id, page, resumeData, userProfile } = resolved;
   const design = resumeData.design;
   const avatarUrl = getOptimizedImageUrl(
     userProfile?.avatarUrl || userProfile?.image || undefined,
   );
 
-  // On a personal domain/subdomain, proxy.ts already rewrites `/` to
-  // `/{username}` internally — a link built as `/{username}` here would
-  // self-nest into a broken path there, so the profile link needs to be
-  // domain-relative instead. Same isPersonalDomainView check as
-  // app/[username]/page.tsx.
   const headersList = await import('next/headers').then((m) => m.headers());
   const hostHeader = headersList.get('host') || '';
   const hostname = hostHeader.split(':')[0];
@@ -104,8 +99,30 @@ export default async function PageDetail({
   const isPersonalDomainView = username.includes('.') || isSubdomainView;
   const profileHref = isPersonalDomainView ? '/' : `/${username}`;
 
-  // Same published/newest-first ordering as PublicWritingList, so "next"
-  // here always agrees with where this post actually sits in that list.
+  const stripHtml = (html?: string) =>
+    html ? html.replace(/<[^>]*>?/gm, '').trim() : '';
+  const customDomain = await getCachedCustomDomainByUserId(user_id);
+  const postCanonicalUrl = getCanonicalUrl(username, customDomain, slug);
+  const authorCanonicalUrl = getCanonicalUrl(username, customDomain);
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: page.title,
+    description: stripHtml(page.content).slice(0, 200),
+    image: page.url || `https://portfoliofy.me/${username}/${slug}/og`,
+    ...(page.createdAt && {
+      datePublished: page.createdAt,
+      dateModified: page.createdAt,
+    }),
+    author: {
+      '@type': 'Person',
+      name: resumeData.header.name,
+      url: authorCanonicalUrl,
+    },
+    url: postCanonicalUrl,
+    mainEntityOfPage: postCanonicalUrl,
+  };
+
   const publishedPages = (resumeData.pages || [])
     .filter((p) => !p.hidden)
     .map((p) => ({ ...p, parsedDate: parsePageDate(p.createdAt) }))
@@ -113,10 +130,7 @@ export default async function PageDetail({
       (a, b) => (b.parsedDate?.getTime() || 0) - (a.parsedDate?.getTime() || 0),
     );
   const currentIndex = publishedPages.findIndex((p) => p.id === page.id);
-  // Stepping through "next" repeatedly should cycle every published post
-  // exactly once: normally that's the next-newer post (index - 1), but the
-  // newest post (index 0) has no newer post to step to, so it wraps around
-  // to the oldest one instead of dead-ending.
+
   const nextPage =
     currentIndex !== -1 && publishedPages.length > 1
       ? currentIndex === 0
@@ -139,10 +153,11 @@ export default async function PageDetail({
             : 'font-sans'
       } typography-${design?.typography || 'sans'} theme-${design?.theme || 'default'}`}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="mx-auto w-full max-w-[540px] flex-1 px-6 py-16 sm:px-0 sm:py-[72px]">
-        {/* Avatar sits above the name, not beside it — matches read.cv's
-            own layout (confirmed by inspecting several archived pages:
-            avatar and name share the same left edge, stacked vertically). */}
         <Link
           href={profileHref}
           className="flex w-fit flex-col items-start gap-3"
