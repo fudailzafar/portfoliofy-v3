@@ -3,7 +3,12 @@ import { PrintResumeWrapper } from '@/app/[username]/_components/resume/PrintRes
 import { FullResume } from '@/app/[username]/_components/resume/FullResume';
 import { Metadata } from 'next';
 import { getUserData } from './utils';
-import { getOptimizedImageUrl, isOwnS3ImageUrl } from '@/lib/utils';
+import {
+  getOptimizedImageUrl,
+  isOwnS3ImageUrl,
+  getCanonicalUrl,
+} from '@/lib/utils';
+import { getCachedCustomDomainByUserId } from '@/lib/server/cachedFunctions';
 import { auth } from '@/auth';
 import dynamic from 'next/dynamic';
 import { after } from 'next/server';
@@ -60,10 +65,18 @@ export async function generateMetadata({
       ? design.favicon
       : undefined;
 
+  // The same profile is reachable at portfoliofy.me/{username},
+  // {username}.portfoliofy.me, and a connected custom domain — this tells
+  // search engines which one actually counts, so ranking signals from all
+  // three consolidate onto it instead of splitting across duplicates.
+  const customDomain = await getCachedCustomDomainByUserId(user_id);
+  const canonicalUrl = getCanonicalUrl(username, customDomain);
+
   return {
     title: `${resume.resumeData.header.name}`,
     description: plainSummary,
     icons: customFavicon ? { icon: customFavicon } : undefined,
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       title: `${resume.resumeData.header.name}`,
       description: plainSummary,
@@ -106,6 +119,12 @@ export default async function ProfilePage({
   const stripHtml = (html: string) =>
     html ? html.replace(/<[^>]*>?/gm, '') : '';
 
+  // Same canonical resolution as generateMetadata above, so the structured
+  // data an answer engine reads agrees with the <link rel="canonical"> tag
+  // rather than pointing back at a different (possibly non-custom) URL.
+  const customDomain = await getCachedCustomDomainByUserId(user_id);
+  const canonicalUrl = getCanonicalUrl(username, customDomain);
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -116,7 +135,7 @@ export default async function ProfilePage({
     email: resume.resumeData.contacts?.find(
       (c: any) => c.platform.toLowerCase() === 'email',
     )?.link,
-    url: `https://portfoliofy.me/${username}`,
+    url: canonicalUrl,
     skills: resume.resumeData.header.skills,
   };
 

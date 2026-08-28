@@ -2,6 +2,7 @@ import {
   getResume,
   getUserIdByUsername,
   getUserIdByCustomDomain,
+  getCustomDomainByUserId,
 } from '@/lib/server/dbActions';
 import sql from '@/lib/server/db';
 import { unstable_cache } from 'next/cache';
@@ -98,6 +99,24 @@ export const getCachedUserIdByCustomDomain = cache(
       [domain],
       {
         tags: ['domains', `domain-${domain}`],
+        revalidate: 86400, // 1 day
+      },
+    )();
+  },
+);
+
+// For canonical-URL purposes on the profile/page routes — tagged `user-${userId}`
+// so it's invalidated by the same revalidateTag call /api/domain already makes
+// when a user connects or removes their domain.
+export const getCachedCustomDomainByUserId = cache(
+  async (userId: string): Promise<string | null> => {
+    return unstable_cache(
+      async () => {
+        return await getCustomDomainByUserId(userId);
+      },
+      [userId],
+      {
+        tags: ['users', `user-${userId}`],
         revalidate: 86400, // 1 day
       },
     )();
