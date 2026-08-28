@@ -16,23 +16,16 @@ import {
 } from 'lucide-react';
 import { cn, getOptimizedImageUrl } from '@/lib/utils';
 import { useS3Upload } from 'next-s3-upload';
-import {
-  Embed,
-  EmbedProvider,
-  parseEmbedUrl,
-} from '@/components/composite/tiptap-embed';
+import { Embed, EmbedProvider } from '@/components/composite/tiptap-embed';
 import {
   ContentImage,
   ContentVideo,
   Gallery,
 } from '@/components/composite/tiptap-media';
 import { Spinner } from '../ui/spinner';
+import { MediaUploadDialog } from '@/components/composite/MediaUploadDialog';
+import { EmbedDialog } from '@/components/composite/EmbedDialog';
 
-// `createdAt` is stored as a full ISO timestamp but edited as a plain
-// YYYY-MM-DD via <input type="date">. Anchoring to noon (rather than
-// midnight) when converting back keeps the calendar day stable across
-// almost all timezones, since local midnight can otherwise round to the
-// previous UTC day.
 function toDateInputValue(isoString?: string): string {
   if (!isoString) return '';
   const parsed = new Date(isoString);
@@ -43,13 +36,6 @@ function toDateInputValue(isoString?: string): string {
 function fromDateInputValue(dateValue: string): string {
   return new Date(`${dateValue}T12:00:00`).toISOString();
 }
-
-const EMBED_PROVIDER_LABELS: Record<EmbedProvider, string> = {
-  youtube: 'YouTube',
-  vimeo: 'Vimeo',
-  figma: 'Figma',
-  twitter: 'X/Twitter',
-};
 
 const BLOCK_TYPE_OPTIONS: {
   label: string;
@@ -100,8 +86,6 @@ export function PageEditorView({
   onClose,
 }: {
   page?: AttachmentSchemaType;
-  // Every slug already in use elsewhere on this resume (excluding `page`
-  // itself) — collisions are de-duped silently on save, not blocked.
   usedSlugs: Set<string>;
   onSave: (page: AttachmentSchemaType) => void;
   onClose: () => void;
@@ -113,11 +97,10 @@ export function PageEditorView({
   const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const contentImageInputRef = useRef<HTMLInputElement>(null);
   const { uploadToS3 } = useS3Upload();
-  const [isUploadingContentImages, setIsUploadingContentImages] =
-    useState(false);
   const [isInsertMenuOpen, setIsInsertMenuOpen] = useState(false);
+  const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
+  const [isEmbedDialogOpen, setIsEmbedDialogOpen] = useState(false);
   const insertMenuRef = useRef<HTMLDivElement>(null);
   const [isTurnIntoMenuOpen, setIsTurnIntoMenuOpen] = useState(false);
   const turnIntoMenuRef = useRef<HTMLDivElement>(null);
@@ -166,10 +149,6 @@ export function PageEditorView({
 
   const editor = useEditor({
     extensions: [
-      // Levels restricted to 2-3: the page's own title (rendered outside
-      // this editor) is the document's only <h1>, so "Heading 1"/"Heading 2"
-      // in the "Turn into" menu below map to actual <h2>/<h3> elements —
-      // never <h1> — regardless of what they're labeled in the UI.
       StarterKit.configure({
         heading: { levels: [2, 3] },
       }),
@@ -193,15 +172,6 @@ export function PageEditorView({
     },
   });
 
-  // Pushes a newly-opened page's content into the editor. Keyed on the
-  // page's identity (not the mirrored `content` state, which onUpdate below
-  // already keeps in sync) — keying on `content` instead re-fires on every
-  // keystroke and races the editor's own input rules: typing a closing
-  // backtick strips both delimiters and applies the mono mark in one
-  // transaction, but this effect would immediately overwrite that with a
-  // one-tick-stale `content` snapshot still holding the raw, un-stripped
-  // backticks (and reset the cursor to the end, since setContent collapses
-  // the selection).
   useEffect(() => {
     if (!editor) return;
     editor.commands.setContent(page?.content || '');
@@ -251,81 +221,44 @@ export function PageEditorView({
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
   };
 
-  const insertEmbed = (provider: EmbedProvider) => {
-    if (!editor) return;
-    setIsInsertMenuOpen(false);
-    const url = window.prompt(`${EMBED_PROVIDER_LABELS[provider]} URL`);
-    if (!url) return;
-    const parsed = parseEmbedUrl(url);
-    if (!parsed || parsed.provider !== provider) {
-      window.alert(
-        `That doesn't look like a ${EMBED_PROVIDER_LABELS[provider]} URL.`,
-      );
-      return;
+  const handleMediaInsert = (attachments: AttachmentSchemaType[]) => {
+    setIsMediaDialogOpen(false);
+    if (!editor || attachments.length === 0) return;
+
+    const toNode = (a: AttachmentSchemaType) => {
+      const src = getOptimizedImageUrl(a.url) || a.url;
+      return a.type === 'video'
+        ? { type: 'contentVideo', attrs: { src } }
+        : { type: 'contentImage', attrs: { src } };
+    };
+
+    if (attachments.length === 1) {
+      editor.chain().focus().insertContent(toNode(attachments[0])).run();
+    } else if (attachments.every((a) => a.type !== 'video')) {
+      editor
+        .chain()
+        .focus()
+        .insertContent({
+          type: 'gallery',
+          attrs: {
+            images: attachments.map(
+              (a) => getOptimizedImageUrl(a.url) || a.url,
+            ),
+          },
+        })
+        .run();
+    } else {
+      editor.chain().focus().insertContent(attachments.map(toNode)).run();
     }
+  };
+
+  const handleEmbedInsert = (provider: EmbedProvider, src: string) => {
+    if (!editor) return;
     editor
       .chain()
       .focus()
-      .insertContent({
-        type: 'embed',
-        attrs: { provider: parsed.provider, src: parsed.src },
-      })
+      .insertContent({ type: 'embed', attrs: { provider, src } })
       .run();
-  };
-
-  const handleInsertImagesClick = () => {
-    setIsInsertMenuOpen(false);
-    contentImageInputRef.current?.click();
-  };
-
-  const handleContentImagesUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const files = Array.from(e.target.files || []);
-    if (!files.length || !editor) return;
-
-    try {
-      setIsUploadingContentImages(true);
-      const uploaded = await Promise.all(
-        files.map(async (file) => {
-          const isVideo = file.type.startsWith('video/');
-          const { url } = await uploadToS3(file, {
-            endpoint: { request: { url: '/api/s3-upload' } },
-          });
-          return { url: getOptimizedImageUrl(url) || url, isVideo };
-        }),
-      );
-
-      const toNode = ({ url, isVideo }: { url: string; isVideo: boolean }) =>
-        isVideo
-          ? { type: 'contentVideo', attrs: { src: url } }
-          : { type: 'contentImage', attrs: { src: url } };
-
-      if (uploaded.length === 1) {
-        editor.chain().focus().insertContent(toNode(uploaded[0])).run();
-      } else if (uploaded.every((item) => !item.isVideo)) {
-        // The inline-expanding gallery layout only knows how to lay out
-        // photos — a mixed or all-video selection falls through to the
-        // branch below and inserts each item as its own block instead.
-        editor
-          .chain()
-          .focus()
-          .insertContent({
-            type: 'gallery',
-            attrs: { images: uploaded.map((item) => item.url) },
-          })
-          .run();
-      } else {
-        editor.chain().focus().insertContent(uploaded.map(toNode)).run();
-      }
-    } catch (error) {
-      console.error('Error uploading content images:', error);
-    } finally {
-      setIsUploadingContentImages(false);
-      if (contentImageInputRef.current) {
-        contentImageInputRef.current.value = '';
-      }
-    }
   };
 
   const handleThumbnailUpload = async (
@@ -353,20 +286,19 @@ export function PageEditorView({
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden bg-surface-1">
-      {/* Top Bar */}
-      <div className="flex h-12 shrink-0 items-center border-b border-border-strong bg-surface-1">
+      <div className="scrollbar-hide flex h-12 shrink-0 items-center overflow-x-auto border-b border-border-strong bg-surface-1">
         <button
           onClick={onClose}
-          className="flex h-full w-14 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
+          className="flex h-full w-14 shrink-0 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
 
-        <div ref={turnIntoMenuRef} className="relative h-full">
+        <div ref={turnIntoMenuRef} className="relative h-full shrink-0">
           <button
             onClick={() => setIsTurnIntoMenuOpen((prev) => !prev)}
             className={cn(
-              'flex h-full items-center border-r border-border-strong px-6 text-sm font-medium text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
+              'flex h-full items-center whitespace-nowrap border-r border-border-strong px-6 text-sm font-medium text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
               isTurnIntoMenuOpen && 'bg-surface-2 text-content-primary',
             )}
           >
@@ -399,11 +331,11 @@ export function PageEditorView({
           )}
         </div>
 
-        <div ref={insertMenuRef} className="relative h-full">
+        <div ref={insertMenuRef} className="relative h-full shrink-0">
           <button
             onClick={() => setIsInsertMenuOpen((prev) => !prev)}
             className={cn(
-              'flex h-full items-center gap-1.5 border-r border-border-strong px-6 text-sm font-medium text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
+              'flex h-full items-center gap-1.5 whitespace-nowrap border-r border-border-strong px-6 text-sm font-medium text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
               isInsertMenuOpen && 'bg-surface-2 text-content-primary',
             )}
           >
@@ -413,53 +345,44 @@ export function PageEditorView({
           {isInsertMenuOpen && (
             <div className="absolute left-0 top-full z-10 mt-1 w-48 overflow-hidden rounded-md border border-border-strong bg-surface-1 shadow-lg">
               <button
-                onClick={handleInsertImagesClick}
-                disabled={isUploadingContentImages}
-                className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary disabled:cursor-not-allowed disabled:opacity-50"
+                onClick={() => {
+                  setIsInsertMenuOpen(false);
+                  setIsMediaDialogOpen(true);
+                }}
+                className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
               >
                 Photos and video
               </button>
               <button
-                onClick={() => insertEmbed('figma')}
+                onClick={() => {
+                  setIsInsertMenuOpen(false);
+                  setIsEmbedDialogOpen(true);
+                }}
                 className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
               >
-                Figma
-              </button>
-              <button
-                onClick={() => insertEmbed('vimeo')}
-                className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
-              >
-                Vimeo
-              </button>
-              <button
-                onClick={() => insertEmbed('youtube')}
-                className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
-              >
-                YouTube
-              </button>
-              <button
-                onClick={() => insertEmbed('twitter')}
-                className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
-              >
-                Twitter
+                Embed
               </button>
             </div>
           )}
         </div>
 
-        <input
-          type="file"
-          ref={contentImageInputRef}
-          className="hidden"
-          accept="image/*,video/mp4,video/quicktime"
-          multiple
-          onChange={handleContentImagesUpload}
+        <MediaUploadDialog
+          open={isMediaDialogOpen}
+          onOpenChange={setIsMediaDialogOpen}
+          existingAttachments={[]}
+          onSave={handleMediaInsert}
+        />
+
+        <EmbedDialog
+          open={isEmbedDialogOpen}
+          onOpenChange={setIsEmbedDialogOpen}
+          onInsert={handleEmbedInsert}
         />
 
         <button
           onClick={() => editor?.chain().focus().toggleBold().run()}
           className={cn(
-            'flex h-full w-12 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
+            'flex h-full w-12 shrink-0 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
             editor?.isActive('bold') && 'bg-surface-2 text-content-primary',
           )}
         >
@@ -469,7 +392,7 @@ export function PageEditorView({
         <button
           onClick={() => editor?.chain().focus().toggleItalic().run()}
           className={cn(
-            'flex h-full w-12 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
+            'flex h-full w-12 shrink-0 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
             editor?.isActive('italic') && 'bg-surface-2 text-content-primary',
           )}
         >
@@ -479,7 +402,7 @@ export function PageEditorView({
         <button
           onClick={() => editor?.chain().focus().toggleStrike().run()}
           className={cn(
-            'flex h-full w-12 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
+            'flex h-full w-12 shrink-0 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
             editor?.isActive('strike') && 'bg-surface-2 text-content-primary',
           )}
         >
@@ -489,7 +412,7 @@ export function PageEditorView({
         <button
           onClick={() => editor?.chain().focus().toggleCode().run()}
           className={cn(
-            'flex h-full w-12 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
+            'flex h-full w-12 shrink-0 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
             editor?.isActive('code') && 'bg-surface-2 text-content-primary',
           )}
         >
@@ -499,7 +422,7 @@ export function PageEditorView({
         <button
           onClick={setLink}
           className={cn(
-            'flex h-full w-12 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
+            'flex h-full w-12 shrink-0 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
             editor?.isActive('link') && 'bg-surface-2 text-content-primary',
           )}
         >
@@ -510,7 +433,7 @@ export function PageEditorView({
       {/* Editor Body */}
       <div className="flex-1 overflow-y-auto px-8 py-12 md:px-24">
         <div className="mx-auto max-w-3xl">
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex flex-1 flex-col gap-6">
               <div className="flex items-center gap-6">
                 <span className="w-12 text-sm text-content-muted">Slug</span>
@@ -547,7 +470,7 @@ export function PageEditorView({
             </div>
 
             {/* Thumbnail Area */}
-            <div className="ml-8 shrink-0">
+            <div className="shrink-0 sm:ml-8">
               {thumbnailUrl ? (
                 <div className="group relative h-24 w-40 overflow-hidden rounded-xl border border-border-strong bg-surface-2 shadow-sm">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -608,7 +531,7 @@ export function PageEditorView({
           disabled={!title.trim()}
           className="h-9 rounded-md border border-border-strong bg-surface-1 px-6 text-sm font-medium text-content-primary shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
         >
-          Save
+          Publish
         </button>
       </div>
     </div>
