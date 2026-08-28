@@ -49,6 +49,7 @@ export const FullResume = ({
   userProfile,
   username,
   hideSocialFeatures = false,
+  isPersonalDomainView = false,
 }: {
   resume: ResumeData;
   profilePicture?: string;
@@ -56,6 +57,7 @@ export const FullResume = ({
   userProfile?: UserProfile;
   username: string;
   hideSocialFeatures?: boolean;
+  isPersonalDomainView?: boolean;
 }) => {
   const [activeTab, setActiveTab] = useState<'about' | 'writing'>('about');
   const order = normalizeSectionOrder(resume.sectionOrder);
@@ -219,7 +221,11 @@ export const FullResume = ({
             })}
           </div>
         ) : (
-          <PublicWritingList resume={resume} username={username} />
+          <PublicWritingList
+            resume={resume}
+            username={username}
+            isPersonalDomainView={isPersonalDomainView}
+          />
         )}
       </section>
     </ResumePagesProvider>
