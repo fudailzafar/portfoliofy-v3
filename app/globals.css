@@ -276,6 +276,14 @@
   margin: 1.5rem 0;
 }
 
+.embed-iframe[data-embed-provider='figma'] {
+  border-radius: 0;
+}
+
+.embed-iframe[data-embed-provider='vimeo'] {
+  border-radius: 0;
+}
+
 .embed-tweet-card {
   display: block;
   margin: 1.5rem 0;
@@ -294,6 +302,13 @@
 }
 
 .content-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+}
+
+.content-video {
   display: block;
   width: 100%;
   height: auto;
