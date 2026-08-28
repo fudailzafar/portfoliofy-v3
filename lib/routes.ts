@@ -16,4 +16,6 @@ export const RESERVED_USERNAMES = [
   'terms',
   'www',
   'explore',
+  'press',
+  'about',
 ];
