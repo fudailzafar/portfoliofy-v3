@@ -9,7 +9,10 @@ export function Footer() {
           <Link href="/" className="underline-offset-[3px] hover:underline">
             About
           </Link>
-          <Link href="/faq" className="underline-offset-[3px] hover:underline">
+          <Link
+            href="/support/faq"
+            className="underline-offset-[3px] hover:underline"
+          >
             FAQs
           </Link>
           <Link
