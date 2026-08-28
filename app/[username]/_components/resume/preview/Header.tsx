@@ -138,13 +138,24 @@ export function Header({
               className="text-pretty text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary"
               aria-labelledby="resume-name"
             >
-              {[
-                header.shortAbout,
-                header.location ? `in ${header.location}` : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              {header.pronouns ? `, ${header.pronouns}` : ''}
+              {(() => {
+                const mainText = [
+                  header.shortAbout,
+                  header.location
+                    ? header.shortAbout
+                      ? `in ${header.location}`
+                      : header.location
+                    : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ');
+                const pronounsText = header.pronouns
+                  ? mainText
+                    ? `, ${header.pronouns}`
+                    : header.pronouns
+                  : '';
+                return `${mainText}${pronounsText}`;
+              })()}
             </p>
           )}
 
