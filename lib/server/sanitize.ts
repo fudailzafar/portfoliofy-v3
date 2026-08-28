@@ -21,9 +21,10 @@ export function sanitizeRichText(html: string): string {
 }
 
 // Broader allowlist for an embedded page's body — mirrors what
-// PageEditorView's richer Tiptap instance (headings, images, YouTube/Vimeo/
-// Figma embeds) can actually produce. Iframes are locked to those three
-// hostnames so this can't be used to embed arbitrary third-party content.
+// PageEditorView's richer Tiptap instance (headings, images, video,
+// YouTube/Vimeo/Figma embeds) can actually produce. Iframes are locked to
+// those three hostnames so this can't be used to embed arbitrary third-party
+// content.
 const PAGE_CONTENT_OPTIONS: sanitizeHtml.IOptions = {
   allowedTags: [
     ...(RICH_TEXT_OPTIONS.allowedTags as string[]),
@@ -41,6 +42,7 @@ const PAGE_CONTENT_OPTIONS: sanitizeHtml.IOptions = {
     's',
     'hr',
     'img',
+    'video',
     'iframe',
     'div',
     'button',
@@ -48,6 +50,16 @@ const PAGE_CONTENT_OPTIONS: sanitizeHtml.IOptions = {
   allowedAttributes: {
     a: ['href', 'target', 'rel', 'class', 'data-embed-provider'],
     img: ['src', 'alt', 'width', 'height', 'class', 'data-content-image'],
+    video: [
+      'src',
+      'controls',
+      'playsinline',
+      'preload',
+      'width',
+      'height',
+      'class',
+      'data-content-video',
+    ],
     iframe: [
       'src',
       'width',
