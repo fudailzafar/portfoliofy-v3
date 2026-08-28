@@ -50,7 +50,9 @@ export const ContentVideo = Node.create({
       mergeAttributes(HTMLAttributes, {
         'data-content-video': 'true',
         class: 'content-video',
-        controls: '',
+        autoplay: '',
+        muted: '',
+        loop: '',
         playsinline: '',
         preload: 'metadata',
       }),

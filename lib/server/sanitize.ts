@@ -53,6 +53,9 @@ const PAGE_CONTENT_OPTIONS: sanitizeHtml.IOptions = {
     video: [
       'src',
       'controls',
+      'autoplay',
+      'muted',
+      'loop',
       'playsinline',
       'preload',
       'width',
