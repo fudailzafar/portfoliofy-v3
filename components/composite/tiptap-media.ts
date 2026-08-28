@@ -28,6 +28,36 @@ export const ContentImage = Node.create({
   },
 });
 
+export const ContentVideo = Node.create({
+  name: 'contentVideo',
+  group: 'block',
+  atom: true,
+  draggable: true,
+
+  addAttributes() {
+    return {
+      src: { default: null },
+    };
+  },
+
+  parseHTML() {
+    return [{ tag: 'video[data-content-video]' }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return [
+      'video',
+      mergeAttributes(HTMLAttributes, {
+        'data-content-video': 'true',
+        class: 'content-video',
+        controls: '',
+        playsinline: '',
+        preload: 'metadata',
+      }),
+    ];
+  },
+});
+
 /**
  * Multiple images grouped into one inline-expanding gallery, matching
  * read.cv's writing pages: click a thumbnail and it expands in place
