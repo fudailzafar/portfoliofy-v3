@@ -3,7 +3,12 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getUserData } from '../utils';
 import { findPageBySlug, estimateReadMinutes } from '@/lib/resume';
-import { getOptimizedImageUrl, isOwnS3ImageUrl } from '@/lib/utils';
+import {
+  getOptimizedImageUrl,
+  isOwnS3ImageUrl,
+  getCanonicalUrl,
+} from '@/lib/utils';
+import { getCachedCustomDomainByUserId } from '@/lib/server/cachedFunctions';
 import { PageContent } from './PageContent';
 import { ShareButton } from './ShareButton';
 
@@ -14,13 +19,13 @@ const parsePageDate = (dateStr?: string) => {
 };
 
 async function resolvePage(username: string, slug: string) {
-  const { resume, userProfile } = await getUserData(username);
-  if (!resume?.resumeData) return null;
+  const { user_id, resume, userProfile } = await getUserData(username);
+  if (!user_id || !resume?.resumeData) return null;
 
   const page = findPageBySlug(resume.resumeData, slug);
   if (!page || page.hidden) return null;
 
-  return { page, resumeData: resume.resumeData, userProfile };
+  return { user_id, page, resumeData: resume.resumeData, userProfile };
 }
 
 export async function generateMetadata({
@@ -45,10 +50,14 @@ export async function generateMetadata({
       ? design.favicon
       : undefined;
 
+  const customDomain = await getCachedCustomDomainByUserId(resolved.user_id);
+  const canonicalUrl = getCanonicalUrl(username, customDomain, slug);
+
   return {
     title: `${resolved.page.title}`,
     description: stripHtml(resolved.page.content).slice(0, 200),
     icons: customFavicon ? { icon: customFavicon } : undefined,
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       title: resolved.page.title,
       description: stripHtml(resolved.page.content).slice(0, 200),
