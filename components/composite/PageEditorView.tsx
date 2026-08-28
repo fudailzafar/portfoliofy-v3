@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { AttachmentSchemaType, slugify, dedupeSlug } from '@/lib/resume';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -102,22 +103,37 @@ export function PageEditorView({
   const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
   const [isEmbedDialogOpen, setIsEmbedDialogOpen] = useState(false);
   const insertMenuRef = useRef<HTMLDivElement>(null);
+  const insertButtonRef = useRef<HTMLButtonElement>(null);
+  const insertDropdownRef = useRef<HTMLDivElement>(null);
+  const [insertMenuPos, setInsertMenuPos] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
   const [isTurnIntoMenuOpen, setIsTurnIntoMenuOpen] = useState(false);
   const turnIntoMenuRef = useRef<HTMLDivElement>(null);
+  const turnIntoButtonRef = useRef<HTMLButtonElement>(null);
+  const turnIntoDropdownRef = useRef<HTMLDivElement>(null);
+  const [turnIntoMenuPos, setTurnIntoMenuPos] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
   // Slug auto-follows the title until the user edits it by hand.
   const slugTouchedRef = useRef(false);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node;
       if (
         insertMenuRef.current &&
-        !insertMenuRef.current.contains(event.target as Node)
+        !insertMenuRef.current.contains(target) &&
+        !insertDropdownRef.current?.contains(target)
       ) {
         setIsInsertMenuOpen(false);
       }
       if (
         turnIntoMenuRef.current &&
-        !turnIntoMenuRef.current.contains(event.target as Node)
+        !turnIntoMenuRef.current.contains(target) &&
+        !turnIntoDropdownRef.current?.contains(target)
       ) {
         setIsTurnIntoMenuOpen(false);
       }
@@ -125,6 +141,20 @@ export function PageEditorView({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useLayoutEffect(() => {
+    if (isTurnIntoMenuOpen && turnIntoButtonRef.current) {
+      const rect = turnIntoButtonRef.current.getBoundingClientRect();
+      setTurnIntoMenuPos({ top: rect.bottom + 4, left: rect.left });
+    }
+  }, [isTurnIntoMenuOpen]);
+
+  useLayoutEffect(() => {
+    if (isInsertMenuOpen && insertButtonRef.current) {
+      const rect = insertButtonRef.current.getBoundingClientRect();
+      setInsertMenuPos({ top: rect.bottom + 4, left: rect.left });
+    }
+  }, [isInsertMenuOpen]);
 
   useEffect(() => {
     if (page) {
@@ -296,6 +326,7 @@ export function PageEditorView({
 
         <div ref={turnIntoMenuRef} className="relative h-full shrink-0">
           <button
+            ref={turnIntoButtonRef}
             onClick={() => setIsTurnIntoMenuOpen((prev) => !prev)}
             className={cn(
               'flex h-full items-center whitespace-nowrap border-r border-border-strong px-6 text-sm font-medium text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
@@ -305,34 +336,43 @@ export function PageEditorView({
             Turn into
           </button>
 
-          {isTurnIntoMenuOpen && editor && (
-            <div className="absolute left-0 top-full z-10 mt-1 w-48 overflow-hidden rounded-md border border-border-strong bg-surface-1 shadow-lg">
-              {BLOCK_TYPE_OPTIONS.map(({ label, isActive, run }) => {
-                const active = isActive(editor);
-                return (
-                  <button
-                    key={label}
-                    onClick={() => {
-                      run(editor);
-                      setIsTurnIntoMenuOpen(false);
-                    }}
-                    className={cn(
-                      'flex w-full items-center px-4 py-2.5 text-left text-sm transition-colors hover:bg-surface-2 hover:text-content-primary',
-                      active
-                        ? 'font-semibold text-content-primary'
-                        : 'text-content-secondary',
-                    )}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          {isTurnIntoMenuOpen &&
+            editor &&
+            turnIntoMenuPos &&
+            createPortal(
+              <div
+                ref={turnIntoDropdownRef}
+                style={{ top: turnIntoMenuPos.top, left: turnIntoMenuPos.left }}
+                className="pointer-events-auto fixed z-[100] w-48 overflow-hidden rounded-md border border-border-strong bg-surface-1 shadow-lg"
+              >
+                {BLOCK_TYPE_OPTIONS.map(({ label, isActive, run }) => {
+                  const active = isActive(editor);
+                  return (
+                    <button
+                      key={label}
+                      onClick={() => {
+                        run(editor);
+                        setIsTurnIntoMenuOpen(false);
+                      }}
+                      className={cn(
+                        'flex w-full items-center px-4 py-2.5 text-left text-sm transition-colors hover:bg-surface-2 hover:text-content-primary',
+                        active
+                          ? 'font-semibold text-content-primary'
+                          : 'text-content-secondary',
+                      )}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>,
+              document.body,
+            )}
         </div>
 
         <div ref={insertMenuRef} className="relative h-full shrink-0">
           <button
+            ref={insertButtonRef}
             onClick={() => setIsInsertMenuOpen((prev) => !prev)}
             className={cn(
               'flex h-full items-center gap-1.5 whitespace-nowrap border-r border-border-strong px-6 text-sm font-medium text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
@@ -342,28 +382,35 @@ export function PageEditorView({
             Insert
           </button>
 
-          {isInsertMenuOpen && (
-            <div className="absolute left-0 top-full z-10 mt-1 w-48 overflow-hidden rounded-md border border-border-strong bg-surface-1 shadow-lg">
-              <button
-                onClick={() => {
-                  setIsInsertMenuOpen(false);
-                  setIsMediaDialogOpen(true);
-                }}
-                className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
+          {isInsertMenuOpen &&
+            insertMenuPos &&
+            createPortal(
+              <div
+                ref={insertDropdownRef}
+                style={{ top: insertMenuPos.top, left: insertMenuPos.left }}
+                className="pointer-events-auto fixed z-[100] w-48 overflow-hidden rounded-md border border-border-strong bg-surface-1 shadow-lg"
               >
-                Photos and video
-              </button>
-              <button
-                onClick={() => {
-                  setIsInsertMenuOpen(false);
-                  setIsEmbedDialogOpen(true);
-                }}
-                className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
-              >
-                Embed
-              </button>
-            </div>
-          )}
+                <button
+                  onClick={() => {
+                    setIsInsertMenuOpen(false);
+                    setIsMediaDialogOpen(true);
+                  }}
+                  className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
+                >
+                  Photos and video
+                </button>
+                <button
+                  onClick={() => {
+                    setIsInsertMenuOpen(false);
+                    setIsEmbedDialogOpen(true);
+                  }}
+                  className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
+                >
+                  Embed
+                </button>
+              </div>,
+              document.body,
+            )}
         </div>
 
         <MediaUploadDialog
