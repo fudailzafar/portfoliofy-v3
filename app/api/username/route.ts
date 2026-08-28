@@ -3,6 +3,10 @@ import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { normalizeUsername } from '@/lib/validation/username';
+import { checkRateLimit } from '@/lib/server/rateLimit';
+
+const USERNAME_CHANGE_MAX_REQUESTS = 5;
+const USERNAME_CHANGE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 export type GetResponse = { username?: string | null } | { error: string };
 export type PostResponse = { success: true } | { error: string };
@@ -31,6 +35,21 @@ export async function POST(
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { allowed, retryAfterMs } = await checkRateLimit(
+      `username-change:${session.user.id}`,
+      USERNAME_CHANGE_MAX_REQUESTS,
+      USERNAME_CHANGE_WINDOW_MS,
+    );
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many username changes — please try again later.' },
+        {
+          status: 429,
+          headers: { 'Retry-After': String(Math.ceil(retryAfterMs / 1000)) },
+        },
+      );
     }
 
     const { username } = await request.json();

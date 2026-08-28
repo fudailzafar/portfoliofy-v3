@@ -5,6 +5,10 @@ import { createUsernameLookup, storeResume } from '@/lib/server/dbActions';
 import { ResumeDataSchemaType, ResumeDataSchema } from '@/lib/resume';
 import { revalidateTag } from 'next/cache';
 import { normalizeUsername } from '@/lib/validation/username';
+import { checkRateLimit } from '@/lib/server/rateLimit';
+
+const CLAIM_MAX_REQUESTS = 10;
+const CLAIM_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 export async function claimUsernameAndInitProfile(
   username: string,
@@ -14,6 +18,15 @@ export async function claimUsernameAndInitProfile(
   const userId = session?.user?.id;
   if (!userId) {
     throw new Error('Unauthorized');
+  }
+
+  const { allowed } = await checkRateLimit(
+    `claim-username:${userId}`,
+    CLAIM_MAX_REQUESTS,
+    CLAIM_WINDOW_MS,
+  );
+  if (!allowed) {
+    return { error: 'Too many attempts — please try again later.' };
   }
 
   // 1. Claim username

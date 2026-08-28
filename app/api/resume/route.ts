@@ -3,6 +3,10 @@ import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { revalidateTag } from 'next/cache';
+import { checkRateLimit } from '@/lib/server/rateLimit';
+
+const RESUME_SAVE_MAX_REQUESTS = 30;
+const RESUME_SAVE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 export type GetResumeResponse = { resume?: Resume } | { error: string };
 export type PostResumeResponse =
@@ -33,6 +37,21 @@ export async function POST(
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { allowed, retryAfterMs } = await checkRateLimit(
+      `resume-save:${session.user.id}`,
+      RESUME_SAVE_MAX_REQUESTS,
+      RESUME_SAVE_WINDOW_MS,
+    );
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many saves — please try again shortly.' },
+        {
+          status: 429,
+          headers: { 'Retry-After': String(Math.ceil(retryAfterMs / 1000)) },
+        },
+      );
     }
 
     // Guard: parse body first — a missing or malformed body would otherwise
