@@ -12,11 +12,6 @@ import {
   Italic,
   Strikethrough,
   Link as LinkIcon,
-  Image as ImageIcon,
-  Figma,
-  Film,
-  Youtube,
-  Twitter,
   CodeXml,
 } from 'lucide-react';
 import { cn, getOptimizedImageUrl } from '@/lib/utils';
@@ -26,7 +21,11 @@ import {
   EmbedProvider,
   parseEmbedUrl,
 } from '@/components/composite/tiptap-embed';
-import { ContentImage, Gallery } from '@/components/composite/tiptap-media';
+import {
+  ContentImage,
+  ContentVideo,
+  Gallery,
+} from '@/components/composite/tiptap-media';
 import { Spinner } from '../ui/spinner';
 
 // `createdAt` is stored as a full ISO timestamp but edited as a plain
@@ -179,6 +178,7 @@ export function PageEditorView({
       }),
       Embed,
       ContentImage,
+      ContentVideo,
       Gallery,
     ],
     content: content,
@@ -288,25 +288,35 @@ export function PageEditorView({
       setIsUploadingContentImages(true);
       const uploaded = await Promise.all(
         files.map(async (file) => {
+          const isVideo = file.type.startsWith('video/');
           const { url } = await uploadToS3(file, {
             endpoint: { request: { url: '/api/s3-upload' } },
           });
-          return getOptimizedImageUrl(url) || url;
+          return { url: getOptimizedImageUrl(url) || url, isVideo };
         }),
       );
 
+      const toNode = ({ url, isVideo }: { url: string; isVideo: boolean }) =>
+        isVideo
+          ? { type: 'contentVideo', attrs: { src: url } }
+          : { type: 'contentImage', attrs: { src: url } };
+
       if (uploaded.length === 1) {
+        editor.chain().focus().insertContent(toNode(uploaded[0])).run();
+      } else if (uploaded.every((item) => !item.isVideo)) {
+        // The inline-expanding gallery layout only knows how to lay out
+        // photos — a mixed or all-video selection falls through to the
+        // branch below and inserts each item as its own block instead.
         editor
           .chain()
           .focus()
-          .insertContent({ type: 'contentImage', attrs: { src: uploaded[0] } })
+          .insertContent({
+            type: 'gallery',
+            attrs: { images: uploaded.map((item) => item.url) },
+          })
           .run();
       } else {
-        editor
-          .chain()
-          .focus()
-          .insertContent({ type: 'gallery', attrs: { images: uploaded } })
-          .run();
+        editor.chain().focus().insertContent(uploaded.map(toNode)).run();
       }
     } catch (error) {
       console.error('Error uploading content images:', error);
@@ -407,40 +417,31 @@ export function PageEditorView({
                 disabled={isUploadingContentImages}
                 className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isUploadingContentImages ? (
-                  <Spinner size={4} />
-                ) : (
-                  <ImageIcon className="h-4 w-4" />
-                )}
-                Image
+                Photos and video
               </button>
               <button
                 onClick={() => insertEmbed('figma')}
                 className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
               >
-                <Figma className="h-4 w-4" />
                 Figma
               </button>
               <button
                 onClick={() => insertEmbed('vimeo')}
                 className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
               >
-                <Film className="h-4 w-4" />
                 Vimeo
               </button>
               <button
                 onClick={() => insertEmbed('youtube')}
                 className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
               >
-                <Youtube className="h-4 w-4" />
                 YouTube
               </button>
               <button
                 onClick={() => insertEmbed('twitter')}
                 className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
               >
-                <Twitter className="h-4 w-4" />
-                X/Twitter
+                Twitter
               </button>
             </div>
           )}
@@ -450,7 +451,7 @@ export function PageEditorView({
           type="file"
           ref={contentImageInputRef}
           className="hidden"
-          accept="image/*"
+          accept="image/*,video/mp4,video/quicktime"
           multiple
           onChange={handleContentImagesUpload}
         />
