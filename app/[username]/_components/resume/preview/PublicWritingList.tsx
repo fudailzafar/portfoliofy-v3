@@ -6,9 +6,11 @@ import Link from 'next/link';
 export function PublicWritingList({
   resume,
   username,
+  isPersonalDomainView = false,
 }: {
   resume: ResumeData;
   username: string;
+  isPersonalDomainView?: boolean;
 }) {
   const parseDate = (dateStr?: string) => {
     if (!dateStr) return null;
@@ -65,7 +67,9 @@ export function PublicWritingList({
           <div className="flex flex-col gap-8">
             {yearPages.map((page) => {
               const { parsedDate } = page;
-              const href = `/${username}/${page.slug || page.id}`;
+              const href = isPersonalDomainView
+                ? `/${page.slug || page.id}`
+                : `/${username}/${page.slug || page.id}`;
               const underline =
                 'hover:underline hover:decoration-1 hover:underline-offset-2';
               const dateLabel = parsedDate
