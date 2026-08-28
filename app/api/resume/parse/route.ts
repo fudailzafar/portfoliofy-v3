@@ -7,9 +7,6 @@ import { checkRateLimit } from '@/lib/server/rateLimit';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-// zodToJsonSchema(ResumeDataSchema, ...) is deterministic and only depends on
-// the static schema, so it's computed once at module load instead of on
-// every request.
 const RESUME_JSON_SCHEMA = zodToJsonSchema(ResumeDataSchema, 'ResumeData');
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB — generous for a resume PDF
@@ -23,7 +20,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { allowed, retryAfterMs } = checkRateLimit(
+    const { allowed, retryAfterMs } = await checkRateLimit(
       `resume-parse:${session.user.id}`,
       RATE_LIMIT_MAX_REQUESTS,
       RATE_LIMIT_WINDOW_MS,

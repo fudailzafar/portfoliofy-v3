@@ -13,6 +13,12 @@ import {
   fetchVercelAPI,
   releaseUserDomainFromVercel,
 } from '@/lib/server/vercelDomains';
+import { checkRateLimit } from '@/lib/server/rateLimit';
+
+// Connect and disconnect share one bucket — both call the paid Vercel
+// Domains API, so both count against the same hourly cap.
+const DOMAIN_MUTATE_MAX_REQUESTS = 10;
+const DOMAIN_MUTATE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 export async function GET() {
   try {
@@ -84,6 +90,21 @@ export async function POST(req: Request) {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { allowed, retryAfterMs } = await checkRateLimit(
+      `domain-mutate:${session.user.id}`,
+      DOMAIN_MUTATE_MAX_REQUESTS,
+      DOMAIN_MUTATE_WINDOW_MS,
+    );
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many domain changes — please try again later.' },
+        {
+          status: 429,
+          headers: { 'Retry-After': String(Math.ceil(retryAfterMs / 1000)) },
+        },
+      );
     }
 
     if (!VERCEL_API_TOKEN || !VERCEL_PROJECT_ID) {
@@ -177,6 +198,21 @@ export async function DELETE() {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { allowed, retryAfterMs } = await checkRateLimit(
+      `domain-mutate:${session.user.id}`,
+      DOMAIN_MUTATE_MAX_REQUESTS,
+      DOMAIN_MUTATE_WINDOW_MS,
+    );
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many domain changes — please try again later.' },
+        {
+          status: 429,
+          headers: { 'Retry-After': String(Math.ceil(retryAfterMs / 1000)) },
+        },
+      );
     }
 
     const domain = await getCustomDomainByUserId(session.user.id);
