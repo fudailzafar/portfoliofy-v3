@@ -2,10 +2,16 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getUserData } from '../utils';
-import { findPageBySlug } from '@/lib/resume';
+import { findPageBySlug, estimateReadMinutes } from '@/lib/resume';
 import { getOptimizedImageUrl, isOwnS3ImageUrl } from '@/lib/utils';
 import { PageContent } from './PageContent';
 import { ShareButton } from './ShareButton';
+
+const parsePageDate = (dateStr?: string) => {
+  if (!dateStr) return null;
+  const parsed = new Date(dateStr);
+  return isNaN(parsed.getTime()) ? null : parsed;
+};
 
 async function resolvePage(username: string, slug: string) {
   const { resume, userProfile } = await getUserData(username);
@@ -40,7 +46,7 @@ export async function generateMetadata({
       : undefined;
 
   return {
-    title: `${resolved.page.title} · ${resolved.resumeData.header.name}`,
+    title: `${resolved.page.title}`,
     description: stripHtml(resolved.page.content).slice(0, 200),
     icons: customFavicon ? { icon: customFavicon } : undefined,
     openGraph: {
@@ -51,7 +57,7 @@ export async function generateMetadata({
           url: `https://portfoliofy.me/${username}/${slug}/og`,
           width: 1200,
           height: 630,
-          alt: `${resolved.page.title} · ${resolved.resumeData.header.name}`,
+          alt: `${resolved.page.title}`,
         },
       ],
     },
@@ -88,6 +94,31 @@ export default async function PageDetail({
     (hostname.endsWith('.localhost') && hostname !== 'localhost');
   const isPersonalDomainView = username.includes('.') || isSubdomainView;
   const profileHref = isPersonalDomainView ? '/' : `/${username}`;
+
+  // Same published/newest-first ordering as PublicWritingList, so "next"
+  // here always agrees with where this post actually sits in that list.
+  const publishedPages = (resumeData.pages || [])
+    .filter((p) => !p.hidden)
+    .map((p) => ({ ...p, parsedDate: parsePageDate(p.createdAt) }))
+    .sort(
+      (a, b) => (b.parsedDate?.getTime() || 0) - (a.parsedDate?.getTime() || 0),
+    );
+  const currentIndex = publishedPages.findIndex((p) => p.id === page.id);
+  // Stepping through "next" repeatedly should cycle every published post
+  // exactly once: normally that's the next-newer post (index - 1), but the
+  // newest post (index 0) has no newer post to step to, so it wraps around
+  // to the oldest one instead of dead-ending.
+  const nextPage =
+    currentIndex !== -1 && publishedPages.length > 1
+      ? currentIndex === 0
+        ? publishedPages[publishedPages.length - 1]
+        : publishedPages[currentIndex - 1]
+      : null;
+  const nextPageHref = nextPage
+    ? isPersonalDomainView
+      ? `/${nextPage.slug || nextPage.id}`
+      : `/${username}/${nextPage.slug || nextPage.id}`
+    : null;
 
   return (
     <div
@@ -126,7 +157,38 @@ export default async function PageDetail({
 
         <PageContent html={page.content || ''} />
 
-        <div className="mt-16 flex items-center justify-center gap-8 pt-6">
+        {nextPage && nextPageHref && (
+          <div className="mt-16">
+            <p className="text-xs font-normal text-theme-muted">
+              More from {resumeData.header.name}
+            </p>
+            <Link
+              href={nextPageHref}
+              className="mt-4 flex h-[90px] w-full overflow-hidden rounded-lg border border-theme-border bg-theme-border"
+            >
+              <div className="h-full w-[108px] shrink-0 overflow-hidden bg-[color-mix(in_srgb,var(--theme-border)_40%,transparent)] sm:w-[152px]">
+                {nextPage.url && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={nextPage.url}
+                    alt={nextPage.title || 'Thumbnail'}
+                    className="h-full w-full object-cover"
+                  />
+                )}
+              </div>
+              <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4">
+                <h4 className="line-clamp-1 text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-primary">
+                  {nextPage.title || 'Untitled'}
+                </h4>
+                <p className="text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-muted">
+                  {estimateReadMinutes(nextPage.content || '')} min read
+                </p>
+              </div>
+            </Link>
+          </div>
+        )}
+
+        <div className="mt-12 flex items-center justify-center gap-8">
           <Link
             href={profileHref}
             className="font-regular text-sm text-theme-muted hover:underline hover:underline-offset-4"
