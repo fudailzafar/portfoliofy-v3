@@ -122,6 +122,7 @@ export function EditProfileDialog({
     hasUnsavedChanges,
     setHasUnsavedChanges,
     initResume,
+    setResume,
     triggerSave,
     activeFormValid,
     editingPage,
@@ -144,27 +145,22 @@ export function EditProfileDialog({
   // Use React Query's fresh data if available, otherwise fallback to server component's initial data
   const freshResume = resumeQuery.data?.resume?.resumeData || resume;
 
-  // Guarded on hasUnsavedChanges: resumeQuery has no custom staleTime, so it
-  // refetches on every window focus. Without this guard, a refetch completing
-  // while the user has an in-progress local edit (anywhere in the editor,
-  // not just Pages) would silently overwrite the store with the older,
-  // pre-edit server snapshot — discarding the edit before Save is ever
-  // clicked. Once hasUnsavedChanges flips back to false (after a successful
-  // save), this re-fires and picks up the now-current freshResume normally.
+  useEffect(() => {
+    initResume(resume, username);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (!hasUnsavedChanges) {
-      initResume(freshResume, username);
+      setResume(freshResume);
     }
-  }, [freshResume, username, initResume, hasUnsavedChanges]);
+  }, [freshResume, setResume, hasUnsavedChanges]);
 
   const [open, setOpen] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
   const [localPicture, setLocalPicture] = useState<string | undefined>(picture);
-  // Tracks the last avatar that actually saved successfully — a failed
-  // upload/removal rolls back here, not to the static page-load `picture`
-  // prop, so an earlier successful change in the same session isn't lost.
   const lastSavedPictureRef = useRef(picture);
   const [isUploadingPicture, setIsUploadingPicture] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<DeleteTarget | null>(null);
@@ -379,9 +375,6 @@ export function EditProfileDialog({
       console.error(error);
       setIsDeletingAccount(false);
     }
-    // No `finally` resetting isDeletingAccount on success — the tab is about
-    // to navigate away (signOut + redirect), so it should stay disabled
-    // rather than flash back to normal for the instant before that happens.
   }, []);
 
   // ---------------------------------------------------------------------------
@@ -390,9 +383,6 @@ export function EditProfileDialog({
   const handleGlobalSave = useCallback(async () => {
     setIsSaving(true);
     try {
-      // Flush whatever item is currently being added/edited (if any) into
-      // the resume before persisting — there's no separate per-item commit
-      // step anymore, Save always captures everything on screen.
       useResumeStore.getState().activeFormCommit?.();
 
       if (uname !== username) {
@@ -446,8 +436,6 @@ export function EditProfileDialog({
     setHasUnsavedChanges(false);
     initResume(resume, username);
     setSectionOrder(normalizeSectionOrder(resume.sectionOrder));
-    // Remounts the currently-active tab so any in-progress add/edit form
-    // (and its local draft) is dropped along with everything else.
     triggerSave();
   }, [resume, username, initResume, setHasUnsavedChanges, triggerSave]);
 
@@ -527,13 +515,6 @@ export function EditProfileDialog({
           <DialogTitle className="sr-only">Edit Profile</DialogTitle>
 
           <ResumePagesProvider pages={currentResume?.pages || []}>
-            {/* The page editor renders as an overlay, not a ternary swap —
-              the sidebar/content tree (and whichever tab's in-progress
-              local draft, e.g. an item mid-edit with the form still open)
-              stays mounted underneath the whole time. Unmounting it while
-              the page editor was open used to reset the tab back to its
-              list view and drop the very draft the new page was just
-              added to. */}
             {editingPage && (
               <div className="flex flex-1 flex-col overflow-hidden">
                 <PageEditorView
