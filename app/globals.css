@@ -271,17 +271,9 @@
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: 0.75rem;
+  border-radius: 0;
   border: 1px solid var(--theme-border, #e5e5e5);
   margin: 1.5rem 0;
-}
-
-.embed-iframe[data-embed-provider='figma'] {
-  border-radius: 0;
-}
-
-.embed-iframe[data-embed-provider='vimeo'] {
-  border-radius: 0;
 }
 
 .embed-tweet-card {
