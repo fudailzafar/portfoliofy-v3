@@ -21,7 +21,7 @@ import { SidebarButton } from './SidebarButton';
 import React, { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { useResumeStore } from '@/store/useResumeStore';
-import { User, Pencil, Settings } from 'lucide-react';
+import { User, Pencil, Bolt } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -96,7 +96,7 @@ export function ProfileSidebar({
   const groups = [
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'writing', label: 'Writing', icon: Pencil },
-    { id: 'account', label: 'Account', icon: Settings },
+    { id: 'account', label: 'Account', icon: Bolt },
   ] as const;
 
   return (

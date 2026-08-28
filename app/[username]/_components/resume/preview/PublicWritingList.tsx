@@ -71,7 +71,7 @@ export function PublicWritingList({
                 ? `/${page.slug || page.id}`
                 : `/${username}/${page.slug || page.id}`;
               const underline =
-                'hover:underline hover:decoration-1 hover:underline-offset-2';
+                'hover:underline hover:decoration-1 hover:underline-offset-[3px]';
               const dateLabel = parsedDate
                 ? parsedDate.toLocaleDateString('en-US', {
                     month: 'short',
@@ -81,45 +81,42 @@ export function PublicWritingList({
               const readLabel = `${estimateReadMinutes(page.content || '')} min read`;
               return (
                 <div key={page.id} className="flex items-center gap-4 sm:gap-8">
-                  {/* Date gutter — desktop/tablet only. On mobile the date
-                      folds into the "{date} · {read time}" line below the
-                      title instead, matching read.cv's own mobile layout
-                      (no separate date column eating into the same left
-                      indentation the About tab content uses). */}
-                  <Link
-                    href={href}
-                    className={`hidden w-14 shrink-0 text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary sm:block sm:w-20 ${underline}`}
-                  >
-                    {dateLabel}
-                  </Link>
-
                   <div className="flex flex-1 items-center justify-between gap-4">
-                    {/* pl-6 indents the title/date block relative to the year
-                        header on mobile (no separate date gutter there to do
-                        it visually) — this also naturally closes up the gap
-                        to the thumbnail, since the thumbnail stays anchored
-                        to the row's right edge via justify-between. */}
-                    <div className="flex flex-col gap-1 pl-6 sm:pl-0">
+                    <div className="flex items-start gap-4 sm:gap-8">
+                      {/* Date */}
                       <Link
                         href={href}
-                        className={`text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-primary ${underline}`}
+                        className={`hidden w-14 shrink-0 text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-muted sm:block sm:w-20 ${underline}`}
                       >
-                        {page.title || 'Untitled'}
+                        {dateLabel}
                       </Link>
-                      <Link
-                        href={href}
-                        className={`hidden text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary sm:block ${underline}`}
-                      >
-                        {readLabel}
-                      </Link>
-                      <Link
-                        href={href}
-                        className={`text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary sm:hidden ${underline}`}
-                      >
-                        {dateLabel} · {readLabel}
-                      </Link>
+
+                      {/* Title / Read Time */}
+                      <div className="flex flex-col gap-1 pl-6 sm:pl-0">
+                        <Link
+                          href={href}
+                          className={`text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-primary ${underline}`}
+                        >
+                          {page.title || 'Untitled'}
+                        </Link>
+                        <Link
+                          href={href}
+                          className={`hidden text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-muted sm:block ${underline}`}
+                        >
+                          {readLabel}
+                        </Link>
+
+                        {/* Mobile Date + Read Time */}
+                        <Link
+                          href={href}
+                          className={`text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary sm:hidden ${underline}`}
+                        >
+                          {dateLabel} · {readLabel}
+                        </Link>
+                      </div>
                     </div>
 
+                    {/* Thumbnail */}
                     <Link
                       href={href}
                       className="h-[90px] w-[115px] shrink-0 overflow-hidden rounded-xl border border-theme-border bg-[color-mix(in_srgb,var(--theme-border)_40%,transparent)] sm:w-[152px]"
