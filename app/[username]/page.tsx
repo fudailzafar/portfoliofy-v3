@@ -76,7 +76,7 @@ export async function generateMetadata({
           url: customOgImage || `https://portfoliofy.me/${username}/og`,
           width: 1200,
           height: 630,
-          alt: 'Portfoliofy User Open Graph Image',
+          alt: `${resume.resumeData.header.name}'s profile`,
         },
       ],
     },
