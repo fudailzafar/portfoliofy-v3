@@ -124,15 +124,6 @@ export default async function PageDetail({
           {page.title}
         </h1>
 
-        {page.url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={page.url}
-            alt={page.title}
-            className="mb-8 w-full object-cover"
-          />
-        ) : null}
-
         <PageContent html={page.content || ''} />
 
         <div className="mt-16 flex items-center justify-center gap-8 pt-6">
