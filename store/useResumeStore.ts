@@ -11,6 +11,7 @@ interface ResumeStore {
 
   // Actions
   initResume: (resume: ResumeData, initialUname: string) => void;
+  setResume: (resume: ResumeData) => void;
   setActiveTab: (tab: string) => void;
   setHasUnsavedChanges: (has: boolean) => void;
   setUname: (uname: string) => void;
@@ -21,15 +22,6 @@ interface ResumeStore {
   updateDesign: (design: Partial<ResumeData['design']>) => void;
   deleteItemFromSection: (sectionKey: keyof ResumeData, id: string) => void;
 
-  // Set by SectionAttachments when "Add a page" (or its pencil-edit icon) is
-  // clicked — swaps EditProfileDialog's whole body for PageEditorView. `onSave`
-  // is a closure over that specific SectionAttachments instance's local
-  // `attachments`/`onChange` pair, not a resume-wide store write: the owning
-  // item may not be committed to the resume yet (e.g. a brand-new item still
-  // being filled in), so writing the page into `resume[sectionKey]` by id
-  // would silently do nothing for it. Going through the same local onChange
-  // every other attachment already uses works for both committed and
-  // in-progress items.
   editingPage: {
     attachment: AttachmentSchemaType | undefined;
     onSave: (page: AttachmentSchemaType) => void;
@@ -43,30 +35,17 @@ interface ResumeStore {
 
   isEditingTab: boolean;
   setIsEditingTab: (editing: boolean) => void;
-  // Bumped whenever the global Cancel button discards changes — tabs key
-  // their rendering on this so an in-progress add/edit form fully remounts
-  // (and its local draft is dropped) instead of showing stale state.
   saveTrigger: number;
   triggerSave: () => void;
   isSaveDisabled: boolean;
   setIsSaveDisabled: (disabled: boolean) => void;
 
-  // The currently-open tab form (if any) registers a commit function here so
-  // the global Save button can flush an in-progress item into the resume
-  // before persisting — there's only ever one form open at a time.
   activeFormCommit: (() => boolean) | null;
   setActiveFormCommit: (fn: (() => boolean) | null) => void;
   activeFormValid: boolean;
   setActiveFormValid: (valid: boolean) => void;
-  // Whether the open form's fields actually differ from what it opened
-  // with — distinct from the global hasUnsavedChanges, which can already be
-  // true from an unrelated earlier edit elsewhere and would otherwise make
-  // a freshly-opened, untouched form's Save button wrongly enabled.
   activeFormDirty: boolean;
   setActiveFormDirty: (dirty: boolean) => void;
-  // Discards the open form's in-progress draft and returns to the list view
-  // without committing it — the bottom bar's Cancel button while a form is
-  // open. Distinct from activeFormCommit, which always tries to save.
   activeFormCancel: (() => void) | null;
   setActiveFormCancel: (fn: (() => void) | null) => void;
 
@@ -81,6 +60,7 @@ export const useResumeStore = create<ResumeStore>((set) => ({
   uname: '',
 
   initResume: (resume, initialUname) => set({ resume, uname: initialUname }),
+  setResume: (resume) => set({ resume }),
   setActiveTab: (tab) => set({ activeTab: tab }),
   setHasUnsavedChanges: (has) => set({ hasUnsavedChanges: has }),
   setUname: (uname) => set({ uname, hasUnsavedChanges: true }),
