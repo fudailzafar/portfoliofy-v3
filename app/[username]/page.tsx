@@ -36,11 +36,6 @@ export async function generateMetadata({
   const { user_id, resume } = await getUserData(username);
 
   if (!user_id) {
-    // Calling notFound() here (not just in the page body below) matters:
-    // generateMetadata resolves before the page component renders, and if
-    // it returns normally, Next commits to a 200 status before the page's
-    // own notFound() call gets a chance to override it — producing a
-    // "soft 404" (correct not-found content, wrong HTTP status).
     notFound();
   }
 
@@ -65,10 +60,6 @@ export async function generateMetadata({
       ? design.favicon
       : undefined;
 
-  // The same profile is reachable at portfoliofy.me/{username},
-  // {username}.portfoliofy.me, and a connected custom domain — this tells
-  // search engines which one actually counts, so ranking signals from all
-  // three consolidate onto it instead of splitting across duplicates.
   const customDomain = await getCachedCustomDomainByUserId(user_id);
   const canonicalUrl = getCanonicalUrl(username, customDomain);
 
@@ -119,11 +110,18 @@ export default async function ProfilePage({
   const stripHtml = (html: string) =>
     html ? html.replace(/<[^>]*>?/gm, '') : '';
 
-  // Same canonical resolution as generateMetadata above, so the structured
-  // data an answer engine reads agrees with the <link rel="canonical"> tag
-  // rather than pointing back at a different (possibly non-custom) URL.
   const customDomain = await getCachedCustomDomainByUserId(user_id);
   const canonicalUrl = getCanonicalUrl(username, customDomain);
+
+  const sameAs = (resume.resumeData.contacts || [])
+    .filter(
+      (c: any) =>
+        !c.hidden &&
+        c.platform?.toLowerCase() !== 'email' &&
+        typeof c.link === 'string' &&
+        c.link.startsWith('http'),
+    )
+    .map((c: any) => c.link);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -136,6 +134,7 @@ export default async function ProfilePage({
       (c: any) => c.platform.toLowerCase() === 'email',
     )?.link,
     url: canonicalUrl,
+    ...(sameAs.length > 0 && { sameAs }),
     skills: resume.resumeData.header.skills,
   };
 
@@ -146,8 +145,7 @@ export default async function ProfilePage({
     (hostname.endsWith('.portfoliofy.me') &&
       hostname !== 'www.portfoliofy.me') ||
     (hostname.endsWith('.localhost') && hostname !== 'localhost');
-  // True for custom domains (abaan.lol) and subdomains (fidel.portfoliofy.me);
-  // false for the default portfoliofy.me/username path.
+
   const isPersonalDomainView = username.includes('.') || isSubdomainView;
   const isOwner = userId === user_id && !isPersonalDomainView;
 

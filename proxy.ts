@@ -12,11 +12,6 @@ export default async function middleware(req: NextRequest) {
     hostname === 'portfoliofy.me' || hostname === 'www.portfoliofy.me';
   const isVercelDomain = hostname.endsWith('.vercel.app');
   const isLocalhost = hostname === 'localhost';
-
-  // Exclude Vercel's own deployment preview URLs (e.g. portfoliofy-v3-fudail.portfoliofy.me,
-  // portfoliofy-v3-git-main-fudail.portfoliofy.me). These contain hyphens and the project
-  // name — they are NOT user subdomains. We detect them by checking for the project name
-  // prefix or by matching the VERCEL_URL env var that Vercel injects automatically.
   const vercelUrl = process.env.VERCEL_URL || ''; // e.g. portfoliofy-v3-fudail.vercel.app
   const vercelBranchUrl = process.env.VERCEL_BRANCH_URL || '';
   const vercelProjectName = process.env.VERCEL_PROJECT_PRODUCTION_URL || '';
@@ -33,14 +28,10 @@ export default async function middleware(req: NextRequest) {
 
   let res = NextResponse.next();
 
-  // sitemap.ts/robots.ts live at the root and read the Host header themselves
-  // to scope their output per-domain — rewriting them into /{subdomain}/... or
-  // /{domain}/... below would send them through the [username]/[slug] route
-  // instead (404, since no such slug exists), so every hostname must reach
-  // these two routes unrewritten.
   const isMetadataRoute =
     req.nextUrl.pathname === '/robots.txt' ||
-    req.nextUrl.pathname === '/sitemap.xml';
+    req.nextUrl.pathname === '/sitemap.xml' ||
+    req.nextUrl.pathname === '/llms.txt';
 
   if (isSubdomain) {
     // Treat subdomains like username.portfoliofy.me as user profiles
@@ -62,11 +53,6 @@ export default async function middleware(req: NextRequest) {
   } else {
     // Run NextAuth middleware for normal requests
     const authMiddleware = auth((req) => {
-      // Always allow NextAuth's own API routes and routes the public,
-      // logged-out profile view depends on: /api/explore (the explore feed)
-      // and /api/collaborators/info (collaborator avatars rendered on any
-      // public profile via AvatarStack/useLiveCollaborators — blocking this
-      // silently breaks that feature for every anonymous visitor).
       if (
         req.nextUrl.pathname.startsWith('/api/auth') ||
         req.nextUrl.pathname.startsWith('/api/explore') ||
@@ -98,11 +84,6 @@ export default async function middleware(req: NextRequest) {
     'camera=(), microphone=(), geolocation=()',
   );
 
-  // Next.js injects inline hydration scripts, and framer-motion writes inline
-  // styles, so 'unsafe-inline' is still required for both. 'unsafe-eval' is
-  // only needed by dev-mode HMR/React Refresh and is dropped in production.
-  // Removing 'unsafe-inline' from script-src requires nonce plumbing through
-  // the NextAuth middleware branch below — tracked as follow-up work.
   const scriptSrc = [
     `'self'`,
     `'unsafe-inline'`,
@@ -122,8 +103,6 @@ export default async function middleware(req: NextRequest) {
     `media-src 'self' https://*.amazonaws.com https://*.s3.amazonaws.com https://*.cloudfront.net`,
     `font-src 'self' data:`,
     `connect-src 'self' https://accounts.google.com https://*.vercel-insights.com https://*.amazonaws.com https://*.s3.amazonaws.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com`,
-    // Matches allowedIframeHostnames in lib/server/sanitize.ts — every host
-    // a page's embedded YouTube/Vimeo/Figma iframe can actually come from.
     `frame-src https://accounts.google.com https://www.youtube.com https://player.vimeo.com https://www.figma.com`,
     `frame-ancestors 'none'`,
     `base-uri 'self'`,
