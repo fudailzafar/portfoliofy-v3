@@ -1,7 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useCallback,
+} from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ResumeData } from '@/lib/server/dbActions';
 import { UserProfile } from '@/lib/server/cachedFunctions';
 import { sortByDateDesc } from '@/lib/resume';
@@ -61,6 +67,38 @@ export const FullResume = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'about' | 'writing'>('about');
   const order = normalizeSectionOrder(resume.sectionOrder);
+
+  const tabBarRef = useRef<HTMLDivElement>(null);
+  const pendingScrollAnchorRef = useRef<number | null>(null);
+
+  const handleTabChange = (tab: 'about' | 'writing') => {
+    if (tabBarRef.current) {
+      pendingScrollAnchorRef.current =
+        tabBarRef.current.getBoundingClientRect().top;
+    }
+    setActiveTab(tab);
+  };
+
+  // Re-pins the tab bar to wherever it was on screen right before the
+  // switch, undoing any scroll clamp caused by the content height changing.
+  // Called from two places: immediately on the state change (useLayoutEffect
+  // below), and again from AnimatePresence's onExitComplete — the fade-out
+  // keeps the old (tall) content in the DOM for the duration of the exit
+  // animation, so the actual height/scroll-clamp doesn't happen until it's
+  // removed, well after the state change and the first correction already
+  // ran. Doesn't clear the pending ref itself so both call sites can use it.
+  const correctScrollAnchor = useCallback(() => {
+    if (pendingScrollAnchorRef.current === null || !tabBarRef.current) return;
+    const newTop = tabBarRef.current.getBoundingClientRect().top;
+    const delta = newTop - pendingScrollAnchorRef.current;
+    if (delta !== 0) {
+      window.scrollBy(0, delta);
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    correctScrollAnchor();
+  }, [activeTab, correctScrollAnchor]);
 
   const sortedWork = sortByDateDesc(resume.workExperience);
   const sortedSideProjects = sortByDateDesc(resume.sideProjects);
@@ -159,13 +197,16 @@ export const FullResume = ({
         />
 
         {isWritingEnabled ? (
-          <div className="flex w-full items-center gap-6 pt-2 print:hidden">
+          <div
+            ref={tabBarRef}
+            className="flex w-full items-center gap-6 pt-2 print:hidden"
+          >
             <button
-              onClick={() => setActiveTab('about')}
+              onClick={() => handleTabChange('about')}
               className={`relative pb-1 text-sm transition-all ${
                 activeTab === 'about'
                   ? 'text-theme-primary'
-                  : 'text-theme-secondary'
+                  : 'text-theme-muted'
               }`}
             >
               About
@@ -177,11 +218,11 @@ export const FullResume = ({
               )}
             </button>
             <button
-              onClick={() => setActiveTab('writing')}
+              onClick={() => handleTabChange('writing')}
               className={`relative pb-1 text-sm transition-all ${
                 activeTab === 'writing'
                   ? 'text-theme-primary'
-                  : 'text-theme-secondary'
+                  : 'text-theme-muted'
               }`}
             >
               Writing
@@ -194,39 +235,58 @@ export const FullResume = ({
             </button>
           </div>
         ) : hasSummary ? (
-          // Writing isn't available, so there's nothing to switch between —
-          // show "About" as a plain label, not an interactive tab (no
-          // underline indicator, since there's no other tab it distinguishes
-          // this one from).
           <div className="flex w-full items-center gap-6 pt-2 print:hidden">
             <span className="pb-1 text-sm text-theme-primary">About</span>
           </div>
         ) : null}
 
-        {activeTab === 'about' ? (
-          <div className="flex flex-col gap-6">
-            <Summary summary={resume.summary} />
+        <AnimatePresence
+          mode="wait"
+          onExitComplete={() => {
+            correctScrollAnchor();
+            pendingScrollAnchorRef.current = null;
+          }}
+        >
+          {activeTab === 'about' ? (
+            <motion.div
+              key="about"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="flex flex-col gap-6"
+            >
+              <Summary summary={resume.summary} />
 
-            {isOwner && isEmptyProfile && <EmptyProfileState />}
-            {!isOwner && isEmptyProfile && (
-              <PublicEmptyProfileState name={resume.header.name} />
-            )}
+              {isOwner && isEmptyProfile && <EmptyProfileState />}
+              {!isOwner && isEmptyProfile && (
+                <PublicEmptyProfileState name={resume.header.name} />
+              )}
 
-            {order.map((sectionId) => {
-              const Component = SECTION_COMPONENTS[sectionId];
-              if (!Component) return null;
-              return (
-                <Component key={sectionId} {...getSectionProps(sectionId)} />
-              );
-            })}
-          </div>
-        ) : (
-          <PublicWritingList
-            resume={resume}
-            username={username}
-            isPersonalDomainView={isPersonalDomainView}
-          />
-        )}
+              {order.map((sectionId) => {
+                const Component = SECTION_COMPONENTS[sectionId];
+                if (!Component) return null;
+                return (
+                  <Component key={sectionId} {...getSectionProps(sectionId)} />
+                );
+              })}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="writing"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
+              <PublicWritingList
+                resume={resume}
+                username={username}
+                isPersonalDomainView={isPersonalDomainView}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </section>
     </ResumePagesProvider>
   );
