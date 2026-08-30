@@ -94,7 +94,7 @@ export function resolveAttachedPages(
     .filter((p): p is AttachmentSchemaType => !!p);
 }
 
-const PAGE_ATTACHMENT_SECTION_KEYS: (keyof ResumeDataSchemaType)[] = [
+export const PAGE_ATTACHMENT_SECTION_KEYS: (keyof ResumeDataSchemaType)[] = [
   'workExperience',
   'education',
   'projects',
@@ -210,6 +210,37 @@ export function getUsedPageSlugs(
     if (page.slug && page.id !== excludePageId) used.add(page.slug);
   }
   return used;
+}
+
+// Removes a page and every {id, type:'page'} reference stub to it across
+// all attaching section items — a page can be attached to more than one
+// item at once (see resolveAttachedPages above), so deleting it has to
+// sweep all of them, not just wherever the delete was triggered from.
+export function withPageRemoved(
+  resumeData: ResumeDataSchemaType,
+  pageId: string,
+): Partial<ResumeDataSchemaType> {
+  const patch: Record<string, any> = {
+    pages: (resumeData.pages || []).filter((p) => p.id !== pageId),
+  };
+  for (const key of PAGE_ATTACHMENT_SECTION_KEYS) {
+    const items = resumeData[key];
+    if (!Array.isArray(items)) continue;
+    patch[key] = items.map((item: any) =>
+      item.attachments?.some(
+        (a: AttachmentSchemaType) => a.type === 'page' && a.id === pageId,
+      )
+        ? {
+            ...item,
+            attachments: item.attachments.filter(
+              (a: AttachmentSchemaType) =>
+                !(a.type === 'page' && a.id === pageId),
+            ),
+          }
+        : item,
+    );
+  }
+  return patch;
 }
 
 // Every page on the resume, for sitemap generation.
