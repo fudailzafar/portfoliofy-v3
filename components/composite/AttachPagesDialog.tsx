@@ -57,7 +57,7 @@ export function AttachPagesDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex h-[600px] flex-col overflow-hidden border-border-strong bg-surface-1 p-0 text-content-primary sm:max-w-lg [&>button]:hidden">
-        <div className="flex-1 overflow-hidden p-6 pb-0">
+        <div className="flex flex-1 flex-col overflow-hidden p-6 pb-0">
           <DialogTitle>Select pages</DialogTitle>
           <DialogDescription className="mt-3">
             Select 1 or more pages to attach to this experience. To create or
@@ -80,7 +80,7 @@ export function AttachPagesDialog({
               </p>
             </div>
           ) : (
-            <div className="scrollbar-hide -mx-6 mt-2 flex h-full flex-col overflow-y-auto px-6 pb-6">
+            <div className="scrollbar-hide -mx-6 mt-2 flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pb-6">
               {publishedPages.map((page) => {
                 const isSelected = selected.has(page.id);
                 return (

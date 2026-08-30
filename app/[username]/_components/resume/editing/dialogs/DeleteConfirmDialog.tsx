@@ -15,7 +15,7 @@ interface DeleteConfirmDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   description: string;
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
   isLoading?: boolean;
   confirmLabel?: string;
   loadingLabel?: string;
@@ -49,7 +49,10 @@ export function DeleteConfirmDialog({
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            onClick={onConfirm}
+            onClick={(e) => {
+              e.preventDefault();
+              onConfirm();
+            }}
             disabled={isLoading}
             className="h-9 whitespace-nowrap rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:text-red-600 dark:active:bg-border-strong"
           >

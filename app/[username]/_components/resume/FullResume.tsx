@@ -161,7 +161,7 @@ export const FullResume = ({
 
   const isWritingEnabled =
     resume.preferences?.writingEnabled !== false &&
-    (resume.pages || []).some((p) => !p.hidden);
+    (resume.pages || []).some((p) => !p.hidden && !p.isBlurred);
 
   // Same emptiness check as Summary.tsx itself — kept in sync here so the
   // tab bar's own visibility decision matches what Summary would actually
