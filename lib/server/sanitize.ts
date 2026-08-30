@@ -46,10 +46,14 @@ const PAGE_CONTENT_OPTIONS: sanitizeHtml.IOptions = {
     'iframe',
     'div',
     'button',
+    'figure',
+    'figcaption',
   ],
   allowedAttributes: {
     a: ['href', 'target', 'rel', 'class', 'data-embed-provider'],
     img: ['src', 'alt', 'width', 'height', 'class', 'data-content-image'],
+    figure: ['data-content-image', 'data-content-video', 'class'],
+    figcaption: ['class'],
     video: [
       'src',
       'controls',
