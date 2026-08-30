@@ -307,11 +307,6 @@
   margin: 1.5rem 0;
 }
 
-/* Figure-wrapped image/video: the figure takes over the block-rhythm
-   margin (bare UA figure margins would otherwise stack with the rule
-   above, plus add an unwanted horizontal indent), and the inner
-   image/video's own margin is zeroed only in this context — a bare
-   legacy <img>/<video> with no figure wrapper is untouched. */
 .content-image-figure {
   margin: 1.5rem 0;
 }
@@ -344,9 +339,21 @@
   color: var(--theme-secondary, inherit);
 }
 
-/* Square corners, no border — matches read.cv's own content images
-   (computed styles pulled directly from several archived pages showed
-   border-radius: 0 and no border on every content image found). */
+@media (max-width: 639px) {
+  [data-page-content] .content-image-figure,
+  [data-page-content] .content-video-figure {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+
+  [data-page-content] .content-image-caption,
+  [data-page-content] .content-video-caption {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
 .content-gallery {
   display: flex;
   flex-wrap: wrap;
@@ -389,16 +396,6 @@
   object-fit: contain;
 }
 
-/* Code block syntax highlighting — colors match read.cv's own theme
-   (extracted from an archived post: Prism.js's "Material Light"/"Material
-   Dark" presets, one per color scheme) mapped onto highlight.js's class
-   names instead of Prism's, since highlight.js is what actually runs the
-   highlighting here (chosen for its built-in language auto-detection —
-   see PageContent.tsx/PageEditorView.tsx, which call
-   hljs.highlightElement() with no language specified). Different
-   library, same token->color mapping. Light values are the default;
-   .dark overrides below swap in the dark-theme mapping, following the
-   same convention as the .dark .theme-default block above. */
 .hljs-keyword,
 .hljs-literal,
 .hljs-symbol,
