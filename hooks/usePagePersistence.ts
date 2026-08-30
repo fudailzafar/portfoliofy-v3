@@ -6,40 +6,33 @@ import {
   withPageRemoved,
 } from '@/lib/resume';
 
-// Independently persists a single page's publish/unpublish/delete, decoupled
-// from whatever else might currently be sitting unsaved in the editor.
-//
-// storeResume (lib/server/dbActions.ts) only ever does a full-row JSONB
-// replace — there's no per-page API route or partial update. So "independent"
-// here means: source the rest of the resume from a server-confirmed
-// snapshot (never from a possibly-dirty local draft), patch in only this
-// one page's change, and POST that whole thing through the existing
-// save mutation. On success, write back with patchResumeQuiet — a merge,
-// not a replace — so an unrelated in-progress edit elsewhere in the store
-// is never silently discarded or bundled into this save.
+let queue: Promise<unknown> = Promise.resolve();
+
 export function usePagePersistence() {
-  const { resumeQuery, saveResumeDataMutation } = useUserActions();
+  const { saveResumeDataMutation } = useUserActions();
 
-  function getBaseResume(): ResumeDataSchemaType | undefined {
-    const { resume, hasUnsavedChanges } = useResumeStore.getState();
-    // hasUnsavedChanges can be true purely from an in-progress tab form's
-    // own dirty-tracking (see hooks/useTabEditor.ts) before `resume` itself
-    // is touched — so when it's false, `resume` is already server-equal and
-    // reading it locally is free. Only fall back to the last-fetched server
-    // snapshot when there's reason to think `resume` might hold something
-    // not yet persisted.
-    if (!hasUnsavedChanges && resume) return resume;
-    return resumeQuery.data?.resume?.resumeData ?? resume ?? undefined;
-  }
-
-  async function persistPatch(
-    computePatch: (base: ResumeDataSchemaType) => Partial<ResumeDataSchemaType>,
-  ): Promise<void> {
-    const base = getBaseResume();
-    if (!base) throw new Error('Resume not loaded yet');
-    const patch = computePatch(base);
-    await saveResumeDataMutation.mutateAsync({ ...base, ...patch });
-    useResumeStore.getState().patchResumeQuiet(patch);
+  async function persistPatch<T>(
+    computePatch: (base: ResumeDataSchemaType) => {
+      patch: Partial<ResumeDataSchemaType>;
+      result: T;
+    },
+  ): Promise<T> {
+    const run = async (): Promise<T> => {
+      const base = useResumeStore.getState().resume;
+      if (!base) throw new Error('Resume not loaded yet');
+      const { patch, result } = computePatch(base);
+      await saveResumeDataMutation.mutateAsync({ ...base, ...patch });
+      useResumeStore.getState().applyPersistedPatch(patch);
+      return result;
+    };
+    const outcome = queue.then(run, run);
+    // Keep the queue alive regardless of this call's outcome, so a failure
+    // doesn't permanently wedge every action after it.
+    queue = outcome.then(
+      () => undefined,
+      () => undefined,
+    );
+    return outcome;
   }
 
   const publishPage = (page: AttachmentSchemaType) =>
@@ -47,21 +40,33 @@ export function usePagePersistence() {
       const published: AttachmentSchemaType = { ...page, hidden: false };
       const exists = (base.pages || []).some((p) => p.id === page.id);
       return {
-        pages: exists
-          ? (base.pages || []).map((p) => (p.id === page.id ? published : p))
-          : [...(base.pages || []), published],
+        patch: {
+          pages: exists
+            ? (base.pages || []).map((p) => (p.id === page.id ? published : p))
+            : [...(base.pages || []), published],
+        },
+        result: published,
       };
     });
 
-  const unpublishPage = (pageId: string) =>
-    persistPatch((base) => ({
-      pages: (base.pages || []).map((p) =>
-        p.id === pageId ? { ...p, hidden: true } : p,
-      ),
-    }));
+  const unpublishPage = (page: AttachmentSchemaType) =>
+    persistPatch((base) => {
+      const unpublished: AttachmentSchemaType = { ...page, hidden: true };
+      return {
+        patch: {
+          pages: (base.pages || []).map((p) =>
+            p.id === page.id ? unpublished : p,
+          ),
+        },
+        result: unpublished,
+      };
+    });
 
   const deletePage = (pageId: string) =>
-    persistPatch((base) => withPageRemoved(base, pageId));
+    persistPatch((base) => ({
+      patch: withPageRemoved(base, pageId),
+      result: undefined,
+    }));
 
   return {
     publishPage,
