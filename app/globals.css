@@ -307,6 +307,43 @@
   margin: 1.5rem 0;
 }
 
+/* Figure-wrapped image/video: the figure takes over the block-rhythm
+   margin (bare UA figure margins would otherwise stack with the rule
+   above, plus add an unwanted horizontal indent), and the inner
+   image/video's own margin is zeroed only in this context — a bare
+   legacy <img>/<video> with no figure wrapper is untouched. */
+.content-image-figure {
+  margin: 1.5rem 0;
+}
+
+.content-image-figure .content-image {
+  margin: 0;
+}
+
+.content-image-caption {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--theme-secondary, inherit);
+}
+
+.content-video-figure {
+  margin: 1.5rem 0;
+}
+
+.content-video-figure .content-video {
+  margin: 0;
+}
+
+.content-video-caption {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--theme-secondary, inherit);
+}
+
 /* Square corners, no border — matches read.cv's own content images
    (computed styles pulled directly from several archived pages showed
    border-radius: 0 and no border on every content image found). */
