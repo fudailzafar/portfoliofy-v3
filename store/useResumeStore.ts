@@ -12,6 +12,11 @@ interface ResumeStore {
   // Actions
   initResume: (resume: ResumeData, initialUname: string) => void;
   setResume: (resume: ResumeData) => void;
+  // Merges only the given fields into whatever `resume` currently holds —
+  // for writing back an independently-persisted change (e.g. a page
+  // publish/unpublish/delete) without touching hasUnsavedChanges or
+  // clobbering an unrelated in-progress edit sitting elsewhere in `resume`.
+  patchResumeQuiet: (data: Partial<ResumeData>) => void;
   setActiveTab: (tab: string) => void;
   setHasUnsavedChanges: (has: boolean) => void;
   setUname: (uname: string) => void;
@@ -24,12 +29,10 @@ interface ResumeStore {
 
   editingPage: {
     attachment: AttachmentSchemaType | undefined;
-    onSave: (page: AttachmentSchemaType) => void;
   } | null;
   setEditingPage: (
     value: {
       attachment: AttachmentSchemaType | undefined;
-      onSave: (page: AttachmentSchemaType) => void;
     } | null,
   ) => void;
 
@@ -61,6 +64,10 @@ export const useResumeStore = create<ResumeStore>((set) => ({
 
   initResume: (resume, initialUname) => set({ resume, uname: initialUname }),
   setResume: (resume) => set({ resume }),
+  patchResumeQuiet: (data) =>
+    set((state) =>
+      state.resume ? { resume: { ...state.resume, ...data } } : state,
+    ),
   setActiveTab: (tab) => set({ activeTab: tab }),
   setHasUnsavedChanges: (has) => set({ hasUnsavedChanges: has }),
   setUname: (uname) => set({ uname, hasUnsavedChanges: true }),
