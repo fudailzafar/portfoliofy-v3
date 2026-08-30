@@ -4,6 +4,7 @@ import { AttachmentSchemaType, estimateReadMinutes } from '@/lib/resume';
 import { Pen } from 'lucide-react';
 import { usePagePersistence } from '@/hooks/usePagePersistence';
 import { DeleteConfirmDialog } from '../dialogs';
+import { withErrorToast } from '@/lib/errorToast';
 import { toast } from 'sonner';
 
 function formatPageDate(createdAt?: string): string | null {
@@ -36,6 +37,7 @@ export function WritingTab({
   const [pendingDeletePageId, setPendingDeletePageId] = useState<string | null>(
     null,
   );
+  const [isDeletingPage, setIsDeletingPage] = useState(false);
 
   const pages = useMemo(() => resume?.pages || [], [resume]);
 
@@ -62,25 +64,24 @@ export function WritingTab({
   };
 
   // Publish/Unpublish persist immediately and independently — see
-  // hooks/usePagePersistence.ts. isBlurred is a separate, unrelated
-  // visual-blur toggle and stays purely local (still rides along with the
-  // outer global Save), so it keeps using updateResume.
+  // hooks/usePagePersistence.ts. isBlurred ("Hide") is a separate axis: it
+  // hides an already-published page from the public writing panel index
+  // (see PublicWritingList.tsx / app/[username]/[slug]/page.tsx) while still
+  // letting it be attached to sections and visited directly — unlike
+  // publish/unpublish, it isn't persisted independently and stays purely
+  // local (still rides along with the outer global Save), so it keeps using
+  // updateResume.
   const handleTogglePublish = async (
     target: AttachmentSchemaType,
     e: React.MouseEvent,
   ) => {
     e.stopPropagation();
     setPendingTogglePageId(target.id);
-    try {
-      if (target.hidden) await publishPage(target);
-      else await unpublishPage(target.id);
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to update page',
-      );
-    } finally {
-      setPendingTogglePageId(null);
-    }
+    await withErrorToast(
+      () => (target.hidden ? publishPage(target) : unpublishPage(target)),
+      'Failed to update page',
+    );
+    setPendingTogglePageId(null);
   };
 
   const toggleBlurred = (pageId: string, e: React.MouseEvent) => {
@@ -95,16 +96,14 @@ export function WritingTab({
 
   const handleConfirmDelete = async () => {
     if (!pendingDeletePageId) return;
-    try {
-      await deletePage(pendingDeletePageId);
-      toast.success('Page deleted');
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to delete page',
-      );
-    } finally {
-      setPendingDeletePageId(null);
-    }
+    setIsDeletingPage(true);
+    const ok = await withErrorToast(
+      () => deletePage(pendingDeletePageId),
+      'Failed to delete page',
+    );
+    if (ok.ok) toast.success('Page deleted');
+    setIsDeletingPage(false);
+    setPendingDeletePageId(null);
   };
 
   return (
@@ -214,6 +213,7 @@ export function WritingTab({
         onOpenChange={(open) => !open && setPendingDeletePageId(null)}
         description="This will permanently delete this page. This action cannot be undone."
         onConfirm={handleConfirmDelete}
+        isLoading={isDeletingPage}
       />
     </div>
   );

@@ -21,7 +21,7 @@ export function PublicWritingList({
   const pages = useMemo(() => {
     if (!resume?.pages) return [];
     return resume.pages
-      .filter((p) => !p.hidden)
+      .filter((p) => !p.hidden && !p.isBlurred)
       .map((p) => ({ ...p, parsedDate: parseDate(p.createdAt) }))
       .sort(
         (a, b) =>
