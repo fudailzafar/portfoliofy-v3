@@ -433,11 +433,19 @@ export function EditProfileDialog({
   // is currently being added/edited) back to the last-saved-on-server state.
   // ---------------------------------------------------------------------------
   const handleGlobalCancel = useCallback(() => {
+    const lastKnownGood = resumeQuery.data?.resume?.resumeData || resume;
     setHasUnsavedChanges(false);
-    initResume(resume, username);
-    setSectionOrder(normalizeSectionOrder(resume.sectionOrder));
+    initResume(lastKnownGood, username);
+    setSectionOrder(normalizeSectionOrder(lastKnownGood.sectionOrder));
     triggerSave();
-  }, [resume, username, initResume, setHasUnsavedChanges, triggerSave]);
+  }, [
+    resume,
+    resumeQuery.data,
+    username,
+    initResume,
+    setHasUnsavedChanges,
+    triggerSave,
+  ]);
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {

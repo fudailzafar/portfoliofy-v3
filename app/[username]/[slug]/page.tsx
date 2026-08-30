@@ -124,7 +124,7 @@ export default async function PageDetail({
   };
 
   const publishedPages = (resumeData.pages || [])
-    .filter((p) => !p.hidden)
+    .filter((p) => !p.hidden && !p.isBlurred)
     .map((p) => ({ ...p, parsedDate: parsePageDate(p.createdAt) }))
     .sort(
       (a, b) => (b.parsedDate?.getTime() || 0) - (a.parsedDate?.getTime() || 0),

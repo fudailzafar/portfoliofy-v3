@@ -3,9 +3,9 @@
 import React, {
   useState,
   useEffect,
-  useLayoutEffect,
   useRef,
   useCallback,
+  useMemo,
 } from 'react';
 import { createPortal } from 'react-dom';
 import { AttachmentSchemaType, slugify, dedupeSlug } from '@/lib/resume';
@@ -36,7 +36,9 @@ import { PageContent } from '@/components/composite/PageContent';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { DeleteConfirmDialog } from '@/app/[username]/_components/resume/editing/dialogs';
 import { usePagePersistence } from '@/hooks/usePagePersistence';
+import { useAnchoredMenu } from '@/hooks/useAnchoredMenu';
 import { useResumeStore } from '@/store/useResumeStore';
+import { withErrorToast } from '@/lib/errorToast';
 import { toast } from 'sonner';
 
 function toDateInputValue(isoString?: string): string {
@@ -139,32 +141,11 @@ export function PageEditorView({
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { uploadToS3 } = useS3Upload();
-  const [isInsertMenuOpen, setIsInsertMenuOpen] = useState(false);
   const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
   const [isEmbedDialogOpen, setIsEmbedDialogOpen] = useState(false);
-  const insertMenuRef = useRef<HTMLDivElement>(null);
-  const insertButtonRef = useRef<HTMLButtonElement>(null);
-  const insertDropdownRef = useRef<HTMLDivElement>(null);
-  const [insertMenuPos, setInsertMenuPos] = useState<{
-    top: number;
-    left: number;
-  } | null>(null);
-  const [isTurnIntoMenuOpen, setIsTurnIntoMenuOpen] = useState(false);
-  const turnIntoMenuRef = useRef<HTMLDivElement>(null);
-  const turnIntoButtonRef = useRef<HTMLButtonElement>(null);
-  const turnIntoDropdownRef = useRef<HTMLDivElement>(null);
-  const [turnIntoMenuPos, setTurnIntoMenuPos] = useState<{
-    top: number;
-    left: number;
-  } | null>(null);
-  const [isStatusMenuOpen, setIsStatusMenuOpen] = useState(false);
-  const statusMenuRef = useRef<HTMLDivElement>(null);
-  const statusButtonRef = useRef<HTMLButtonElement>(null);
-  const statusDropdownRef = useRef<HTMLDivElement>(null);
-  const [statusMenuPos, setStatusMenuPos] = useState<{
-    top: number;
-    left: number;
-  } | null>(null);
+  const insertMenu = useAnchoredMenu();
+  const turnIntoMenu = useAnchoredMenu();
+  const statusMenu = useAnchoredMenu();
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   // Slug auto-follows the title until the user edits it by hand.
@@ -176,58 +157,9 @@ export function PageEditorView({
 
   const { publishPage, unpublishPage, deletePage, isSaving } =
     usePagePersistence();
-  const { resume, setEditingPage } = useResumeStore();
+  const resume = useResumeStore((state) => state.resume);
+  const setEditingPage = useResumeStore((state) => state.setEditingPage);
   const design = resume?.design;
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      const target = event.target as Node;
-      if (
-        insertMenuRef.current &&
-        !insertMenuRef.current.contains(target) &&
-        !insertDropdownRef.current?.contains(target)
-      ) {
-        setIsInsertMenuOpen(false);
-      }
-      if (
-        turnIntoMenuRef.current &&
-        !turnIntoMenuRef.current.contains(target) &&
-        !turnIntoDropdownRef.current?.contains(target)
-      ) {
-        setIsTurnIntoMenuOpen(false);
-      }
-      if (
-        statusMenuRef.current &&
-        !statusMenuRef.current.contains(target) &&
-        !statusDropdownRef.current?.contains(target)
-      ) {
-        setIsStatusMenuOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  useLayoutEffect(() => {
-    if (isTurnIntoMenuOpen && turnIntoButtonRef.current) {
-      const rect = turnIntoButtonRef.current.getBoundingClientRect();
-      setTurnIntoMenuPos({ top: rect.bottom + 4, left: rect.left });
-    }
-  }, [isTurnIntoMenuOpen]);
-
-  useLayoutEffect(() => {
-    if (isInsertMenuOpen && insertButtonRef.current) {
-      const rect = insertButtonRef.current.getBoundingClientRect();
-      setInsertMenuPos({ top: rect.bottom + 4, left: rect.left });
-    }
-  }, [isInsertMenuOpen]);
-
-  useLayoutEffect(() => {
-    if (isStatusMenuOpen && statusButtonRef.current) {
-      const rect = statusButtonRef.current.getBoundingClientRect();
-      setStatusMenuPos({ top: rect.bottom + 4, left: rect.left });
-    }
-  }, [isStatusMenuOpen]);
 
   // Resets the visible fields (and re-baselines isDirty against them) for
   // whichever page is currently open — on mount, when a different page is
@@ -276,7 +208,14 @@ export function PageEditorView({
 
   useEffect(() => {
     if (!editor) return;
-    editor.commands.setContent(page?.content || '');
+    const next = page?.content || '';
+    // A page's id transitions from undefined to a real UUID the moment it's
+    // first published, while the editor stays open (mounted) across that —
+    // without this check, setContent would unconditionally replace the
+    // document with textually-identical content, jumping the cursor to the
+    // end and pushing a spurious entry onto the undo stack.
+    if (editor.getHTML() === next) return;
+    editor.commands.setContent(next);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page?.id, editor]);
 
@@ -288,9 +227,19 @@ export function PageEditorView({
     editor?.commands.setContent(page?.content || '');
   }, [resetToBaseline, editor, page]);
 
-  const isDirty =
-    JSON.stringify({ slug, date, title, content, thumbnailUrl }) !==
-    JSON.stringify(baselineRef.current);
+  const isDirty = useMemo(() => {
+    const baseline = baselineRef.current;
+    return (
+      slug !== baseline.slug ||
+      date !== baseline.date ||
+      title !== baseline.title ||
+      content !== baseline.content ||
+      thumbnailUrl !== baseline.thumbnailUrl
+    );
+    // baselineRef only ever changes in the same update as one of these 5
+    // fields (resetToBaseline/handleDiscardChanges set both together), so
+    // depending on the fields alone is enough to stay correct.
+  }, [slug, date, title, content, thumbnailUrl]);
 
   const status: PageStatus = !page
     ? 'new'
@@ -331,49 +280,45 @@ export function PageEditorView({
   // Publishes (or, if already published, applies pending edits to) this
   // page immediately and independently of anything else unsaved elsewhere
   // in the profile editor — see hooks/usePagePersistence.ts. The editor
-  // stays open; once the store's editingPage.attachment updates below, the
-  // `page` prop flowing back in re-triggers the reset effect above, which
-  // re-baselines isDirty and flips `status` to "published".
+  // stays open; publishPage returns the actually-persisted page (always
+  // hidden:false), which we feed back into the store directly rather than
+  // the pre-publish `built` object, so the editor's own status display
+  // can't drift from what was actually saved. Once editingPage.attachment
+  // updates below, the `page` prop flowing back in re-triggers the reset
+  // effect above, which re-baselines isDirty and flips `status`.
   const handlePublish = async () => {
-    const built = buildPage();
-    try {
-      await publishPage(built);
-      setEditingPage({ attachment: built });
-      if (status === 'published') toast.success('Changes published');
-      else toast.success('Page published');
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to publish page',
-      );
-    }
+    const wasPublished = status === 'published';
+    await withErrorToast(async () => {
+      const built = buildPage();
+      const published = await publishPage(built);
+      setEditingPage({ attachment: published });
+      toast.success(wasPublished ? 'Changes published' : 'Page published');
+    }, 'Failed to publish page');
   };
 
+  // Uses buildPage() (current form state), not the stale `page` prop — so
+  // unpublishing a page you've been editing but haven't saved doesn't
+  // silently discard those edits. This makes Unpublish behave like Publish:
+  // whatever's currently in the editor gets saved, just now hidden.
   const handleUnpublish = async () => {
     if (!page) return;
-    setIsStatusMenuOpen(false);
-    try {
-      await unpublishPage(page.id);
-      setEditingPage({ attachment: { ...page, hidden: true } });
+    statusMenu.setIsOpen(false);
+    await withErrorToast(async () => {
+      const built = buildPage();
+      const unpublished = await unpublishPage(built);
+      setEditingPage({ attachment: unpublished });
       toast.success('Page unpublished');
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to unpublish page',
-      );
-    }
+    }, 'Failed to unpublish page');
   };
 
   const handleConfirmDelete = async () => {
     if (!page) return;
-    try {
+    await withErrorToast(async () => {
       await deletePage(page.id);
       toast.success('Page deleted');
       setIsDeleteConfirmOpen(false);
       onClose();
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to delete page',
-      );
-    }
+    }, 'Failed to delete page');
   };
 
   const setLink = () => {
@@ -461,33 +406,33 @@ export function PageEditorView({
           <ArrowLeft className="h-5 w-5" />
         </button>
 
-        <div ref={statusMenuRef} className="relative h-full shrink-0">
+        <div className="relative h-full shrink-0">
           <button
-            ref={statusButtonRef}
-            onClick={() => setIsStatusMenuOpen((prev) => !prev)}
+            ref={statusMenu.triggerRef}
+            onClick={() => statusMenu.setIsOpen((prev) => !prev)}
             disabled={isSaving}
             className={cn(
               'flex h-full items-center whitespace-nowrap border-r border-border-strong px-6 text-sm font-medium transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-50',
               status === 'published'
                 ? 'text-green-600 dark:text-green-500'
                 : 'text-content-secondary hover:text-content-primary',
-              isStatusMenuOpen && 'bg-surface-2',
+              statusMenu.isOpen && 'bg-surface-2',
             )}
           >
             {status === 'published' ? 'Published' : 'Draft'}
           </button>
 
-          {isStatusMenuOpen &&
-            statusMenuPos &&
+          {statusMenu.isOpen &&
+            statusMenu.pos &&
             createPortal(
               <div
-                ref={statusDropdownRef}
-                style={{ top: statusMenuPos.top, left: statusMenuPos.left }}
+                ref={statusMenu.dropdownRef}
+                style={{ top: statusMenu.pos.top, left: statusMenu.pos.left }}
                 className="pointer-events-auto fixed z-[100] w-52 overflow-hidden rounded-md border border-border-strong bg-surface-1 shadow-lg"
               >
                 <button
                   onClick={() => {
-                    setIsStatusMenuOpen(false);
+                    statusMenu.setIsOpen(false);
                     setIsPreviewOpen(true);
                   }}
                   disabled={status === 'published' && !isDirty}
@@ -499,7 +444,7 @@ export function PageEditorView({
                   <button
                     onClick={() => {
                       handleDiscardChanges();
-                      setIsStatusMenuOpen(false);
+                      statusMenu.setIsOpen(false);
                     }}
                     disabled={!isDirty}
                     className="flex w-full items-center px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 active:text-content-primary disabled:cursor-not-allowed disabled:opacity-40"
@@ -518,7 +463,7 @@ export function PageEditorView({
                 {status !== 'new' && (
                   <button
                     onClick={() => {
-                      setIsStatusMenuOpen(false);
+                      statusMenu.setIsOpen(false);
                       setIsDeleteConfirmOpen(true);
                     }}
                     className="flex w-full items-center px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 active:text-content-primary"
@@ -531,25 +476,28 @@ export function PageEditorView({
             )}
         </div>
 
-        <div ref={turnIntoMenuRef} className="relative h-full shrink-0">
+        <div className="relative h-full shrink-0">
           <button
-            ref={turnIntoButtonRef}
-            onClick={() => setIsTurnIntoMenuOpen((prev) => !prev)}
+            ref={turnIntoMenu.triggerRef}
+            onClick={() => turnIntoMenu.setIsOpen((prev) => !prev)}
             className={cn(
               'flex h-full items-center whitespace-nowrap border-r border-border-strong px-6 text-sm font-medium text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
-              isTurnIntoMenuOpen && 'bg-surface-2 text-content-primary',
+              turnIntoMenu.isOpen && 'bg-surface-2 text-content-primary',
             )}
           >
             Turn into
           </button>
 
-          {isTurnIntoMenuOpen &&
+          {turnIntoMenu.isOpen &&
             editor &&
-            turnIntoMenuPos &&
+            turnIntoMenu.pos &&
             createPortal(
               <div
-                ref={turnIntoDropdownRef}
-                style={{ top: turnIntoMenuPos.top, left: turnIntoMenuPos.left }}
+                ref={turnIntoMenu.dropdownRef}
+                style={{
+                  top: turnIntoMenu.pos.top,
+                  left: turnIntoMenu.pos.left,
+                }}
                 className="pointer-events-auto fixed z-[100] w-48 overflow-hidden rounded-md border border-border-strong bg-surface-1 shadow-lg"
               >
                 {BLOCK_TYPE_OPTIONS.map(({ label, isActive, run }) => {
@@ -559,7 +507,7 @@ export function PageEditorView({
                       key={label}
                       onClick={() => {
                         run(editor);
-                        setIsTurnIntoMenuOpen(false);
+                        turnIntoMenu.setIsOpen(false);
                       }}
                       className={cn(
                         'flex w-full items-center px-4 py-2.5 text-left text-sm transition-colors hover:bg-surface-2 hover:text-content-primary',
@@ -577,29 +525,29 @@ export function PageEditorView({
             )}
         </div>
 
-        <div ref={insertMenuRef} className="relative h-full shrink-0">
+        <div className="relative h-full shrink-0">
           <button
-            ref={insertButtonRef}
-            onClick={() => setIsInsertMenuOpen((prev) => !prev)}
+            ref={insertMenu.triggerRef}
+            onClick={() => insertMenu.setIsOpen((prev) => !prev)}
             className={cn(
               'flex h-full items-center gap-1.5 whitespace-nowrap border-r border-border-strong px-6 text-sm font-medium text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary',
-              isInsertMenuOpen && 'bg-surface-2 text-content-primary',
+              insertMenu.isOpen && 'bg-surface-2 text-content-primary',
             )}
           >
             Insert
           </button>
 
-          {isInsertMenuOpen &&
-            insertMenuPos &&
+          {insertMenu.isOpen &&
+            insertMenu.pos &&
             createPortal(
               <div
-                ref={insertDropdownRef}
-                style={{ top: insertMenuPos.top, left: insertMenuPos.left }}
+                ref={insertMenu.dropdownRef}
+                style={{ top: insertMenu.pos.top, left: insertMenu.pos.left }}
                 className="pointer-events-auto fixed z-[100] w-48 overflow-hidden rounded-md border border-border-strong bg-surface-1 shadow-lg"
               >
                 <button
                   onClick={() => {
-                    setIsInsertMenuOpen(false);
+                    insertMenu.setIsOpen(false);
                     setIsMediaDialogOpen(true);
                   }}
                   className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
@@ -608,7 +556,7 @@ export function PageEditorView({
                 </button>
                 <button
                   onClick={() => {
-                    setIsInsertMenuOpen(false);
+                    insertMenu.setIsOpen(false);
                     setIsEmbedDialogOpen(true);
                   }}
                   className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
