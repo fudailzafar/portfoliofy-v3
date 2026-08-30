@@ -9,7 +9,7 @@ import {
   getCanonicalUrl,
 } from '@/lib/utils';
 import { getCachedCustomDomainByUserId } from '@/lib/server/cachedFunctions';
-import { PageContent } from './PageContent';
+import { PageContent } from '@/components/composite/PageContent';
 import { ShareButton } from './ShareButton';
 
 const parsePageDate = (dateStr?: string) => {

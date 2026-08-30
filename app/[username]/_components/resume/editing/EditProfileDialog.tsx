@@ -520,7 +520,6 @@ export function EditProfileDialog({
                 <PageEditorView
                   page={editingPage.attachment}
                   usedSlugs={usedPageSlugs}
-                  onSave={editingPage.onSave}
                   onClose={() => setEditingPage(null)}
                 />
               </div>

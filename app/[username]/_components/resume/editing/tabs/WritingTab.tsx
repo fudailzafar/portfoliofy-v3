@@ -1,7 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { AttachmentSchemaType, estimateReadMinutes } from '@/lib/resume';
 import { Pen } from 'lucide-react';
+import { usePagePersistence } from '@/hooks/usePagePersistence';
+import { DeleteConfirmDialog } from '../dialogs';
+import { toast } from 'sonner';
 
 function formatPageDate(createdAt?: string): string | null {
   if (!createdAt) return null;
@@ -26,6 +29,13 @@ export function WritingTab({
   const resume = useResumeStore((state) => state.resume);
   const updateResume = useResumeStore((state) => state.updateResume);
   const setEditingPage = useResumeStore((state) => state.setEditingPage);
+  const { publishPage, unpublishPage, deletePage } = usePagePersistence();
+  const [pendingTogglePageId, setPendingTogglePageId] = useState<string | null>(
+    null,
+  );
+  const [pendingDeletePageId, setPendingDeletePageId] = useState<string | null>(
+    null,
+  );
 
   const pages = useMemo(() => resume?.pages || [], [resume]);
 
@@ -43,77 +53,58 @@ export function WritingTab({
     );
   }, [pages, filter]);
 
-  const savePage = (updated: AttachmentSchemaType) => {
-    if (!resume) return;
-    const exists = (resume.pages || []).some((p) => p.id === updated.id);
-    const newPages = exists
-      ? (resume.pages || []).map((p) => (p.id === updated.id ? updated : p))
-      : [...(resume.pages || []), updated];
-    updateResume({ pages: newPages });
-    setEditingPage(null);
-  };
-
   const handleNewPage = () => {
-    setEditingPage({ attachment: undefined, onSave: savePage });
+    setEditingPage({ attachment: undefined });
   };
 
   const handleEditPage = (page: AttachmentSchemaType) => {
-    setEditingPage({ attachment: page, onSave: savePage });
+    setEditingPage({ attachment: page });
   };
 
-  const toggleField = (
-    pageId: string,
-    field: 'hidden' | 'isBlurred',
+  // Publish/Unpublish persist immediately and independently — see
+  // hooks/usePagePersistence.ts. isBlurred is a separate, unrelated
+  // visual-blur toggle and stays purely local (still rides along with the
+  // outer global Save), so it keeps using updateResume.
+  const handleTogglePublish = async (
+    target: AttachmentSchemaType,
     e: React.MouseEvent,
   ) => {
+    e.stopPropagation();
+    setPendingTogglePageId(target.id);
+    try {
+      if (target.hidden) await publishPage(target);
+      else await unpublishPage(target.id);
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to update page',
+      );
+    } finally {
+      setPendingTogglePageId(null);
+    }
+  };
+
+  const toggleBlurred = (pageId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!resume) return;
     updateResume({
       pages: (resume.pages || []).map((p) =>
-        p.id === pageId ? { ...p, [field]: !p[field] } : p,
+        p.id === pageId ? { ...p, isBlurred: !p.isBlurred } : p,
       ),
     });
   };
 
-  const handleDelete = (pageId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!resume) return;
-    const newPages = (resume.pages || []).filter((p) => p.id !== pageId);
-
-    // A deleted page can be attached to more than one section item — drop
-    // its stub everywhere it appears, not just wherever it was clicked from.
-    const sectionKeys: (keyof typeof resume)[] = [
-      'workExperience',
-      'education',
-      'projects',
-      'sideProjects',
-      'speaking',
-      'writing',
-      'exhibitions',
-      'features',
-      'volunteering',
-      'awards',
-      'certifications',
-    ];
-    const updates: Record<string, any> = { pages: newPages };
-    for (const key of sectionKeys) {
-      const items = resume[key];
-      if (!Array.isArray(items)) continue;
-      updates[key] = items.map((item: any) =>
-        item.attachments?.some(
-          (a: AttachmentSchemaType) => a.type === 'page' && a.id === pageId,
-        )
-          ? {
-              ...item,
-              attachments: item.attachments.filter(
-                (a: AttachmentSchemaType) =>
-                  !(a.type === 'page' && a.id === pageId),
-              ),
-            }
-          : item,
+  const handleConfirmDelete = async () => {
+    if (!pendingDeletePageId) return;
+    try {
+      await deletePage(pendingDeletePageId);
+      toast.success('Page deleted');
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to delete page',
       );
+    } finally {
+      setPendingDeletePageId(null);
     }
-    updateResume(updates);
   };
 
   return (
@@ -187,19 +178,27 @@ export function WritingTab({
                   Edit
                 </button>
                 <button
-                  onClick={(e) => toggleField(page.id, 'hidden', e)}
-                  className="hover:underline hover:underline-offset-4"
+                  onClick={(e) => handleTogglePublish(page, e)}
+                  disabled={pendingTogglePageId === page.id}
+                  className="hover:underline hover:underline-offset-4 disabled:opacity-50"
                 >
-                  {page.hidden ? 'Publish' : 'Unpublish'}
+                  {pendingTogglePageId === page.id
+                    ? 'Saving…'
+                    : page.hidden
+                      ? 'Publish'
+                      : 'Unpublish'}
                 </button>
                 <button
-                  onClick={(e) => toggleField(page.id, 'isBlurred', e)}
+                  onClick={(e) => toggleBlurred(page.id, e)}
                   className="hover:underline hover:underline-offset-4"
                 >
                   {page.isBlurred ? 'Show' : 'Hide'}
                 </button>
                 <button
-                  onClick={(e) => handleDelete(page.id, e)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPendingDeletePageId(page.id);
+                  }}
                   className="hover:underline hover:underline-offset-4"
                 >
                   Delete
@@ -209,6 +208,13 @@ export function WritingTab({
           ))}
         </div>
       )}
+
+      <DeleteConfirmDialog
+        open={!!pendingDeletePageId}
+        onOpenChange={(open) => !open && setPendingDeletePageId(null)}
+        description="This will permanently delete this page. This action cannot be undone."
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }

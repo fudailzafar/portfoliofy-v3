@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useCallback,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { AttachmentSchemaType, slugify, dedupeSlug } from '@/lib/resume';
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -26,6 +32,12 @@ import {
 import { Spinner } from '../ui/spinner';
 import { MediaUploadDialog } from '@/components/composite/MediaUploadDialog';
 import { EmbedDialog } from '@/components/composite/EmbedDialog';
+import { PageContent } from '@/components/composite/PageContent';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { DeleteConfirmDialog } from '@/app/[username]/_components/resume/editing/dialogs';
+import { usePagePersistence } from '@/hooks/usePagePersistence';
+import { useResumeStore } from '@/store/useResumeStore';
+import { toast } from 'sonner';
 
 function toDateInputValue(isoString?: string): string {
   if (!isoString) return '';
@@ -36,6 +48,36 @@ function toDateInputValue(isoString?: string): string {
 
 function fromDateInputValue(dateValue: string): string {
   return new Date(`${dateValue}T12:00:00`).toISOString();
+}
+
+type PageStatus = 'new' | 'draft' | 'published';
+
+interface EditorSnapshot {
+  slug: string;
+  date: string;
+  title: string;
+  content: string;
+  thumbnailUrl: string;
+}
+
+function snapshotFromPage(page?: AttachmentSchemaType): EditorSnapshot {
+  return page
+    ? {
+        slug: page.slug || '',
+        date:
+          toDateInputValue(page.createdAt) ||
+          toDateInputValue(new Date().toISOString()),
+        title: page.title || '',
+        content: page.content || '',
+        thumbnailUrl: page.url || '',
+      }
+    : {
+        slug: '',
+        date: toDateInputValue(new Date().toISOString()),
+        title: '',
+        content: '',
+        thumbnailUrl: '',
+      };
 }
 
 const BLOCK_TYPE_OPTIONS: {
@@ -83,12 +125,10 @@ const BLOCK_TYPE_OPTIONS: {
 export function PageEditorView({
   page,
   usedSlugs,
-  onSave,
   onClose,
 }: {
   page?: AttachmentSchemaType;
   usedSlugs: Set<string>;
-  onSave: (page: AttachmentSchemaType) => void;
   onClose: () => void;
 }) {
   const [slug, setSlug] = useState('');
@@ -117,8 +157,27 @@ export function PageEditorView({
     top: number;
     left: number;
   } | null>(null);
+  const [isStatusMenuOpen, setIsStatusMenuOpen] = useState(false);
+  const statusMenuRef = useRef<HTMLDivElement>(null);
+  const statusButtonRef = useRef<HTMLButtonElement>(null);
+  const statusDropdownRef = useRef<HTMLDivElement>(null);
+  const [statusMenuPos, setStatusMenuPos] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   // Slug auto-follows the title until the user edits it by hand.
   const slugTouchedRef = useRef(false);
+  // The values the editor last matched the persisted page on — updated by
+  // resetToBaseline (mount / page change / Discard changes). Compared
+  // against current field values to derive isDirty below.
+  const baselineRef = useRef<EditorSnapshot>(snapshotFromPage(page));
+
+  const { publishPage, unpublishPage, deletePage, isSaving } =
+    usePagePersistence();
+  const { resume, setEditingPage } = useResumeStore();
+  const design = resume?.design;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -136,6 +195,13 @@ export function PageEditorView({
         !turnIntoDropdownRef.current?.contains(target)
       ) {
         setIsTurnIntoMenuOpen(false);
+      }
+      if (
+        statusMenuRef.current &&
+        !statusMenuRef.current.contains(target) &&
+        !statusDropdownRef.current?.contains(target)
+      ) {
+        setIsStatusMenuOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -156,25 +222,31 @@ export function PageEditorView({
     }
   }, [isInsertMenuOpen]);
 
-  useEffect(() => {
-    if (page) {
-      setSlug(page.slug || '');
-      setDate(
-        toDateInputValue(page.createdAt) ||
-          toDateInputValue(new Date().toISOString()),
-      );
-      setTitle(page.title || '');
-      setContent(page.content || '');
-      setThumbnailUrl(page.url || '');
-      slugTouchedRef.current = true;
-    } else {
-      setSlug('');
-      setDate(toDateInputValue(new Date().toISOString()));
-      setTitle('');
-      setContent('');
-      setThumbnailUrl('');
-      slugTouchedRef.current = false;
+  useLayoutEffect(() => {
+    if (isStatusMenuOpen && statusButtonRef.current) {
+      const rect = statusButtonRef.current.getBoundingClientRect();
+      setStatusMenuPos({ top: rect.bottom + 4, left: rect.left });
     }
+  }, [isStatusMenuOpen]);
+
+  // Resets the visible fields (and re-baselines isDirty against them) for
+  // whichever page is currently open — on mount, when a different page is
+  // opened, and on demand from "Discard changes" (handleDiscardChanges
+  // below also resets the Tiptap editor itself, which this alone doesn't).
+  const resetToBaseline = useCallback(() => {
+    const next = snapshotFromPage(page);
+    setSlug(next.slug);
+    setDate(next.date);
+    setTitle(next.title);
+    setContent(next.content);
+    setThumbnailUrl(next.thumbnailUrl);
+    slugTouchedRef.current = !!page;
+    baselineRef.current = next;
+  }, [page]);
+
+  useEffect(() => {
+    resetToBaseline();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const editor = useEditor({
@@ -194,7 +266,7 @@ export function PageEditorView({
     editorProps: {
       attributes: {
         class:
-          'min-h-[300px] w-full bg-transparent outline-none prose blog-prose prose-sm dark:prose-invert max-w-none pt-4 prose-headings:font-normal prose-p:text-[14px] prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-[20px] prose-h3:mb-4 prose-h3:mt-8 prose-h3:text-[16px] prose-a:font-normal prose-a:text-content-primary prose-a:no-underline prose-a:border-b prose-a:border-content-muted prose-blockquote:mx-0 prose-blockquote:my-6 prose-blockquote:pl-[1em] prose-blockquote:font-normal prose-blockquote:not-italic [&_blockquote_p]:before:content-none [&_blockquote_p]:after:content-none prose-strong:font-medium prose-code:font-mono prose-code:text-[14px] prose-code:bg-[#F2F2F2] dark:prose-code:bg-[#2F2F2F] prose-code:rounded-[2px] prose-code:px-[2px] prose-code:mx-[2px] [&_h2_code]:text-[20px] [&_h3_code]:text-[16px] prose-pre:rounded-lg prose-pre:bg-[#FAFAFA] dark:prose-pre:bg-[#2F2F2F] prose-pre:font-mono prose-pre:text-[14px] prose-hr:my-12 prose-ol:pl-0 prose-ul:pl-0 prose-li:pl-0 prose-ul:my-1 prose-li:leading-[1.6] [--tw-prose-bullets:var(--content-secondary)] [--tw-prose-counters:var(--content-secondary)]',
+          'min-h-[300px] w-full bg-transparent outline-none blog-prose prose prose-sm max-w-none text-theme-primary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-headings:font-normal prose-headings:text-theme-primary prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-[20px] prose-h3:mb-4 prose-h3:mt-8 prose-h3:text-[16px] prose-p:text-[14px] prose-p:text-theme-primary prose-a:border-b prose-a:border-theme-muted prose-a:font-normal prose-a:text-theme-primary prose-a:no-underline prose-blockquote:mx-0 prose-blockquote:my-6 prose-blockquote:border-l-2 prose-blockquote:border-theme-primary prose-blockquote:pl-[1em] prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:text-theme-primary prose-strong:font-medium prose-strong:text-theme-primary prose-code:mx-[2px] prose-code:rounded-[2px] prose-code:bg-[#F2F2F2] prose-code:px-[2px] prose-code:font-mono prose-code:text-[14px] prose-code:font-normal prose-code:text-theme-primary prose-code:before:content-none prose-code:after:content-none prose-pre:rounded-lg prose-pre:bg-[#FAFAFA] prose-pre:px-4 prose-pre:py-2 prose-pre:font-mono prose-pre:text-[14px] prose-pre:text-theme-primary prose-ol:pl-0 prose-ol:text-theme-primary prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-primary prose-li:pl-0 prose-li:leading-[1.6] prose-li:text-theme-primary prose-hr:my-12 prose-hr:border-theme-border dark:prose-code:bg-[#333] dark:prose-pre:bg-[#333] [&_blockquote_p]:before:content-none [&_blockquote_p]:after:content-none [&_h2_code]:text-[20px] [&_h3_code]:text-[16px]',
       },
     },
     onUpdate: ({ editor }) => {
@@ -207,6 +279,24 @@ export function PageEditorView({
     editor.commands.setContent(page?.content || '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page?.id, editor]);
+
+  // "Discard changes" — page itself hasn't changed (that's the whole point,
+  // vs. the effect above), so resetToBaseline alone wouldn't re-run; also
+  // reset the Tiptap editor's own content directly.
+  const handleDiscardChanges = useCallback(() => {
+    resetToBaseline();
+    editor?.commands.setContent(page?.content || '');
+  }, [resetToBaseline, editor, page]);
+
+  const isDirty =
+    JSON.stringify({ slug, date, title, content, thumbnailUrl }) !==
+    JSON.stringify(baselineRef.current);
+
+  const status: PageStatus = !page
+    ? 'new'
+    : page.hidden
+      ? 'draft'
+      : 'published';
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -221,9 +311,9 @@ export function PageEditorView({
     setSlug(e.target.value.replace(/[^a-zA-Z0-9-]/g, ''));
   };
 
-  const handleSave = () => {
+  const buildPage = (): AttachmentSchemaType => {
     const finalSlug = dedupeSlug(slugify(slug) || slugify(title), usedSlugs);
-    const savedPage: AttachmentSchemaType = {
+    return {
       id: page?.id || crypto.randomUUID(),
       type: 'page',
       url: thumbnailUrl,
@@ -236,7 +326,54 @@ export function PageEditorView({
       hidden: page?.hidden ?? false,
       isBlurred: page?.isBlurred ?? false,
     };
-    onSave(savedPage);
+  };
+
+  // Publishes (or, if already published, applies pending edits to) this
+  // page immediately and independently of anything else unsaved elsewhere
+  // in the profile editor — see hooks/usePagePersistence.ts. The editor
+  // stays open; once the store's editingPage.attachment updates below, the
+  // `page` prop flowing back in re-triggers the reset effect above, which
+  // re-baselines isDirty and flips `status` to "published".
+  const handlePublish = async () => {
+    const built = buildPage();
+    try {
+      await publishPage(built);
+      setEditingPage({ attachment: built });
+      if (status === 'published') toast.success('Changes published');
+      else toast.success('Page published');
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to publish page',
+      );
+    }
+  };
+
+  const handleUnpublish = async () => {
+    if (!page) return;
+    setIsStatusMenuOpen(false);
+    try {
+      await unpublishPage(page.id);
+      setEditingPage({ attachment: { ...page, hidden: true } });
+      toast.success('Page unpublished');
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to unpublish page',
+      );
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!page) return;
+    try {
+      await deletePage(page.id);
+      toast.success('Page deleted');
+      setIsDeleteConfirmOpen(false);
+      onClose();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to delete page',
+      );
+    }
   };
 
   const setLink = () => {
@@ -323,6 +460,76 @@ export function PageEditorView({
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
+
+        <div ref={statusMenuRef} className="relative h-full shrink-0">
+          <button
+            ref={statusButtonRef}
+            onClick={() => setIsStatusMenuOpen((prev) => !prev)}
+            disabled={isSaving}
+            className={cn(
+              'flex h-full items-center whitespace-nowrap border-r border-border-strong px-6 text-sm font-medium transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-50',
+              status === 'published'
+                ? 'text-green-600 dark:text-green-500'
+                : 'text-content-secondary hover:text-content-primary',
+              isStatusMenuOpen && 'bg-surface-2',
+            )}
+          >
+            {status === 'published' ? 'Published' : 'Draft'}
+          </button>
+
+          {isStatusMenuOpen &&
+            statusMenuPos &&
+            createPortal(
+              <div
+                ref={statusDropdownRef}
+                style={{ top: statusMenuPos.top, left: statusMenuPos.left }}
+                className="pointer-events-auto fixed z-[100] w-52 overflow-hidden rounded-md border border-border-strong bg-surface-1 shadow-lg"
+              >
+                <button
+                  onClick={() => {
+                    setIsStatusMenuOpen(false);
+                    setIsPreviewOpen(true);
+                  }}
+                  disabled={status === 'published' && !isDirty}
+                  className="flex w-full items-center px-4 py-2.5 text-left text-sm text-content-secondary transition-colors active:bg-surface-2 active:text-content-primary disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {status === 'published' ? 'Preview changes' : 'Preview draft'}
+                </button>
+                {status === 'published' && (
+                  <button
+                    onClick={() => {
+                      handleDiscardChanges();
+                      setIsStatusMenuOpen(false);
+                    }}
+                    disabled={!isDirty}
+                    className="flex w-full items-center px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 active:text-content-primary disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Discard changes
+                  </button>
+                )}
+                {status === 'published' && (
+                  <button
+                    onClick={handleUnpublish}
+                    className="flex w-full items-center px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 active:text-content-primary"
+                  >
+                    Unpublish
+                  </button>
+                )}
+                {status !== 'new' && (
+                  <button
+                    onClick={() => {
+                      setIsStatusMenuOpen(false);
+                      setIsDeleteConfirmOpen(true);
+                    }}
+                    className="flex w-full items-center px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 active:text-content-primary"
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>,
+              document.body,
+            )}
+        </div>
 
         <div ref={turnIntoMenuRef} className="relative h-full shrink-0">
           <button
@@ -424,6 +631,55 @@ export function PageEditorView({
           open={isEmbedDialogOpen}
           onOpenChange={setIsEmbedDialogOpen}
           onInsert={handleEmbedInsert}
+        />
+
+        <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+          <DialogContent
+            hideCloseButton
+            className="flex h-[100dvh] w-[100vw] max-w-[100vw] flex-col gap-0 overflow-hidden rounded-none border-none bg-theme-bg p-0"
+          >
+            <DialogTitle className="sr-only">
+              {status === 'published' ? 'Preview changes' : 'Preview draft'}
+            </DialogTitle>
+            <div className="flex h-14 shrink-0 items-center justify-between border-b border-theme-border px-6">
+              <span className="text-sm font-medium text-theme-muted">
+                {status === 'published' ? 'Preview changes' : 'Preview draft'}
+              </span>
+              <button
+                onClick={() => setIsPreviewOpen(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-full text-theme-muted transition-colors hover:bg-theme-border hover:text-theme-primary"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div
+              className={cn(
+                'flex-1 overflow-y-auto bg-theme-bg px-6 py-12',
+                design?.typography === 'serif'
+                  ? 'font-serif'
+                  : design?.typography === 'mono'
+                    ? 'font-mono'
+                    : 'font-sans',
+                `typography-${design?.typography || 'sans'}`,
+                `theme-${design?.theme || 'default'}`,
+              )}
+            >
+              <div className="mx-auto w-full max-w-[540px]">
+                <h1 className="mb-6 text-xl font-normal leading-6 text-theme-primary">
+                  {title || 'Untitled'}
+                </h1>
+                <PageContent html={content} />
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <DeleteConfirmDialog
+          open={isDeleteConfirmOpen}
+          onOpenChange={setIsDeleteConfirmOpen}
+          description="This will permanently delete this page. This action cannot be undone."
+          onConfirm={handleConfirmDelete}
+          isLoading={isSaving}
         />
 
         <button
@@ -574,11 +830,19 @@ export function PageEditorView({
           Close
         </button>
         <button
-          onClick={handleSave}
-          disabled={!title.trim()}
+          onClick={handlePublish}
+          disabled={
+            !title.trim() || isSaving || (status === 'published' && !isDirty)
+          }
           className="h-9 rounded-md border border-border-strong bg-surface-1 px-6 text-sm font-medium text-content-primary shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
         >
-          Publish
+          {isSaving ? (
+            <Spinner size={14} />
+          ) : status === 'published' ? (
+            'Save'
+          ) : (
+            'Publish'
+          )}
         </button>
       </div>
     </div>

@@ -5,6 +5,7 @@ import {
   findPageBySlug,
   getUsedPageSlugs,
   resolveAttachedPages,
+  withPageRemoved,
   migrateEmbeddedPages,
   slugify,
   dedupeSlug,
@@ -252,6 +253,62 @@ describe('resolveAttachedPages', () => {
     expect(
       resolveAttachedPages([{ id: 'p1', type: 'page' as const }] as any, []),
     ).toEqual([]);
+  });
+});
+
+describe('withPageRemoved', () => {
+  const resumeWithSharedPage = {
+    ...baseResume,
+    pages: [
+      { id: 'page-1', type: 'page' as const, title: 'Shared', slug: 'shared' },
+      { id: 'page-2', type: 'page' as const, title: 'Other', slug: 'other' },
+    ],
+    workExperience: [
+      {
+        id: 'work-1',
+        company: 'Acme',
+        location: 'Remote',
+        title: 'Engineer',
+        start: '2020',
+        end: 'Now',
+        description: 'desc',
+        attachments: [{ id: 'page-1', type: 'page' as const }],
+      },
+    ],
+    education: [
+      {
+        id: 'edu-1',
+        school: 'State University',
+        degree: 'BS',
+        start: '2016',
+        end: '2020',
+        description: 'desc',
+        attachments: [
+          { id: 'page-1', type: 'page' as const },
+          { id: 'page-2', type: 'page' as const },
+        ],
+      },
+    ],
+  };
+
+  it('removes the page from resume.pages', () => {
+    const patch = withPageRemoved(resumeWithSharedPage as any, 'page-1');
+    expect(patch.pages?.map((p) => p.id)).toEqual(['page-2']);
+  });
+
+  it('removes the stub from every attaching item, not just the first', () => {
+    const patch = withPageRemoved(resumeWithSharedPage as any, 'page-1');
+    expect((patch as any).workExperience[0].attachments).toEqual([]);
+    expect((patch as any).education[0].attachments).toEqual([
+      { id: 'page-2', type: 'page' },
+    ]);
+  });
+
+  it('leaves items that never attached the deleted page untouched', () => {
+    const patch = withPageRemoved(resumeWithSharedPage as any, 'page-2');
+    expect((patch as any).workExperience[0].attachments).toEqual([
+      { id: 'page-1', type: 'page' },
+    ]);
   });
 });
 
