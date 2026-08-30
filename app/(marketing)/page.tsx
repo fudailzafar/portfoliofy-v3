@@ -322,7 +322,7 @@ export default async function Home() {
             </div>
 
             <div className="flex w-full flex-1 flex-col">
-              <div className="mb-6 flex max-w-full items-center rounded-3xl bg-[#fff] px-3 py-2 text-[#111] shadow-sm dark:text-[#eee] dark:shadow-none sm:px-5 sm:py-3">
+              <div className="mb-6 flex max-w-full items-center rounded-3xl bg-[#fff] px-3 py-2 text-[#111] shadow-sm dark:bg-surface-1 dark:text-[#eee] dark:shadow-none sm:px-5 sm:py-3">
                 <span className="font-regular flex items-center text-[15px] tracking-tight text-[#111] dark:text-[#eee] sm:text-[30px]">
                   Art director
                   <span className="animate-blink ml-0.5 inline-block h-[1.1em] w-[2px] bg-[#0085FF]"></span>
@@ -436,7 +436,7 @@ export default async function Home() {
                 <span className="text-[14px] text-[#8d8e8e] sm:text-[18px]">
                   Architectural Designer
                 </span>
-                <span className="text-[14px] text-[#00366a] sm:text-[18px]">
+                <span className="text-[14px] text-[#00366a] dark:text-[#0788F5] sm:text-[18px]">
                   portfoliofy.me/tom
                 </span>
               </div>
