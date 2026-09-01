@@ -93,7 +93,7 @@ export function Header({
                       id="status-toggle-btn"
                       onClick={() => setIsEditingStatus((prev) => !prev)}
                       aria-label="Set status"
-                      className="absolute -bottom-1 -right-1 flex h-6 w-8 items-center justify-center rounded-full border border-theme-bg bg-theme-border text-sm text-theme-primary shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000000d] transition-transform active:scale-95 dark:shadow-none"
+                      className="absolute -bottom-1 -right-1 flex h-6 w-8 items-center justify-center rounded-full border border-theme-bg bg-theme-bg text-sm text-theme-primary shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000000d] transition-transform active:scale-95 dark:bg-theme-border dark:shadow-none"
                     >
                       <Twemoji
                         tag="span"
@@ -124,7 +124,7 @@ export function Header({
           </div>
         )}
 
-        <div className="flex-1 space-y-1">
+        <div className="flex-1">
           <h1
             className="font-regular text-xl leading-[26px] text-theme-primary"
             id="resume-name"
@@ -165,7 +165,7 @@ export function Header({
               href={ensureHttps(header.website)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1 block text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary active:text-theme-primary"
+              className="mt-1.5 inline-block rounded-full bg-[#F6F6F6] px-3 py-1 text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary transition-colors active:bg-[#F2F2F2] dark:bg-[#383838] dark:active:bg-[#4E4E4E]"
             >
               {header.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
             </a>
@@ -189,7 +189,7 @@ export function Header({
 
       {/* Status Display Bubble */}
       {!isEditingStatus && !hideSocialFeatures && currentStatus.text && (
-        <div className="relative mt-5 flex w-full flex-col gap-1 rounded-3xl bg-theme-border px-6 py-[18px] shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000000d] dark:shadow-none">
+        <div className="relative mt-5 flex w-full flex-col gap-1 rounded-3xl bg-theme-bg px-6 py-[18px] shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000000d] dark:bg-theme-border dark:shadow-none">
           {/* Speech Bubble Tail — centered under the status toggle button */}
           <svg
             width="26"
@@ -226,7 +226,7 @@ export function Header({
             </g>
             <path
               d="M11.5858 3.41422C12.3668 2.63317 13.6332 2.63317 14.4142 3.41422L19.6569 8.65685C21.1571 10.1571 23.192 11 25.3137 11H26V12H0V11H0.686293C2.80802 11 4.84286 10.1571 6.34315 8.65685L11.5858 3.41422Z"
-              className="fill-theme-border"
+              className="fill-theme-bg dark:fill-theme-border"
             />
             <defs>
               <filter
