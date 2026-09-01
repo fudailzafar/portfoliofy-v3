@@ -59,7 +59,8 @@ export async function generateMetadata({
     icons: customFavicon ? { icon: customFavicon } : undefined,
     alternates: { canonical: canonicalUrl },
     openGraph: {
-      title: resolved.page.title,
+      type: 'website',
+      title: `${resolved.page.title}`,
       description: stripHtml(resolved.page.content).slice(0, 200),
       images: [
         {
@@ -69,6 +70,9 @@ export async function generateMetadata({
           alt: `${resolved.page.title}`,
         },
       ],
+    },
+    other: {
+      'og:logo': customFavicon || 'https://portfoliofy.me/favicon.ico',
     },
   };
 }
