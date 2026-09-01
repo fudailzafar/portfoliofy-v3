@@ -209,22 +209,22 @@ export default async function Home() {
 
             <div className="relative flex w-full flex-1 items-center justify-center overflow-hidden">
               <div className="relative flex w-full max-w-[400px] flex-col justify-between gap-6 rounded-[18px] border border-border-strong p-4 text-[#111] shadow-xl dark:text-[#eee] dark:shadow-none sm:p-5">
-                <div className="relative">
+                <div>
                   <div className="font-regular text-[16px] tracking-tight text-[#111] dark:text-[#eee] sm:text-[20px]">
                     Product Designer at Quip
                   </div>
                   <div className="text-[14px] text-content-muted sm:text-[16px]">
                     San Francisco, CA
                   </div>
-
-                  <div className="animate-tag-bubble bg-content-primary/80 pointer-events-none absolute left-8 top-4 whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-medium text-surface-1 shadow-lg backdrop-blur-sm">
-                    Mia Chen
-                  </div>
                 </div>
 
                 <div className="relative flex items-center gap-2">
+                  <div className="animate-tag-bubble bg-content-primary/80 pointer-events-none absolute -top-9 left-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-medium text-surface-1 shadow-lg backdrop-blur-sm">
+                    Mia Chen
+                  </div>
+
                   <div className="flex -space-x-2">
-                    <div className="size-7 shrink-0 overflow-hidden rounded-full bg-surface-3 ring-2 ring-surface-1 sm:size-8">
+                    <div className="size-9 shrink-0 overflow-hidden rounded-full bg-surface-3 ring-2 ring-surface-1 sm:size-10">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src="https://api.dicebear.com/10.x/glyphs/svg?seed=Jeff"
@@ -232,7 +232,7 @@ export default async function Home() {
                         className="h-full w-full object-cover"
                       />
                     </div>
-                    <div className="size-7 shrink-0 overflow-hidden rounded-full bg-surface-3 ring-2 ring-surface-1 sm:size-8">
+                    <div className="size-9 shrink-0 overflow-hidden rounded-full bg-surface-3 ring-2 ring-surface-1 sm:size-10">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src="https://api.dicebear.com/10.x/glyphs/svg?seed=Mia"
@@ -240,7 +240,7 @@ export default async function Home() {
                         className="h-full w-full object-cover"
                       />
                     </div>
-                    <div className="size-7 shrink-0 overflow-hidden rounded-full bg-surface-3 ring-2 ring-surface-1 sm:size-8">
+                    <div className="size-9 shrink-0 overflow-hidden rounded-full bg-surface-3 ring-2 ring-surface-1 sm:size-10">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src="https://api.dicebear.com/10.x/glyphs/svg?seed=Alex"
