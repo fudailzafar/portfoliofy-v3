@@ -101,7 +101,7 @@ export function StatusEditor({
     >
       <div
         ref={containerRef}
-        className="relative flex w-full flex-col gap-1 rounded-3xl bg-theme-border p-4 shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000000d] dark:shadow-none"
+        className="relative flex w-full flex-col gap-1 rounded-3xl bg-theme-bg p-4 shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000000d] dark:bg-theme-border dark:shadow-none"
       >
         {/* Speech Bubble Tail — centered under the status toggle button */}
         <svg
@@ -139,7 +139,7 @@ export function StatusEditor({
           </g>
           <path
             d="M11.5858 3.41422C12.3668 2.63317 13.6332 2.63317 14.4142 3.41422L19.6569 8.65685C21.1571 10.1571 23.192 11 25.3137 11H26V12H0V11H0.686293C2.80802 11 4.84286 10.1571 6.34315 8.65685L11.5858 3.41422Z"
-            className="fill-theme-border"
+            className="fill-theme-bg dark:fill-theme-border"
           />
           <defs>
             <filter
