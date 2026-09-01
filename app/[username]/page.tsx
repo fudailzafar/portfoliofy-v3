@@ -69,6 +69,7 @@ export async function generateMetadata({
     icons: customFavicon ? { icon: customFavicon } : undefined,
     alternates: { canonical: canonicalUrl },
     openGraph: {
+      type: 'website',
       title: `${resume.resumeData.header.name}`,
       description: plainSummary,
       images: [
@@ -79,6 +80,9 @@ export async function generateMetadata({
           alt: `${resume.resumeData.header.name}'s profile`,
         },
       ],
+    },
+    other: {
+      'og:logo': customFavicon || 'https://portfoliofy.me/favicon.ico',
     },
   };
 }
