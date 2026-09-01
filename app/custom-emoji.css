@@ -1,0 +1,62 @@
+/* Custom Emoji Picker overrides for read.cv match */
+.custom-emoji-picker {
+  /* Size math to perfectly fit 7 emojis: 260px wide / 7 = 37.14px per emoji */
+  --epr-emoji-size: 24px !important;
+  --epr-emoji-fullsize: 36px !important;
+
+  /* Hide Categories */
+  --epr-category-navigation-button-size: 0px !important;
+  --epr-category-padding: 0px !important;
+  --epr-category-label-height: 1px !important;
+
+  /* Search Input Styling */
+  --epr-search-border-color: transparent !important;
+  --epr-search-border-color-active: transparent !important;
+  --epr-search-input-border-radius: 0px !important;
+  --epr-search-input-bg-color: transparent !important;
+  --epr-search-input-bg-color-active: transparent !important;
+  --epr-search-input-padding: 0 !important;
+}
+
+.custom-emoji-picker .epr-category-nav {
+  opacity: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+.custom-emoji-picker .epr-search-container {
+  border-bottom: 1px solid var(--border-subtle) !important;
+  margin-bottom: 10px !important;
+}
+
+.custom-emoji-picker .epr-icn-search {
+  display: none !important;
+}
+
+.custom-emoji-picker .epr-search {
+  padding-left: 0 !important;
+}
+
+.custom-emoji-picker .epr-emoji-category-label {
+  opacity: 0 !important;
+  height: 1px !important;
+  line-height: 1px !important;
+  font-size: 0px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Hide the scrollbar but keep it scrollable */
+.custom-emoji-picker .epr-body::-webkit-scrollbar {
+  display: none !important;
+}
+
+.custom-emoji-picker .epr-body {
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+}
