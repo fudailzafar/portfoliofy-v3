@@ -106,6 +106,9 @@ export const metadata: Metadata = {
     ],
     type: 'website',
   },
+  other: {
+    'og:logo': 'https://portfoliofy.me/favicon.ico',
+  },
   verification: {
     google: 'QgVm-W9_sWA8B47coaItOUCg-3pX84KbM2wEtP9Jpm4',
   },
