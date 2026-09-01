@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import EmojiPicker, { EmojiStyle } from 'emoji-picker-react';
+import EmojiPicker, { EmojiStyle, Theme } from 'emoji-picker-react';
 import Twemoji from 'react-twemoji';
 import {
   Tooltip,
@@ -212,7 +212,12 @@ export function StatusEditor({
                   className="absolute left-0 top-12 z-50 shadow-xl"
                 >
                   <EmojiPicker
-                    emojiStyle={EmojiStyle.TWITTER}
+                    className="custom-emoji-picker"
+                    emojiStyle={EmojiStyle.NATIVE}
+                    theme={Theme.AUTO}
+                    width={260}
+                    height={320}
+                    previewConfig={{ showPreview: false }}
                     onEmojiClick={(e) => {
                       setEmoji(e.emoji);
                       setShowEmojiPicker(false);
