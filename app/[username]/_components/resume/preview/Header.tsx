@@ -264,7 +264,7 @@ export function Header({
               </filter>
             </defs>
           </svg>
-          <span className="text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary">
+          <span className="whitespace-pre-wrap text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary">
             {currentStatus.text}
           </span>
           <span className="text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-muted">

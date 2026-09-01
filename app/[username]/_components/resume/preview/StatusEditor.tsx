@@ -32,6 +32,16 @@ export function StatusEditor({
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-grow the textarea to fit wrapped/multi-line content instead of
+  // clipping it inside a fixed single-row box.
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, [text]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -178,7 +188,7 @@ export function StatusEditor({
           </defs>
         </svg>
 
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-1">
           <div className="relative">
             <TooltipProvider>
               <Tooltip>
@@ -229,15 +239,19 @@ export function StatusEditor({
           </div>
 
           <div className="flex flex-1 flex-col gap-4">
-            <input
-              type="text"
+            <textarea
+              ref={textareaRef}
               autoFocus
+              rows={1}
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Looking to build something new..."
-              className="w-full bg-transparent pt-2 text-sm text-theme-primary placeholder:text-theme-secondary focus:outline-none focus:ring-0"
+              className="w-full resize-none overflow-hidden bg-transparent pt-2 text-sm text-theme-primary placeholder:text-theme-secondary focus:outline-none focus:ring-0"
               onKeyDown={(e) => {
-                if (e.key === 'Enter') handleSave();
+                if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                  e.preventDefault();
+                  handleSave();
+                }
                 if (e.key === 'Escape') onClose();
               }}
             />
