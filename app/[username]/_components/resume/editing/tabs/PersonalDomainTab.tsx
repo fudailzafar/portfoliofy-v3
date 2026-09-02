@@ -429,20 +429,20 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 {
                   value: 'sans',
                   label: 'Sans',
-                  description:
-                    'Graphik, designed by Christian Schwartz in 2009.',
+                  description: 'Inter, designed by Rasmus Andersson in 2017.',
                   fontClass: 'font-sans',
                 },
                 {
                   value: 'serif',
                   label: 'Serif',
-                  description: 'Signifier, designed by Kris Sowersby in 2020.',
+                  description: 'Fraunces, designed by Undercase Type in 2018.',
                   fontClass: 'font-serif',
                 },
                 {
                   value: 'mono',
                   label: 'Mono',
-                  description: 'Diatype Mono, designed by Dinamo in 2020.',
+                  description:
+                    'JetBrains Mono, designed by Philipp Nurullin and Konstantin Bulenkov.',
                   fontClass: 'font-mono',
                 },
               ] as const

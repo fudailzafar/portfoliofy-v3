@@ -2,15 +2,7 @@ import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 import { getUserData } from '../utils';
 import { getOptimizedImageUrl, isOwnS3ImageUrl } from '@/lib/utils';
-import { readFileSync } from 'fs';
-import { join } from 'path';
-
-const graphikMedium = readFileSync(
-  join(process.cwd(), 'public/fonts/Graphik-Medium.woff'),
-);
-const graphikRegular = readFileSync(
-  join(process.cwd(), 'public/fonts/Graphik-Regular.woff'),
-);
+import { getOgFonts } from '@/lib/server/ogFonts';
 
 export async function GET(
   request: NextRequest,
@@ -26,6 +18,7 @@ export async function GET(
     // route and isn't affected by that.
     const { username } = await params;
 
+    const ogFonts = await getOgFonts();
     const { resume, userProfile } = await getUserData(username);
 
     // Get data from resume
@@ -125,7 +118,7 @@ export async function GET(
           {/* Title (Name) */}
           <div
             style={{
-              fontFamily: 'Graphik-Medium',
+              fontFamily: 'Inter-Medium',
               fontSize: '68px',
               fontWeight: 500,
               color: '#111111',
@@ -141,7 +134,7 @@ export async function GET(
           {subtitle && (
             <div
               style={{
-                fontFamily: 'Graphik-Regular',
+                fontFamily: 'Inter-Regular',
                 fontSize: '36px',
                 color: '#4a4a4a',
                 textAlign: 'center',
@@ -156,20 +149,7 @@ export async function GET(
       {
         width: 1200,
         height: 630,
-        fonts: [
-          {
-            name: 'Graphik-Medium',
-            data: graphikMedium,
-            weight: 500,
-            style: 'normal',
-          },
-          {
-            name: 'Graphik-Regular',
-            data: graphikRegular,
-            weight: 400,
-            style: 'normal',
-          },
-        ],
+        fonts: ogFonts,
       },
     );
   } catch (e: any) {

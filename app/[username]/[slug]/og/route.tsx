@@ -3,15 +3,7 @@ import { NextRequest } from 'next/server';
 import { getUserData } from '../../utils';
 import { findPageBySlug, estimateReadMinutes } from '@/lib/resume';
 import { getOptimizedImageUrl, isOwnS3ImageUrl } from '@/lib/utils';
-import { readFileSync } from 'fs';
-import { join } from 'path';
-
-const graphikMedium = readFileSync(
-  join(process.cwd(), 'public/fonts/Graphik-Medium.woff'),
-);
-const graphikRegular = readFileSync(
-  join(process.cwd(), 'public/fonts/Graphik-Regular.woff'),
-);
+import { getOgFonts } from '@/lib/server/ogFonts';
 
 export async function GET(
   request: NextRequest,
@@ -27,6 +19,7 @@ export async function GET(
     // from the actual matched route and isn't affected by that.
     const { username, slug } = await params;
 
+    const ogFonts = await getOgFonts();
     const { resume, userProfile } = await getUserData(username);
     const found = resume?.resumeData
       ? findPageBySlug(resume.resumeData, slug)
@@ -123,7 +116,7 @@ export async function GET(
           <div
             style={{
               display: 'flex',
-              fontFamily: 'Graphik-Regular',
+              fontFamily: 'Inter-Regular',
               fontSize: '28px',
               color: '#4a4a4a',
               letterSpacing: '-0.01em',
@@ -140,7 +133,7 @@ export async function GET(
               WebkitBoxOrient: 'vertical',
               WebkitLineClamp: 3,
               overflow: 'hidden',
-              fontFamily: 'Graphik-Medium',
+              fontFamily: 'Inter-Medium',
               fontSize: '64px',
               fontWeight: 500,
               color: '#111111',
@@ -157,7 +150,7 @@ export async function GET(
           <div
             style={{
               display: 'flex',
-              fontFamily: 'Graphik-Regular',
+              fontFamily: 'Inter-Regular',
               fontSize: '24px',
               color: '#8a8a8a',
               letterSpacing: '-0.01em',
@@ -170,20 +163,7 @@ export async function GET(
       {
         width: 1200,
         height: 630,
-        fonts: [
-          {
-            name: 'Graphik-Medium',
-            data: graphikMedium,
-            weight: 500,
-            style: 'normal',
-          },
-          {
-            name: 'Graphik-Regular',
-            data: graphikRegular,
-            weight: 400,
-            style: 'normal',
-          },
-        ],
+        fonts: ogFonts,
       },
     );
   } catch (e: any) {

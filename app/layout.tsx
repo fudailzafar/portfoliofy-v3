@@ -1,5 +1,5 @@
 import type React from 'react';
-import localFont from 'next/font/local';
+import { Inter, Fraunces, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryClientProvider } from '@/components/providers/ReactQueryClientProvider';
@@ -12,66 +12,23 @@ import { SessionProviderWrapper } from '@/components/providers/SessionProviderWr
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { SITE_URL } from '@/lib/site';
 
-const graphik = localFont({
-  src: [
-    {
-      path: '../public/fonts/Graphik-Regular.woff',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/Graphik-Medium.woff',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/Graphik-RegularItalic.otf',
-      weight: '400',
-      style: 'italic',
-    },
-    {
-      path: '../public/fonts/Graphik-MediumItalic.otf',
-      weight: '500',
-      style: 'italic',
-    },
-  ],
+const graphik = Inter({
+  weight: ['400', '500'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
   variable: '--font-graphik',
 });
 
-const signifier = localFont({
-  src: [
-    {
-      path: '../public/fonts/Signifier-Regular.otf',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/Signifier-Medium.otf',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/Signifier-RegularItalic.otf',
-      weight: '400',
-      style: 'italic',
-    },
-    {
-      path: '../public/fonts/Signifier-MediumItalic.otf',
-      weight: '500',
-      style: 'italic',
-    },
-  ],
+const signifier = Fraunces({
+  weight: ['400', '500'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
   variable: '--font-signifier',
 });
 
-const diatypeMono = localFont({
-  src: [
-    {
-      path: '../public/fonts/DiatypeMono-Regular.woff',
-      weight: '400',
-      style: 'normal',
-    },
-  ],
+const diatypeMono = JetBrains_Mono({
+  weight: ['400'],
+  subsets: ['latin'],
   variable: '--font-diatype-mono',
 });
 
