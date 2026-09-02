@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { AuthDialog } from '@/components/auth/AuthDialog';
 import { ExploreSidebar } from './ExploreSidebar';
 import { toast } from 'sonner';
@@ -16,6 +17,7 @@ export function GlobalSidebar() {
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [isExploreMode, setIsExploreMode] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
     const handleToggle = () => setIsExploreMode((prev) => !prev);
@@ -128,10 +130,25 @@ export function GlobalSidebar() {
                           `portfoliofy.me/${currentUsername}`,
                         );
                         toast.success('Copied to clipboard');
+                        setIsCopied(true);
+                        setTimeout(() => setIsCopied(false), 2000);
                       }}
-                      className="pl-4 text-left text-[14px] text-content-muted transition-colors hover:underline hover:underline-offset-[3px]"
+                      className="relative h-5 w-40 overflow-hidden pl-4 text-left text-[14px] text-content-muted transition-colors hover:underline hover:underline-offset-[3px]"
                     >
-                      portfoliofy.me/{currentUsername}
+                      <AnimatePresence mode="wait" initial={false}>
+                        <motion.span
+                          key={isCopied ? 'copied' : 'copy'}
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute left-4 top-0"
+                        >
+                          {isCopied
+                            ? 'Copied my profile link'
+                            : 'Copy my profile link'}
+                        </motion.span>
+                      </AnimatePresence>
                     </button>
                   </div>
                 )
