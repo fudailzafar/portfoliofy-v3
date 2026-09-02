@@ -34,3 +34,8 @@ next-env.d.ts
 # Local datasets folder
 /datasets
 .env*.local
+
+# Commercially-licensed fonts (Graphik/Signifier/Diatype Mono) — not
+# redistributable, see app/layout.tsx. Only relevant if you're swapping the
+# open-source default fonts back for your own licensed copies locally.
+/public/fonts/
