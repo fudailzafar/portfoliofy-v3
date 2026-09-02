@@ -1,8 +1,7 @@
 import { headers } from 'next/headers';
 import { getUserData } from '@/app/[username]/utils';
 import { estimateReadMinutes } from '@/lib/resume';
-
-const SITE_URL = 'https://portfoliofy.me';
+import { SITE_URL } from '@/lib/site';
 
 function stripHtml(html?: string): string {
   return html ? html.replace(/<[^>]*>?/gm, '').trim() : '';

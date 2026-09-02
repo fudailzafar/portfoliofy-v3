@@ -9,6 +9,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { X } from 'lucide-react';
 import { useS3Upload } from 'next-s3-upload';
 import { getOptimizedImageUrl, readImageDimensions } from '@/lib/utils';
+import { SITE_HOST } from '@/lib/site';
 
 type AssetKey = 'ogImage' | 'favicon';
 
@@ -152,7 +153,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
           href={
             domainStatus?.verified && customDomain
               ? `https://${customDomain}`
-              : `https://${username}.portfoliofy.me`
+              : `https://${username}.${SITE_HOST}`
           }
           target="_blank"
           rel="noopener noreferrer"
@@ -173,12 +174,12 @@ export function PersonalDomainTab({ username }: { username: string }) {
               <p className="text-[13px] text-content-muted">
                 Optionally set a domain other than{' '}
                 <a
-                  href={`https://${username}.portfoliofy.me`}
+                  href={`https://${username}.${SITE_HOST}`}
                   className="font-mono text-content-primary underline-offset-4 hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {username}.portfoliofy.me
+                  {username}.{SITE_HOST}
                 </a>
               </p>
             </div>

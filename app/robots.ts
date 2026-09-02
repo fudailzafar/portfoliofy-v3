@@ -1,7 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { headers } from 'next/headers';
-
-const SITE_URL = 'https://portfoliofy.me';
+import { SITE_URL } from '@/lib/site';
 
 // A sitemap reference is only meaningful when it's on the same host as the
 // robots.txt serving it, so this points each domain back at its own

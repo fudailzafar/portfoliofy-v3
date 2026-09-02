@@ -4,8 +4,7 @@ import sql from '@/lib/server/db';
 import { getAllPageAttachments } from '@/lib/resume';
 import type { ResumeDataSchemaType } from '@/lib/resume';
 import { getUserData } from './[username]/utils';
-
-const SITE_URL = 'https://portfoliofy.me';
+import { SITE_URL } from '@/lib/site';
 
 function pageEntries(
   baseUrl: string,

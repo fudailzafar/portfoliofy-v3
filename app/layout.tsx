@@ -10,6 +10,7 @@ import Script from 'next/script';
 import { ClientLayoutWrapper } from '@/components/layout/ClientLayoutWrapper';
 import { SessionProviderWrapper } from '@/components/providers/SessionProviderWrapper';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
+import { SITE_URL } from '@/lib/site';
 
 const graphik = localFont({
   src: [
@@ -75,7 +76,7 @@ const diatypeMono = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://portfoliofy.me'),
+  metadataBase: new URL(SITE_URL),
   title: 'Portfoliofy - Mindful professional profiles',
   description:
     'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
@@ -107,7 +108,7 @@ export const metadata: Metadata = {
     type: 'website',
   },
   other: {
-    'og:logo': 'https://portfoliofy.me/favicon.ico',
+    'og:logo': `${SITE_URL}/favicon.ico`,
   },
   verification: {
     google: 'QgVm-W9_sWA8B47coaItOUCg-3pX84KbM2wEtP9Jpm4',
@@ -154,8 +155,8 @@ export default async function RootLayout({
                 __html: JSON.stringify({
                   '@context': 'https://schema.org',
                   '@type': 'Organization',
-                  url: 'https://portfoliofy.me',
-                  logo: 'https://portfoliofy.me/logo.png',
+                  url: SITE_URL,
+                  logo: `${SITE_URL}/logo.png`,
                   name: 'Portfoliofy',
                   description:
                     'Portfoliofy is a progressive platform for mindful professional profiles.',
