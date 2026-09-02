@@ -1,6 +1,20 @@
 {
   "name": "portfoliofy",
   "version": "0.1.0",
+  "description": "A progressive platform for building mindful, customizable professional profiles with a drag-and-drop editor.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fudailzafar/portfoliofy-v3.git"
+  },
+  "license": "MIT",
+  "author": "Fudail Mohammed Zafar",
+  "keywords": [
+    "portfolio",
+    "resume",
+    "nextjs",
+    "tiptap",
+    "profile-builder"
+  ],
   "private": true,
   "packageManager": "pnpm@9.1.2",
   "scripts": {
