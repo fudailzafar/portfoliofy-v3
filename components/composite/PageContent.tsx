@@ -46,24 +46,6 @@ hljs.registerLanguage('css', css);
 export function PageContent({ html }: { html: string }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  // Gallery images expand in place on click (read.cv-style — no modal, no
-  // lost scroll position). Content is injected via dangerouslySetInnerHTML,
-  // so this is a single delegated listener rather than per-button handlers.
-  useEffect(() => {
-    const container = ref.current;
-    if (!container) return;
-
-    const handleClick = (e: MouseEvent) => {
-      const button = (e.target as HTMLElement).closest('.content-gallery-item');
-      if (button && container.contains(button)) {
-        button.classList.toggle('expanded');
-      }
-    };
-
-    container.addEventListener('click', handleClick);
-    return () => container.removeEventListener('click', handleClick);
-  }, [html]);
-
   // Code blocks are saved as plain text (no language picker in the
   // editor) — highlight.js's own language detection runs once here, per
   // page view, against whatever text is actually there. Colors are
