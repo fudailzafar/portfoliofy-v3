@@ -6,6 +6,8 @@
 
   <!-- Badges -->
   <p>
+    <a href="https://github.com/fudailzafar/portfoliofy-v3/actions/workflows/ci.yml"><img src="https://github.com/fudailzafar/portfoliofy-v3/actions/workflows/ci.yml/badge.svg" alt="CI Badge"/></a>
+    <a href="./LICENSE"><img src="https://img.shields.io/github/license/fudailzafar/portfoliofy-v3?style=flat-square" alt="License Badge"/></a>
     <a href="https://github.com/fudailzafar/portfoliofy-v3/stargazers"><img src="https://img.shields.io/github/stars/fudailzafar/portfoliofy-v3?style=flat-square" alt="Stars Badge"/></a>
     <a href="https://github.com/fudailzafar/portfoliofy-v3/network/members"><img src="https://img.shields.io/github/forks/fudailzafar/portfoliofy-v3?style=flat-square" alt="Forks Badge"/></a>
     <a href="https://github.com/fudailzafar/portfoliofy-v3/pulls"><img src="https://img.shields.io/github/issues-pr/fudailzafar/portfoliofy-v3?style=flat-square" alt="Pull Requests Badge"/></a>
@@ -146,12 +148,6 @@ pnpm build
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the application running.
-
-## Future Roadmap
-
-- [ ] Implement deeper Analytics (profile views).
-- [ ] Add more curated theme palettes (Ghibli, Monokai, Cyberpunk).
-- [ ] Full End-to-End testing integration.
 
 ## Contributing
 
