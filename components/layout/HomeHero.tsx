@@ -44,21 +44,8 @@ export function HomeHero() {
           <strong translate="no" className="font-medium">
             Portfoliofy
           </strong>{' '}
-          is a{' '}
-          <a
-            href="https://web.dev/progressive-web-apps/"
-            className="cursor-text text-inherit no-underline hover:text-inherit"
-          >
-            progressive platform
-          </a>{' '}
-          used by hundreds of people to create more{' '}
-          <a
-            href="https://en.wikipedia.org/wiki/Mindfulness"
-            className="cursor-text text-inherit no-underline hover:text-inherit"
-          >
-            mindful
-          </a>{' '}
-          professional profiles.
+          is a drag-and-drop portfolio builder for professionals who want their
+          profile to actually look like them.
         </h1>
 
         <div className="mb-[32px] mt-8 grid grid-cols-[repeat(6,minmax(16px,72px))] items-center gap-[14px] sm:mb-[72px] sm:gap-[22px]">

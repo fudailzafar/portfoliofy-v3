@@ -1,7 +1,7 @@
 {
   "name": "portfoliofy",
   "version": "0.1.0",
-  "description": "A progressive platform for building mindful, customizable professional profiles with a drag-and-drop editor.",
+  "description": "A drag-and-drop portfolio builder for professionals — customizable sections, integrated writing, and profiles that are genuinely yours.",
   "repository": {
     "type": "git",
     "url": "https://github.com/fudailzafar/portfoliofy-v3.git"

@@ -77,9 +77,9 @@ const diatypeMono = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'Portfoliofy - Mindful professional profiles',
+  title: 'Portfoliofy - Customizable professional profiles',
   description:
-    'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
+    'Portfoliofy is a drag-and-drop portfolio builder that helps professionals put together a polished, customizable profile in minutes.',
   alternates: {
     canonical: '/',
   },
@@ -93,9 +93,9 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: 'Portfoliofy - Mindful professional profiles',
+    title: 'Portfoliofy - Customizable professional profiles',
     description:
-      'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
+      'Portfoliofy is a drag-and-drop portfolio builder that helps professionals put together a polished, customizable profile in minutes.',
     url: '/',
     siteName: 'Portfoliofy',
     images: [
@@ -159,7 +159,7 @@ export default async function RootLayout({
                   logo: `${SITE_URL}/logo.png`,
                   name: 'Portfoliofy',
                   description:
-                    'Portfoliofy is a progressive platform for mindful professional profiles.',
+                    'Portfoliofy is a drag-and-drop portfolio builder for professionals.',
                   dateModified: new Date().toISOString(),
                 }),
               }}
@@ -176,7 +176,7 @@ export default async function RootLayout({
                       name: 'What is Portfoliofy?',
                       acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles.',
+                        text: 'Portfoliofy is a drag-and-drop portfolio builder that helps professionals put together a polished, customizable profile in minutes.',
                       },
                     },
                     {
@@ -184,7 +184,7 @@ export default async function RootLayout({
                       name: 'How do I create a profile?',
                       acceptedAnswer: {
                         '@type': 'Answer',
-                        text: 'You can create a profile by signing up and using our intuitive editor to craft your mindful professional profile in minutes.',
+                        text: 'You can create a profile by signing up and building it out with our drag-and-drop editor — most people have something worth sharing in just a few minutes.',
                       },
                     },
                   ],

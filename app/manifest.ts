@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Portfoliofy',
     short_name: 'Portfoliofy',
-    description: 'A progressive platform for mindful professional profiles.',
+    description: 'A drag-and-drop portfolio builder for professionals.',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',

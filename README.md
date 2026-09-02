@@ -2,7 +2,7 @@
   <img alt="Portfoliofy Logo" src="./public/opengraph-image.png" width="100%">
   <br/>
   <h1>Portfoliofy</h1>
-  <p>A progressive platform used by thousands of people to create more mindful professional profiles.</p>
+  <p>A drag-and-drop portfolio builder for professionals — customizable sections, integrated writing, and profiles that are genuinely yours.</p>
 
   <!-- Badges -->
   <p>
