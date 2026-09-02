@@ -27,7 +27,6 @@ import { Embed, EmbedProvider } from '@/components/composite/tiptap-embed';
 import {
   ContentImage,
   ContentVideo,
-  Gallery,
 } from '@/components/composite/tiptap-media';
 import { Spinner } from '../ui/spinner';
 import { MediaUploadDialog } from '@/components/composite/MediaUploadDialog';
@@ -192,7 +191,6 @@ export function PageEditorView({
       Embed,
       ContentImage,
       ContentVideo,
-      Gallery,
     ],
     content: content,
     editorProps: {
@@ -344,24 +342,7 @@ export function PageEditorView({
         : { type: 'contentImage', attrs: { src } };
     };
 
-    if (attachments.length === 1) {
-      editor.chain().focus().insertContent(toNode(attachments[0])).run();
-    } else if (attachments.every((a) => a.type !== 'video')) {
-      editor
-        .chain()
-        .focus()
-        .insertContent({
-          type: 'gallery',
-          attrs: {
-            images: attachments.map(
-              (a) => getOptimizedImageUrl(a.url) || a.url,
-            ),
-          },
-        })
-        .run();
-    } else {
-      editor.chain().focus().insertContent(attachments.map(toNode)).run();
-    }
+    editor.chain().focus().insertContent(attachments.map(toNode)).run();
   };
 
   const handleEmbedInsert = (provider: EmbedProvider, src: string) => {

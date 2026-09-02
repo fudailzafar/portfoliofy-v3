@@ -44,8 +44,6 @@ const PAGE_CONTENT_OPTIONS: sanitizeHtml.IOptions = {
     'img',
     'video',
     'iframe',
-    'div',
-    'button',
     'figure',
     'figcaption',
   ],
@@ -77,8 +75,6 @@ const PAGE_CONTENT_OPTIONS: sanitizeHtml.IOptions = {
       'class',
       'data-embed-provider',
     ],
-    div: ['data-gallery', 'data-images', 'class'],
-    button: ['type', 'data-src', 'class'],
   },
   allowedIframeHostnames: [
     'www.youtube.com',
