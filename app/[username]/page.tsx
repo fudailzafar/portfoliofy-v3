@@ -15,6 +15,7 @@ import { after } from 'next/server';
 import { recordPageView } from '@/lib/server/dbActions';
 import { getVisitorKey } from '@/lib/server/visitorKey';
 import { ProfileUrlProvider } from '@/lib/ProfileUrlContext';
+import { SITE_URL } from '@/lib/site';
 
 const EditProfileDialog = dynamic(() =>
   import('@/app/[username]/_components/resume/editing/EditProfileDialog').then(
@@ -74,7 +75,7 @@ export async function generateMetadata({
       description: plainSummary,
       images: [
         {
-          url: customOgImage || `https://portfoliofy.me/${username}/og`,
+          url: customOgImage || `${SITE_URL}/${username}/og`,
           width: 1200,
           height: 630,
           alt: `${resume.resumeData.header.name}'s profile`,
@@ -82,7 +83,7 @@ export async function generateMetadata({
       ],
     },
     other: {
-      'og:logo': customFavicon || 'https://portfoliofy.me/favicon.ico',
+      'og:logo': customFavicon || `${SITE_URL}/favicon.ico`,
     },
   };
 }

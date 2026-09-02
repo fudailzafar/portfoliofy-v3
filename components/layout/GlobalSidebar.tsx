@@ -9,6 +9,7 @@ import { AuthDialog } from '@/components/auth/AuthDialog';
 import { ExploreSidebar } from './ExploreSidebar';
 import { toast } from 'sonner';
 import { useUserActions } from '@/hooks/useUserActions';
+import { SITE_HOST } from '@/lib/site';
 
 export function GlobalSidebar() {
   const pathname = usePathname();
@@ -127,7 +128,7 @@ export function GlobalSidebar() {
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          `portfoliofy.me/${currentUsername}`,
+                          `${SITE_HOST}/${currentUsername}`,
                         );
                         toast.success('Copied to clipboard');
                         setIsCopied(true);

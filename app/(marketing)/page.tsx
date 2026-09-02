@@ -5,6 +5,7 @@ import { auth } from '@/auth';
 import { getUsernameById } from '@/lib/server/dbActions';
 import { ClaimDialog } from '@/components/auth/ClaimDialog';
 import { MousePointer2 } from 'lucide-react';
+import { SITE_HOST } from '@/lib/site';
 
 const ResumePaper = ({ className }: { className?: string }) => (
   <div
@@ -441,7 +442,7 @@ export default async function Home() {
                   UX Designer
                 </span>
                 <span className="text-[14px] text-[#00366a] dark:text-[#0788F5] sm:text-[18px]">
-                  portfoliofy.me/jane
+                  {SITE_HOST}/jane
                 </span>
               </div>
             </div>
