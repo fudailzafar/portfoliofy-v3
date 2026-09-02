@@ -28,8 +28,9 @@ import { HeartHandshake } from 'lucide-react';
 import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
 
 const isVolunteeringValid = (item: any) =>
-  !!item?.role &&
   !!item?.organization &&
+  !!item?.startYear &&
+  !!item?.endYear &&
   !isReversedRange(item?.startYear, item?.endYear);
 
 export function VolunteeringTab({
@@ -62,6 +63,8 @@ export function VolunteeringTab({
     [volunteering],
   );
 
+  const currentYear = new Date().getFullYear();
+
   return (
     <ListTabLayout
       title="Volunteering"
@@ -71,8 +74,8 @@ export function VolunteeringTab({
         setCurrentVolunteering({
           role: '',
           organization: '',
-          startYear: '',
-          endYear: '',
+          startYear: currentYear.toString(),
+          endYear: 'Now',
           location: '',
           link: '',
         });
@@ -191,7 +194,7 @@ export function VolunteeringTab({
             <div className="grid grid-cols-2 gap-6">
               <FormInput
                 id="role"
-                label="Role*"
+                label="Role"
                 value={currentVolunteering.role}
                 onChange={(e) =>
                   setCurrentVolunteering({

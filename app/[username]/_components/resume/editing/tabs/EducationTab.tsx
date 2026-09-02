@@ -31,7 +31,7 @@ const RichTextEditor = dynamic(
 
 const isEducationValid = (item: any) =>
   !!item?.school &&
-  !!item?.degree &&
+  !!item?.start &&
   !!item?.end &&
   !isReversedRange(item?.start, item?.end);
 
@@ -182,7 +182,7 @@ export function EducationTab({
             <div className="grid grid-cols-2 gap-6">
               <FormInput
                 id="degree"
-                label="Degree or certification*"
+                label="Degree or certification"
                 value={currentEdu.degree}
                 onChange={(e) =>
                   setCurrentEdu({ ...currentEdu, degree: e.target.value })
