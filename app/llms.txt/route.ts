@@ -10,7 +10,7 @@ function stripHtml(html?: string): string {
 function getMainDomainLlmsTxt(): string {
   return `# Portfoliofy
 
-> Portfoliofy is a progressive platform used by thousands of people to create more mindful professional profiles. It provides a clean, minimal, and accessible interface for building and sharing resumes, portfolios, and contact information.
+> Portfoliofy is a drag-and-drop portfolio builder for professionals. It provides a clean, minimal, and accessible interface for building and sharing resumes, portfolios, and contact information.
 
 ## System Guidelines
 
