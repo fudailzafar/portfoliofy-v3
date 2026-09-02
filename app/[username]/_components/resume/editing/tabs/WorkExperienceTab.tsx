@@ -27,7 +27,10 @@ import {
 import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
 
 const isWorkValid = (item: any) =>
-  !!item?.title && !!item?.company && !isReversedRange(item?.start, item?.end);
+  !!item?.company &&
+  !!item?.start &&
+  !!item?.end &&
+  !isReversedRange(item?.start, item?.end);
 
 export function WorkExperienceTab({
   years,
@@ -174,7 +177,7 @@ export function WorkExperienceTab({
             <div className="grid grid-cols-2 gap-6">
               <FormInput
                 id="title"
-                label="Title*"
+                label="Title"
                 value={currentWork.title}
                 onChange={(e) =>
                   setCurrentWork({
@@ -182,7 +185,7 @@ export function WorkExperienceTab({
                     title: e.target.value,
                   })
                 }
-                placeholder="Senior Product Designer"
+                placeholder="Architect, painter, etc"
               />
               <FormInput
                 id="company"
