@@ -15,9 +15,11 @@ const ResumePaper = ({ className }: { className?: string }) => (
     <div className="flex gap-4 sm:gap-8">
       <div className="w-[35%] shrink-0">
         <div className="font-regular mb-0.5 text-[10px] text-[#111] dark:text-[#eee] sm:text-[12px]">
-          Jeff Hamada
+          Jane Smith
         </div>
-        <div className="text-content-muted">Artist in Vancouver, He/Him</div>
+        <div className="text-content-muted">
+          UX Designer in Bangalore, She/Her
+        </div>
       </div>
       <div className="w-full">
         <div className="font-regular mb-4 text-[10px] text-[#111] dark:text-[#eee] sm:text-[12px]">
@@ -26,30 +28,32 @@ const ResumePaper = ({ className }: { className?: string }) => (
 
         <div className="mb-5 flex gap-3 sm:gap-5">
           <div className="w-16 shrink-0 whitespace-nowrap font-medium text-content-muted">
-            2008 — Now
+            2023 — Now
           </div>
           <div className="flex-1">
             <div className="font-regular mb-0.5 text-[10px] text-[#111] dark:text-[#eee] sm:text-[12px]">
-              Founder at Booooooom
+              UX Designer
             </div>
-            <div className="mb-1.5 text-content-muted">Vancouver, Canada</div>
+            <div className="mb-1.5 text-content-muted">Bangalore, India</div>
             <div className="leading-relaxed text-content-muted">
-              Clients: Mercedes, Red Bull, MTV, Adobe, VICE, Sony, Converse,
-              WeTransfer, Levi&apos;s, Oakley, Native Shoes, Flexfit, Ray Ban,
-              Vitamin Water, Telus, Jameson, Herschel Supply, Nikon.
+              At Myntra, I design seamless and intuitive user experiences for
+              one of India&apos;s leading e-commerce platforms. My work involves
+              collaborating with cross-functional teams to create engaging
+              digital products that cater to millions of users across the
+              country.
             </div>
           </div>
         </div>
 
         <div className="flex gap-3 sm:gap-5">
           <div className="w-16 shrink-0 whitespace-nowrap font-medium text-content-muted">
-            2004 — 2005
+            2020 — 2023
           </div>
           <div className="flex-1">
             <div className="font-regular mb-0.5 text-[10px] text-[#111] dark:text-[#eee] sm:text-[12px]">
-              Graphic Designer at Electronic Arts
+              UX Designer
             </div>
-            <div className="mb-1.5 text-content-muted">Vancouver, Canada</div>
+            <div className="mb-1.5 text-content-muted">Delhi, India</div>
           </div>
         </div>
       </div>
@@ -78,7 +82,7 @@ export default async function Home() {
           {/* Hero Section */}
           <HomeHero />
           {/* Feature 1: Create a beautiful profile */}
-          <div className="relative mb-8 flex h-[384px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
+          <div className="relative mb-8 flex h-[278px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -174,7 +178,7 @@ export default async function Home() {
           </div>
 
           {/* Feature 2: Make it collaborative */}
-          <div className="relative mb-8 flex h-[384px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
+          <div className="relative mb-8 flex h-[280px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -211,16 +215,16 @@ export default async function Home() {
               <div className="relative flex w-full max-w-[400px] flex-col justify-between gap-6 rounded-[18px] border border-border-strong p-4 text-[#111] shadow-xl dark:text-[#eee] dark:shadow-none sm:p-5">
                 <div>
                   <div className="font-regular text-[16px] tracking-tight text-[#111] dark:text-[#eee] sm:text-[20px]">
-                    Product Designer at Quip
+                    Product Designer at Acme, inc
                   </div>
                   <div className="text-[14px] text-content-muted sm:text-[16px]">
-                    San Francisco, CA
+                    Chennai, India
                   </div>
                 </div>
 
                 <div className="relative flex items-center gap-2">
                   <div className="animate-tag-bubble bg-content-primary/80 pointer-events-none absolute -top-9 left-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-medium text-surface-1 shadow-lg backdrop-blur-sm">
-                    Mia Chen
+                    Sarah Lee
                   </div>
 
                   <div className="flex -space-x-2">
@@ -263,7 +267,7 @@ export default async function Home() {
           </div>
 
           {/* Feature 3: Print it out */}
-          <div className="relative mb-8 flex h-[384px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
+          <div className="relative mb-8 flex h-[280px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -298,7 +302,7 @@ export default async function Home() {
           </div>
 
           {/* Feature 4: Find who you're looking for */}
-          <div className="relative mb-8 flex h-[384px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
+          <div className="relative mb-8 flex h-[240px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
             <style
               dangerouslySetInnerHTML={{
                 __html: `
@@ -322,9 +326,9 @@ export default async function Home() {
             </div>
 
             <div className="flex w-full flex-1 flex-col">
-              <div className="mb-6 flex max-w-full items-center rounded-3xl bg-[#fff] px-3 py-2 text-[#111] shadow-sm dark:bg-surface-1 dark:text-[#eee] dark:shadow-none sm:px-5 sm:py-3">
+              <div className="mb-6 flex max-w-full items-center rounded-xl bg-[#fff] px-3 py-2 text-[#111] shadow-sm dark:bg-surface-1 dark:text-[#eee] dark:shadow-none sm:rounded-3xl sm:px-5 sm:py-3">
                 <span className="font-regular flex items-center text-[15px] tracking-tight text-[#111] dark:text-[#eee] sm:text-[30px]">
-                  Art director
+                  UX Designer
                   <span className="animate-blink ml-0.5 inline-block h-[1.1em] w-[2px] bg-[#0085FF]"></span>
                 </span>
               </div>
@@ -341,13 +345,13 @@ export default async function Home() {
                   </div>
                   <div className="leading-tight">
                     <div className="text-[14px] text-content-muted opacity-30 dark:text-content-muted sm:text-[28px]">
-                      Lauren Jochum
+                      Jane Smith
                     </div>
                     <div className="text-[13px] text-content-muted opacity-30 dark:text-content-muted sm:text-[28px]">
                       <strong className="text-[#111] dark:text-[#eee]">
-                        Art director
+                        UX Designer
                       </strong>{' '}
-                      in Berkeley
+                      in Bangalore
                     </div>
                   </div>
                 </div>
@@ -362,11 +366,11 @@ export default async function Home() {
                   </div>
                   <div className="leading-tight">
                     <div className="text-[14px] text-content-muted dark:text-content-muted sm:text-[28px]">
-                      Skip Hursh
+                      John Doe
                     </div>
                     <div className="text-[13px] text-content-muted dark:text-content-muted sm:text-[28px]">
                       <strong className="text-[#111] dark:text-[#eee]">
-                        Art director
+                        UX Designer
                       </strong>{' '}
                       in NYC
                     </div>
@@ -377,7 +381,7 @@ export default async function Home() {
           </div>
 
           {/* Feature 5: Use it anywhere */}
-          <div className="relative flex h-[354px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[360px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
+          <div className="relative flex h-[275px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[360px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
             <div className="mb-6 sm:mb-8">
               <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-[#111] dark:text-[#eee]">
                 Use it anywhere
@@ -431,13 +435,13 @@ export default async function Home() {
 
               <div className="ml-1 flex flex-col pb-4 leading-snug sm:pb-0">
                 <span className="text-[15px] font-medium text-[#111] dark:text-[#eee] sm:text-[18px]">
-                  Tom Chung
+                  Jane Smith
                 </span>
                 <span className="text-[14px] text-[#8d8e8e] sm:text-[18px]">
-                  Architectural Designer
+                  UX Designer
                 </span>
                 <span className="text-[14px] text-[#00366a] dark:text-[#0788F5] sm:text-[18px]">
-                  portfoliofy.me/tom
+                  portfoliofy.me/jane
                 </span>
               </div>
             </div>
