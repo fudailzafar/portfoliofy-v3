@@ -159,9 +159,6 @@ export function GeneralTab({
             Username*
           </Label>
           <div className="relative flex items-center overflow-hidden rounded-md bg-surface-3 dark:border-none dark:bg-border-subtle">
-            <span className="absolute left-3 top-1/2 z-10 -translate-y-1/2 select-none text-sm text-content-muted">
-              portfoliofy.me/
-            </span>
             <Input
               id="uname"
               placeholder="your-username"
@@ -171,7 +168,7 @@ export function GeneralTab({
                   e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''),
                 )
               }
-              className="h-10 rounded-none border-none bg-transparent pl-[110px] shadow-none focus-visible:ring-0"
+              className="h-10 rounded-none border-none bg-transparent shadow-none focus-visible:ring-0"
             />
             <div className="flex items-center pr-3">
               {isInitialUsername ? null : isCheckingUsername ? (
