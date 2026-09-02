@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { SITE_URL } from '@/lib/site';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -50,7 +51,7 @@ export function getCanonicalUrl(
 ): string {
   const base = customDomain
     ? `https://${customDomain}`
-    : `https://portfoliofy.me/${username}`;
+    : `${SITE_URL}/${username}`;
   return slug ? `${base}/${slug}` : base;
 }
 

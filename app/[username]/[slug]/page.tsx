@@ -11,6 +11,7 @@ import {
 import { getCachedCustomDomainByUserId } from '@/lib/server/cachedFunctions';
 import { PageContent } from '@/components/composite/PageContent';
 import { ShareButton } from './ShareButton';
+import { SITE_URL } from '@/lib/site';
 
 const parsePageDate = (dateStr?: string) => {
   if (!dateStr) return null;
@@ -64,7 +65,7 @@ export async function generateMetadata({
       description: stripHtml(resolved.page.content).slice(0, 200),
       images: [
         {
-          url: `https://portfoliofy.me/${username}/${slug}/og`,
+          url: `${SITE_URL}/${username}/${slug}/og`,
           width: 1200,
           height: 630,
           alt: `${resolved.page.title}`,
@@ -72,7 +73,7 @@ export async function generateMetadata({
       ],
     },
     other: {
-      'og:logo': customFavicon || 'https://portfoliofy.me/favicon.ico',
+      'og:logo': customFavicon || `${SITE_URL}/favicon.ico`,
     },
   };
 }
@@ -113,7 +114,7 @@ export default async function PageDetail({
     '@type': 'BlogPosting',
     headline: page.title,
     description: stripHtml(page.content).slice(0, 200),
-    image: page.url || `https://portfoliofy.me/${username}/${slug}/og`,
+    image: page.url || `${SITE_URL}/${username}/${slug}/og`,
     ...(page.createdAt && {
       datePublished: page.createdAt,
       dateModified: page.createdAt,
