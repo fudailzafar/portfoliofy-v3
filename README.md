@@ -15,13 +15,13 @@
 
 ---
 
-## ⚡️ Overview
+## Overview
 
 **Portfoliofy** allows users to effortlessly build beautiful, responsive, and highly customizable online portfolios in seconds using a dynamic drag-and-drop editor.
 
 Users get a custom profile link (`portfoliofy.me/username`), dynamic social media sharing images (Open Graph), and global discoverability via the Explore network.
 
-## ✨ Key Features
+## Key Features
 
 - **Drag & Drop Editor**: Rearrange sections of your portfolio seamlessly using `@dnd-kit`.
 - **Rich Text Editing**: Integrated `Tiptap` for rich, interactive text formatting within portfolio sections.
@@ -30,11 +30,11 @@ Users get a custom profile link (`portfoliofy.me/username`), dynamic social medi
 - **Dynamic Open Graph Images**: Automatically generates beautiful, rounded social media preview cards for every profile using `@next/og`.
 - **Split-Pane Navigation**: Seamlessly browse other portfolios directly from the sidebar without hard refreshing the page.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 This project uses a modern, scalable full-stack architecture:
 
-- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
 - **Database**: [Supabase PostgreSQL](https://supabase.com/) with `postgres.js`
 - **Authentication**: [NextAuth.js v5 (Auth.js)](https://authjs.dev/) with Google OAuth
 - **Image Storage**: [AWS S3](https://aws.amazon.com/s3/) (for Custom Avatars)
@@ -43,16 +43,16 @@ This project uses a modern, scalable full-stack architecture:
 - **Drag & Drop**: [@dnd-kit](https://dndkit.com/)
 - **Hosting**: [Vercel](https://vercel.com/)
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 .
 ├── app/
 │   ├── (marketing)/    # Landing page and marketing routes
 │   ├── [username]/     # Dynamic user profile and editor routes
-│   ├── api/            # Next.js API Routes (Auth, S3, Resume sync)
+│   ├── actions/        # Server actions
+│   ├── api/            # Next.js API Routes (Auth, S3, Resume sync, Explore, Domains)
 │   ├── auth/           # Post-login handling
-│   ├── explore/        # Global discovery network
 │   └── layout.tsx      # Root application layout
 ├── components/         # Reusable UI components (Shadcn, layouts, etc.)
 ├── hooks/              # Custom React hooks (e.g., useTabEditor)
@@ -61,9 +61,11 @@ This project uses a modern, scalable full-stack architecture:
 └── public/             # Static assets, fonts, and Open Graph images
 ```
 
+> Note: the "Explore" discovery network isn't a separate route — it's an in-app sidebar panel (`components/layout/ExploreSidebar.tsx`) backed by `app/api/explore/`.
+
 > **Note for Developers**: For a deep dive into the architecture, component patterns, and a step-by-step guide on adding new features, please read our [Architecture & Developer Guide](./ARCHITECTURE.md).
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -77,7 +79,7 @@ Ensure you have created accounts and obtained API keys for the following service
 
 ```bash
 git clone https://github.com/fudailzafar/portfoliofy-v3.git
-cd portfoliofy
+cd portfoliofy-v3
 ```
 
 ### 2. Install dependencies
@@ -99,19 +101,32 @@ S3_UPLOAD_BUCKET="portfoliofy"
 S3_UPLOAD_KEY="your_aws_key"
 S3_UPLOAD_SECRET="your_aws_secret"
 S3_UPLOAD_REGION="us-east-1"
+NEXT_PUBLIC_CDN_URL="your_cloudfront_or_cdn_url" # Optional
 
 # Database (Supabase Pooler URL)
 # Ensure you are using the Transaction Pooler URL on port 6543
 DATABASE_URL="postgresql://postgres.[REF]:[PASSWORD]@aws-0-REGION.pooler.supabase.com:6543/postgres"
+NEXT_PUBLIC_SUPABASE_URL="your_supabase_project_url"
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="your_supabase_publishable_key"
 
 # NextAuth Configuration
 AUTH_SECRET="generate_a_random_base64_string"
 GOOGLE_CLIENT_ID="your_google_oauth_client_id"
 GOOGLE_CLIENT_SECRET="your_google_oauth_secret"
 
+# Rate Limiting (Upstash Redis)
+UPSTASH_REDIS_REST_URL="your_upstash_redis_url"
+UPSTASH_REDIS_REST_TOKEN="your_upstash_redis_token"
+
+# Custom Domains (Vercel API — needed for the Personal Domain feature)
+VERCEL_API_TOKEN="your_vercel_api_token"
+VERCEL_PROJECT_ID="your_vercel_project_id"
+
 # Analytics (Optional)
 NEXT_PUBLIC_GA_ID="G-XXXXXXXXXX"
 ```
+
+See `.example.env` for the full, authoritative list of environment variables.
 
 ### 4. Initialize the Database
 
@@ -132,18 +147,16 @@ pnpm build
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the application running.
 
-## 📝 Future Roadmap
+## Future Roadmap
 
-- [ ] Add a rich Markdown/Tiptap blog CMS directly into the portfolios.
 - [ ] Implement deeper Analytics (profile views).
-- [ ] Add custom domain support for individual users (`username.com`).
 - [ ] Add more curated theme palettes (Ghibli, Monokai, Cyberpunk).
 - [ ] Full End-to-End testing integration.
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are always welcome! Feel free to open an issue or submit a pull request if you have ideas on how to improve the platform.
+Contributions are always welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup steps, code style, and the pull request process.
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
