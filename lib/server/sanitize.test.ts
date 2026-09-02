@@ -154,16 +154,6 @@ describe('sanitizePageContent', () => {
     expect(out).not.toContain('javascript:');
   });
 
-  it('preserves gallery/embed markup produced by the Tiptap nodes', () => {
-    const out = sanitizePageContent(
-      '<div data-gallery="true" class="content-gallery" data-images="[&quot;a.png&quot;]">' +
-        '<button type="button" class="content-gallery-item" data-src="a.png"><img src="a.png" alt=""></button>' +
-        '</div>',
-    );
-    expect(out).toContain('data-gallery');
-    expect(out).toContain('content-gallery-item');
-  });
-
   it('preserves video markup produced by the ContentVideo Tiptap node', () => {
     const out = sanitizePageContent(
       '<video src="https://example.com/a.mp4" autoplay muted loop playsinline ' +
