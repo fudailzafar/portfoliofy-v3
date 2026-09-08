@@ -153,7 +153,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
           href={
             domainStatus?.verified && customDomain
               ? `https://${customDomain}`
-              : `https://${username}.${SITE_HOST}`
+              : `https://${SITE_HOST}/${username}`
           }
           target="_blank"
           rel="noopener noreferrer"
@@ -174,12 +174,12 @@ export function PersonalDomainTab({ username }: { username: string }) {
               <p className="text-[13px] text-content-muted">
                 Optionally set a domain other than{' '}
                 <a
-                  href={`https://${username}.${SITE_HOST}`}
-                  className="font-mono text-content-primary underline-offset-4 hover:underline"
+                  href={`https://${SITE_HOST}/${username}`}
+                  className="font-sans text-content-primary underline-offset-4 hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {username}.{SITE_HOST}
+                  {SITE_HOST}/{username}
                 </a>
               </p>
             </div>
