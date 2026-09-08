@@ -104,7 +104,9 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
               key={tab.id}
               onClick={() => setSort(tab.id)}
               className={`relative cursor-default pb-3 text-[13px] transition-all ${
-                sort === tab.id ? 'text-content-primary' : 'text-content-muted'
+                sort === tab.id
+                  ? 'text-content-primary'
+                  : 'cursor-pointer text-content-muted'
               }`}
             >
               {tab.label}
