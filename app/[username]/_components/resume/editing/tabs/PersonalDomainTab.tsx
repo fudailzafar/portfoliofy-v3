@@ -241,13 +241,13 @@ export function PersonalDomainTab({ username }: { username: string }) {
               ) : (
                 <div className="flex gap-2">
                   <button
-                    className="h-9 rounded-lg border-border-strong text-[13px] font-normal text-content-muted dark:text-content-muted sm:h-10"
+                    className="h-8 items-center justify-center rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong sm:h-10"
                     disabled
                   >
                     Save
                   </button>
                   <button
-                    className="h-9 rounded-lg border-border-strong text-[13px] font-normal text-content-muted hover:text-content-primary sm:h-10"
+                    className="h-8 items-center justify-center rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong sm:h-10"
                     onClick={handleDomainRemove}
                     disabled={isVerifyingDomain}
                   >
