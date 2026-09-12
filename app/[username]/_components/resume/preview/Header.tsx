@@ -165,7 +165,7 @@ export function Header({
               href={ensureHttps(header.website)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1.5 inline-block rounded-full bg-[#F6F6F6] px-3 py-1 text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary transition-colors active:bg-[#F2F2F2] dark:bg-[#383838] dark:active:bg-[#4E4E4E]"
+              className="mt-1.5 inline-block rounded-full bg-[#F6F6F6] px-3 py-1 text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary transition-colors active:bg-[#F2F2F2] dark:bg-theme-border dark:active:bg-[#4E4E4E]"
             >
               {header.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
             </a>
