@@ -26,7 +26,7 @@ This site is designed to be easily read by AI systems.
 
 ## Contact
 
-Support: support@portfoliofy.me
+Support: fudail.zafar@gmail.com
 `;
 }
 
