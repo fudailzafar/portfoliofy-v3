@@ -10,15 +10,30 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useSidebarStore } from '@/store/useSidebarStore';
+import {
+  SIDEBAR_MAX_WIDTH,
+  SIDEBAR_PEEK,
+  useSidebarStore,
+} from '@/store/useSidebarStore';
 
 export function ClientLayoutWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { isOpen, setIsOpen } = useSidebarStore();
+  const { isOpen, setIsOpen, sidebarWidth, setSidebarWidth } =
+    useSidebarStore();
   const pathname = usePathname();
+
+  useEffect(() => {
+    const updateWidth = () =>
+      setSidebarWidth(
+        Math.min(SIDEBAR_MAX_WIDTH, window.innerWidth - SIDEBAR_PEEK),
+      );
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, [setSidebarWidth]);
 
   useEffect(() => {
     if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
@@ -55,17 +70,21 @@ export function ClientLayoutWrapper({
   // Expose sidebar state via CSS variable so other fixed elements (like edit button) can follow
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty('--sidebar-offset', isOpen ? '330px' : '0px');
-  }, [isOpen]);
+    root.style.setProperty(
+      '--sidebar-offset',
+      isOpen ? `${sidebarWidth}px` : '0px',
+    );
+  }, [isOpen, sidebarWidth]);
 
   return (
     <TooltipProvider delayDuration={0}>
       <div className="relative flex min-h-screen w-full overflow-x-hidden bg-surface-1 font-sans">
         {/* Sliding Sidebar */}
         <motion.div
-          className="fixed left-0 top-0 z-40 h-full w-[330px] print:hidden"
-          initial={{ x: -330 }}
-          animate={{ x: isOpen ? 0 : -330 }}
+          className="fixed left-0 top-0 z-40 h-full print:hidden"
+          style={{ width: sidebarWidth }}
+          initial={{ x: -sidebarWidth }}
+          animate={{ x: isOpen ? 0 : -sidebarWidth }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
           <GlobalSidebar />
@@ -82,7 +101,7 @@ export function ClientLayoutWrapper({
         {/* Main Content Layer */}
         <motion.div
           animate={{
-            x: isOpen ? 330 : 0,
+            x: isOpen ? sidebarWidth : 0,
           }}
           transition={{
             type: 'spring',
@@ -105,7 +124,7 @@ export function ClientLayoutWrapper({
         {/* Floating Menu Toggle Button */}
         <motion.div
           className="fixed bottom-6 left-6 z-50 flex items-center gap-3 print:hidden"
-          animate={{ x: isOpen ? 330 : 0 }}
+          animate={{ x: isOpen ? sidebarWidth : 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
           <Tooltip>
