@@ -176,7 +176,7 @@ export function EditProfileDialog({
     return () => window.removeEventListener('open-editor', handleOpenEditor);
   }, []);
 
-  const { isOpen: isSidebarOpen } = useSidebarStore();
+  const { isOpen: isSidebarOpen, sidebarWidth } = useSidebarStore();
 
   const isInitialUsername = uname === username;
 
@@ -474,7 +474,7 @@ export function EditProfileDialog({
               <TooltipTrigger asChild>
                 <motion.button
                   initial={false}
-                  animate={{ x: isSidebarOpen ? 330 : 0 }}
+                  animate={{ x: isSidebarOpen ? sidebarWidth : 0 }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   whileTap={{ scale: 0.9 }}
                   aria-label="Edit Profile"

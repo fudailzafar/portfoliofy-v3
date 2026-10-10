@@ -48,7 +48,7 @@ export function HomeHero() {
           profile to actually look like them.
         </h1>
 
-        <div className="mb-[32px] mt-8 grid grid-cols-[repeat(6,minmax(16px,72px))] items-center gap-[14px] sm:mb-[72px] sm:gap-[22px]">
+        <div className="mb-8 mt-4 grid grid-cols-[repeat(6,minmax(16px,72px))] items-center [gap:var(--hero-gap,22px)] min-[481px]:mb-12 min-[481px]:mt-8 min-[637px]:mb-[calc(50vw_-_270px)] min-[685px]:mb-[72px]">
           {FEATURED_PROFILE_SEEDS.map((seed) => (
             <div
               key={seed}

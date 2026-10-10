@@ -47,7 +47,7 @@ export function GlobalSidebar() {
 
   return (
     <>
-      <div className="flex h-full w-[330px] flex-col border-r border-border-strong bg-surface-1 px-4 py-6">
+      <div className="flex h-full w-full flex-col border-r border-border-strong bg-surface-1 px-4 py-6">
         <div className="mt-2 flex-1">
           <div
             onClick={() => setIsExploreMode(true)}
