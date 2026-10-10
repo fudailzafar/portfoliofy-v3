@@ -69,7 +69,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
   ];
 
   return (
-    <div className="flex h-full w-[330px] flex-col border-r border-border-strong bg-surface-1">
+    <div className="flex h-full w-full flex-col border-r border-border-strong bg-surface-1">
       <div className="mx-4 flex flex-col gap-4 border-b border-border-strong pt-8">
         <div className="flex items-center gap-3">
           <div className="relative flex-1">

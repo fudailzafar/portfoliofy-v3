@@ -4,61 +4,191 @@ import Link from 'next/link';
 import { auth } from '@/auth';
 import { getUsernameById } from '@/lib/server/dbActions';
 import { ClaimDialog } from '@/components/auth/ClaimDialog';
-import { MousePointer2 } from 'lucide-react';
 import { SITE_HOST } from '@/lib/site';
+import type { CSSProperties, ReactNode } from 'react';
 
-const ResumePaper = ({ className }: { className?: string }) => (
-  <div
-    className={`flex w-[90%] flex-col gap-6 border border-border-strong bg-[#fff] p-5 text-[9px] shadow-sm dark:bg-[#222] sm:w-[95%] sm:p-7 sm:text-[10px] ${
-      className || ''
-    }`}
-  >
-    <div className="flex gap-4 sm:gap-8">
-      <div className="w-[35%] shrink-0">
-        <div className="font-regular mb-0.5 text-[10px] text-[#111] dark:text-[#eee] sm:text-[12px]">
-          Jane Smith
-        </div>
-        <div className="text-content-muted">
-          UX Designer in Bangalore, She/Her
-        </div>
+const PrintPaper = ({ className }: { className?: string }) => (
+  <div className={`print-paper ${className || ''}`}>
+    <div className="print-paper-grid">
+      <div className="print-paper-left">
+        <div>Jane Smith</div>
+        <div>UX Designer in Bangalore, She/Her</div>
       </div>
-      <div className="w-full">
-        <div className="font-regular mb-4 text-[10px] text-[#111] dark:text-[#eee] sm:text-[12px]">
-          Work Experience
+      <div className="print-paper-right">
+        <div>
+          <div className="print-paper-heading">Work Experience</div>
+          <div className="print-paper-rows">
+            <div className="print-paper-row">
+              <div className="print-paper-date">2023 — Now</div>
+              <div className="print-paper-body">
+                <div>UX Designer at Myntra</div>
+                <div>Bangalore, India</div>
+                <div>
+                  Designing seamless, intuitive shopping experiences for one of
+                  India&apos;s leading e-commerce platforms, alongside
+                  cross-functional teams serving millions of users.
+                </div>
+              </div>
+            </div>
+            <div className="print-paper-row">
+              <div className="print-paper-date">2020 — 2023</div>
+              <div className="print-paper-body">
+                <div>Product Designer at Acme, inc</div>
+                <div>Chennai, India</div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div className="mb-5 flex gap-3 sm:gap-5">
-          <div className="w-16 shrink-0 whitespace-nowrap font-medium text-content-muted">
-            2023 — Now
-          </div>
-          <div className="flex-1">
-            <div className="font-regular mb-0.5 text-[10px] text-[#111] dark:text-[#eee] sm:text-[12px]">
-              UX Designer
+        <div>
+          <div className="print-paper-heading">Projects</div>
+          <div className="print-paper-row">
+            <div className="print-paper-date">2022</div>
+            <div className="print-paper-body">
+              <div>&ldquo;Checkout, Rethought&rdquo;</div>
+              <div>
+                Led a redesign of the mobile checkout flow, cutting the steps to
+                purchase from five to two and unifying the design system behind
+                it.
+              </div>
             </div>
-            <div className="mb-1.5 text-content-muted">Bangalore, India</div>
-            <div className="leading-relaxed text-content-muted">
-              At Myntra, I design seamless and intuitive user experiences for
-              one of India&apos;s leading e-commerce platforms. My work involves
-              collaborating with cross-functional teams to create engaging
-              digital products that cater to millions of users across the
-              country.
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-3 sm:gap-5">
-          <div className="w-16 shrink-0 whitespace-nowrap font-medium text-content-muted">
-            2020 — 2023
-          </div>
-          <div className="flex-1">
-            <div className="font-regular mb-0.5 text-[10px] text-[#111] dark:text-[#eee] sm:text-[12px]">
-              UX Designer
-            </div>
-            <div className="mb-1.5 text-content-muted">Delhi, India</div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+);
+
+const LANDING_STYLES = `
+  @keyframes drag-card {
+    0% { transform: translateY(70%); }
+    16% { transform: translateY(100%); }
+    40% { transform: translateY(40%); }
+    64%, 100% { transform: translateY(70%); }
+  }
+  .animate-drag-card {
+    transform: translateY(70%);
+    animation: drag-card 2.5s ease-in-out infinite;
+  }
+  .drag-text {
+    font-size: 5.4cqw;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  @keyframes collab-cursor {
+    0% { transform: translateX(20cqw); }
+    14%, 57% { transform: translateX(0); }
+    71%, 100% { transform: translateX(20cqw); }
+  }
+  @keyframes collab-tooltip {
+    0%, 9% { opacity: 0; transform: translateY(2.14cqw); }
+    16%, 61% { opacity: 1; transform: translateY(0); }
+    68%, 100% { opacity: 0; transform: translateY(2.14cqw); }
+  }
+  .animate-collab-cursor {
+    animation: collab-cursor 3.5s ease-in-out infinite;
+  }
+  .animate-collab-tooltip {
+    animation: collab-tooltip 3.5s ease-in-out infinite;
+  }
+
+  @keyframes print-feed {
+    0% { transform: translateY(105%); }
+    66.67%, 100% { transform: translateY(0); }
+  }
+  .animate-print-feed {
+    animation: print-feed 1.5s ease-in-out infinite;
+  }
+  .print-sheet-edge {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  }
+  .print-sheet-feed,
+  :root.dark .print-sheet-edge {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  }
+  .print-paper {
+    container-type: inline-size;
+    background: #fff;
+    color: #111;
+  }
+  :root.dark .print-paper {
+    background: #222;
+    color: #eee;
+  }
+  .print-paper-grid {
+    display: flex;
+    padding: 8.97cqw 0 0 6.41cqw;
+    font-size: 1.39cqw;
+    line-height: 1.4;
+  }
+  .print-paper-left {
+    width: 32.26cqw;
+    flex-shrink: 0;
+  }
+  .print-paper-right {
+    display: flex;
+    flex-direction: column;
+    gap: 4.35cqw;
+  }
+  .print-paper-heading {
+    margin-bottom: 2.1cqw;
+  }
+  .print-paper-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 2cqw;
+  }
+  .print-paper-row {
+    display: flex;
+  }
+  .print-paper-date {
+    width: 12.18cqw;
+    flex-shrink: 0;
+  }
+  .print-paper-body {
+    width: 33.3cqw;
+  }
+
+  @keyframes search-caret {
+    0% { opacity: 1; }
+    16.67%, 50% { opacity: 0; }
+    66.67%, 100% { opacity: 1; }
+  }
+  .animate-search-caret {
+    animation: search-caret 1.5s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-drag-card,
+    .animate-collab-cursor,
+    .animate-collab-tooltip,
+    .animate-print-feed,
+    .animate-search-caret {
+      animation: none;
+    }
+  }
+`;
+
+const FeatureTile = ({
+  title,
+  byline,
+  children,
+}: {
+  title: string;
+  byline: ReactNode;
+  children: ReactNode;
+}) => (
+  <div className="overflow-hidden rounded-[calc(var(--hero-avatar)/2)] bg-[rgba(0,0,0,0.05)] dark:bg-[rgb(255,255,255,0.05)]">
+    <div className="px-[calc(4px+5vw)] py-[5vw] sm:px-9 sm:py-8">
+      <h2 className="text-[clamp(14px,-8px+5vw,18px)] font-medium leading-[1.6] text-[#111] dark:text-[#eee]">
+        {title}
+      </h2>
+      <p className="text-[clamp(14px,-8px+5vw,18px)] leading-[1.6] text-[#666] dark:text-[#aaa]">
+        {byline}
+      </p>
+    </div>
+    {children}
   </div>
 );
 
@@ -78,69 +208,73 @@ export default async function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-[#fff] dark:bg-[#222]">
       {needsClaim && <ClaimDialog />}
-      <main className="flex flex-1 flex-col items-center font-sans text-[#111] dark:text-[#eee]">
-        <div className="flex w-full max-w-[540px] flex-col px-6 pb-32 pt-4 sm:pt-[72px] md:px-0">
-          {/* Hero Section */}
+      <style dangerouslySetInnerHTML={{ __html: LANDING_STYLES }} />
+      {/* Vertical rhythm follows the viewport: 72px top padding on wide
+          screens, easing down to 48px by 636px and 16px on phones. */}
+      <main className="flex flex-1 flex-col items-center px-6 font-sans text-[#111] dark:text-[#eee] min-[481px]:px-12">
+        <div
+          className="flex w-full max-w-[540px] flex-col pt-4 [container-type:inline-size] min-[481px]:pt-12 min-[637px]:pt-[calc(50vw_-_270px)] min-[685px]:pt-[72px]"
+          style={
+            {
+              // The hero grid spreads six 72px avatars across the column,
+              // with gaps never tighter than 14px; avatars shrink once the
+              // column is narrower than that allows.
+              '--hero-gap': 'max(14px, calc((100cqw - 432px) / 5))',
+              '--hero-avatar':
+                'min(72px, calc((100cqw - 5 * var(--hero-gap)) / 6))',
+            } as CSSProperties
+          }
+        >
           <HomeHero />
-          {/* Feature 1: Create a beautiful profile */}
-          <div className="relative mb-8 flex h-[278px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
-            <style
-              dangerouslySetInnerHTML={{
-                __html: `
-              @keyframes drag-and-drop {
-                0%, 100% { transform: translateY(0px) scale(1.05); }
-                50% { transform: translateY(-28px) scale(1.05); }
+
+          <div className="flex flex-col gap-8">
+            {/* Feature 1: Create a beautiful profile */}
+            <FeatureTile
+              title="Create a beautiful profile"
+              byline={
+                <>
+                  A fun and intuitive{' '}
+                  <Link
+                    href="/"
+                    className="cursor-text text-inherit no-underline hover:text-inherit"
+                  >
+                    editor
+                  </Link>{' '}
+                  allows you to create a beautiful profile in just a couple
+                  minutes.
+                </>
               }
-              .animate-drag {
-                animation: drag-and-drop 3s ease-in-out infinite;
-              }
-            `,
-              }}
-            />
-            <div className="mb-8">
-              <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-[#111] dark:text-[#eee]">
-                Create a beautiful profile
-              </h3>
-              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-[#666] dark:text-[#aaa]">
-                A fun and intuitive{' '}
-                <Link
-                  href="/"
-                  className="cursor-text text-inherit no-underline hover:text-inherit"
-                >
-                  editor
-                </Link>{' '}
-                allows you to create a beautiful profile in just a couple
-                minutes.
-              </p>
-            </div>
+            >
+              {/* Mock UI: the section list, mid-drag. */}
+              <div
+                aria-hidden="true"
+                className="relative mx-[calc(4px+5vw)] aspect-[468/236] overflow-hidden [container-type:inline-size] sm:mx-9"
+              >
+                <div className="drag-text absolute left-[7.05cqw] top-[0.9cqw] text-[#aaa] opacity-50 dark:text-content-muted">
+                  Side Projects
+                </div>
+                <div className="drag-text absolute left-[7.05cqw] top-[31.67cqw] text-[#aaa] opacity-50 dark:text-content-muted">
+                  Features
+                </div>
+                <div className="drag-text absolute left-[7.05cqw] top-[47.05cqw] text-[#aaa] opacity-50 dark:text-content-muted">
+                  Writing
+                </div>
 
-            {/* Mock UI */}
-            <div className="relative -mx-4 flex flex-1 flex-col justify-start overflow-hidden px-4">
-              <div className="pointer-events-none absolute inset-0 z-20"></div>
-
-              <div className="mb-4 px-4 text-[16px] tracking-tight text-[#aaa] opacity-70 dark:text-content-muted sm:text-[28px]">
-                Side Projects
-              </div>
-
-              <div className="animate-drag relative z-10 mx-auto flex w-full max-w-[460px] items-center justify-between rounded-[18px] bg-[#fff] p-3 text-[#111] shadow-xl dark:bg-[#222] dark:text-[#eee] dark:shadow-none sm:rounded-[22px] sm:p-4 sm:px-5">
-                <span className="truncate pr-2 text-[16px] tracking-tight text-[#111] dark:text-[#eee] sm:text-[28px]">
-                  Work Experience
-                </span>
-                <div className="relative flex flex-col gap-[3px]">
-                  <div className="flex flex-col gap-[3px] opacity-40 dark:opacity-60">
-                    <div className="h-[2px] w-5 rounded-full bg-content-muted"></div>
-                    <div className="h-[2px] w-5 rounded-full bg-content-muted"></div>
-                  </div>
-
-                  {/* Grabbing Hand SVG */}
-                  <div className="absolute -bottom-6 -right-2 h-8 w-8 opacity-100">
+                <div className="animate-drag-card absolute inset-x-0 top-0 z-10 flex h-[15.38cqw] items-center rounded-[5.13cqw] bg-[#fff] pl-[7.05cqw] shadow-[0_4px_40px_rgba(0,0,0,0.05),0_4px_10px_rgba(0,0,0,0.1)] dark:bg-[#222] dark:shadow-none">
+                  <span className="drag-text text-[#111] dark:text-[#eee]">
+                    Work Experience
+                  </span>
+                  <div className="absolute left-[87.18cqw] top-[6.41cqw] h-[0.64cqw] w-[4.91cqw] rounded-full bg-[#aaa]" />
+                  <div className="absolute left-[87.18cqw] top-[8.33cqw] h-[0.64cqw] w-[4.91cqw] rounded-full bg-[#aaa]" />
+                  {/* Grabbing hand, on the drag handle */}
+                  <div className="absolute left-[88.89cqw] top-[7.48cqw] h-[5.56cqw] w-[5.98cqw]">
                     <svg
                       viewBox="416 35 28 26"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-full w-full opacity-100 drop-shadow-md"
+                      className="h-full w-full drop-shadow-[0_2px_2px_rgba(0,0,0,0.35)]"
                     >
-                      <g filter="url(#filter0_d)">
+                      <g>
                         <path
                           d="M422 38.3C422.96 37.94 424.86 38.16 425.36 39.24C425.86 40.32 426.16 41.72 426.18 41.38C426.142 40.3466 426.229 39.3124 426.44 38.3C426.662 37.6517 427.172 37.1423 427.82 36.92C428.415 36.732 429.046 36.6908 429.66 36.8C430.281 36.9278 430.831 37.2849 431.2 37.8C431.668 38.9663 431.932 40.2043 431.98 41.46C432.03 40.3885 432.211 39.3272 432.52 38.3C432.854 37.8291 433.342 37.4896 433.9 37.34C434.561 37.2191 435.239 37.2191 435.9 37.34C436.443 37.5201 436.917 37.8621 437.26 38.32C437.685 39.3803 437.941 40.5005 438.02 41.64C438.02 41.92 438.16 40.86 438.6 40.16C438.954 39.1107 440.091 38.5466 441.14 38.9C442.189 39.2535 442.754 40.3907 442.4 41.44C442.4 42.74 442.4 42.68 442.4 43.56C442.4 44.44 442.4 45.22 442.4 45.96C442.328 47.1305 442.168 48.2938 441.92 49.44C441.573 50.4547 441.088 51.4169 440.48 52.3C439.509 53.3801 438.707 54.6005 438.1 55.92C437.952 56.576 437.885 57.2477 437.9 57.92C437.898 58.5413 437.979 59.1601 438.14 59.76C437.322 59.8474 436.498 59.8474 435.68 59.76C434.9 59.64 433.94 58.08 433.68 57.6C433.551 57.3423 433.288 57.1794 433 57.1794C432.712 57.1794 432.449 57.3423 432.32 57.6C431.88 58.36 430.9 59.74 430.32 59.82C428.98 59.98 426.2 59.82 424.04 59.82C424.04 59.82 424.42 57.82 423.58 57.1C422.74 56.38 421.92 55.54 421.3 54.98L419.64 53.14C418.469 52.0534 417.613 50.6717 417.16 49.14C416.74 47.26 416.78 46.36 417.16 45.6C417.548 44.9724 418.153 44.5096 418.86 44.3C419.448 44.1934 420.052 44.2347 420.62 44.42C421.013 44.5844 421.352 44.8544 421.6 45.2C422.06 45.82 422.22 46.12 422.02 45.44C421.82 44.76 421.38 44.26 421.16 43.44C420.732 42.4716 420.475 41.4363 420.4 40.38C420.482 39.4324 421.144 38.6351 422.06 38.38"
                           fill="white"
@@ -168,289 +302,198 @@ export default async function Home() {
                   </div>
                 </div>
               </div>
+            </FeatureTile>
 
-              <div className="mt-4 px-4 text-[16px] tracking-tight text-[#aaa] opacity-70 dark:text-content-muted sm:text-[28px]">
-                Features
-              </div>
-              <div className="mt-6 px-4 text-[16px] tracking-tight text-[#aaa] opacity-70 dark:text-content-muted sm:text-[28px]">
-                Writing
-              </div>
-            </div>
-          </div>
-
-          {/* Feature 2: Make it collaborative */}
-          <div className="relative mb-8 flex h-[280px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
-            <style
-              dangerouslySetInnerHTML={{
-                __html: `
-              @keyframes cursor-tag {
-                0%, 20% { transform: translate(0px, 0px); }
-                50%, 70% { transform: translate(-3px, -3px); }
-                90%, 100% { transform: translate(0px, 0px); }
-              }
-              .animate-cursor-tag {
-                animation: cursor-tag 3.5s ease-in-out infinite;
-              }
-              @keyframes tag-bubble {
-                0%, 35% { opacity: 0; transform: translateY(6px) scale(0.96); }
-                50%, 75% { opacity: 1; transform: translateY(0px) scale(1); }
-                90%, 100% { opacity: 0; transform: translateY(6px) scale(0.96); }
-              }
-              .animate-tag-bubble {
-                animation: tag-bubble 3.5s ease-in-out infinite;
-              }
-            `,
-              }}
-            />
-            <div className="mb-8">
-              <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-[#111] dark:text-[#eee]">
-                Make it collaborative
-              </h3>
-              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-[#666] dark:text-[#aaa]">
-                Profiles are made even richer when you tag collaborators in
-                experiences.
-              </p>
-            </div>
-
-            <div className="relative flex w-full flex-1 items-center justify-center overflow-hidden">
-              <div className="relative flex w-full max-w-[400px] flex-col justify-between gap-6 rounded-[18px] border border-border-strong p-4 text-[#111] shadow-xl dark:text-[#eee] dark:shadow-none sm:p-5">
-                <div>
-                  <div className="font-regular text-[16px] tracking-tight text-[#111] dark:text-[#eee] sm:text-[20px]">
-                    Product Designer at Acme, inc
-                  </div>
-                  <div className="text-[14px] text-content-muted sm:text-[16px]">
-                    Chennai, India
-                  </div>
+            {/* Feature 2: Make it collaborative. Positions are on a 468×200
+                grid; the cursor glides onto the last avatar and its name
+                pops up above it. */}
+            <FeatureTile
+              title="Make it collaborative"
+              byline="Profiles are made even richer when you tag collaborators in experiences."
+            >
+              <div
+                aria-hidden="true"
+                className="relative mx-[calc(4px+5vw)] mb-[calc(4px+5vw)] aspect-[468/200] rounded-[calc(var(--hero-avatar)/3)] bg-[#fff] shadow-[0_4px_40px_rgba(0,0,0,0.05),0_4px_10px_rgba(0,0,0,0.1)] [container-type:inline-size] dark:bg-[#222] dark:shadow-none sm:mx-9 sm:mb-9"
+              >
+                <div className="absolute left-[8.55cqw] right-[8.55cqw] top-[7.43cqw] truncate text-[length:5.6cqw] leading-[1.2] text-[#111] dark:text-[#eee]">
+                  Product Designer at Acme, inc
+                </div>
+                <div className="absolute left-[8.55cqw] right-[8.55cqw] top-[15.76cqw] truncate text-[length:5.6cqw] leading-[1.2] text-[#aaa] dark:text-content-muted">
+                  Chennai, India
                 </div>
 
-                <div className="relative flex items-center gap-2">
-                  <div className="animate-tag-bubble bg-content-primary/80 pointer-events-none absolute -top-9 left-0 whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-medium text-surface-1 shadow-lg backdrop-blur-sm">
-                    Sarah Lee
-                  </div>
+                {['Jeff', 'Mia', 'Alex'].map((seed, i) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={seed}
+                    src={`https://api.dicebear.com/10.x/glyphs/svg?seed=${seed}`}
+                    alt=""
+                    className={`absolute top-[26.5cqw] size-[8.55cqw] rounded-full border border-black/10 bg-surface-3 dark:border-white/10 ${
+                      ['left-[8.55cqw]', 'left-[19.66cqw]', 'left-[30.98cqw]'][
+                        i
+                      ]
+                    }`}
+                  />
+                ))}
 
-                  <div className="flex -space-x-2">
-                    <div className="size-9 shrink-0 overflow-hidden rounded-full bg-surface-3 ring-2 ring-surface-1 sm:size-10">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="https://api.dicebear.com/10.x/glyphs/svg?seed=Jeff"
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    <div className="size-9 shrink-0 overflow-hidden rounded-full bg-surface-3 ring-2 ring-surface-1 sm:size-10">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="https://api.dicebear.com/10.x/glyphs/svg?seed=Mia"
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    <div className="size-9 shrink-0 overflow-hidden rounded-full bg-surface-3 ring-2 ring-surface-1 sm:size-10">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="https://api.dicebear.com/10.x/glyphs/svg?seed=Alex"
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                  </div>
+                <div className="animate-collab-tooltip absolute left-[18.59cqw] top-[13.68cqw] flex h-[11.11cqw] w-[32.91cqw] items-center justify-center whitespace-nowrap rounded-[3.42cqw] bg-[#111] text-[length:5.3cqw] font-medium text-[#fafafa] dark:bg-[#eee] dark:text-[#111]">
+                  Sarah Lee
+                </div>
 
-                  <div className="animate-cursor-tag pointer-events-none">
-                    <MousePointer2
-                      className="h-4 w-4 stroke-black text-white dark:stroke-white dark:text-black"
-                      strokeWidth={1.5}
-                      fill="currentColor"
+                <div className="animate-collab-cursor absolute left-[34.91cqw] top-[31.07cqw] z-[1]">
+                  <svg
+                    viewBox="0 0 20 28"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-[7.86cqw] w-[5.62cqw] drop-shadow-[0_2px_2px_rgba(0,0,0,0.35)]"
+                  >
+                    <path
+                      d="M2 2V21.5L6.9 16.9L10.6 25.6L14 24.1L10.4 15.6H17L2 2Z"
+                      fill="#111"
+                      stroke="#fff"
+                      strokeWidth="1.5"
+                      strokeLinejoin="round"
                     />
-                  </div>
+                  </svg>
                 </div>
               </div>
-            </div>
-          </div>
+            </FeatureTile>
 
-          {/* Feature 3: Print it out */}
-          <div className="relative mb-8 flex h-[280px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
-            <style
-              dangerouslySetInnerHTML={{
-                __html: `
-              @keyframes print-slide {
-                0% { transform: translateY(100%); opacity: 1; }
-                60% { transform: translateY(0%); opacity: 1; }
-                100% { transform: translateY(0%); opacity: 1; }
-              }
-              .animate-print {
-                animation: print-slide 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-              }
-            `,
-              }}
-            />
-            <div className="mb-8">
-              <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-[#111] dark:text-[#eee]">
-                Print it out
-              </h3>
-              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-[#666] dark:text-[#aaa]">
-                Profiles are print ready, with optimized typography and only the
-                relevant information shown.
-              </p>
-            </div>
-
-            <div className="relative flex w-full flex-1 justify-center overflow-hidden">
-              {/* Sheet underneath, peeking out slightly */}
-              <ResumePaper className="absolute top-1 z-10 shadow-sm" />
-
-              {/* Printing Paper (animated) */}
-              <ResumePaper className="animate-print absolute top-0 z-20 shadow-md" />
-            </div>
-          </div>
-
-          {/* Feature 4: Find who you're looking for */}
-          <div className="relative mb-8 flex h-[240px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[384px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
-            <style
-              dangerouslySetInnerHTML={{
-                __html: `
-              @keyframes cursor-blink {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0; }
-              }
-              .animate-blink {
-                animation: cursor-blink 1s step-end infinite;
-              }
-            `,
-              }}
-            />
-            <div className="mb-8">
-              <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-[#111] dark:text-[#eee]">
-                Find who you&apos;re looking for
-              </h3>
-              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-[#666] dark:text-[#aaa]">
-                Search by title, location, and username.
-              </p>
-            </div>
-
-            <div className="flex w-full flex-1 flex-col">
-              <div className="mb-6 flex max-w-full items-center rounded-xl bg-[#fff] px-3 py-2 text-[#111] shadow-sm dark:bg-surface-1 dark:text-[#eee] dark:shadow-none sm:rounded-3xl sm:px-5 sm:py-3">
-                <span className="font-regular flex items-center text-[15px] tracking-tight text-[#111] dark:text-[#eee] sm:text-[30px]">
-                  UX Designer
-                  <span className="animate-blink ml-0.5 inline-block h-[1.1em] w-[2px] bg-[#0085FF]"></span>
-                </span>
+            {/* Feature 3: Print it out. A stack of printed sheets with edges
+                at 0, 4 and 8px; a new sheet feeds up onto the top of the
+                stack in a loop, landing exactly on an identical sheet so the
+                reset is invisible. */}
+            <FeatureTile
+              title="Print it out"
+              byline="Profiles are print ready, with optimized typography and only the relevant information shown."
+            >
+              <div
+                aria-hidden="true"
+                className="relative mx-[calc(4px+5vw)] aspect-[468/236] overflow-hidden shadow-[0_4px_40px_rgba(0,0,0,0.05),0_4px_10px_rgba(0,0,0,0.1)] sm:mx-9"
+              >
+                <PrintPaper className="absolute inset-0" />
+                <div className="print-sheet-edge absolute inset-x-0 bottom-0 top-1" />
+                <div className="print-sheet-edge absolute inset-x-0 bottom-0 top-2 overflow-hidden">
+                  <PrintPaper className="absolute inset-0" />
+                  <PrintPaper className="animate-print-feed print-sheet-feed absolute inset-0 z-[1]" />
+                </div>
               </div>
+            </FeatureTile>
 
-              <div className="space-y-4 px-1 sm:px-2">
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-16">
+            {/* Feature 4: Find who you're looking for */}
+            <FeatureTile
+              title="Find who you're looking for"
+              byline="Search by title, location, and username."
+            >
+              <div
+                aria-hidden="true"
+                className="relative mx-[calc(4px+5vw)] aspect-[468/236] overflow-hidden [container-type:inline-size] sm:mx-9"
+              >
+                <div className="absolute inset-x-0 top-0 flex h-[15.38cqw] items-center rounded-[5.13cqw] bg-[#fff] pl-[5.56cqw] dark:bg-[#222]">
+                  <span className="text-[length:6.41cqw] leading-none text-[#111] dark:text-[#eee]">
+                    UX Designer
+                  </span>
+                  <span className="animate-search-caret ml-[0.64cqw] h-[6.84cqw] w-[0.64cqw] rounded-full bg-[#0085FF]" />
+                </div>
+
+                {[
+                  {
+                    seed: 'Lauren',
+                    name: 'Jane Smith',
+                    place: 'Bangalore',
+                    position: 'top-[22.22cqw]',
+                  },
+                  {
+                    seed: 'Skip',
+                    name: 'John Doe',
+                    place: 'NYC',
+                    position: 'top-[45.73cqw] opacity-50',
+                  },
+                ].map((result) => (
+                  <div
+                    key={result.seed}
+                    className={`absolute inset-x-0 ${result.position}`}
+                  >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="https://api.dicebear.com/10.x/glyphs/svg?seed=Lauren"
-                      alt="Lauren"
-                      className="h-full w-full object-cover"
+                      src={`https://api.dicebear.com/10.x/glyphs/svg?seed=${result.seed}`}
+                      alt=""
+                      className="absolute left-0 top-0 size-[15.38cqw] rounded-full bg-surface-3"
                     />
-                  </div>
-                  <div className="leading-tight">
-                    <div className="text-[14px] text-content-muted opacity-30 dark:text-content-muted sm:text-[28px]">
-                      Jane Smith
-                    </div>
-                    <div className="text-[13px] text-content-muted opacity-30 dark:text-content-muted sm:text-[28px]">
-                      <strong className="text-[#111] dark:text-[#eee]">
-                        UX Designer
-                      </strong>{' '}
-                      in Bangalore
+                    <div className="absolute left-[19.02cqw] top-0 whitespace-nowrap text-[length:6.41cqw] leading-[7.69cqw] text-[#aaa] dark:text-content-muted">
+                      <div>{result.name}</div>
+                      <div>
+                        <strong className="font-medium text-[#111] dark:text-[#eee]">
+                          UX Designer
+                        </strong>{' '}
+                        in {result.place}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 opacity-30 sm:gap-4">
-                  <div className="size-10 shrink-0 overflow-hidden rounded-full bg-surface-3 sm:size-16">
+                ))}
+              </div>
+            </FeatureTile>
+
+            {/* Feature 5: Use it anywhere */}
+            <FeatureTile
+              title="Use it anywhere"
+              byline="Add your link wherever your audience is."
+            >
+              <div
+                aria-hidden="true"
+                className="relative mx-[calc(4px+5vw)] aspect-[468/236] overflow-hidden bg-[#fff] text-[#111] shadow-[0_4px_40px_rgba(0,0,0,0.05),0_4px_10px_rgba(0,0,0,0.1)] [container-type:inline-size] dark:bg-[#222] dark:text-[#eee] dark:shadow-none sm:mx-9"
+              >
+                <div className="absolute left-[5.56cqw] top-[5.13cqw] size-[22.86cqw] rounded-full bg-gradient-to-b from-[#9E2692] to-[#FAA958] p-[0.64cqw]">
+                  <div className="h-full w-full rounded-full bg-[#fff] p-[0.43cqw] dark:bg-[#222]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="https://api.dicebear.com/10.x/glyphs/svg?seed=Skip"
-                      alt="Skip"
-                      className="h-full w-full object-cover"
+                      src="https://api.dicebear.com/10.x/glyphs/svg?seed=Tom"
+                      alt=""
+                      className="h-full w-full rounded-full bg-surface-3 object-cover"
                     />
                   </div>
-                  <div className="leading-tight">
-                    <div className="text-[14px] text-content-muted dark:text-content-muted sm:text-[28px]">
-                      John Doe
-                    </div>
-                    <div className="text-[13px] text-content-muted dark:text-content-muted sm:text-[28px]">
-                      <strong className="text-[#111] dark:text-[#eee]">
-                        UX Designer
-                      </strong>{' '}
-                      in NYC
-                    </div>
+                </div>
+
+                {[
+                  { value: '54', label: 'Posts', position: 'left-[43.8cqw]' },
+                  {
+                    value: '368',
+                    label: 'Followers',
+                    position: 'left-[65.17cqw]',
+                  },
+                  {
+                    value: '115',
+                    label: 'Following',
+                    position: 'left-[86.54cqw]',
+                  },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className={`absolute top-[12.24cqw] flex -translate-x-1/2 flex-col items-center ${stat.position}`}
+                  >
+                    <span className="text-[length:4.49cqw] font-medium leading-none">
+                      {stat.value}
+                    </span>
+                    <span className="mt-[0.77cqw] text-[length:3.74cqw] leading-none">
+                      {stat.label}
+                    </span>
                   </div>
+                ))}
+
+                <div className="absolute left-[5.56cqw] top-[31.66cqw] flex flex-col whitespace-nowrap text-[length:3.9cqw] leading-[4.91cqw]">
+                  <span className="font-medium">Jane Smith</span>
+                  <span className="text-[#8d8e8e]">UX Designer</span>
+                  <span className="text-[#00366a] dark:text-[#0788F5]">
+                    {SITE_HOST}/jane
+                  </span>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Feature 5: Use it anywhere */}
-          <div className="relative flex h-[275px] flex-col overflow-hidden rounded-[22px] bg-[rgba(0,0,0,0.05)] p-5 pb-0 dark:bg-[rgb(255,255,255,0.05)] sm:h-[360px] sm:rounded-[36px] sm:p-9 sm:pb-0 sm:pt-8">
-            <div className="mb-6 sm:mb-8">
-              <h3 className="mb-1.5 text-[clamp(14px,-8px+5vw,18px)] font-medium text-[#111] dark:text-[#eee]">
-                Use it anywhere
-              </h3>
-              <p className="text-[clamp(14px,-8px+5vw,18px)] leading-snug text-[#666] dark:text-[#aaa]">
-                Add your link wherever your audience is.
-              </p>
-            </div>
-
-            <div className="flex w-full flex-1 flex-col border border-b-0 border-border-strong bg-[#fff] p-5 text-[#111] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] dark:bg-[#222] dark:text-[#eee] dark:shadow-none sm:p-5">
-              <div className="mb-4 flex items-center gap-4 sm:gap-8">
-                <div className="size-[64px] shrink-0 rounded-full bg-gradient-to-b from-[#9E2692] to-[#FAA958] p-[2px] sm:size-[120px] sm:p-[3px]">
-                  <div className="h-full w-full rounded-full p-0.5 text-[#111] dark:text-[#eee]">
-                    <div className="h-full w-full overflow-hidden rounded-full bg-surface-3">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="https://api.dicebear.com/10.x/glyphs/svg?seed=Tom"
-                        alt="Tom Chung"
-                        className="h-full w-full rounded-full object-cover p-0.5"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex w-full justify-around gap-3 pr-0 text-center sm:justify-center sm:gap-8">
-                  <div className="flex flex-col items-center">
-                    <div className="text-[17px] font-medium text-[#111] dark:text-[#eee] sm:text-[20px]">
-                      54
-                    </div>
-                    <div className="text-[13px] tracking-tight text-[#111] dark:text-[#eee] sm:text-[18px]">
-                      Posts
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="text-[17px] font-medium text-[#111] dark:text-[#eee] sm:text-[20px]">
-                      368
-                    </div>
-                    <div className="text-[13px] tracking-tight text-[#111] dark:text-[#eee] sm:text-[18px]">
-                      Followers
-                    </div>
-                  </div>
-                  <div className="hidden flex-col items-center sm:flex">
-                    <div className="text-[17px] font-medium text-[#111] dark:text-[#eee] sm:text-[20px]">
-                      115
-                    </div>
-                    <div className="text-[13px] tracking-tight text-[#111] dark:text-[#eee] sm:text-[18px]">
-                      Following
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="ml-1 flex flex-col pb-4 leading-snug sm:pb-0">
-                <span className="text-[15px] font-medium text-[#111] dark:text-[#eee] sm:text-[18px]">
-                  Jane Smith
-                </span>
-                <span className="text-[14px] text-[#8d8e8e] sm:text-[18px]">
-                  UX Designer
-                </span>
-                <span className="text-[14px] text-[#00366a] dark:text-[#0788F5] sm:text-[18px]">
-                  {SITE_HOST}/jane
-                </span>
-              </div>
-            </div>
+            </FeatureTile>
           </div>
         </div>
       </main>
 
-      <Footer />
+      <Footer className="mt-24 pb-24 pt-0 min-[481px]:mt-36 min-[685px]:pb-[72px]" />
     </div>
   );
 }
