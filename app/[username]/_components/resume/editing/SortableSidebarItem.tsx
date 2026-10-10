@@ -52,9 +52,12 @@ export function SortableSidebarItem({
       }}
     >
       <span>{label}</span>
+      {/* touch-none: without it, a finger drag on the handle is taken by the
+          browser as a scroll, which cancels the drag. The handle is a 44px
+          touch target; the negative margins keep the row height unchanged. */}
       <div
         className={cn(
-          'flex flex-col gap-[4px] p-2 opacity-50 transition-opacity hover:opacity-100',
+          '-my-2.5 -mr-2 flex size-11 shrink-0 touch-none select-none flex-col items-center justify-center gap-[4px] opacity-50 transition-opacity hover:opacity-100',
           isDragging ? 'cursor-grabbing opacity-100' : 'cursor-grab',
         )}
         {...attributes}
