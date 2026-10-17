@@ -31,7 +31,9 @@ export default async function middleware(req: NextRequest) {
       if (
         req.nextUrl.pathname.startsWith('/api/auth') ||
         req.nextUrl.pathname.startsWith('/api/explore') ||
-        req.nextUrl.pathname.startsWith('/api/collaborators/info')
+        req.nextUrl.pathname.startsWith('/api/collaborators/info') ||
+        // Has no session; the route checks CRON_SECRET itself.
+        req.nextUrl.pathname.startsWith('/api/cron')
       ) {
         return;
       }

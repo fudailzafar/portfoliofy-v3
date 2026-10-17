@@ -48,4 +48,9 @@ describe('getClientIp', () => {
     const req = new Request('http://localhost');
     expect(getClientIp(req)).toBe('unknown');
   });
+
+  it('pingRedis reports not-configured without Upstash credentials', async () => {
+    const { pingRedis } = await import('./rateLimit');
+    expect(await pingRedis()).toBe('not-configured');
+  });
 });
