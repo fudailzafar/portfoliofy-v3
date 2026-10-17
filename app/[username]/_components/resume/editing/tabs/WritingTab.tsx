@@ -18,10 +18,8 @@ function formatPageDate(createdAt?: string): string | null {
   });
 }
 
-// The centralized Writing panel: every page on the resume, regardless of
-// which section item(s) it's attached to (or none at all) — creating,
-// editing, publishing, and deleting all happen here. A section item's own
-// "Add a page" only ever attaches an already-published page from this list.
+// The Writing panel: creates, edits, publishes and deletes every page.
+// Section items can only attach pages already published here.
 export function WritingTab({
   filter,
 }: {
@@ -63,14 +61,8 @@ export function WritingTab({
     setEditingPage({ attachment: page });
   };
 
-  // Publish/Unpublish persist immediately and independently — see
-  // hooks/usePagePersistence.ts. isBlurred ("Hide") is a separate axis: it
-  // hides an already-published page from the public writing panel index
-  // (see PublicWritingList.tsx / app/[username]/[slug]/page.tsx) while still
-  // letting it be attached to sections and visited directly — unlike
-  // publish/unpublish, it isn't persisted independently and stays purely
-  // local (still rides along with the outer global Save), so it keeps using
-  // updateResume.
+  // Publish/unpublish save immediately (usePagePersistence). Hide only hides a
+  // published page from the writing index and is saved with the global Save.
   const handleTogglePublish = async (
     target: AttachmentSchemaType,
     e: React.MouseEvent,

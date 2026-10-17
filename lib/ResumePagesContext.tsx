@@ -3,13 +3,7 @@
 import { createContext, useContext } from 'react';
 import { AttachmentSchemaType } from '@/lib/resume';
 
-/**
- * The resume's top-level `pages` array, available anywhere under FullResume
- * without prop-drilling through every section/list-item component. A page
- * attachment inside an item's `attachments` array is just a
- * {id, type:'page'} reference stub — AttachmentsPreview resolves it against
- * this list to render the real title/content/thumbnail.
- */
+// The resume's top-level pages, so page stubs can be resolved anywhere.
 const ResumePagesContext = createContext<AttachmentSchemaType[]>([]);
 
 export function ResumePagesProvider({

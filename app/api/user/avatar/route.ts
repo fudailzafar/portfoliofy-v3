@@ -16,10 +16,8 @@ export async function POST(request: Request) {
     if (!url || typeof url !== 'string') {
       return NextResponse.json({ error: 'URL is required' }, { status: 400 });
     }
-    // Only our own S3 bucket is a legitimate value here — this always comes from
-    // a client-side next-s3-upload call, never a user-typed URL. Rejecting anything
-    // else prevents this endpoint from being used to make the server (via the public
-    // /[username]/og image route) fetch an attacker-chosen URL.
+    // Only our own S3 URLs: the public OG route fetches this server-side, so any
+    // other URL would let a user make the server fetch it (SSRF).
     if (!isOwnS3ImageUrl(url)) {
       return NextResponse.json({ error: 'Invalid image URL' }, { status: 400 });
     }

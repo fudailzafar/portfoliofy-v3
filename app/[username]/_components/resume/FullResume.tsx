@@ -79,14 +79,8 @@ export const FullResume = ({
     setActiveTab(tab);
   };
 
-  // Re-pins the tab bar to wherever it was on screen right before the
-  // switch, undoing any scroll clamp caused by the content height changing.
-  // Called from two places: immediately on the state change (useLayoutEffect
-  // below), and again from AnimatePresence's onExitComplete — the fade-out
-  // keeps the old (tall) content in the DOM for the duration of the exit
-  // animation, so the actual height/scroll-clamp doesn't happen until it's
-  // removed, well after the state change and the first correction already
-  // ran. Doesn't clear the pending ref itself so both call sites can use it.
+  // Keeps the tab bar where it was on screen when the content height changes.
+  // Runs on switch and again after the exit animation, so it keeps the ref.
   const correctScrollAnchor = useCallback(() => {
     if (pendingScrollAnchorRef.current === null || !tabBarRef.current) return;
     const newTop = tabBarRef.current.getBoundingClientRect().top;
@@ -163,19 +157,14 @@ export const FullResume = ({
     resume.preferences?.writingEnabled !== false &&
     (resume.pages || []).some((p) => !p.hidden && !p.isBlurred);
 
-  // Same emptiness check as Summary.tsx itself — kept in sync here so the
-  // tab bar's own visibility decision matches what Summary would actually
-  // render, without duplicating that component's render logic.
+  // Must match Summary.tsx's own emptiness check.
   const hasSummary = !(
     !resume.summary ||
     resume.summary === '' ||
     resume.summary === '<p></p>'
   );
 
-  // If writing gets disabled (or its last published page is removed) while
-  // the writing tab is selected, its button disappears from the row below —
-  // fall back to About rather than leaving the user stuck on a tab with no
-  // way back to it.
+  // Fall back to About if the selected Writing tab disappears.
   useEffect(() => {
     if (!isWritingEnabled && activeTab === 'writing') {
       setActiveTab('about');

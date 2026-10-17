@@ -24,9 +24,7 @@ export function AttachmentsPreview({
     return null;
   }
 
-  // A page-type entry here is a {id, type:'page'} reference stub — resolve
-  // it against the resume's top-level pages list for the real title/
-  // content/thumbnail before rendering.
+  // Page entries are {id, type:'page'} stubs; resolve them against resume.pages.
   const attachedPages = resolveAttachedPages(attachments, resumePages);
 
   // The lightbox only knows about image/video — a page attachment gets its

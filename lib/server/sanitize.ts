@@ -1,9 +1,7 @@
 import sanitizeHtml from 'sanitize-html';
 import type { Resume } from './dbActions';
 
-// Mirrors exactly what RichTextEditor can produce: paragraphs, bullet/ordered
-// lists, links, and line breaks. Bold/italic/heading/code/blockquote are
-// disabled in the editor config, so they are not allowed here either.
+// Must match what RichTextEditor can produce.
 const RICH_TEXT_OPTIONS: sanitizeHtml.IOptions = {
   allowedTags: ['p', 'br', 'ul', 'ol', 'li', 'a'],
   allowedAttributes: { a: ['href', 'target', 'rel'] },
@@ -20,11 +18,8 @@ export function sanitizeRichText(html: string): string {
   return sanitizeHtml(html, RICH_TEXT_OPTIONS);
 }
 
-// Broader allowlist for an embedded page's body — mirrors what
-// PageEditorView's richer Tiptap instance (headings, images, video,
-// YouTube/Vimeo/Figma embeds) can actually produce. Iframes are locked to
-// those three hostnames so this can't be used to embed arbitrary third-party
-// content.
+// Must match what PageEditorView can produce. Iframes are limited to YouTube,
+// Vimeo and Figma so embeds can't load arbitrary sites.
 const PAGE_CONTENT_OPTIONS: sanitizeHtml.IOptions = {
   allowedTags: [
     ...(RICH_TEXT_OPTIONS.allowedTags as string[]),
@@ -96,11 +91,7 @@ export function sanitizePageContent(html: string): string {
 
 const RICH_TEXT_FIELDS = ['summary', 'description'];
 
-/**
- * Sanitizes every rich-text field on a resume before it is persisted.
- * Sanitizing on write (rather than on render) means the database never holds
- * untrusted markup, so any current or future render path is safe by default.
- */
+// Sanitized on write, so stored markup is always safe to render.
 export function sanitizeResumeData(resumeData: Resume['resumeData']) {
   if (!resumeData) return resumeData;
 
@@ -115,10 +106,7 @@ export function sanitizeResumeData(resumeData: Resume['resumeData']) {
     if (typeof value === 'string' && RICH_TEXT_FIELDS.includes(key)) {
       sanitized[key] = sanitizeRichText(value);
     }
-    // pages is its own top-level array now (a page can be attached to more
-    // than one section item, so it's no longer nested under any one item's
-    // attachments) — its body gets the broader PAGE_CONTENT_OPTIONS
-    // allowlist (headings, images, embeds) instead of sanitizeRichText.
+    // Page bodies allow richer markup (headings, images, embeds).
     else if (key === 'pages' && Array.isArray(value)) {
       sanitized.pages = value.map((page: any) =>
         page && typeof page.content === 'string'

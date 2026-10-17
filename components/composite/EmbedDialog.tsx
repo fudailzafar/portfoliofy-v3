@@ -89,8 +89,7 @@ export function EmbedDialog({
           Embed a link from Figma, Vimeo, or X/Twitter
         </DialogDescription>
 
-        {/* Provider list — a horizontal scrollable tab row on mobile,
-            a fixed-width vertical sidebar from sm: up. */}
+        {/* Provider tabs: a scrolling row on mobile, a sidebar from sm: up. */}
         <div className="flex shrink-0 overflow-x-auto border-b border-border-subtle sm:w-48 sm:flex-col sm:overflow-y-auto sm:overflow-x-visible sm:border-b-0 sm:border-r sm:py-2">
           {PROVIDERS.map((p) => (
             <button

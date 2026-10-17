@@ -30,9 +30,7 @@ export function ListTabLayout({
 }: ListTabLayoutProps) {
   return (
     <div className="mx-auto flex max-w-3xl flex-col">
-      {/* No back chevron in the form view — the bottom bar's Cancel button
-          (rendered by ProfileContent, driven by activeFormCancel) is the
-          only way back to the list now. */}
+      {/* No back button: the bottom bar's Cancel returns to the list. */}
       <TabHeader
         title={title}
         showAddButton={view === 'list'}

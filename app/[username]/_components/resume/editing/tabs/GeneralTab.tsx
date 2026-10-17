@@ -33,9 +33,7 @@ export function GeneralTab({
   ) => Promise<void>;
   removePicture: () => Promise<void>;
   onAvatarUpload?: () => void;
-  // The debounced availability check is owned by EditProfileDialog (it needs
-  // the result for the Save button too) — GeneralTab only renders it, so
-  // there's exactly one check in flight per username, not two.
+  // EditProfileDialog owns the availability check (Save needs it too).
   isValidUsername: boolean;
   isCheckingUsername: boolean;
 }) {

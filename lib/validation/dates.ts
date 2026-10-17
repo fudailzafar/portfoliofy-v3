@@ -1,12 +1,5 @@
-/**
- * Shared date-range validation used by both the UI and server-side schema.
- *
- * A range is "reversed" (invalid) when:
- *  - `from` and `to` are both numeric years, AND `from > to`
- *
- * "Now" (or blank) for `to` always means ongoing, which is always valid.
- * "Now" for `from` is treated as invalid (can't start in the future).
- */
+// Whether a year range runs backwards. An empty or "Now" end is ongoing and
+// always valid; a "Now" start is invalid.
 export function isReversedRange(
   from?: string | null,
   to?: string | null,

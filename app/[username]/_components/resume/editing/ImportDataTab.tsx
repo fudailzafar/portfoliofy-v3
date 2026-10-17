@@ -7,12 +7,8 @@ import { ResumeDataSchemaType } from '@/lib/resume';
 
 type ExtraFields = { collaborators?: unknown[]; attachments?: unknown[] };
 
-// The AI-parsed re-import has no idea about collaborators/attachments tagged
-// on the existing entries (they're portfoliofy-specific fields it never
-// sees), so a naive whole-array replace would silently wipe them. Instead,
-// match each freshly-parsed item back to an existing one by a stable-ish
-// identity key and carry those fields over when there's a match. Items with
-// no match (genuinely new entries) simply start with none, same as today.
+// The AI re-import doesn't know about collaborators/attachments, so carry
+// them over from the matching existing item instead of wiping them.
 function mergeSectionPreservingExtras<T extends ExtraFields>(
   parsedItems: T[] | undefined,
   existingItems: T[] | undefined,

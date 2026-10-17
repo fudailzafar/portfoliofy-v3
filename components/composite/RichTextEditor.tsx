@@ -80,11 +80,8 @@ export function RichTextEditor({
       return;
     }
 
-    // update link — normalize to an absolute URL first, otherwise a scheme-less
-    // value like "google.com" is a relative link and resolves against the
-    // current page (portfoliofy.me/google.com) instead of the real target.
-    // mailto:/tel: are already absolute and must be left alone — ensureHttps
-    // would otherwise mangle them into "https://mailto:...".
+    // Make scheme-less links absolute ("google.com" would resolve relative to
+    // this site), but leave mailto:/tel: alone.
     const normalizedUrl =
       url.startsWith('mailto:') || url.startsWith('tel:')
         ? url

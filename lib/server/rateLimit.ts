@@ -1,15 +1,5 @@
-/**
- * A rate limiter for expensive or abuse-prone actions (AI resume parsing,
- * custom-domain connect/disconnect, username claims, uploads, resume
- * saves). Backed by Upstash Redis so counts are shared across every
- * serverless instance — a per-instance in-memory counter doesn't actually
- * cap anything on Vercel, since concurrent requests land on different
- * instances that each keep their own memory.
- *
- * Fails open: if UPSTASH_REDIS_REST_URL/TOKEN aren't set (e.g. local dev
- * before Redis is provisioned) or a Redis call itself errors, requests are
- * allowed through rather than blocking real users on an infra hiccup.
- */
+// Redis-backed so limits hold across serverless instances. Fails open:
+// without Redis config, or on a Redis error, requests are allowed.
 
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';

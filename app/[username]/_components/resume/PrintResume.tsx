@@ -41,12 +41,8 @@ export const PrintResume = ({
     [sectionOrder],
   );
 
-  // Print/export must respect the same per-item `hidden` flag the live public
-  // preview honors (see e.g. preview/WorkExperience.tsx) — otherwise an item a
-  // user explicitly hid still leaks into their printed/exported resume. The
-  // filter runs inside each memo (keyed on the original, reference-stable
-  // array) rather than as a separate pre-computed variable, so it doesn't
-  // produce a new array identity on every render and defeat the memoization.
+  // Hidden items stay out of print too. Filtering inside each memo keeps the
+  // array identity stable.
   const notHidden = (item: any) => !item.hidden;
   const sortedWork = useMemo(
     () => sortByDateDesc(workExperience?.filter(notHidden)),
@@ -108,10 +104,6 @@ export const PrintResume = ({
     );
   };
 
-  // Each entry's `content` mirrors what that section actually looks like on
-  // the page — the field mapping is inherently section-specific, but the
-  // guard-and-wrap boilerplate around it is not, so `order.map` below only
-  // has to do that once.
   const sections: Record<string, { title: string; content: React.ReactNode }> =
     {
       awards: {

@@ -12,9 +12,7 @@ export async function DELETE() {
 
     const userId = session.user.id;
 
-    // Release any connected custom domain from Vercel before the row (and
-    // its custom_domain value) disappears — otherwise the domain stays
-    // attached to the project with nothing left to say who it belonged to.
+    // Release the custom domain from Vercel while we still know which one it is.
     await releaseUserDomainFromVercel(userId);
 
     // Delete user from DB. Cascading will handle resumes automatically.

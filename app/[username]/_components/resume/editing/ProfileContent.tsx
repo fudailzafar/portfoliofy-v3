@@ -75,16 +75,11 @@ export function ProfileContent({
 }: ProfileContentProps) {
   const hasUnsavedChanges = useResumeStore((state) => state.hasUnsavedChanges);
   const activeFormValid = useResumeStore((state) => state.activeFormValid);
-  // Whether a list-tab form (Work Experience, Awards, etc.) is currently
-  // open — while it is, the bottom bar shows that form's own Cancel/Save
-  // pair instead of the resume-wide one, per the "chevron-back is gone,
-  // Cancel does that job now" flow.
+  // While a list-tab form is open, the bottom bar shows its Cancel/Save.
   const isEditingTab = useResumeStore((state) => state.isEditingTab);
   const activeFormDirty = useResumeStore((state) => state.activeFormDirty);
   const activeFormCancel = useResumeStore((state) => state.activeFormCancel);
-  // Bumped by the global Cancel button — used as a remount key on each list
-  // tab so an in-progress add/edit form (and its local draft) is dropped
-  // along with the rest of the discarded changes.
+  // Bumped by global Cancel; a remount key that drops open form drafts.
   const saveTrigger = useResumeStore((state) => state.saveTrigger);
 
   return (
@@ -230,10 +225,7 @@ export function ProfileContent({
         {activeTab === 'import_data' && <ImportDataTab />}
       </div>
 
-      {/* Bottom action bar — one global Cancel/Save (or Done, when nothing's
-          changed) instead of a separate pair inside every tab's own form.
-          The print tab is a standalone action screen, not part of the save
-          flow, so it only ever shows its own Print button. */}
+      {/* One global Cancel/Save for every tab; the print tab only shows Print. */}
       <div className="flex-none bg-surface-1 px-4 pb-4 sm:px-8 md:px-12 md:pb-6">
         <div className="flex w-full items-center justify-end gap-3 border-t border-border-subtle pt-4">
           {activeTab === 'print' ? (

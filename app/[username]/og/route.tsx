@@ -9,13 +9,8 @@ export async function GET(
   { params }: { params: Promise<{ username: string }> },
 ) {
   try {
-    // Read the route's own matched param rather than parsing
-    // request.nextUrl.pathname — on a subdomain, proxy.ts rewrites the
-    // browser-visible path (e.g. /og) to /{username}/og for routing
-    // purposes, but nextUrl.pathname inside the handler still reflects the
-    // original, un-prefixed path, so pathname.split('/')[1] reads 'og'
-    // itself as the username. params is populated from the actual matched
-    // route and isn't affected by that.
+    // Use params, not request.nextUrl.pathname: on a subdomain the pathname is
+    // the un-rewritten path (/og), not /{username}/og.
     const { username } = await params;
 
     const ogFonts = await getOgFonts();
@@ -33,11 +28,8 @@ export async function GET(
       subtitle = `Based in ${location}`;
     }
 
-    // Use profile image from Postgres users table. This route is public and
-    // unauthenticated, and ImageResponse fetches `src` server-side, so only
-    // trust customImage when it's our own S3 URL — anything else (e.g. an
-    // internal/metadata-service URL from before the write-side check existed)
-    // falls back to the OAuth-provided image instead of being fetched here.
+    // ImageResponse fetches `src` server-side, so only trust our own S3 URLs;
+    // anything else falls back to the OAuth image.
     const rawProfileImage =
       (userProfile?.customImage && isOwnS3ImageUrl(userProfile.customImage)
         ? userProfile.customImage

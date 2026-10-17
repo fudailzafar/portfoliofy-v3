@@ -30,9 +30,7 @@ Support: fudail.zafar@gmail.com
 `;
 }
 
-// A subdomain (username.portfoliofy.me) or a connected custom domain
-// (fudailzafar.com): the host itself identifies the one user this
-// llms.txt describes, same scoping as app/sitemap.ts's single-user branch.
+// On a user's subdomain or custom domain, describe just that user.
 async function getSingleUserLlmsTxt(
   identifier: string,
   baseUrl: string,

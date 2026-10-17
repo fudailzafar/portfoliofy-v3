@@ -7,10 +7,6 @@ interface SkillsProps {
   className?: string;
 }
 
-/**
- * Skills section component
- * Displays a list of professional skills separated by dots
- */
 export function Skills({ skills, className }: SkillsProps) {
   if (!skills || skills.length === 0) return null;
 

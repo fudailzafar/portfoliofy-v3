@@ -149,9 +149,7 @@ export function PageEditorView({
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   // Slug auto-follows the title until the user edits it by hand.
   const slugTouchedRef = useRef(false);
-  // The values the editor last matched the persisted page on — updated by
-  // resetToBaseline (mount / page change / Discard changes). Compared
-  // against current field values to derive isDirty below.
+  // The field values last saved; isDirty compares against these.
   const baselineRef = useRef<EditorSnapshot>(snapshotFromPage(page));
 
   const { publishPage, unpublishPage, deletePage, isSaving } =
@@ -160,10 +158,8 @@ export function PageEditorView({
   const setEditingPage = useResumeStore((state) => state.setEditingPage);
   const design = resume?.design;
 
-  // Resets the visible fields (and re-baselines isDirty against them) for
-  // whichever page is currently open — on mount, when a different page is
-  // opened, and on demand from "Discard changes" (handleDiscardChanges
-  // below also resets the Tiptap editor itself, which this alone doesn't).
+  // Resets fields and the dirty baseline to the open page. Discard must also
+  // reset the Tiptap editor itself.
   const resetToBaseline = useCallback(() => {
     const next = snapshotFromPage(page);
     setSlug(next.slug);
@@ -207,19 +203,14 @@ export function PageEditorView({
   useEffect(() => {
     if (!editor) return;
     const next = page?.content || '';
-    // A page's id transitions from undefined to a real UUID the moment it's
-    // first published, while the editor stays open (mounted) across that —
-    // without this check, setContent would unconditionally replace the
-    // document with textually-identical content, jumping the cursor to the
-    // end and pushing a spurious entry onto the undo stack.
+    // The id changes on first publish while the editor stays open; skip the
+    // identical setContent so the cursor and undo history aren't disturbed.
     if (editor.getHTML() === next) return;
     editor.commands.setContent(next);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page?.id, editor]);
 
-  // "Discard changes" — page itself hasn't changed (that's the whole point,
-  // vs. the effect above), so resetToBaseline alone wouldn't re-run; also
-  // reset the Tiptap editor's own content directly.
+  // Discard: the page prop didn't change, so reset the editor content directly.
   const handleDiscardChanges = useCallback(() => {
     resetToBaseline();
     editor?.commands.setContent(page?.content || '');
@@ -234,9 +225,7 @@ export function PageEditorView({
       content !== baseline.content ||
       thumbnailUrl !== baseline.thumbnailUrl
     );
-    // baselineRef only ever changes in the same update as one of these 5
-    // fields (resetToBaseline/handleDiscardChanges set both together), so
-    // depending on the fields alone is enough to stay correct.
+    // baselineRef only changes alongside these fields, so they suffice as deps.
   }, [slug, date, title, content, thumbnailUrl]);
 
   const status: PageStatus = !page
@@ -275,15 +264,8 @@ export function PageEditorView({
     };
   };
 
-  // Publishes (or, if already published, applies pending edits to) this
-  // page immediately and independently of anything else unsaved elsewhere
-  // in the profile editor — see hooks/usePagePersistence.ts. The editor
-  // stays open; publishPage returns the actually-persisted page (always
-  // hidden:false), which we feed back into the store directly rather than
-  // the pre-publish `built` object, so the editor's own status display
-  // can't drift from what was actually saved. Once editingPage.attachment
-  // updates below, the `page` prop flowing back in re-triggers the reset
-  // effect above, which re-baselines isDirty and flips `status`.
+  // Publishes immediately, independent of the global Save. Store what the
+  // server returned so the status shown matches what was actually saved.
   const handlePublish = async () => {
     const wasPublished = status === 'published';
     await withErrorToast(async () => {
@@ -294,10 +276,7 @@ export function PageEditorView({
     }, 'Failed to publish page');
   };
 
-  // Uses buildPage() (current form state), not the stale `page` prop — so
-  // unpublishing a page you've been editing but haven't saved doesn't
-  // silently discard those edits. This makes Unpublish behave like Publish:
-  // whatever's currently in the editor gets saved, just now hidden.
+  // Saves the current edits too, so unpublishing never discards them.
   const handleUnpublish = async () => {
     if (!page) return;
     statusMenu.setIsOpen(false);

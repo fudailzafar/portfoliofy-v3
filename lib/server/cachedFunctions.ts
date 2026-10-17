@@ -72,10 +72,7 @@ export const getCachedResume = cache(async (userId: string) => {
 
 export const getCachedUserIdByUsername = cache(
   async (username: string): Promise<string | null> => {
-    // Normalize before it's used as the cache key/tag — getUserIdByUsername
-    // normalizes internally too, so two calls that differ only in casing must
-    // resolve to the same cache entry, or a revalidation keyed on one casing
-    // would leave a stale entry under the other.
+    // Normalize the key so casing variants share one cache entry.
     const normalized = normalizeUsername(username);
     return unstable_cache(
       async () => {
@@ -105,9 +102,7 @@ export const getCachedUserIdByCustomDomain = cache(
   },
 );
 
-// For canonical-URL purposes on the profile/page routes — tagged `user-${userId}`
-// so it's invalidated by the same revalidateTag call /api/domain already makes
-// when a user connects or removes their domain.
+// Tagged user-${userId} so /api/domain's revalidateTag clears it.
 export const getCachedCustomDomainByUserId = cache(
   async (userId: string): Promise<string | null> => {
     return unstable_cache(

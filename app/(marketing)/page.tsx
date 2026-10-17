@@ -208,16 +208,13 @@ export default async function Home() {
     <div className="flex min-h-screen flex-col bg-[#fff] dark:bg-[#222]">
       {needsClaim && <ClaimDialog />}
       <style dangerouslySetInnerHTML={{ __html: LANDING_STYLES }} />
-      {/* Vertical rhythm follows the viewport: 72px top padding on wide
-          screens, easing down to 48px by 636px and 16px on phones. */}
+      {/* Top padding: 72px, easing to 48px at 636px wide, 16px on phones. */}
       <main className="flex flex-1 flex-col items-center px-6 font-sans text-[#111] dark:text-[#eee] min-[481px]:px-12">
         <div
           className="flex w-full max-w-[540px] flex-col pt-4 [container-type:inline-size] min-[481px]:pt-12 min-[637px]:pt-[calc(50vw_-_270px)] min-[685px]:pt-[72px]"
           style={
             {
-              // The hero grid spreads six 72px avatars across the column,
-              // with gaps never tighter than 14px; avatars shrink once the
-              // column is narrower than that allows.
+              // Six avatars up to 72px across the column; gaps never under 14px.
               '--hero-gap': 'max(14px, calc((100cqw - 432px) / 5))',
               '--hero-avatar':
                 'min(72px, calc((100cqw - 5 * var(--hero-gap)) / 6))',
@@ -303,9 +300,7 @@ export default async function Home() {
               </div>
             </FeatureTile>
 
-            {/* Feature 2: Make it collaborative. Positions are on a 468×200
-                grid; the cursor glides onto the last avatar and its name
-                pops up above it. */}
+            {/* Feature 2: Make it collaborative (laid out on a 468×200 grid) */}
             <FeatureTile
               title="Make it collaborative"
               byline="Profiles are made even richer when you tag collaborators in experiences."
@@ -358,10 +353,8 @@ export default async function Home() {
               </div>
             </FeatureTile>
 
-            {/* Feature 3: Print it out. A stack of printed sheets with edges
-                at 0, 4 and 8px; a new sheet feeds up onto the top of the
-                stack in a loop, landing exactly on an identical sheet so the
-                reset is invisible. */}
+            {/* Feature 3: Print it out. The fed sheet lands on an identical sheet,
+                so the loop reset is invisible. */}
             <FeatureTile
               title="Print it out"
               byline="Profiles are print ready, with optimized typography and only the relevant information shown."

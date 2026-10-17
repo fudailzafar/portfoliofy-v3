@@ -10,13 +10,8 @@ export async function GET(
   { params }: { params: Promise<{ username: string; slug: string }> },
 ) {
   try {
-    // Read the route's own matched params rather than parsing
-    // request.nextUrl.pathname — on a subdomain, proxy.ts rewrites the
-    // browser-visible path (e.g. /hello-world/og) to /{username}/hello-world/og
-    // for routing purposes, but nextUrl.pathname inside the handler still
-    // reflects the original, un-prefixed path. Parsing that manually reads
-    // the slug as the username and 'og' as the slug. params is populated
-    // from the actual matched route and isn't affected by that.
+    // Use params, not request.nextUrl.pathname: on a subdomain the pathname is
+    // the un-rewritten path (/slug/og), not /{username}/slug/og.
     const { username, slug } = await params;
 
     const ogFonts = await getOgFonts();
@@ -29,9 +24,7 @@ export async function GET(
     const name = resume?.resumeData?.header?.name || username;
     const readMinutes = estimateReadMinutes(found?.content || '');
 
-    // Same trust rule as app/[username]/og/route.tsx: this route is public
-    // and unauthenticated, and ImageResponse fetches `src` server-side, so
-    // only ever trust our own S3 URL for the uploaded avatar.
+    // ImageResponse fetches `src` server-side, so only trust our own S3 URLs.
     const rawProfileImage =
       (userProfile?.customImage && isOwnS3ImageUrl(userProfile.customImage)
         ? userProfile.customImage
@@ -68,8 +61,7 @@ export async function GET(
           }}
         />
 
-        {/* Radial Gradient Overlay, anchored to the left where the
-              content sits, rather than centered like the profile card */}
+        {/* Radial overlay, anchored left where the content sits */}
         <div
           style={{
             position: 'absolute',

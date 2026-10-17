@@ -26,10 +26,8 @@ export function PrintResumeWrapper({
   const typographyClass = `typography-${typography}`;
 
   return (
-    // aria-hidden: this tree duplicates the on-screen resume (name, headings,
-    // etc.) and is only ever visually shown via the print stylesheet — left
-    // exposed to the accessibility tree it doubles up headings for screen
-    // reader users on every normal page visit.
+    // Print-only copy of the resume; aria-hidden so screen readers don't hear
+    // every heading twice.
     <div aria-hidden="true">
       <PrintResume
         resume={displayResume}

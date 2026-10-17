@@ -28,10 +28,8 @@ const RichTextEditor = dynamic(
 
 const isWritingValid = (item: any) => !!item?.title && !!item?.year;
 
-// The Writing *section* — a bibliography-style list of published pieces
-// (title/year/publication/link), same pattern as Awards or Certifications.
-// Distinct from the centralized Writing *panel* (ProfileSidebar's own
-// group), which manages this resume's Pages CMS content instead.
+// The Writing *section* (a list of published pieces), not the Writing
+// panel that manages pages.
 export function WritingPiecesTab({
   years,
   setProjectToDelete,

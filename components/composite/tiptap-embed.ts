@@ -8,11 +8,8 @@ export interface EmbedParseResult {
 }
 
 /**
- * Resolves a pasted URL to a known embed provider. Twitter/X has no public
- * iframe embed (their real embed needs platform.twitter.com/widgets.js,
- * third-party JS we don't want executing inside saved page content), so its
- * "src" is just the original tweet URL and it renders as a static link card
- * instead of a live embed.
+ * Resolves a pasted URL to an embed provider. Twitter/X has no iframe embed
+ * without running its widget JS, so it renders as a plain link card.
  */
 export function parseEmbedUrl(rawUrl: string): EmbedParseResult | null {
   let url: URL;

@@ -1,17 +1,6 @@
-// Font data for @vercel/og's ImageResponse (used by the OG image routes).
-// ImageResponse needs raw font bytes up front — it can't use a next/font
-// loader, which only wires up CSS for normal page rendering. Previously
-// this read Graphik's font files straight off disk; those aren't ours to
-// redistribute (see app/layout.tsx), so this fetches Inter — SIL Open Font
-// Licensed, safe to redistribute — from Google Fonts instead, once per
-// serverless instance, and caches the result for every OG request after
-// that.
-//
-// Fetching with no custom User-Agent is deliberate: Google's font CSS API
-// serves different font formats depending on the request's User-Agent, and
-// a plain server-side fetch (no browser UA) gets truetype — the format
-// @vercel/og's renderer (Satori) needs, unlike the woff2 a browser would
-// get.
+// OG images need raw font bytes (next/font only emits CSS), so fetch Inter
+// once per instance. No User-Agent: Google then serves TrueType, which
+// Satori needs, instead of woff2.
 let cachedFonts: Promise<
   { name: string; data: ArrayBuffer; weight: 400 | 500; style: 'normal' }[]
 > | null = null;
