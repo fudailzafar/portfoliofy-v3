@@ -223,7 +223,7 @@ export default async function PageDetail({
           </div>
         )}
 
-        <div className="mt-12 flex items-center justify-center gap-8">
+        <div className="mt-12 flex items-center justify-center gap-6">
           <Link
             href={profileHref}
             className="font-regular text-sm text-theme-muted hover:underline hover:underline-offset-4"
