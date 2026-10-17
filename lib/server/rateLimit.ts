@@ -53,6 +53,23 @@ export async function checkRateLimit(
   }
 }
 
+/**
+ * One cheap Redis command, so Upstash's free tier doesn't archive the
+ * database for inactivity during quiet weeks (see the keepalive cron).
+ */
+export async function pingRedis(): Promise<'ok' | 'not-configured' | 'error'> {
+  const client = getRedis();
+  if (!client) return 'not-configured';
+
+  try {
+    await client.ping();
+    return 'ok';
+  } catch (error) {
+    console.warn('Redis keepalive ping failed:', error);
+    return 'error';
+  }
+}
+
 /** Best-effort client IP, for rate-limiting routes with no session to key by. */
 export function getClientIp(request: Request): string {
   const forwardedFor = request.headers.get('x-forwarded-for');
