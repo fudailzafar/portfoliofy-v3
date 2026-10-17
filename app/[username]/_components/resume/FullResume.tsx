@@ -32,6 +32,9 @@ import { PublicWritingList } from './preview/PublicWritingList';
 import { normalizeSectionOrder } from '@/lib/resume';
 import { ResumePagesProvider } from '@/lib/ResumePagesContext';
 
+// Snappy spring for the sliding tab underline.
+const TAB_SPRING = { type: 'spring', stiffness: 700, damping: 50 } as const;
+
 const SECTION_COMPONENTS: Record<string, React.FC<any>> = {
   work: WorkExperience,
   side_projects: SideProjects,
@@ -173,8 +176,10 @@ export const FullResume = ({
 
   return (
     <ResumePagesProvider pages={resume.pages || []}>
+      {/* Page insets: 24px sides on phones, 48px up to 636px, and
+          top spacing that grows with the viewport until it caps at 72px. */}
       <section
-        className="mx-auto my-8 w-full max-w-[540px] space-y-8 bg-theme-bg px-4 min-[481px]:px-12 min-[637px]:px-0 print:space-y-4"
+        className="mx-auto mb-24 mt-6 w-full max-w-[540px] space-y-8 bg-theme-bg px-6 min-[481px]:mt-12 min-[481px]:px-12 min-[637px]:mt-[calc(50vw-270px)] min-[637px]:px-0 min-[685px]:mb-[72px] min-[685px]:mt-[72px] print:my-8 print:space-y-4"
         aria-label="Resume Content"
       >
         <Header
@@ -188,11 +193,11 @@ export const FullResume = ({
         {isWritingEnabled ? (
           <div
             ref={tabBarRef}
-            className="flex w-full items-center gap-6 pt-2 print:hidden"
+            className="flex w-full items-center gap-6 pt-1 print:hidden"
           >
             <button
               onClick={() => handleTabChange('about')}
-              className={`relative pb-1 text-sm transition-all ${
+              className={`relative h-8 text-sm leading-8 ${
                 activeTab === 'about'
                   ? 'text-theme-primary'
                   : 'text-theme-muted'
@@ -202,13 +207,14 @@ export const FullResume = ({
               {activeTab === 'about' && (
                 <motion.div
                   layoutId="publicProfileTabIndicator"
-                  className="absolute -bottom-[1px] left-0 right-0 h-[1.5px] bg-theme-primary"
+                  transition={TAB_SPRING}
+                  className="absolute -bottom-px left-0 right-0 h-px bg-theme-primary"
                 />
               )}
             </button>
             <button
               onClick={() => handleTabChange('writing')}
-              className={`relative pb-1 text-sm transition-all ${
+              className={`relative h-8 text-sm leading-8 ${
                 activeTab === 'writing'
                   ? 'text-theme-primary'
                   : 'text-theme-muted'
@@ -218,14 +224,17 @@ export const FullResume = ({
               {activeTab === 'writing' && (
                 <motion.div
                   layoutId="publicProfileTabIndicator"
-                  className="absolute -bottom-[1px] left-0 right-0 h-[1.5px] bg-theme-primary"
+                  transition={TAB_SPRING}
+                  className="absolute -bottom-px left-0 right-0 h-px bg-theme-primary"
                 />
               )}
             </button>
           </div>
         ) : hasSummary ? (
-          <div className="flex w-full items-center gap-6 pt-2 print:hidden">
-            <span className="pb-1 text-sm text-theme-primary">About</span>
+          <div className="flex w-full items-center gap-6 pt-1 print:hidden">
+            <span className="h-8 text-sm leading-8 text-theme-primary">
+              About
+            </span>
           </div>
         ) : null}
 

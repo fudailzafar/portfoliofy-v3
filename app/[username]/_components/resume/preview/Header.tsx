@@ -69,7 +69,7 @@ export function Header({
 
   return (
     <div className="mb-8">
-      <header className="flex items-center gap-4 md:gap-6">
+      <header className="flex items-center gap-4">
         {!hideSocialFeatures && (
           <div className="relative">
             <Avatar className="size-[92px] shrink-0" aria-hidden="true">
@@ -90,14 +90,14 @@ export function Header({
                       id="status-toggle-btn"
                       onClick={() => setIsEditingStatus((prev) => !prev)}
                       aria-label="Set status"
-                      className="absolute -bottom-1 -right-1 flex h-6 w-8 items-center justify-center rounded-full border border-theme-bg bg-theme-bg text-sm text-theme-primary shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000000d] transition-transform active:scale-95 dark:bg-theme-border dark:shadow-none"
+                      className="absolute bottom-0 right-0 flex h-6 w-8 items-center justify-center rounded-full bg-theme-bg text-base text-theme-primary shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000001a] transition-transform active:scale-95 dark:bg-theme-border dark:shadow-none"
                     >
                       <Twemoji
                         tag="span"
                         className="flex items-center justify-center leading-none"
                         options={{ className: 'h-[1em] w-[1em]' }}
                       >
-                        {currentStatus.emoji || <SmilePlus size={14} />}
+                        {currentStatus.emoji || <SmilePlus size={16} />}
                       </Twemoji>
                     </button>
                   </TooltipTrigger>
@@ -108,7 +108,7 @@ export function Header({
               </TooltipProvider>
             )}
             {!isOwner && currentStatus.emoji && (
-              <div className="absolute -bottom-1 -right-1 flex h-6 w-8 items-center justify-center rounded-full border border-theme-bg bg-theme-border text-sm text-theme-primary shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000000d] dark:shadow-none">
+              <div className="absolute bottom-0 right-0 flex h-6 w-8 items-center justify-center rounded-full bg-theme-bg text-base text-theme-primary shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000001a] dark:bg-theme-border dark:shadow-none">
                 <Twemoji
                   tag="span"
                   className="flex items-center justify-center leading-none"
@@ -162,7 +162,7 @@ export function Header({
               href={ensureHttps(header.website)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1.5 inline-block rounded-full bg-[#F6F6F6] px-3 py-1 text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary transition-colors active:bg-[#F2F2F2] dark:bg-theme-border dark:active:bg-[#4E4E4E]"
+              className="mt-1.5 flex h-6 w-fit items-center rounded-full bg-[#F6F6F6] px-[10px] text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary transition-colors active:bg-[#F2F2F2] dark:bg-[#383838] dark:active:bg-[#4E4E4E]"
             >
               {header.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
             </a>
@@ -186,7 +186,7 @@ export function Header({
 
       {/* Status Display Bubble */}
       {!isEditingStatus && !hideSocialFeatures && currentStatus.text && (
-        <div className="relative mt-5 flex w-full flex-col gap-1 rounded-3xl bg-theme-bg px-6 py-[18px] shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000000d] dark:bg-theme-border dark:shadow-none">
+        <div className="relative -mx-2 mt-4 flex w-[calc(100%+16px)] flex-col gap-1 rounded-3xl bg-theme-bg px-6 py-[18px] shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000001a] dark:bg-theme-border dark:shadow-none min-[481px]:mx-0 min-[481px]:w-full">
           {/* Speech Bubble Tail — centered under the status toggle button */}
           <svg
             width="26"
@@ -194,7 +194,7 @@ export function Header({
             viewBox="0 0 26 12"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="absolute -top-[11px] left-[67px]"
+            className="absolute -top-[11px] left-[72px] min-[481px]:left-[64px]"
             aria-hidden="true"
           >
             <mask
