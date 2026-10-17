@@ -65,7 +65,7 @@ export function HomeHero() {
 
           <Button
             onClick={handleCreateProfile}
-            className="col-span-3 h-full min-h-11 rounded-full bg-action-primary text-[clamp(18px,-8px+5vw,24px)] font-medium tracking-wide text-surface-1 hover:bg-action-primary-hover max-[415px]:text-[16px]"
+            className="col-span-3 h-full min-h-11 rounded-full bg-[#111] text-[clamp(18px,-8px+5vw,24px)] font-medium tracking-wide text-surface-1 hover:bg-black dark:bg-action-primary dark:hover:bg-action-primary-hover max-[415px]:text-[16px] max-[340px]:px-2 max-[340px]:text-[14px]"
           >
             Create a profile
           </Button>
