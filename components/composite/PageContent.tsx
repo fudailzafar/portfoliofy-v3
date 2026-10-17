@@ -1,6 +1,10 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import {
+  attachGalleryDrag,
+  attachMediaZoom,
+} from '@/components/composite/postMediaInteractions';
 import hljs from 'highlight.js/lib/core';
 
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -57,6 +61,40 @@ export function PageContent({ html }: { html: string }) {
         hljs.highlightElement(block);
       }
     });
+  }, [html]);
+
+  useEffect(() => {
+    const container = ref.current;
+    if (!container) return;
+    const cleanups: (() => void)[] = [];
+
+    // Drop the grey placeholder once each image or video has loaded.
+    container
+      .querySelectorAll<
+        HTMLImageElement | HTMLVideoElement
+      >('.content-image, .content-gallery-media')
+      .forEach((media) => {
+        const markLoaded = () => {
+          media.dataset.loaded = 'true';
+        };
+        const isImage = media instanceof HTMLImageElement;
+        const ready = isImage
+          ? media.complete && media.naturalWidth > 0
+          : media.readyState >= 2;
+        if (ready) return markLoaded();
+        const event = isImage ? 'load' : 'loadeddata';
+        media.addEventListener(event, markLoaded, { once: true });
+        cleanups.push(() => media.removeEventListener(event, markLoaded));
+      });
+
+    // Galleries scroll by mouse drag everywhere; zoom only on the published
+    // post page, not in the editor preview.
+    cleanups.push(attachGalleryDrag(container));
+    if (container.closest('[data-post-page]')) {
+      cleanups.push(attachMediaZoom(container));
+    }
+
+    return () => cleanups.forEach((cleanup) => cleanup());
   }, [html]);
 
   return (

@@ -41,12 +41,15 @@ const PAGE_CONTENT_OPTIONS: sanitizeHtml.IOptions = {
     'iframe',
     'figure',
     'figcaption',
+    'div',
   ],
   allowedAttributes: {
     a: ['href', 'target', 'rel', 'class', 'data-embed-provider'],
     img: ['src', 'alt', 'width', 'height', 'class', 'data-content-image'],
     figure: ['data-content-image', 'data-content-video', 'class'],
     figcaption: ['class'],
+    // Only the ContentGallery wrapper; plain divs keep no attributes.
+    div: ['class', 'data-content-gallery'],
     video: [
       'src',
       'controls',

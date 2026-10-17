@@ -392,18 +392,159 @@
   color: var(--theme-secondary, inherit);
 }
 
-@media (max-width: 639px) {
+/* Single media goes edge to edge at 540px and below, captions inset 12px
+   from 600px down. */
+@media (max-width: 540px) {
   [data-page-content] .content-image-figure,
   [data-page-content] .content-video-figure {
     width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
   }
+}
 
+@media (max-width: 600px) {
   [data-page-content] .content-image-caption,
   [data-page-content] .content-video-caption {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* Media placeholder (#fafafa / #333) until the file loads;
+   PageContent marks loaded media with data-loaded. Coloured themes use their
+   own wash. width/height on the media reserve the space. */
+:root {
+  --theme-media-bg: #fafafa;
+}
+
+.dark {
+  --theme-media-bg: #333333;
+}
+
+:is(
+  .theme-brutalist,
+  .theme-swiss,
+  .theme-klein,
+  .theme-red,
+  .theme-green,
+  .theme-blue,
+  .theme-albers
+) {
+  --theme-media-bg: var(--theme-wash);
+}
+
+.content-image,
+.content-gallery-media {
+  background-color: var(--theme-media-bg);
+}
+
+.content-image[data-loaded],
+.content-gallery-media[data-loaded] {
+  background-color: transparent;
+}
+
+/* Several images added together: a horizontal strip, 320px tall,
+   12px apart, scrolling sideways with the scrollbar hidden. */
+.content-gallery {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.content-gallery::-webkit-scrollbar {
+  display: none;
+}
+
+.content-gallery-track {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+}
+
+.content-gallery-item {
+  flex-shrink: 0;
+  /* Captions wrap at the image's width instead of widening the item. */
+  width: min-content;
+  margin: 0;
+}
+
+.content-gallery-media {
+  display: block;
+  height: 320px;
+  width: auto;
+  max-width: none;
+  margin: 0;
+}
+
+.content-gallery-caption {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--theme-secondary, inherit);
+}
+
+/* On the published post the strip breaks out to the full width and starts at
+   the text column; it stays inside the column in the editor and preview. */
+[data-post-page] .content-gallery {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  cursor: grab;
+}
+
+[data-post-page] .content-gallery[data-dragging] {
+  cursor: grabbing;
+}
+
+/* Zoomable media (postMediaInteractions, above 600px): zoom cursors on
+   single images, a pointer on strip images. */
+[data-post-page] [data-zoomable] {
+  cursor: zoom-in;
+}
+
+[data-post-page] [data-zoomable][data-zoomed] {
+  cursor: zoom-out;
+}
+
+[data-post-page] .content-gallery-media[data-zoomable] {
+  cursor: pointer;
+}
+
+[data-post-page] .content-gallery[data-dragging] .content-gallery-media {
+  cursor: grabbing;
+}
+
+[data-post-page] [data-zoomable]:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+}
+
+[data-post-page] .content-gallery-track {
+  padding-inline: max(24px, calc((100vw - 540px) / 2));
+}
+
+@media (max-width: 600px) {
+  [data-post-page] .content-gallery-track {
+    padding-inline: 0;
+  }
+
+  .content-gallery-caption {
+    padding-right: 12px;
+  }
+
+  .content-gallery-item:first-child .content-gallery-caption {
+    padding-left: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-gallery {
+    margin-top: 32px;
+    margin-bottom: 32px;
   }
 }
 
