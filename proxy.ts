@@ -1,30 +1,12 @@
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { PRIVATE_ROUTES } from './lib/routes';
+import { classifyHost } from './lib/site';
 
 import type { NextRequest } from 'next/server';
 
 export default async function middleware(req: NextRequest) {
-  const rawHostname = req.headers.get('host') || '';
-  const hostname = rawHostname.split(':')[0]; // Strip port for local testing
-
-  const isMainDomain =
-    hostname === 'portfoliofy.me' || hostname === 'www.portfoliofy.me';
-  const isVercelDomain = hostname.endsWith('.vercel.app');
-  const isLocalhost = hostname === 'localhost';
-  const vercelUrl = process.env.VERCEL_URL || ''; // e.g. portfoliofy-v3-fudail.vercel.app
-  const vercelBranchUrl = process.env.VERCEL_BRANCH_URL || '';
-  const vercelProjectName = process.env.VERCEL_PROJECT_PRODUCTION_URL || '';
-  const isVercelDeploymentDomain =
-    (vercelUrl && hostname === vercelUrl.split(':')[0]) ||
-    (vercelBranchUrl && hostname === vercelBranchUrl.split(':')[0]) ||
-    (vercelProjectName && hostname === vercelProjectName.split(':')[0]);
-
-  const isSubdomain =
-    (hostname.endsWith('.portfoliofy.me') || hostname.endsWith('.localhost')) &&
-    !isMainDomain &&
-    !isLocalhost &&
-    !isVercelDeploymentDomain;
+  const host = classifyHost(req.headers.get('host'));
 
   let res = NextResponse.next();
 
@@ -33,21 +15,14 @@ export default async function middleware(req: NextRequest) {
     req.nextUrl.pathname === '/sitemap.xml' ||
     req.nextUrl.pathname === '/llms.txt';
 
-  if (isSubdomain) {
-    // Treat subdomains like username.portfoliofy.me as user profiles
+  if (host.kind !== 'main') {
+    // A user's subdomain or custom domain serves that user's profile:
+    // rewrite to /[username] or /[domain] (the [username] route resolves both).
     if (!req.nextUrl.pathname.startsWith('/api/') && !isMetadataRoute) {
-      const subdomain = hostname
-        .replace('.portfoliofy.me', '')
-        .replace('.localhost', '');
+      const profileKey =
+        host.kind === 'subdomain' ? host.username : host.hostname;
       const url = req.nextUrl.clone();
-      url.pathname = `/${subdomain}${url.pathname === '/' ? '' : url.pathname}`;
-      res = NextResponse.rewrite(url);
-    }
-  } else if (!isMainDomain && !isVercelDomain && !isLocalhost) {
-    // If this is a custom domain (e.g. abaan.lol), rewrite to /[domain]
-    if (!req.nextUrl.pathname.startsWith('/api/') && !isMetadataRoute) {
-      const url = req.nextUrl.clone();
-      url.pathname = `/${hostname}${url.pathname === '/' ? '' : url.pathname}`;
+      url.pathname = `/${profileKey}${url.pathname === '/' ? '' : url.pathname}`;
       res = NextResponse.rewrite(url);
     }
   } else {

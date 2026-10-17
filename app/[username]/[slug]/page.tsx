@@ -11,7 +11,7 @@ import {
 import { getCachedCustomDomainByUserId } from '@/lib/server/cachedFunctions';
 import { PageContent } from '@/components/composite/PageContent';
 import { ShareButton } from './ShareButton';
-import { SITE_URL } from '@/lib/site';
+import { SITE_URL, classifyHost } from '@/lib/site';
 
 const parsePageDate = (dateStr?: string) => {
   if (!dateStr) return null;
@@ -95,12 +95,8 @@ export default async function PageDetail({
   );
 
   const headersList = await import('next/headers').then((m) => m.headers());
-  const hostHeader = headersList.get('host') || '';
-  const hostname = hostHeader.split(':')[0];
   const isSubdomainView =
-    (hostname.endsWith('.portfoliofy.me') &&
-      hostname !== 'www.portfoliofy.me') ||
-    (hostname.endsWith('.localhost') && hostname !== 'localhost');
+    classifyHost(headersList.get('host')).kind === 'subdomain';
   const isPersonalDomainView = username.includes('.') || isSubdomainView;
   const profileHref = isPersonalDomainView ? '/' : `/${username}`;
 

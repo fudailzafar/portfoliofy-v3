@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import { getUserData } from '@/app/[username]/utils';
 import { estimateReadMinutes } from '@/lib/resume';
-import { SITE_URL } from '@/lib/site';
+import { SITE_URL, classifyHost } from '@/lib/site';
 
 function stripHtml(html?: string): string {
   return html ? html.replace(/<[^>]*>?/gm, '').trim() : '';
@@ -70,30 +70,15 @@ async function getSingleUserLlmsTxt(
 }
 
 export async function GET() {
-  const headersList = await headers();
-  const hostHeader = headersList.get('host') || '';
-  const hostname = hostHeader.split(':')[0];
-
-  const isMainDomain =
-    hostname === 'portfoliofy.me' ||
-    hostname === 'www.portfoliofy.me' ||
-    hostname === 'localhost' ||
-    hostname.endsWith('.vercel.app');
+  const host = classifyHost((await headers()).get('host'));
 
   let body: string;
-  if (isMainDomain || !hostname) {
+  if (host.kind === 'main') {
     body = getMainDomainLlmsTxt();
   } else {
-    const isSubdomain =
-      (hostname.endsWith('.portfoliofy.me') &&
-        hostname !== 'www.portfoliofy.me') ||
-      (hostname.endsWith('.localhost') && hostname !== 'localhost');
-
-    const identifier = isSubdomain
-      ? hostname.replace('.portfoliofy.me', '').replace('.localhost', '')
-      : hostname;
-
-    body = await getSingleUserLlmsTxt(identifier, `https://${hostname}`);
+    const identifier =
+      host.kind === 'subdomain' ? host.username : host.hostname;
+    body = await getSingleUserLlmsTxt(identifier, `https://${host.hostname}`);
   }
 
   return new Response(body, {
