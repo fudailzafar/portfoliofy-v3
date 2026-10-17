@@ -461,7 +461,7 @@ describe('estimateReadMinutes', () => {
     expect(estimateReadMinutes('<p></p>')).toBe(1);
   });
 
-  it('matches the read.cv-derived 200-words-per-minute formula', () => {
+  it('uses a 200-words-per-minute formula', () => {
     const html = Array(650).fill('word').join(' ');
     expect(estimateReadMinutes(html)).toBe(4); // ceil(650 / 200)
   });

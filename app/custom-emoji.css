@@ -1,4 +1,4 @@
-/* Custom Emoji Picker overrides for read.cv match */
+/* Custom Emoji Picker overrides */
 .custom-emoji-picker {
   /* Size math to perfectly fit 7 emojis: 260px wide / 7 = 37.14px per emoji */
   --epr-emoji-size: 24px !important;
