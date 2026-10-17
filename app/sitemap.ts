@@ -80,10 +80,7 @@ async function getMainDomainSitemap(): Promise<MetadataRoute.Sitemap> {
   }
 }
 
-// A subdomain (username.portfoliofy.me) or a connected custom domain
-// (abaan.lol): the sitemap is scoped to just that one user, using their own
-// host as the base URL — proxy.ts already rewrites `/` and `/{slug}` on
-// these hosts to that user's profile and pages internally.
+// On a user's subdomain or custom domain, list just that user's pages.
 async function getSingleUserSitemap(
   identifier: string,
   baseUrl: string,

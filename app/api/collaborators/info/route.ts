@@ -1,14 +1,8 @@
 import { NextResponse } from 'next/server';
 import sql from '@/lib/server/db';
 
-// Deliberately public, no auth check: this resolves collaborator avatars
-// (username/name/image) rendered on a public profile via AvatarStack ->
-// useLiveCollaborators, which anonymous visitors hit on every page view.
-// Requiring auth here breaks that for anyone not logged in. The data
-// returned is exactly what's already public the moment a user is tagged as
-// a collaborator on any live profile, so this isn't a new disclosure — it's
-// just a batch lookup by id instead of by username. MAX_IDS bounds it so a
-// single request can't be used to scrape the user table wholesale.
+// Public on purpose: anonymous visitors need collaborator avatars, and the
+// data is already public on the profile. MAX_IDS stops bulk scraping.
 const MAX_IDS = 50;
 
 export async function GET(request: Request) {

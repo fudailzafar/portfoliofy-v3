@@ -38,15 +38,11 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
                 />
               </DialogPrimitive.Overlay>
 
-              {/* The card rises 20px into place on a spring and drops back
-                  down on close. */}
               <DialogPrimitive.Content
                 asChild
                 forceMount
                 aria-describedby={undefined}
-                // Focus the card itself on open (focus stays trapped inside)
-                // rather than the Google button, which would otherwise show
-                // a focus ring the moment the dialog appears.
+                // Focus the card, not the button, so no focus ring shows on open.
                 onOpenAutoFocus={(e) => {
                   e.preventDefault();
                   cardRef.current?.focus();

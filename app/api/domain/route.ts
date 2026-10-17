@@ -160,9 +160,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Save to our DB. The UNIQUE constraint on users.custom_domain is the
-    // hard backstop against a race with another request claiming the same
-    // domain between the check above and this write.
+    // users.custom_domain is UNIQUE, which catches a race with the check above.
     const result = await setCustomDomain(session.user.id, cleanDomain);
     if (!result.success) {
       return NextResponse.json(

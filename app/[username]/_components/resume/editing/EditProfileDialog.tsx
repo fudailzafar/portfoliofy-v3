@@ -50,10 +50,6 @@ const PageEditorView = dynamic(
   { ssr: false },
 );
 
-// ---------------------------------------------------------------------------
-// Constants — hoisted outside the component so they are never reallocated
-// ---------------------------------------------------------------------------
-
 const TAB_DEFINITIONS: Record<string, { label: string; disabled: boolean }> = {
   ...Object.fromEntries(
     DEFAULT_SECTION_ORDER.map((sectionId) => [
@@ -213,9 +209,6 @@ export function EditProfileDialog({
   const { uploadToS3 } = useS3Upload();
   const router = useRouter();
 
-  // ---------------------------------------------------------------------------
-  // Stable delete setters — prevent inline arrow re-creation on every render
-  // ---------------------------------------------------------------------------
   const makeDeleteSetter = useCallback(
     (type: DeleteTarget['type']) => (id: string) =>
       setPendingDelete({ type, id }),
@@ -271,9 +264,7 @@ export function EditProfileDialog({
     [makeDeleteSetter],
   );
 
-  // ---------------------------------------------------------------------------
-  // Delete handlers — stable; reads store at call-time so no stale closure
-  // ---------------------------------------------------------------------------
+  // These read the store at call time, so they never close over stale state.
   const SECTION_MAP: Record<DeleteTarget['type'], any> = useMemo(
     () => ({
       project: 'projects',
@@ -292,9 +283,6 @@ export function EditProfileDialog({
     [],
   );
 
-  // ---------------------------------------------------------------------------
-  // Avatar
-  // ---------------------------------------------------------------------------
   const handleAvatarUpload = useCallback(
     async (file: File) => {
       if (!file.type.startsWith('image/')) {
@@ -358,9 +346,6 @@ export function EditProfileDialog({
     [handleAvatarUpload],
   );
 
-  // ---------------------------------------------------------------------------
-  // Account deletion
-  // ---------------------------------------------------------------------------
   const handleDeleteAccount = useCallback(async () => {
     setIsDeletingAccount(true);
     try {
@@ -377,9 +362,6 @@ export function EditProfileDialog({
     }
   }, []);
 
-  // ---------------------------------------------------------------------------
-  // Global save
-  // ---------------------------------------------------------------------------
   const handleGlobalSave = useCallback(async () => {
     setIsSaving(true);
     try {
@@ -428,10 +410,7 @@ export function EditProfileDialog({
     }, 600);
   }, [uname, username, router]);
 
-  // ---------------------------------------------------------------------------
-  // Global cancel — discards every unsaved change (including whatever item
-  // is currently being added/edited) back to the last-saved-on-server state.
-  // ---------------------------------------------------------------------------
+  // Reverts every unsaved change, including any open form, to the saved state.
   const handleGlobalCancel = useCallback(() => {
     const lastKnownGood = resumeQuery.data?.resume?.resumeData || resume;
     setHasUnsavedChanges(false);
@@ -463,9 +442,6 @@ export function EditProfileDialog({
     [sectionOrder, setHasUnsavedChanges],
   );
 
-  // ---------------------------------------------------------------------------
-  // Render
-  // ---------------------------------------------------------------------------
   const editButton = mounted
     ? createPortal(
         <TooltipProvider delayDuration={0}>
@@ -596,8 +572,7 @@ export function EditProfileDialog({
               />
             </div>
 
-            {/* Mobile Sidebar Action Bar — hidden while the page editor is
-              open, since it has its own Close/Save bar. */}
+            {/* Mobile action bar; hidden while the page editor shows its own. */}
             {!editingPage && showMobileMenu && (
               <div className="flex-none bg-surface-1 px-4 pb-4 sm:hidden">
                 <div className="flex w-full items-center justify-end gap-3 border-t border-border-subtle pt-4">

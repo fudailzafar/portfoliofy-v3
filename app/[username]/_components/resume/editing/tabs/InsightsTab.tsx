@@ -34,12 +34,8 @@ interface InsightsData {
   customDomain: string | null;
 }
 
-// Matches the reference chart's fixed background grid: 3 equal-width
-// columns followed by one half-width column (3.5 units total), independent
-// of how many data points/date ticks are actually plotted. Expressed as the
-// fraction of the plot width where each column *starts* — column 1 starts
-// at the plot's own left edge (0), so only fractions 2/3/4 correspond to an
-// actual drawn gridline.
+// Gridlines: three equal columns plus a half column (3.5 units), as
+// fractions of plot width. 0 is the plot edge, not a drawn line.
 const GRID_COLUMN_START_FRACTIONS = [0, 2 / 7, 4 / 7, 6 / 7];
 
 const verticalGridGenerator = ({
@@ -53,9 +49,7 @@ const verticalGridGenerator = ({
   );
 };
 
-// The X-axis tick under each gridline (including the plot's left edge) —
-// not the true last data point, which falls inside the final half-column
-// rather than at a column boundary.
+// X-axis ticks sit on the gridlines, not on the last data point.
 const gridColumnTickIndices = (length: number) => {
   if (length <= 1) return [0];
   return Array.from(
@@ -66,9 +60,7 @@ const gridColumnTickIndices = (length: number) => {
 };
 
 const formatAxisDate = (value: string) => {
-  // `value` is a plain "YYYY-MM-DD" string from the API — parse the parts
-  // directly rather than via `new Date(value)` so the displayed day never
-  // shifts by one due to UTC/local timezone parsing ambiguity.
+  // Parse "YYYY-MM-DD" by hand; new Date() can shift the day by timezone.
   const [year, month, day] = value.split('-').map(Number);
   const date = new Date(year, month - 1, day);
   return date.toLocaleDateString('en-US', {

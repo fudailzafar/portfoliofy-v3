@@ -37,9 +37,7 @@ export async function generateMetadata({
   const { username, slug } = await params;
   const resolved = await resolvePage(username, slug);
 
-  // See app/[username]/page.tsx for why notFound() belongs here too, not
-  // just in the page body — otherwise Next commits to a 200 before the
-  // page's own notFound() gets a chance to override it.
+  // notFound() here too, or Next commits to a 200 before the page body runs.
   if (!resolved) notFound();
 
   const stripHtml = (html?: string) =>

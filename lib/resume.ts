@@ -36,10 +36,7 @@ export const SECTION_LABELS: Record<string, string> = {
 
 export const AttachmentSchema = z.object({
   id: z.string().describe('Unique identifier for the attachment'),
-  // Optional: a page-type entry inside an item's `attachments` array is a
-  // lightweight reference stub (just `{id, type: 'page'}`) once pages moved
-  // to the top-level `pages` array below — the real url/title/etc. live on
-  // the canonical entry there, resolved via resolveAttachedPages().
+  // Page attachments are {id, type:'page'} stubs; the page lives in resume.pages.
   url: z
     .string()
     .optional()
@@ -77,11 +74,7 @@ export const AttachmentSchema = z.object({
 
 export type AttachmentSchemaType = z.infer<typeof AttachmentSchema>;
 
-// A page-type entry inside an item's `attachments` array is just a
-// `{id, type: 'page'}` reference stub — the canonical page (title, slug,
-// content, hidden, etc.) lives in the top-level `pages` array. This resolves
-// an item's stubs to their full page objects for rendering, silently
-// dropping any stub whose target page was deleted.
+// Resolves an item's page stubs to full pages, dropping stubs to deleted pages.
 export function resolveAttachedPages(
   attachments: AttachmentSchemaType[] | undefined,
   pages: AttachmentSchemaType[] | undefined,
@@ -108,13 +101,8 @@ export const PAGE_ATTACHMENT_SECTION_KEYS: (keyof ResumeDataSchemaType)[] = [
   'certifications',
 ];
 
-// Before pages became their own top-level list, a page was a full object
-// embedded directly in whichever item's `attachments` array it was attached
-// to. Older resumes on read still have that shape — this pulls every
-// embedded full page object into resume.pages and replaces it in place with
-// a lightweight {id, type:'page'} reference stub, so nothing that already
-// existed silently disappears just because the storage shape changed.
-// Idempotent: a no-op once a resume has already been migrated.
+// Older resumes embed full page objects in item attachments. Move them into
+// resume.pages and leave stubs behind. Idempotent.
 export function migrateEmbeddedPages(
   resumeData: ResumeDataSchemaType | null | undefined,
 ): ResumeDataSchemaType | null | undefined {
@@ -179,16 +167,10 @@ export function estimateReadMinutes(html: string): number {
   return Math.max(1, Math.ceil(words.length / 200));
 }
 
-// Static segments that already exist under /[username]/ (e.g. the OG image
-// route) — Next.js resolves these before the dynamic /[username]/[slug]
-// page route, so a page slug matching one of these would be unreachable.
+// Static routes under /[username]/ that would shadow a page with that slug.
 export const RESERVED_PAGE_SLUGS = ['og'];
 
-// Pages are their own top-level list (resume.pages) — a page can be attached
-// to more than one section item at once, so it can no longer be "owned" by
-// a single item's attachments array. Items keep {id, type:'page'} reference
-// stubs (see resolveAttachedPages above); these three helpers are the only
-// places that need the canonical page, so they read resume.pages directly.
+// A page can be attached to several items, so these read resume.pages directly.
 export function findPageBySlug(
   resumeData: ResumeDataSchemaType | null | undefined,
   slug: string,
@@ -197,9 +179,7 @@ export function findPageBySlug(
   return resumeData.pages?.find((p) => p.slug === slug);
 }
 
-// Every slug currently in use across the whole resume, for uniqueness
-// checks — excludes the given page id so editing a page doesn't collide
-// with itself.
+// All slugs in use, excluding the given page so it doesn't collide with itself.
 export function getUsedPageSlugs(
   resumeData: ResumeDataSchemaType | null | undefined,
   excludePageId?: string,
@@ -212,10 +192,7 @@ export function getUsedPageSlugs(
   return used;
 }
 
-// Removes a page and every {id, type:'page'} reference stub to it across
-// all attaching section items — a page can be attached to more than one
-// item at once (see resolveAttachedPages above), so deleting it has to
-// sweep all of them, not just wherever the delete was triggered from.
+// Deletes a page and every stub pointing at it, across all items.
 export function withPageRemoved(
   resumeData: ResumeDataSchemaType,
   pageId: string,
@@ -258,9 +235,7 @@ export function slugify(text: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-// Appends -2, -3, etc. until the slug no longer collides with an existing
-// one or a reserved route segment — never blocks the user with an error,
-// just quietly picks an available slug.
+// Appends -2, -3, … until the slug is free; never errors.
 export function dedupeSlug(base: string, used: Set<string>): string {
   const safeBase = base || 'untitled';
   if (!used.has(safeBase) && !RESERVED_PAGE_SLUGS.includes(safeBase)) {
@@ -669,11 +644,7 @@ export const ResumeDataSchema = z.object({
   awards: AwardsSection.optional().default([]),
   certifications: CertificationsSection.optional().default([]),
   contacts: ContactSection.optional().default([]),
-  // Every page on the resume — the single source of truth for a page's
-  // title/slug/content/hidden state. Section items reference pages by id
-  // via {id, type:'page'} stubs in their own `attachments` array (see
-  // resolveAttachedPages), so the same page can be attached to more than
-  // one item.
+  // Single source of truth for pages; items reference them by id.
   pages: z.array(AttachmentSchema).optional().default([]),
   preferences: z
     .object({

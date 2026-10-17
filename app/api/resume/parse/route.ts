@@ -115,13 +115,8 @@ ${JSON.stringify(RESUME_JSON_SCHEMA, null, 2)}`;
       return NextResponse.json({ success: true, data: validationResult.data });
     }
 
-    // The LLM's output didn't match the schema as a whole (e.g. one field has
-    // an unexpected type) — rather than either hard-failing the import or
-    // returning the raw, schema-violating object as-is, validate each
-    // top-level section independently and keep only the ones that pass. This
-    // is the "map as best as possible" the original comment here intended:
-    // a bad `education` entry shouldn't also throw away a perfectly good
-    // `workExperience` array.
+    // Partial match: keep each top-level section that validates on its own, so
+    // one bad field doesn't discard the whole import.
     console.error('Full-document validation failed:', validationResult.error);
 
     const salvaged: Record<string, unknown> = {};

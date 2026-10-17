@@ -10,24 +10,15 @@ export const ContentImage = Node.create({
   addAttributes() {
     return {
       src: { default: null },
-      // Rendered manually in renderHTML below — as the <img alt> value
-      // and an optional <figcaption> — not as a raw `caption="..."`
-      // attribute, so it's opted out of the default attribute-to-HTML
-      // mapping.
+      // Rendered as <img alt> and <figcaption> in renderHTML, not as an attribute.
       caption: { default: '', renderHTML: () => ({}) },
     };
   },
 
   parseHTML() {
     return [
-      // New format: <figure data-content-image><img data-content-image>
-      // [<figcaption>...</figcaption>]</figure>. Matching the *figure*,
-      // not the <img>, is deliberate: if only the <img> (a void element)
-      // had a rule, ProseMirror's parser would treat the sibling
-      // <figcaption> as unmatched and walk into its text, auto-wrapping
-      // it into a phantom paragraph right after the image — duplicating
-      // the caption. Matching the figure consumes the whole subtree as
-      // one unit and avoids that.
+      // Match the whole <figure>: with a rule for only the <img>, the parser
+      // would turn the <figcaption> into a duplicate paragraph.
       {
         tag: 'figure[data-content-image]',
         getAttrs: (dom) => {
@@ -41,9 +32,7 @@ export const ContentImage = Node.create({
           };
         },
       },
-      // Legacy format: bare <img data-content-image>, no figure/figcaption
-      // — every page persisted before captions existed. Must keep
-      // matching so old pages still load correctly for editing.
+      // Pages saved before captions existed: a bare <img data-content-image>.
       {
         tag: 'img[data-content-image]',
         getAttrs: (dom) => {

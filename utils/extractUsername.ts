@@ -1,7 +1,3 @@
-/**
- * Extracts a displayable username from a given URL.
- * Handles common platforms like Twitter/X, GitHub, LinkedIn, Instagram, etc.
- */
 export function buildContactUrl(link: string, platform: string): string {
   if (!link) return '';
 

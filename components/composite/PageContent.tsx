@@ -46,13 +46,8 @@ hljs.registerLanguage('css', css);
 export function PageContent({ html }: { html: string }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  // Code blocks are saved as plain text (no language picker in the
-  // editor) — highlight.js's own language detection runs once here, per
-  // page view, against whatever text is actually there. Colors are
-  // globals.css's .hljs-* rules, matched to read.cv's Material Dark
-  // theme. Guarded by dataset.highlighted since dev's StrictMode fires
-  // effects twice and re-highlighting an already-highlighted element
-  // throws a console warning.
+  // Code blocks have no language set, so highlight.js auto-detects per view.
+  // dataset.highlighted guards against StrictMode's double effect.
   useEffect(() => {
     const container = ref.current;
     if (!container) return;
@@ -69,8 +64,7 @@ export function PageContent({ html }: { html: string }) {
       ref={ref}
       data-page-content
       className="blog-prose prose prose-sm max-w-none text-theme-primary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-headings:font-normal prose-headings:text-theme-primary prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-[20px] prose-h3:mb-4 prose-h3:mt-8 prose-h3:text-[16px] prose-p:text-[14px] prose-p:text-theme-primary prose-a:border-b prose-a:border-theme-muted prose-a:font-normal prose-a:text-theme-primary prose-a:no-underline prose-blockquote:mx-0 prose-blockquote:my-6 prose-blockquote:border-l-2 prose-blockquote:border-theme-primary prose-blockquote:pl-[1em] prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:text-theme-primary prose-strong:font-medium prose-strong:text-theme-primary prose-code:mx-[2px] prose-code:rounded-[2px] prose-code:bg-[#F2F2F2] prose-code:px-[2px] prose-code:font-mono prose-code:text-[14px] prose-code:font-normal prose-code:text-theme-primary prose-code:before:content-none prose-code:after:content-none prose-pre:rounded-lg prose-pre:bg-[#FAFAFA] prose-pre:px-4 prose-pre:py-2 prose-pre:font-mono prose-pre:text-[14px] prose-pre:text-theme-primary prose-ol:pl-0 prose-ol:text-theme-primary prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-primary prose-li:pl-0 prose-li:leading-[1.6] prose-li:text-theme-primary prose-hr:my-12 prose-hr:border-theme-border dark:prose-code:bg-[#333] dark:prose-pre:bg-[#333] [&_blockquote_p]:before:content-none [&_blockquote_p]:after:content-none [&_h2_code]:text-[20px] [&_h3_code]:text-[16px]"
-      // Sanitized server-side (sanitizePageContent) before ever being
-      // persisted — see lib/server/sanitize.ts.
+      // Sanitized on save (lib/server/sanitize.ts).
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

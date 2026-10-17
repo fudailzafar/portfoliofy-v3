@@ -4,10 +4,6 @@ interface AboutProps {
   summary: ResumeDataSchemaType['summary'];
 }
 
-/**
- * Summary section component
- * Displays a summary of professional experience and goals
- */
 export function Summary({ summary }: AboutProps) {
   if (!summary || summary === '' || summary === '<p></p>') {
     return null;
