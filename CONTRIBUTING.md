@@ -50,6 +50,18 @@ If your contribution adds a new portfolio section (e.g. "Languages," "Certificat
 - Tailwind CSS for styling; match the utility-class conventions already used in the file you're editing rather than introducing a new one.
 - Reuse existing hooks/components (`useResumeList`, `useTabEditor`, `ListTabLayout`, etc.) instead of re-implementing the same CRUD/list/form logic per section.
 
+## Comments
+
+Write a comment only when the code can't say it for itself.
+
+- **Explain why, not what.** A constraint, a workaround, a security rule, or a trade-off belongs in a comment. What the code does should be clear from good names; if it isn't, rename or extract a function before reaching for a comment.
+- **Keep it to one or two lines.** If it needs a paragraph, the reasoning probably belongs in the PR description or [ARCHITECTURE.md](./ARCHITECTURE.md).
+- **No history.** "This used to…" or "changed because…" goes in the commit message, where it stays attached to the change.
+- **Name other files only when they must stay in sync** (e.g. `// Must match what RichTextEditor can produce.`), never just to list callers — those references go stale.
+- **Doc comments only where they add something.** Use JSDoc on exported functions whose behavior isn't obvious from the name and types; don't restate a component's name ("Header component").
+- **No commented-out code or TODOs.** Delete unused code (git keeps it) and open an issue instead of a TODO.
+- **Say why when silencing a lint rule**, e.g. `// eslint-disable-next-line react-hooks/exhaustive-deps -- runs once on mount`.
+
 ## Reporting bugs or requesting features
 
 Open a [GitHub issue](https://github.com/fudailzafar/portfoliofy-v3/issues) with steps to reproduce (for bugs) or the problem you're trying to solve (for feature requests).
