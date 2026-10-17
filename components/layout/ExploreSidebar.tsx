@@ -12,6 +12,9 @@ interface ExploreSidebarProps {
   onClose: () => void;
 }
 
+// Snappy spring for the sliding tab underline.
+const TAB_SPRING = { type: 'spring', stiffness: 700, damping: 50 } as const;
+
 export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
   const router = useRouter();
   const [query, setQuery] = useState('');
@@ -69,8 +72,9 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col border-r border-border-strong bg-surface-1">
-      <div className="mx-4 flex flex-col gap-4 border-b border-border-strong pt-8">
+    <div className="flex h-full w-full flex-col border-r border-[#e5e5e5] bg-surface-1 dark:border-border-strong">
+      {/* Same 20px/24px inset as the collapsed Explore pill, so the input stays put when it opens. */}
+      <div className="px-5 pt-6">
         <div className="flex items-center gap-3">
           <div className="relative flex-1">
             <input
@@ -79,7 +83,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
               placeholder="Explore people..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="h-10 w-full rounded-full bg-surface-2 px-4 text-[14px] text-content-primary transition-colors placeholder:text-content-muted focus:outline-none focus:ring-0 dark:bg-[#333]"
+              className="h-9 w-full rounded-full bg-[#f2f2f2] px-4 text-[14px] text-content-primary transition-colors placeholder:text-content-muted focus:outline-none focus:ring-0 dark:bg-[#333]"
             />
             {query && (
               <button
@@ -98,22 +102,23 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
           </button>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="mt-3 flex items-center gap-6 border-b border-black/5 px-1 dark:border-white/10">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setSort(tab.id)}
-              className={`relative cursor-default pb-3 text-[13px] transition-all ${
+              className={`relative h-10 cursor-default text-[14px] leading-10 ${
                 sort === tab.id
-                  ? 'text-content-primary'
-                  : 'cursor-pointer text-content-muted'
+                  ? 'text-[#111] dark:text-[#eee]'
+                  : 'text-[#aaa] dark:text-[#777]'
               }`}
             >
               {tab.label}
               {sort === tab.id && (
                 <motion.div
                   layoutId="exploreTabIndicator"
-                  className="absolute -bottom-[1px] left-0 right-0 h-[1px] bg-action-primary"
+                  transition={TAB_SPRING}
+                  className="absolute -bottom-[1px] left-0 right-0 h-[1px] bg-[#111] dark:bg-[#eee]"
                 />
               )}
             </button>
