@@ -28,13 +28,10 @@ export const { handlers, auth } = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
-      // Persist Google profile to Postgres on every sign-in
+      // Refresh Google profile fields for existing users. New users have no row
+      // until they claim a username. custom_image is never touched.
       if (account?.provider === 'google' && account.providerAccountId) {
         try {
-          // If user exists, update their Google info without touching custom_image
-          // If they don't exist yet, we don't insert here because `claim` inserts them.
-          // Wait, actually, if they don't exist, they can't be updated.
-          // But what if they change their name/image on Google?
           await sql`
             UPDATE users 
             SET name = COALESCE(${user.name ?? null}, name),

@@ -196,8 +196,7 @@ export default async function Home() {
   const session = await auth();
   const userId = session?.user?.id;
 
-  let needsClaim = false; // CHANGE THIS TO TRUE AND COMMENT
-  // THE BELOW CODE FOR ENTERING CLAIM DIALOG
+  let needsClaim = false;
   if (userId) {
     const existingUsername = await getUsernameById(userId);
     if (!existingUsername) {
