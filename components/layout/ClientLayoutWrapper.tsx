@@ -13,6 +13,7 @@ import {
 import {
   SIDEBAR_MAX_WIDTH,
   SIDEBAR_PEEK,
+  SIDEBAR_SLIDE,
   useSidebarStore,
 } from '@/store/useSidebarStore';
 
@@ -85,7 +86,7 @@ export function ClientLayoutWrapper({
           style={{ width: sidebarWidth }}
           initial={{ x: -sidebarWidth }}
           animate={{ x: isOpen ? 0 : -sidebarWidth }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          transition={SIDEBAR_SLIDE}
         >
           <GlobalSidebar />
         </motion.div>
@@ -103,18 +104,14 @@ export function ClientLayoutWrapper({
           animate={{
             x: isOpen ? sidebarWidth : 0,
           }}
-          transition={{
-            type: 'spring',
-            stiffness: 300,
-            damping: 30,
-          }}
+          transition={SIDEBAR_SLIDE}
           className="relative z-10 flex min-h-screen min-w-0 flex-1 flex-col bg-surface-1 print:!transform-none print:shadow-none"
         >
           <motion.div
             key={pathname}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.3 }}
             className="flex min-h-screen min-w-0 flex-1 flex-col"
           >
             {children}
@@ -123,9 +120,9 @@ export function ClientLayoutWrapper({
 
         {/* Floating Menu Toggle Button */}
         <motion.div
-          className="fixed bottom-6 left-6 z-50 flex items-center gap-3 print:hidden"
+          className="fixed bottom-[30px] left-6 z-50 flex items-center gap-3 print:hidden"
           animate={{ x: isOpen ? sidebarWidth : 0 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          transition={SIDEBAR_SLIDE}
         >
           <Tooltip>
             <TooltipTrigger asChild className="print:hidden">
@@ -133,7 +130,7 @@ export function ClientLayoutWrapper({
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Menu"
-                className="flex size-[48px] flex-col items-center justify-center gap-1 rounded-full border border-border-strong bg-[#fff] shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 dark:border-none dark:bg-[#333]"
+                className="flex size-[48px] flex-col items-center justify-center gap-1 rounded-full bg-[#fff] shadow-[0_0_0_1px_rgba(0,0,0,0.1),0_3px_8px_rgba(0,0,0,0.05)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 dark:bg-[#333] dark:shadow-none"
               >
                 <svg
                   width="24"

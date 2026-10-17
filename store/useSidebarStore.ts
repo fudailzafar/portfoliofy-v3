@@ -2,6 +2,8 @@ import { create } from 'zustand';
 
 export const SIDEBAR_MAX_WIDTH = 330;
 export const SIDEBAR_PEEK = 48;
+// Shared by everything that slides with the sidebar so they stay in lockstep.
+export const SIDEBAR_SLIDE = { duration: 0.3 } as const;
 
 interface SidebarState {
   isOpen: boolean;

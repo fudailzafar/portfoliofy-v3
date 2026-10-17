@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Spinner } from '@/components/ui/spinner';
 import { Pencil } from 'lucide-react';
-import { useSidebarStore } from '@/store/useSidebarStore';
+import { SIDEBAR_SLIDE, useSidebarStore } from '@/store/useSidebarStore';
 import { createPortal } from 'react-dom';
 import { useResumeStore } from '@/store/useResumeStore';
 import { signOut } from 'next-auth/react';
@@ -451,12 +451,12 @@ export function EditProfileDialog({
                 <motion.button
                   initial={false}
                   animate={{ x: isSidebarOpen ? sidebarWidth : 0 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  transition={SIDEBAR_SLIDE}
                   whileTap={{ scale: 0.9 }}
                   aria-label="Edit Profile"
                   style={{
                     position: 'fixed',
-                    bottom: '24px',
+                    bottom: '30px',
                     left: '80px',
                     zIndex: 50,
                   }}
