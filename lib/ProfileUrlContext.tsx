@@ -1,12 +1,9 @@
 'use client';
 
 import { createContext, useContext } from 'react';
+import { SITE_HOST, SITE_URL, SUBDOMAINS_ENABLED } from '@/lib/site';
 
-/**
- * Stores whether the current view is a personal domain/subdomain view.
- * This is a boolean (serializable from Server Components) rather than a function.
- * The URL-building logic lives in useProfileUrl() on the client.
- */
+// True when the page is served from a user's own subdomain or custom domain.
 const ProfileUrlContext = createContext<boolean>(false);
 
 export function ProfileUrlProvider({
@@ -24,26 +21,21 @@ export function ProfileUrlProvider({
 }
 
 /**
- * Returns a function that generates the correct profile URL for the current context:
- * - Personal domain / subdomain → https://username.portfoliofy.me
- * - Main platform               → /username
+ * Builds a link to another user's profile: relative on the main site;
+ * absolute (their subdomain, or main-site path) from a personal domain.
  */
 export function useProfileUrl(): (username: string) => string {
   const isPersonalDomainView = useContext(ProfileUrlContext);
-  return (username: string) =>
-    isPersonalDomainView
-      ? `https://${username}.portfoliofy.me`
-      : `/${username}`;
+  return (username: string) => {
+    if (!isPersonalDomainView) return `/${username}`;
+    return SUBDOMAINS_ENABLED
+      ? `https://${username}.${SITE_HOST}`
+      : `${SITE_URL}/${username}`;
+  };
 }
 
-/**
- * Whether the current view is already scoped to one profile's own personal
- * domain/subdomain — needed for links to a page *within that same profile*
- * (e.g. an embedded page). On a personal domain, proxy.ts already rewrites
- * `/slug` to `/{username}/slug` internally, so a link built with the
- * `/{username}/slug` prefix (useProfileUrl's shape, meant for cross-profile
- * links) would self-nest into a broken path there instead.
- */
+// On a personal domain, links within the same profile omit the username:
+// `/slug` already maps to `/{username}/slug` there.
 export function usePersonalDomainView(): boolean {
   return useContext(ProfileUrlContext);
 }
