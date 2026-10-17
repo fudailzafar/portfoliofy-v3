@@ -11,6 +11,7 @@ import {
 import { getCachedCustomDomainByUserId } from '@/lib/server/cachedFunctions';
 import { PageContent } from '@/components/composite/PageContent';
 import { ShareButton } from './ShareButton';
+import { PostStatusBadge } from './PostStatusBadge';
 import { SITE_URL, classifyHost } from '@/lib/site';
 
 const parsePageDate = (dateStr?: string) => {
@@ -96,6 +97,11 @@ export default async function PageDetail({
   const isSubdomainView =
     classifyHost(headersList.get('host')).kind === 'subdomain';
   const isPersonalDomainView = username.includes('.') || isSubdomainView;
+  // Same rule as the profile: a personal domain can turn social bits off.
+  const statusEmoji =
+    isPersonalDomainView && design?.hideSocialFeatures
+      ? null
+      : userProfile?.statusEmoji;
   const profileHref = isPersonalDomainView ? '/' : `/${username}`;
 
   const stripHtml = (html?: string) =>
@@ -156,18 +162,23 @@ export default async function PageDetail({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="mx-auto w-full max-w-[540px] flex-1 px-6 py-16 sm:px-0 sm:py-[72px]">
+      {/* Vertical insets: 24px top on phones, 48px up to 636px,
+          then growing to 72px; 96px at the bottom until 685px, then 72px. */}
+      <div className="mx-auto w-full max-w-[540px] flex-1 px-6 pb-24 pt-6 min-[481px]:pt-12 min-[637px]:pt-[calc(50vw-270px)] sm:px-0 min-[685px]:pb-[72px] min-[685px]:pt-[72px]">
         <Link
           href={profileHref}
-          className="flex w-fit flex-col items-start gap-3"
+          className="flex w-fit flex-col items-start gap-4"
         >
           {avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={avatarUrl}
-              alt={resumeData.header.name}
-              className="h-12 w-12 rounded-full object-cover"
-            />
+            <span className="relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={avatarUrl}
+                alt={resumeData.header.name}
+                className="h-12 w-12 rounded-full object-cover"
+              />
+              {statusEmoji && <PostStatusBadge emoji={statusEmoji} />}
+            </span>
           ) : null}
           <span className="text-sm text-theme-muted hover:underline hover:underline-offset-4">
             {resumeData.header.name}
