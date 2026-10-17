@@ -150,6 +150,7 @@ export default async function PageDetail({
 
   return (
     <div
+      data-post-page
       className={`flex min-h-screen flex-col bg-theme-bg ${
         design?.typography === 'serif'
           ? 'font-serif'

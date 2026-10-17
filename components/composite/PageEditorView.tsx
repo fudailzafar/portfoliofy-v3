@@ -25,8 +25,10 @@ import { cn, getOptimizedImageUrl } from '@/lib/utils';
 import { useS3Upload } from 'next-s3-upload';
 import { Embed, EmbedProvider } from '@/components/composite/tiptap-embed';
 import {
+  ContentGallery,
   ContentImage,
   ContentVideo,
+  type GalleryItem,
 } from '@/components/composite/tiptap-media';
 import { Spinner } from '../ui/spinner';
 import { MediaUploadDialog } from '@/components/composite/MediaUploadDialog';
@@ -187,6 +189,7 @@ export function PageEditorView({
       Embed,
       ContentImage,
       ContentVideo,
+      ContentGallery,
     ],
     content: content,
     editorProps: {
@@ -314,14 +317,43 @@ export function PageEditorView({
     setIsMediaDialogOpen(false);
     if (!editor || attachments.length === 0) return;
 
-    const toNode = (a: AttachmentSchemaType) => {
-      const src = getOptimizedImageUrl(a.url) || a.url;
-      return a.type === 'video'
-        ? { type: 'contentVideo', attrs: { src } }
-        : { type: 'contentImage', attrs: { src } };
-    };
+    const srcOf = (a: AttachmentSchemaType) =>
+      getOptimizedImageUrl(a.url) || a.url;
 
-    editor.chain().focus().insertContent(attachments.map(toNode)).run();
+    // Several files added together become one horizontal strip.
+    if (attachments.length > 1) {
+      const items: GalleryItem[] = attachments.map((a) => ({
+        type: a.type === 'video' ? 'video' : 'image',
+        src: srcOf(a) || '',
+        width: a.width ?? null,
+        height: a.height ?? null,
+        caption: '',
+      }));
+      editor
+        .chain()
+        .focus()
+        .insertContent({ type: 'contentGallery', attrs: { items } })
+        .run();
+      return;
+    }
+
+    const [a] = attachments;
+    editor
+      .chain()
+      .focus()
+      .insertContent(
+        a.type === 'video'
+          ? { type: 'contentVideo', attrs: { src: srcOf(a) } }
+          : {
+              type: 'contentImage',
+              attrs: {
+                src: srcOf(a),
+                width: a.width ?? null,
+                height: a.height ?? null,
+              },
+            },
+      )
+      .run();
   };
 
   const handleEmbedInsert = (provider: EmbedProvider, src: string) => {
