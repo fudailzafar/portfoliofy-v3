@@ -12,8 +12,9 @@ import { SessionProviderWrapper } from '@/components/providers/SessionProviderWr
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { SITE_URL, classifyHost } from '@/lib/site';
 
+// 600 is only for emphasis inside the landing-page search tile
 const graphik = Inter({
-  weight: ['400', '500'],
+  weight: ['400', '500', '600'],
   style: ['normal', 'italic'],
   subsets: ['latin'],
   variable: '--font-graphik',
