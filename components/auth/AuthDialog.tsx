@@ -48,35 +48,40 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
                   cardRef.current?.focus();
                 }}
               >
-                <motion.div
+                {/* CSS centres the card; motion only animates the 20px rise. */}
+                <div
                   ref={cardRef}
-                  className="fixed left-1/2 top-1/2 z-50 w-[calc(100vw-24px)] max-w-[375px] rounded-2xl bg-[#fff] p-6 font-sans text-[14px] leading-[1.6] text-[#111] outline-none dark:bg-[#222] dark:text-[#eee] print:hidden"
-                  initial={{ opacity: 0, x: '-50%', y: 'calc(-50% + 20px)' }}
-                  animate={{ opacity: 1, x: '-50%', y: '-50%' }}
-                  exit={{ opacity: 0, x: '-50%', y: 'calc(-50% + 20px)' }}
-                  transition={SPRING}
+                  className="fixed left-1/2 top-1/2 z-50 w-[calc(100vw-24px)] max-w-[375px] -translate-x-1/2 -translate-y-1/2 font-sans text-[14px] leading-[1.6] text-[#111] outline-none dark:text-[#eee] print:hidden"
                 >
-                  <DialogPrimitive.Title className="mb-1 text-[18px] font-medium leading-[1.6] text-[#111] dark:text-[#eee]">
-                    {title}
-                    <span aria-hidden="true" className="whitespace-nowrap">
-                      {' '}
-                      {mode === 'login' ? '👋' : '✨'}
-                    </span>
-                  </DialogPrimitive.Title>
-                  <p className="text-[#666] dark:text-[#aaa]">
-                    By continuing you agree to our terms of service and privacy
-                    policy.
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={handleGoogleSignIn}
-                    className="mt-5 flex h-9 w-full items-center justify-center rounded-lg border border-[#e5e5e5] bg-[#fff] px-3 font-medium text-[#666] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#111]/20 active:bg-[#f2f2f2] dark:border-none dark:bg-[#333] dark:text-[#aaa] dark:focus-visible:ring-[#eee]/20 dark:active:bg-[#444]"
+                  <motion.div
+                    className="rounded-2xl bg-[#fff] p-6 dark:bg-[#222]"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={SPRING}
                   >
-                    <GoogleIcon />
-                    Continue with Google
-                  </button>
-                </motion.div>
+                    <DialogPrimitive.Title className="mb-1 text-[18px] font-medium leading-[1.6] text-[#111] dark:text-[#eee]">
+                      {title}
+                      <span aria-hidden="true" className="whitespace-nowrap">
+                        {' '}
+                        {mode === 'login' ? '👋' : '✨'}
+                      </span>
+                    </DialogPrimitive.Title>
+                    <p className="text-[#666] dark:text-[#aaa]">
+                      By continuing you agree to our terms of service and
+                      privacy policy.
+                    </p>
+
+                    <button
+                      type="button"
+                      onClick={handleGoogleSignIn}
+                      className="mt-4 flex h-9 w-full items-center justify-center rounded-lg border border-[#e5e5e5] bg-[#fff] px-3 font-medium text-[#666] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#111]/20 active:bg-[#f2f2f2] dark:border-none dark:bg-[#333] dark:text-[#aaa] dark:focus-visible:ring-[#eee]/20 dark:active:bg-[#444]"
+                    >
+                      <GoogleIcon />
+                      Continue with Google
+                    </button>
+                  </motion.div>
+                </div>
               </DialogPrimitive.Content>
             </DialogPrimitive.Portal>
           )}
