@@ -267,6 +267,58 @@
   --theme-accent: #4c3e51;
 }
 
+/* Code in posts. Default light and dark use Material palettes; the coloured
+   themes tint code with their own wash and keep it monochrome, since the
+   Material colours are unreadable on backgrounds like Swiss or Klein. The
+   :root/.dark values also cover the editor preview, which has no theme
+   wrapper. */
+:root {
+  --theme-wash: #f2f2f2;
+  --theme-code-bg: #fafafa;
+  --theme-code-text: #90a4ae;
+}
+
+.dark {
+  --theme-wash: #333333;
+  --theme-code-bg: #2f2f2f;
+  --theme-code-text: #eeeeee;
+}
+
+.theme-brutalist {
+  --theme-wash: #afafaf;
+}
+.theme-swiss {
+  --theme-wash: #e35e43;
+}
+.theme-klein {
+  --theme-wash: #1944b0;
+}
+.theme-red {
+  --theme-wash: #fbe0df;
+}
+.theme-green {
+  --theme-wash: #d5f0d5;
+}
+.theme-blue {
+  --theme-wash: #d5e7f8;
+}
+.theme-albers {
+  --theme-wash: #f4d7e1;
+}
+
+:is(
+  .theme-brutalist,
+  .theme-swiss,
+  .theme-klein,
+  .theme-red,
+  .theme-green,
+  .theme-blue,
+  .theme-albers
+) {
+  --theme-code-bg: var(--theme-wash);
+  --theme-code-text: var(--theme-primary);
+}
+
 /* Embedded page content — Embed/ContentImage/ContentVideo Tiptap nodes */
 .embed-iframe {
   display: block;
@@ -463,4 +515,31 @@
 .dark .hljs-doctag {
   color: #616161;
   font-weight: 700;
+}
+
+/* Coloured themes: one colour for code, muted for comments. Placed after the
+   .dark rules so it wins at equal specificity. */
+:is(
+    .theme-brutalist,
+    .theme-swiss,
+    .theme-klein,
+    .theme-red,
+    .theme-green,
+    .theme-blue,
+    .theme-albers
+  )
+  [class*='hljs-'] {
+  color: inherit;
+}
+:is(
+    .theme-brutalist,
+    .theme-swiss,
+    .theme-klein,
+    .theme-red,
+    .theme-green,
+    .theme-blue,
+    .theme-albers
+  )
+  :is(.hljs-comment, .hljs-quote, .hljs-meta, .hljs-doctag) {
+  color: var(--theme-muted);
 }
