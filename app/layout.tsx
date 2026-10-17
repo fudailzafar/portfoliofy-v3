@@ -10,7 +10,7 @@ import Script from 'next/script';
 import { ClientLayoutWrapper } from '@/components/layout/ClientLayoutWrapper';
 import { SessionProviderWrapper } from '@/components/providers/SessionProviderWrapper';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
-import { SITE_URL } from '@/lib/site';
+import { SITE_URL, classifyHost } from '@/lib/site';
 
 const graphik = Inter({
   weight: ['400', '500'],
@@ -90,13 +90,8 @@ export default async function RootLayout({
   const gaId = process.env.NEXT_PUBLIC_GA_ID || 'G-B99MN9ZMBL';
 
   const headersList = await require('next/headers').headers();
-  const rawHostname = headersList.get('host') || '';
-  const hostname = rawHostname.split(':')[0]; // Strip port for local testing
-  const isMainDomain =
-    hostname === 'portfoliofy.me' || hostname === 'www.portfoliofy.me';
-  const isVercelDomain = hostname.endsWith('.vercel.app');
-  const isLocalhost = hostname.includes('localhost');
-  const isCustomDomain = !isMainDomain && !isVercelDomain && !isLocalhost;
+  // A user's own subdomain or custom domain renders without the app chrome.
+  const isCustomDomain = classifyHost(headersList.get('host')).kind !== 'main';
 
   return (
     <SessionProviderWrapper>

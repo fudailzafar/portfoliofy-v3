@@ -15,7 +15,7 @@ import { after } from 'next/server';
 import { recordPageView } from '@/lib/server/dbActions';
 import { getVisitorKey } from '@/lib/server/visitorKey';
 import { ProfileUrlProvider } from '@/lib/ProfileUrlContext';
-import { SITE_URL } from '@/lib/site';
+import { SITE_URL, classifyHost } from '@/lib/site';
 
 const EditProfileDialog = dynamic(() =>
   import('@/app/[username]/_components/resume/editing/EditProfileDialog').then(
@@ -144,12 +144,8 @@ export default async function ProfilePage({
   };
 
   const headersList = await import('next/headers').then((m) => m.headers());
-  const hostHeader = headersList.get('host') || '';
-  const hostname = hostHeader.split(':')[0];
   const isSubdomainView =
-    (hostname.endsWith('.portfoliofy.me') &&
-      hostname !== 'www.portfoliofy.me') ||
-    (hostname.endsWith('.localhost') && hostname !== 'localhost');
+    classifyHost(headersList.get('host')).kind === 'subdomain';
 
   const isPersonalDomainView = username.includes('.') || isSubdomainView;
   const isOwner = userId === user_id && !isPersonalDomainView;
