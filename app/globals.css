@@ -166,7 +166,7 @@
   background-color: var(--content-primary);
 }
 
-/* Typography scale — aligned to Read.cv's extracted --type-size / --secondary-type-size / --line-height */
+/* Typography scale */
 .typography-sans {
   --type-size: 14px;
   --secondary-type-size: 12px;
@@ -185,23 +185,23 @@
   --line-height: 1.65;
 }
 
-/* Dynamic Themes for Portfolio — aligned to Read.cv's extracted CSS custom properties */
+/* Dynamic Themes for Portfolio */
 .theme-default {
   --theme-bg: #ffffff;
-  --theme-primary: #111111; /* Read.cv --grey1 (light) */
-  --theme-secondary: #555555; /* Read.cv --grey2 (light) */
+  --theme-primary: #111111;
+  --theme-secondary: #555555;
   --theme-muted: #999999;
-  --theme-border: #e5e5e5; /* Read.cv --primaryBorderColor (light) */
-  --theme-accent: #0788f5; /* Read.cv --blue */
+  --theme-border: #e5e5e5;
+  --theme-accent: #0788f5;
 }
 
 .dark .theme-default {
   --theme-bg: #222222;
-  --theme-primary: #eeeeee; /* Read.cv --grey1 (dark) */
-  --theme-secondary: #bbbbbb; /* Read.cv --grey2 (dark) */
+  --theme-primary: #eeeeee;
+  --theme-secondary: #bbbbbb;
   --theme-muted: #888888;
-  --theme-border: #333333; /* Read.cv --primaryBorderColor (dark) */
-  --theme-accent: #0788f5; /* Read.cv --blue */
+  --theme-border: #333333;
+  --theme-accent: #0788f5;
 }
 
 .theme-brutalist {
