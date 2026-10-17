@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { Switch } from '@/components/ui/switch';
 
@@ -11,10 +10,6 @@ export function PrintTab() {
   const togglePrintSection = useResumeStore(
     (state) => state.togglePrintSection,
   );
-  React.useEffect(() => {
-    // No longer setting isEditingTab so the main ProfileContent action bar is used
-  }, []);
-
   const SECTIONS = [
     { id: 'summary', label: 'About' },
     { id: 'work', label: 'Work Experience' },
