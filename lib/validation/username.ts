@@ -1,12 +1,4 @@
-/**
- * Shared username validation and normalization.
- *
- * - `normalizeUsername`: trims and lowercases, so "Bob" and "bob" are always
- *   the same value before they ever reach a uniqueness check or the DB.
- * - `isValidUsernameFormat`: lowercase letters, numbers, and hyphens only,
- *   2-30 characters. Doesn't check availability or reserved words — see
- *   lib/server/dbActions.ts for those.
- */
+// Format only; availability and reserved names are checked server-side.
 
 const USERNAME_PATTERN = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 const MIN_LENGTH = 2;

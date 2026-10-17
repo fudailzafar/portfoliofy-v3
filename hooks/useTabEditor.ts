@@ -35,18 +35,12 @@ export function useTabEditor<T = any>(options?: UseTabEditorOptions<T>) {
   const optionsRef = useRef(options);
   currentRef.current = current;
   optionsRef.current = options;
-  // Whether the global unsaved-changes flag was already true for some other
-  // reason (an unrelated earlier edit, or a real commit elsewhere) the
-  // moment this form opened — captured so cancel() can tell "this form's own
-  // speculative edits" apart from "there was already something else unsaved"
-  // and only clear the flag in the former case.
+  // Whether something else was already unsaved when this form opened, so
+  // cancel() only clears the flag if this form set it.
   const preexistingDirtyRef = useRef(false);
 
   const setCurrent = useCallback((value: T | null) => {
-    // Only reset the baseline when a form is freshly opened (list -> form),
-    // not on every field edit — setCurrent is what every field's onChange
-    // already calls, so this is how "did anything actually change since the
-    // form opened" gets tracked without touching per-field handlers.
+    // The baseline is set once per opened form; dirtiness compares against it.
     if (baselineRef.current === null) {
       baselineRef.current = JSON.stringify(value);
     }
@@ -62,12 +56,8 @@ export function useTabEditor<T = any>(options?: UseTabEditorOptions<T>) {
     setViewState(next);
   }, []);
 
-  // Commits the current draft if it's valid; a no-op (returns false) if the
-  // form is empty/incomplete. Used both by the global Save flush and by
-  // "Back," so leaving a finished item never silently discards it. Skips
-  // calling onCommit when nothing actually changed from the opened baseline
-  // — otherwise just opening an existing item and leaving without editing
-  // would spuriously flip the global unsaved-changes indicator.
+  // Commits a valid draft (used by global Save and Back). Skips unchanged
+  // drafts so just opening an item doesn't mark the profile as edited.
   const commit = useCallback(() => {
     const item = currentRef.current;
     const opts = optionsRef.current;
@@ -77,15 +67,8 @@ export function useTabEditor<T = any>(options?: UseTabEditorOptions<T>) {
     return true;
   }, []);
 
-  // Discards the in-progress draft and returns to the list view — the
-  // opposite of commit(). Since the draft only ever lives in this hook's own
-  // `current` state until onCommit runs, simply abandoning it (never calling
-  // onCommit) and switching views is already a full discard: a brand-new
-  // item never gets appended, and an edited existing item's stored copy was
-  // never touched in the first place. Also rolls back the global
-  // unsaved-changes flag if this form's own speculative dirty-tracking was
-  // the only thing that had set it — otherwise Cancel would strand the
-  // bottom bar on Cancel/Save instead of Done despite nothing being unsaved.
+  // The draft lives only in this hook until commit, so leaving is a full
+  // discard. Clears the unsaved flag only if this form was what set it.
   const cancel = useCallback(() => {
     if (!preexistingDirtyRef.current) {
       setHasUnsavedChanges(false);
@@ -107,11 +90,8 @@ export function useTabEditor<T = any>(options?: UseTabEditorOptions<T>) {
     }
   }, [current, view, setHasUnsavedChanges]);
 
-  // Register this form's commit/cancel functions and valid/dirty state
-  // while it's open, so the bottom bar (rendered well outside this hook's
-  // own tab component) can act on whichever form is currently open. Only
-  // one tab form can be open at a time, so there's no coordination needed
-  // beyond register/clear.
+  // Expose this form's actions to the global bottom bar. Only one form can be
+  // open at a time.
   useEffect(() => {
     if (view !== 'form' || !options) {
       setActiveFormCommit(null);

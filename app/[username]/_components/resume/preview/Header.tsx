@@ -47,9 +47,6 @@ function getRelativeTime(dateInput: Date | string | null | undefined): string {
   return rtf.format(-diffInYears, 'year');
 }
 
-/**
- * Header component displaying personal information and contact details
- */
 export function Header({
   header,
   picture,

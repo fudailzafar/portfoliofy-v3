@@ -113,8 +113,7 @@ function SortableAttachmentRow({
         <X className="h-4 w-4" />
       </button>
 
-      {/* touch-none: without it, a finger drag on the handle is taken by the
-          browser as a scroll, which cancels the drag. */}
+      {/* touch-none: otherwise a finger drag scrolls the list and cancels the drag. */}
       <div
         {...attributes}
         {...listeners}

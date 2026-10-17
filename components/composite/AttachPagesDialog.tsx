@@ -21,9 +21,7 @@ interface AttachPagesDialogProps {
   onSave: (pageIds: string[]) => void;
 }
 
-// Opened from "Add a page" on any section item. Creating/editing a page's
-// actual content happens only in the Writing tab — this dialog just lets
-// you pick one or more already-published pages to attach here.
+// Picks already-published pages to attach; pages are edited in the Writing tab.
 export function AttachPagesDialog({
   open,
   onOpenChange,

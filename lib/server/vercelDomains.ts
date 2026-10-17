@@ -28,10 +28,8 @@ export async function fetchVercelAPI(
   return { ok: response.ok, status: response.status, data };
 }
 
-// Releases a user's connected custom domain from the app's Vercel project, if
-// any. Shared by the explicit "disconnect domain" flow and account deletion,
-// so a deleted account never leaves a domain permanently attached to Vercel
-// with nothing pointing back to who owned it.
+// Shared by domain disconnect and account deletion, so a deleted account
+// never leaves its domain attached to the project.
 export async function releaseUserDomainFromVercel(
   userId: string,
 ): Promise<void> {

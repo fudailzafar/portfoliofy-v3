@@ -26,19 +26,13 @@ export function SectionAttachments({
   const pageStubs = attachments.filter((a) => a.type === 'page');
   const attachedPages = resolveAttachedPages(attachments, resumePages);
 
-  // MediaUploadDialog only knows about image/video attachments — it has no
-  // concept of a page (undefined width/height/filename would render oddly,
-  // and its own remove button would let someone delete a page stub from the
-  // wrong dialog). Keep it entirely out of that dialog's world: strip page
-  // stubs out going in, splice them back in unchanged coming out.
+  // MediaUploadDialog only understands media, so page stubs are stripped
+  // going in and spliced back unchanged coming out.
   const handleSaveUploads = (newMediaAttachments: AttachmentSchemaType[]) => {
     onChange([...newMediaAttachments, ...pageStubs]);
   };
 
-  // "Add a page" only attaches already-published pages — creating/editing a
-  // page's actual content happens in the Writing tab. Saving here just
-  // rewrites this item's set of {id, type:'page'} reference stubs; media
-  // attachments are untouched.
+  // Only rewrites this item's page stubs; media attachments are untouched.
   const handleAttachPagesSave = (pageIds: string[]) => {
     const mediaAttachments = attachments.filter((a) => a.type !== 'page');
     const newStubs = pageIds.map((id) => ({
@@ -56,10 +50,7 @@ export function SectionAttachments({
     );
   };
 
-  // Reorders within the pages-only sub-list (pageStubs and attachedPages
-  // share the same relative order, both derived by filtering `attachments`
-  // in place), then splices back in after the media attachments — matching
-  // the same media-first convention handleAttachPagesSave already uses.
+  // Reorder pages among themselves, then put them back after the media.
   const movePageLeft = (index: number) => {
     if (index === 0) return;
     const newPageStubs = [...pageStubs];

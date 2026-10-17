@@ -1,14 +1,3 @@
-/**
- * Shared website URL validation and normalization.
- *
- * - `normalizeWebsite`: prepends `https://` when no protocol is present.
- * - `isValidWebsite`: accepts empty (optional field), validates the normalized
- *   value is a parseable URL with an `http(s)` protocol and a dotted hostname.
- *
- * Used by both the UI (for inline feedback) and the server schema (in
- * lib/resume.ts via the `website` field refinement).
- */
-
 export function normalizeWebsite(input: string): string {
   const v = input.trim();
   if (!v) return '';

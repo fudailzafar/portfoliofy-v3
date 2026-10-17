@@ -39,20 +39,11 @@ export async function getResume(userId: string): Promise<Resume | undefined> {
       }
     }
 
-    // Run the row through the schema so zod defaults (e.g. `collaborators`/
-    // `attachments` arrays defaulting to `[]`) actually apply on read, not
-    // just on write — otherwise a legacy row predating a field genuinely has
-    // it as `undefined` at runtime, relying on every consumer to individually
-    // guard against that. Fall back to the raw cast on failure (rather than
-    // throwing) so a row that doesn't perfectly conform doesn't take down the
-    // whole profile — same tolerance the old bare-cast behavior had.
+    // Parse on read so schema defaults apply to old rows; fall back to the raw
+    // row rather than failing the whole profile.
     const parsed = ResumeSchema.safeParse(row);
     if (parsed.success) {
-      // Self-healing: a resume saved before pages became their own
-      // top-level list may still have full page objects embedded directly
-      // in a section item's attachments — surface them under `pages` on
-      // every read so they don't just vanish because the storage shape
-      // changed. No-op (returns the same object) once already migrated.
+      // Move page objects embedded by older saves into resume.pages.
       return {
         ...parsed.data,
         resumeData: migrateEmbeddedPages(parsed.data.resumeData),
