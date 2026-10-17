@@ -415,10 +415,8 @@ export default async function Home() {
                     <div className="absolute left-[19.02cqw] top-0 whitespace-nowrap text-[length:6.41cqw] leading-[7.69cqw] text-[#aaa] dark:text-content-muted">
                       <div>{result.name}</div>
                       <div>
-                        <strong className="font-medium text-[#111] dark:text-[#eee]">
-                          UX Designer
-                        </strong>{' '}
-                        in {result.place}
+                        <strong className="font-[600]">UX Designer</strong> in{' '}
+                        {result.place}
                       </div>
                     </div>
                   </div>
@@ -435,15 +433,14 @@ export default async function Home() {
                 aria-hidden="true"
                 className="relative mx-[calc(4px+5vw)] aspect-[468/236] overflow-hidden bg-[#fff] text-[#111] shadow-[0_4px_40px_rgba(0,0,0,0.05),0_4px_10px_rgba(0,0,0,0.1)] [container-type:inline-size] dark:bg-[#222] dark:text-[#eee] dark:shadow-none sm:mx-9"
               >
-                <div className="absolute left-[5.56cqw] top-[5.13cqw] size-[22.86cqw] rounded-full bg-gradient-to-b from-[#9E2692] to-[#FAA958] p-[0.64cqw]">
-                  <div className="h-full w-full rounded-full bg-[#fff] p-[0.43cqw] dark:bg-[#222]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="https://api.dicebear.com/10.x/glyphs/svg?seed=Tom"
-                      alt=""
-                      className="h-full w-full rounded-full bg-surface-3 object-cover"
-                    />
-                  </div>
+                <div className="absolute left-[4.06cqw] top-[3.63cqw] size-[25.85cqw] rounded-full bg-gradient-to-b from-[#9E2692] to-[#FAA958]">
+                  <div className="absolute inset-[0.855cqw] rounded-full bg-[#fff] dark:bg-[#222]" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="https://api.dicebear.com/10.x/glyphs/svg?seed=Tom"
+                    alt=""
+                    className="absolute inset-[1.5cqw] size-[22.86cqw] rounded-full bg-surface-3 object-cover"
+                  />
                 </div>
 
                 {[
