@@ -166,4 +166,29 @@ describe('sanitizePageContent', () => {
     expect(out).toContain('loop');
     expect(out).toContain('data-content-video');
   });
+
+  it('preserves gallery markup produced by the ContentGallery Tiptap node', () => {
+    const out = sanitizePageContent(
+      '<div data-content-gallery="true" class="content-gallery">' +
+        '<div class="content-gallery-track">' +
+        '<figure class="content-gallery-item">' +
+        '<img src="https://example.com/a.jpg" alt="A" width="1200" height="800" class="content-gallery-media">' +
+        '<figcaption class="content-gallery-caption">A</figcaption></figure>' +
+        '</div></div>',
+    );
+    expect(out).toContain('data-content-gallery="true"');
+    expect(out).toContain('class="content-gallery-track"');
+    expect(out).toContain('width="1200"');
+    expect(out).toContain('height="800"');
+    expect(out).toContain(
+      '<figcaption class="content-gallery-caption">A</figcaption>',
+    );
+  });
+
+  it('keeps no attributes on divs beyond the gallery wrapper', () => {
+    const out = sanitizePageContent(
+      '<div style="position:fixed" onclick="x()" id="a" data-x="1">hi</div>',
+    );
+    expect(out).toBe('<div>hi</div>');
+  });
 });
