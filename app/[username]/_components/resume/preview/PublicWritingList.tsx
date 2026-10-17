@@ -56,15 +56,18 @@ export function PublicWritingList({
     );
   }
 
+  // Year groups 60px apart, posts 36px apart; titles line up
+  // with the profile's content column (94px date column + 36px gap); from
+  // 480px down the date moves under the title and rows indent 16px.
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-[60px]">
       {groupedByYear.map(({ year, pages: yearPages }) => (
-        <div key={year} className="flex flex-col gap-6">
-          <h2 className="text-[length:var(--type-size)] font-bold leading-[var(--line-height)] text-theme-primary">
+        <div key={year} className="flex flex-col gap-3">
+          <h2 className="text-[length:var(--type-size)] font-normal tabular-nums leading-[var(--line-height)] text-theme-primary">
             {year}
           </h2>
 
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-9">
             {yearPages.map((page) => {
               const { parsedDate } = page;
               const href = isPersonalDomainView
@@ -80,57 +83,58 @@ export function PublicWritingList({
                 : '';
               const readLabel = `${estimateReadMinutes(page.content || '')} min read`;
               return (
-                <div key={page.id} className="flex items-center gap-4 sm:gap-8">
-                  <div className="flex flex-1 items-center justify-between gap-4">
-                    <div className="flex items-start gap-4 sm:gap-8">
-                      {/* Date */}
-                      <Link
-                        href={href}
-                        className={`hidden w-14 shrink-0 text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-muted sm:block sm:w-20 ${underline}`}
-                      >
-                        {dateLabel}
-                      </Link>
-
-                      {/* Title / Read Time */}
-                      <div className="flex flex-col gap-1 pl-6 sm:pl-0">
-                        <Link
-                          href={href}
-                          className={`text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-primary ${underline}`}
-                        >
-                          {page.title || 'Untitled'}
-                        </Link>
-                        <Link
-                          href={href}
-                          className={`hidden text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-muted sm:block ${underline}`}
-                        >
-                          {readLabel}
-                        </Link>
-
-                        {/* Mobile Date + Read Time */}
-                        <Link
-                          href={href}
-                          className={`text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary sm:hidden ${underline}`}
-                        >
-                          {dateLabel} · {readLabel}
-                        </Link>
-                      </div>
-                    </div>
-
-                    {/* Thumbnail */}
+                <div
+                  key={page.id}
+                  className="flex items-center gap-6 max-[480px]:ml-4"
+                >
+                  {/* Date and title share a grid so the date sits on the
+                      title's first line, whatever the title's height. */}
+                  <div className="grid min-w-0 flex-1 grid-cols-[106px_minmax(0,1fr)] gap-x-6 max-[480px]:grid-cols-1">
                     <Link
                       href={href}
-                      className="h-[90px] w-[115px] shrink-0 overflow-hidden rounded-xl border border-theme-border bg-[color-mix(in_srgb,var(--theme-border)_40%,transparent)] sm:w-[152px]"
+                      className={`w-fit text-[length:var(--type-size)] tabular-nums leading-[var(--line-height)] text-theme-muted max-[480px]:hidden ${underline}`}
                     >
-                      {page.url && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={page.url}
-                          alt="Thumbnail"
-                          className="h-full w-full object-cover"
-                        />
-                      )}
+                      {dateLabel}
                     </Link>
+
+                    <div className="flex min-w-0 flex-col">
+                      <Link
+                        href={href}
+                        className={`line-clamp-2 w-fit text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-primary ${underline}`}
+                      >
+                        {page.title || 'Untitled'}
+                      </Link>
+                      <Link
+                        href={href}
+                        className={`w-fit text-[length:var(--type-size)] tabular-nums leading-[var(--line-height)] text-theme-muted ${underline}`}
+                      >
+                        {dateLabel && (
+                          <span className="hidden max-[480px]:inline">
+                            {dateLabel}&nbsp;·&nbsp;
+                          </span>
+                        )}
+                        {readLabel}
+                      </Link>
+                    </div>
                   </div>
+
+                  {/* Thumbnail: soft fill and a faint inner border, both from
+                      the theme (globals.css). */}
+                  <Link
+                    href={href}
+                    tabIndex={-1}
+                    aria-hidden="true"
+                    className="relative h-[90px] w-[30%] min-w-[40px] max-w-[152px] shrink-0 overflow-hidden rounded-lg bg-[var(--theme-thumb-bg)] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-[var(--theme-faint-border)] max-[480px]:w-[37.5%]"
+                  >
+                    {page.url && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={page.url}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    )}
+                  </Link>
                 </div>
               );
             })}

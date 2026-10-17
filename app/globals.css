@@ -444,6 +444,45 @@
   background-color: transparent;
 }
 
+/* Writing-tab thumbnails: a soft fill and a faint hairline, per theme. */
+:root {
+  --theme-thumb-bg: #f2f2f2;
+  --theme-faint-border: rgba(0, 0, 0, 0.05);
+}
+
+.dark {
+  --theme-thumb-bg: #383838;
+  --theme-faint-border: rgba(255, 255, 255, 0.1);
+}
+
+:is(
+  .theme-brutalist,
+  .theme-swiss,
+  .theme-klein,
+  .theme-red,
+  .theme-green,
+  .theme-blue,
+  .theme-albers
+) {
+  --theme-thumb-bg: var(--theme-wash);
+}
+
+:is(.theme-brutalist, .theme-swiss, .theme-klein) {
+  --theme-faint-border: rgba(255, 255, 255, 0.1);
+}
+.theme-red {
+  --theme-faint-border: rgba(229, 8, 0, 0.1);
+}
+.theme-green {
+  --theme-faint-border: rgba(0, 128, 0, 0.1);
+}
+.theme-blue {
+  --theme-faint-border: rgba(0, 102, 204, 0.1);
+}
+.theme-albers {
+  --theme-faint-border: rgba(0, 0, 0, 0.1);
+}
+
 /* Several images added together: a horizontal strip, 320px tall,
    12px apart, scrolling sideways with the scrollbar hidden. */
 .content-gallery {
