@@ -4,7 +4,7 @@ import sql from '@/lib/server/db';
 import { getAllPageAttachments } from '@/lib/resume';
 import type { ResumeDataSchemaType } from '@/lib/resume';
 import { getUserData } from './[username]/utils';
-import { SITE_URL } from '@/lib/site';
+import { SITE_URL, classifyHost } from '@/lib/site';
 
 function pageEntries(
   baseUrl: string,
@@ -108,28 +108,12 @@ async function getSingleUserSitemap(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const headersList = await headers();
-  const hostHeader = headersList.get('host') || '';
-  const hostname = hostHeader.split(':')[0];
+  const host = classifyHost((await headers()).get('host'));
 
-  const isMainDomain =
-    hostname === 'portfoliofy.me' ||
-    hostname === 'www.portfoliofy.me' ||
-    hostname === 'localhost' ||
-    hostname.endsWith('.vercel.app');
-
-  if (isMainDomain || !hostname) {
+  if (host.kind === 'main') {
     return getMainDomainSitemap();
   }
 
-  const isSubdomain =
-    (hostname.endsWith('.portfoliofy.me') &&
-      hostname !== 'www.portfoliofy.me') ||
-    (hostname.endsWith('.localhost') && hostname !== 'localhost');
-
-  const identifier = isSubdomain
-    ? hostname.replace('.portfoliofy.me', '').replace('.localhost', '')
-    : hostname;
-
-  return getSingleUserSitemap(identifier, `https://${hostname}`);
+  const identifier = host.kind === 'subdomain' ? host.username : host.hostname;
+  return getSingleUserSitemap(identifier, `https://${host.hostname}`);
 }
