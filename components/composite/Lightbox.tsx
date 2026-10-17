@@ -1,16 +1,45 @@
 'use client';
 
-import React, { useEffect, useCallback } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import { AttachmentSchemaType } from '@/lib/resume';
-import { X } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
+import { cn, getOptimizedImageUrl } from '@/lib/utils';
+
+// A full-screen layer in the page colour fades in, and the media and controls
+// fade in 600ms later. Closing reverses it.
+const FADE = { duration: 0.3 } as const;
+const CONTENT_DELAY_MS = 600;
+// Gap between slides when swiping on touch screens.
+const SWIPE_GAP_PX = 16;
+
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function useIsTouch() {
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia('(hover: none) and (pointer: coarse)');
+    const update = () => setIsTouch(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
+  return isTouch;
+}
+
+// Arrow cursors for the previous/next halves of the image.
+const arrowCursor = (direction: 'left' | 'right') => {
+  const path = direction === 'left' ? 'M14 7l-5 5 5 5' : 'M10 7l5 5-5 5';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="white" stroke="rgba(0,0,0,0.15)"/><path d="${path}" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}") 12 12, ${
+    direction === 'left' ? 'w-resize' : 'e-resize'
+  }`;
+};
+
+const PILL_CLASS =
+  'pointer-events-auto mx-1.5 flex h-9 items-center rounded-3xl bg-[var(--theme-glass)] px-[18px] text-[14px] font-medium text-theme-primary shadow-[0_0_0_1px_var(--theme-faint-border)] backdrop-blur-[5px]';
 
 interface LightboxProps {
   attachments: AttachmentSchemaType[];
@@ -18,6 +47,9 @@ interface LightboxProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onIndexChange: (index: number) => void;
+  // The profile's theme classes: the lightbox renders in a portal, outside
+  // the element that sets the theme's colours.
+  themeClassName?: string;
 }
 
 export function Lightbox({
@@ -26,194 +58,300 @@ export function Lightbox({
   open,
   onOpenChange,
   onIndexChange,
+  themeClassName = 'theme-default',
 }: LightboxProps) {
-  const currentAttachment = attachments[currentIndex];
-  const [direction, setDirection] = React.useState(0);
-
-  const handlePrevious = useCallback(() => {
-    setDirection(-1);
-    onIndexChange((currentIndex - 1 + attachments.length) % attachments.length);
-  }, [currentIndex, attachments.length, onIndexChange]);
-
-  const handleNext = useCallback(() => {
-    setDirection(1);
-    onIndexChange((currentIndex + 1) % attachments.length);
-  }, [currentIndex, attachments.length, onIndexChange]);
-
-  const handleDotClick = useCallback(
-    (idx: number) => {
-      setDirection(idx > currentIndex ? 1 : -1);
-      onIndexChange(idx);
-    },
-    [currentIndex, onIndexChange],
-  );
+  const isTouch = useIsTouch();
+  const [showContent, setShowContent] = useState(false);
+  const closeTimer = useRef<number>(0);
+  const count = attachments.length;
 
   useEffect(() => {
     if (!open) return;
+    window.clearTimeout(closeTimer.current);
+    const delay = prefersReducedMotion() ? 0 : CONTENT_DELAY_MS;
+    const timer = window.setTimeout(() => setShowContent(true), delay);
+    return () => window.clearTimeout(timer);
+  }, [open]);
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') {
-        handlePrevious();
-      } else if (e.key === 'ArrowRight') {
-        handleNext();
-      }
+  useEffect(() => () => window.clearTimeout(closeTimer.current), []);
+
+  const requestClose = useCallback(() => {
+    setShowContent(false);
+    window.clearTimeout(closeTimer.current);
+    const delay = prefersReducedMotion() ? 0 : CONTENT_DELAY_MS;
+    closeTimer.current = window.setTimeout(() => onOpenChange(false), delay);
+  }, [onOpenChange]);
+
+  const next = useCallback(
+    () => onIndexChange((currentIndex + 1) % count),
+    [currentIndex, count, onIndexChange],
+  );
+  const previous = useCallback(
+    () => onIndexChange((currentIndex - 1 + count) % count),
+    [currentIndex, count, onIndexChange],
+  );
+
+  useEffect(() => {
+    if (!open || count < 2) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') next();
+      else if (e.key === 'ArrowLeft') previous();
     };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [open, count, next, previous]);
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open, handlePrevious, handleNext]);
+  // Preload the neighbours so moving to them is instant.
+  useEffect(() => {
+    if (!open || count < 2) return;
+    [currentIndex - 1, currentIndex + 1].forEach((i) => {
+      const neighbour = attachments[(i + count) % count];
+      if (neighbour?.type === 'image' && neighbour.url) {
+        new Image().src = getOptimizedImageUrl(neighbour.url) || neighbour.url;
+      }
+    });
+  }, [open, currentIndex, attachments, count]);
 
-  if (!currentAttachment || !attachments || attachments.length === 0)
-    return null;
-
-  const variants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? '100%' : '-100%',
-      opacity: 0,
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? '100%' : '-100%',
-      opacity: 0,
-    }),
-  };
-
-  const swipeConfidenceThreshold = 10000;
-  const swipePower = (offset: number, velocity: number) => {
-    return Math.abs(offset) * velocity;
-  };
+  if (count === 0) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex h-[100dvh] w-[100vw] max-w-[100vw] flex-col items-center justify-center rounded-none border-none bg-surface-1 p-0 shadow-none sm:rounded-none [&>button.absolute]:hidden">
-        <DialogTitle className="sr-only">Attachment Viewer</DialogTitle>
-        <DialogDescription className="sr-only">
-          Viewing attachment {currentIndex + 1} of {attachments.length}
-        </DialogDescription>
+    <DialogPrimitive.Root
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) requestClose();
+      }}
+    >
+      <MotionConfig reducedMotion="user">
+        <AnimatePresence onExitComplete={() => setShowContent(false)}>
+          {open && (
+            <DialogPrimitive.Portal forceMount>
+              <DialogPrimitive.Content asChild forceMount>
+                <motion.div
+                  className={cn(
+                    'fixed inset-0 z-50 bg-theme-bg outline-none print:hidden',
+                    themeClassName,
+                  )}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={FADE}
+                >
+                  <DialogPrimitive.Title className="sr-only">
+                    Media viewer
+                  </DialogPrimitive.Title>
+                  <DialogPrimitive.Description className="sr-only">
+                    Item {currentIndex + 1} of {count}
+                    {count > 1
+                      ? '. Use the arrow keys to move between items.'
+                      : ''}
+                  </DialogPrimitive.Description>
 
-        {/* Desktop Viewport Close Button */}
-        <button
-          onClick={() => onOpenChange(false)}
-          className="fixed right-3 top-3 z-50 hidden rounded-full bg-[#383838] p-2 text-white sm:block"
-        >
-          <X className="size-3" strokeWidth={4} />
-          <span className="sr-only">Close</span>
-        </button>
+                  <AnimatePresence>
+                    {showContent && (
+                      <motion.div
+                        className="absolute inset-0"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={FADE}
+                      >
+                        {isTouch ? (
+                          <SwipeView
+                            attachments={attachments}
+                            currentIndex={currentIndex}
+                            onIndexChange={onIndexChange}
+                          />
+                        ) : (
+                          <DesktopView
+                            attachment={attachments[currentIndex]}
+                            index={currentIndex}
+                            count={count}
+                            onNext={next}
+                            onPrevious={previous}
+                            onClose={requestClose}
+                          />
+                        )}
 
-        {/* Desktop Left/Right Click Areas */}
-        {attachments.length > 1 && (
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[200] flex h-[108px] items-center px-[18px]">
+                          <button
+                            type="button"
+                            onClick={requestClose}
+                            className={cn(
+                              PILL_CLASS,
+                              'outline-none focus-visible:ring-2 focus-visible:ring-theme-primary active:brightness-95',
+                            )}
+                          >
+                            Close
+                          </button>
+                          {count > 1 && (
+                            <div
+                              aria-hidden="true"
+                              className={cn(PILL_CLASS, 'ml-auto tabular-nums')}
+                            >
+                              {currentIndex + 1} / {count}
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              </DialogPrimitive.Content>
+            </DialogPrimitive.Portal>
+          )}
+        </AnimatePresence>
+      </MotionConfig>
+    </DialogPrimitive.Root>
+  );
+}
+
+// Sized to fit the screen at the media's own proportions.
+function fitStyle(attachment: AttachmentSchemaType): React.CSSProperties {
+  const ratio =
+    attachment.width && attachment.height
+      ? attachment.width / attachment.height
+      : null;
+  if (!ratio) return { maxWidth: '100vw', maxHeight: '100dvh' };
+  return {
+    width: `min(100vw, calc(100dvh * ${ratio}))`,
+    aspectRatio: String(ratio),
+  };
+}
+
+function Media({
+  attachment,
+  label,
+}: {
+  attachment: AttachmentSchemaType;
+  label: string;
+}) {
+  const src = getOptimizedImageUrl(attachment.url) || attachment.url;
+  return attachment.type === 'video' ? (
+    <video
+      src={src}
+      aria-label={label}
+      autoPlay
+      loop
+      muted
+      playsInline
+      className="block h-full w-full object-contain"
+    />
+  ) : (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={label}
+      draggable={false}
+      className="block h-full w-full object-contain"
+    />
+  );
+}
+
+function DesktopView({
+  attachment,
+  index,
+  count,
+  onNext,
+  onPrevious,
+  onClose,
+}: {
+  attachment: AttachmentSchemaType;
+  index: number;
+  count: number;
+  onNext: () => void;
+  onPrevious: () => void;
+  onClose: () => void;
+}) {
+  const kind = attachment.type === 'video' ? 'Video' : 'Image';
+  return (
+    // Clicking the empty space around the media closes.
+    <div
+      className="absolute inset-0 flex items-center justify-center"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="relative" style={fitStyle(attachment)}>
+        <Media
+          attachment={attachment}
+          label={`${kind} ${index + 1} of ${count}`}
+        />
+        {count > 1 && (
           <>
-            <div
-              className="absolute left-0 top-0 z-10 hidden h-full w-[15%] cursor-w-resize sm:block"
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePrevious();
-              }}
+            <button
+              type="button"
+              aria-label="Previous"
+              onClick={onPrevious}
+              style={{ cursor: arrowCursor('left') }}
+              className="absolute inset-y-0 left-0 w-1/2 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-theme-primary"
             />
-            <div
-              className="absolute right-0 top-0 z-10 hidden h-full w-[15%] cursor-e-resize sm:block"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleNext();
-              }}
+            <button
+              type="button"
+              aria-label="Next"
+              onClick={onNext}
+              style={{ cursor: arrowCursor('right') }}
+              className="absolute inset-y-0 right-0 w-1/2 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-theme-primary"
             />
           </>
         )}
+      </div>
+    </div>
+  );
+}
 
-        {/* Main Media Container */}
+// Touch screens: native swiping between full-screen slides that snap.
+function SwipeView({
+  attachments,
+  currentIndex,
+  onIndexChange,
+}: {
+  attachments: AttachmentSchemaType[];
+  currentIndex: number;
+  onIndexChange: (index: number) => void;
+}) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const count = attachments.length;
+
+  // Start on the item that was tapped.
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    scroller.scrollLeft = currentIndex * (scroller.clientWidth + SWIPE_GAP_PX);
+    // Only on mount; afterwards scrolling drives the index.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div
+      ref={scrollerRef}
+      onScroll={(e) => {
+        const el = e.currentTarget;
+        const index = Math.round(
+          el.scrollLeft / (el.clientWidth + SWIPE_GAP_PX),
+        );
+        if (index !== currentIndex && index >= 0 && index < count) {
+          onIndexChange(index);
+        }
+      }}
+      className="absolute inset-0 flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      {attachments.map((attachment, i) => (
         <div
-          className="relative flex h-full max-h-[85vh] w-full max-w-7xl items-center justify-center overflow-hidden px-0 sm:px-4 md:px-16"
-          onClick={() => onOpenChange(false)} // Clicking outside media closes dialog
+          key={attachment.id}
+          className="flex h-full w-screen shrink-0 snap-start items-center justify-center"
+          style={{ marginRight: i < count - 1 ? SWIPE_GAP_PX : 0 }}
         >
-          <div
-            className="relative flex h-full w-full items-center justify-center"
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the media itself
-          >
-            <AnimatePresence initial={false} custom={direction}>
-              <motion.div
-                key={currentIndex}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: 'spring', stiffness: 300, damping: 30 },
-                  opacity: { duration: 0.2 },
-                }}
-                drag={attachments.length > 1 ? 'x' : false}
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={1}
-                onDragEnd={(_e, { offset, velocity }) => {
-                  const swipe = swipePower(offset.x, velocity.x);
-                  if (swipe < -swipeConfidenceThreshold) {
-                    handleNext();
-                  } else if (swipe > swipeConfidenceThreshold) {
-                    handlePrevious();
-                  }
-                }}
-                className="absolute flex h-full w-full items-center justify-center"
-              >
-                {currentAttachment.type === 'video' ? (
-                  <video
-                    src={currentAttachment.url}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="relative z-0 max-h-full max-w-full rounded-lg object-contain sm:shadow-2xl"
-                  />
-                ) : (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={currentAttachment.url}
-                    alt={currentAttachment.filename || 'Attachment preview'}
-                    className="relative z-0 max-h-[85vh] max-w-full rounded-lg object-contain sm:shadow-2xl"
-                    loading="eager"
-                  />
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* Mobile controls (Bottom) */}
-        <div className="pointer-events-none fixed bottom-6 left-4 right-4 z-50 flex items-center justify-between sm:hidden">
-          <button
-            onClick={() => onOpenChange(false)}
-            className="pointer-events-auto rounded-full bg-black/10 px-5 py-2 text-sm font-medium text-content-primary backdrop-blur-md dark:bg-white/10"
-          >
-            Close
-          </button>
-
-          {attachments.length > 1 && (
-            <div className="pointer-events-auto rounded-full bg-black/10 px-5 py-2 text-sm font-medium tracking-widest text-content-primary backdrop-blur-md dark:bg-white/10">
-              {currentIndex + 1} / {attachments.length}
+          {/* Only the visible item and its neighbours load. */}
+          {Math.abs(i - currentIndex) <= 1 && (
+            <div style={fitStyle(attachment)}>
+              <Media
+                attachment={attachment}
+                label={`${attachment.type === 'video' ? 'Video' : 'Image'} ${i + 1} of ${count}`}
+              />
             </div>
           )}
         </div>
-
-        {/* Desktop Bottom Pagination Dots */}
-        {attachments.length > 1 && (
-          <div className="fixed bottom-3 left-1/2 z-50 hidden -translate-x-1/2 items-center gap-1.5 px-4 py-2 sm:flex">
-            {attachments.map((_, idx) => (
-              <div
-                key={idx}
-                className={cn(
-                  'size-2 cursor-pointer rounded-full transition-all duration-200',
-                  idx === currentIndex ? 'bg-[#6e6e6e]' : 'bg-surface-3',
-                )}
-                onClick={() => handleDotClick(idx)}
-              />
-            ))}
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+      ))}
+    </div>
   );
 }

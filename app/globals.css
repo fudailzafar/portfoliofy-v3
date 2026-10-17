@@ -483,6 +483,27 @@
   --theme-faint-border: rgba(0, 0, 0, 0.1);
 }
 
+/* Lightbox pills: the page colour at 50% over a blur; dark mode uses #111. */
+.theme-default {
+  --theme-glass: rgba(255, 255, 255, 0.5);
+}
+
+.dark .theme-default {
+  --theme-glass: rgba(17, 17, 17, 0.5);
+}
+
+:is(
+  .theme-brutalist,
+  .theme-swiss,
+  .theme-klein,
+  .theme-red,
+  .theme-green,
+  .theme-blue,
+  .theme-albers
+) {
+  --theme-glass: color-mix(in srgb, var(--theme-bg) 50%, transparent);
+}
+
 /* Several images added together: a horizontal strip, 320px tall,
    12px apart, scrolling sideways with the scrollbar hidden. */
 .content-gallery {

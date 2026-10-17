@@ -1,12 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { AttachmentSchemaType, resolveAttachedPages } from '@/lib/resume';
 import { Lightbox } from '@/components/composite/Lightbox';
 import { PageAttachmentCard } from '@/components/composite/PageAttachmentCard';
 import { usePersonalDomainView } from '@/lib/ProfileUrlContext';
 import { useResumePages } from '@/lib/ResumePagesContext';
+
+const THEME_CLASS =
+  /^theme-(default|brutalist|swiss|klein|red|green|blue|albers)$/;
+const CARRIED_CLASS = /^(theme-\w+|typography-\w+|font-(sans|serif|mono))$/;
+
+// The theme, typography and font classes of the nearest themed ancestor.
+function themeClassesAbove(el: HTMLElement | null): string {
+  let node: HTMLElement | null = el;
+  while (node && !Array.from(node.classList).some((c) => THEME_CLASS.test(c))) {
+    node = node.parentElement;
+  }
+  if (!node) return 'theme-default';
+  return Array.from(node.classList)
+    .filter((c) => CARRIED_CLASS.test(c))
+    .join(' ');
+}
 
 export function AttachmentsPreview({
   attachments,
@@ -15,6 +31,8 @@ export function AttachmentsPreview({
 }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [themeClassName, setThemeClassName] = useState('theme-default');
+  const stripRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const params = useParams();
   const isPersonalDomainView = usePersonalDomainView();
@@ -36,6 +54,8 @@ export function AttachmentsPreview({
       (a) => a.id === attachment.id,
     );
     if (mediaIndex === -1) return;
+    // The lightbox renders in a portal, so carry the profile's theme along.
+    setThemeClassName(themeClassesAbove(stripRef.current));
     setCurrentIndex(mediaIndex);
     setLightboxOpen(true);
   };
@@ -51,7 +71,10 @@ export function AttachmentsPreview({
 
   return (
     <>
-      <div className="custom-scrollbar mb-2 mt-4 flex w-full snap-x gap-3 overflow-x-auto pb-2">
+      <div
+        ref={stripRef}
+        className="custom-scrollbar mb-2 mt-4 flex w-full snap-x gap-3 overflow-x-auto pb-2"
+      >
         {attachedPages.map((page) => (
           <button
             key={page.id}
@@ -63,8 +86,10 @@ export function AttachmentsPreview({
           </button>
         ))}
         {mediaAttachments.map((attachment) => (
-          <div
+          <button
             key={attachment.id}
+            type="button"
+            aria-label={`Open ${attachment.type === 'video' ? 'video' : 'image'}`}
             className="group relative h-[90px] shrink-0 cursor-pointer snap-center overflow-hidden rounded-lg border"
             onClick={() => handleOpenLightbox(attachment)}
           >
@@ -82,14 +107,12 @@ export function AttachmentsPreview({
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={attachment.url}
-                alt={attachment.filename || 'Attachment'}
+                alt=""
                 loading="lazy"
                 className="h-full w-auto object-cover"
               />
             )}
-            {/* Subtle hover overlay to indicate clickability */}
-            <div className="absolute inset-0" />
-          </div>
+          </button>
         ))}
       </div>
 
@@ -99,6 +122,7 @@ export function AttachmentsPreview({
         open={lightboxOpen}
         onOpenChange={setLightboxOpen}
         onIndexChange={setCurrentIndex}
+        themeClassName={themeClassName}
       />
     </>
   );
