@@ -27,8 +27,8 @@ export function PreviewListItem({
   collaborators,
 }: PreviewListItemProps) {
   return (
-    <div className="flex flex-col gap-1 min-[481px]:flex-row min-[481px]:gap-[36px] print:mb-6">
-      <div className="shrink-0 pt-0.5 text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-muted min-[481px]:w-[94px]">
+    <div className="flex flex-col min-[481px]:flex-row min-[481px]:gap-[36px] print:mb-6">
+      <div className="shrink-0 text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-muted min-[481px]:w-[94px] min-[481px]:pt-0.5">
         {leftContent}
       </div>
 
@@ -75,7 +75,7 @@ export function PreviewListItem({
 
         {description && description !== '<p></p>' && (
           <div
-            className="prose prose-sm max-w-none text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:pl-0 prose-li:text-theme-secondary"
+            className="prose prose-sm mb-1 mt-2 max-w-none text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-0 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:pl-0 prose-li:text-theme-secondary [&_p+p:not(:empty)]:mt-4"
             style={{
               fontSize: 'var(--type-size)',
               lineHeight: 'var(--line-height)',
