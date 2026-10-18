@@ -1,8 +1,27 @@
 import { Metadata } from 'next';
 import { NotFoundEmojiArt } from '@/components/composite/NotFoundEmojiArt';
 
+const TITLE = 'Page not found';
+const DESCRIPTION =
+  'Portfoliofy is a drag-and-drop portfolio builder that helps professionals put together a polished, customizable profile in minutes.';
+const IMAGE = { url: '/opengraph-image.png', width: 1200, height: 630 };
+
 export const metadata: Metadata = {
-  title: 'Page Not Found',
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    siteName: 'Portfoliofy',
+    images: [IMAGE],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [IMAGE.url],
+  },
 };
 
 export default function NotFound() {
