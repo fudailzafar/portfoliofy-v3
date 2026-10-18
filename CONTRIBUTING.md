@@ -32,7 +32,24 @@ pnpm test
 
 ## Commit messages
 
-This repo follows [Conventional Commits](https://www.conventionalcommits.org/) — prefix your commit subject with `feat:`, `fix:`, `refactor:`, `style:`, `docs:`, `test:`, or `chore:` as appropriate. Add a `!` after the type (e.g. `refactor!:`) for a breaking change.
+This repo follows [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/): `type(optional scope): description`, e.g. `fix(auth): keep the sign-in dialog centred`.
+
+| Type       | Use it for                                                                                                                                                |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `feat`     | Anything new a user can see or do. Required for new features.                                                                                             |
+| `fix`      | Anything that was broken and now works, including security fixes. Required for bug fixes.                                                                 |
+| `style`    | Visual-only tweaks: spacing, colours, typography, small layout changes. If it adds something new, use `feat`; if it corrects something broken, use `fix`. |
+| `refactor` | Code changes with no visible effect.                                                                                                                      |
+| `perf`     | Changes that make something faster without changing what it does.                                                                                         |
+| `test`     | Adding or changing tests.                                                                                                                                 |
+| `docs`     | Documentation and code comments.                                                                                                                          |
+| `ci`       | CI workflows and git hooks.                                                                                                                               |
+| `chore`    | Dependencies, config, assets and other upkeep.                                                                                                            |
+
+- Keep the subject short, around 50 characters and never over 72, lowercase after the colon, with no trailing period.
+- A scope is optional and names a part of the app: `auth`, `posts`, `profile`, `explore`, `sidebar`, `landing`, `domain`, `middleware`, `ui`.
+- One change per commit. If a change needs two types, make two commits.
+- Add a `!` after the type (e.g. `refactor!:`) for a breaking change.
 
 ## Submitting a pull request
 
