@@ -29,15 +29,6 @@ function useIsTouch() {
   return isTouch;
 }
 
-// Arrow cursors for the previous/next halves of the image.
-const arrowCursor = (direction: 'left' | 'right') => {
-  const path = direction === 'left' ? 'M14 7l-5 5 5 5' : 'M10 7l5 5-5 5';
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="white" stroke="rgba(0,0,0,0.15)"/><path d="${path}" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}") 12 12, ${
-    direction === 'left' ? 'w-resize' : 'e-resize'
-  }`;
-};
-
 const PILL_CLASS =
   'pointer-events-auto mx-1.5 flex h-9 items-center rounded-3xl bg-[var(--theme-glass)] px-[18px] text-[14px] font-medium text-theme-primary shadow-[0_0_0_1px_var(--theme-faint-border)] backdrop-blur-[5px]';
 
@@ -282,15 +273,13 @@ function DesktopView({
               type="button"
               aria-label="Previous"
               onClick={onPrevious}
-              style={{ cursor: arrowCursor('left') }}
-              className="absolute inset-y-0 left-0 w-1/2 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-theme-primary"
+              className="lightbox-cursor-previous absolute inset-y-0 left-0 w-1/2 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-theme-primary"
             />
             <button
               type="button"
               aria-label="Next"
               onClick={onNext}
-              style={{ cursor: arrowCursor('right') }}
-              className="absolute inset-y-0 right-0 w-1/2 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-theme-primary"
+              className="lightbox-cursor-next absolute inset-y-0 right-0 w-1/2 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-theme-primary"
             />
           </>
         )}
