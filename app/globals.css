@@ -483,6 +483,41 @@
   --theme-faint-border: rgba(0, 0, 0, 0.1);
 }
 
+/* Lightbox previous/next halves: a small black arrow with a white outline
+   and a soft shadow, centred on the pointer, with a sharper copy for
+   high-density screens. */
+.lightbox-cursor-previous {
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cfilter id='s' filterUnits='userSpaceOnUse' x='0' y='0' width='20' height='20'%3E%3CfeDropShadow dy='1' stdDeviation='0.75' flood-opacity='0.35'/%3E%3C/filter%3E%3Cpath d='M4 10l3.5-3.5v2.5h6v2h-6v2.5z' fill='black' stroke='white' stroke-width='2.5' stroke-linejoin='miter' paint-order='stroke' filter='url(%23s)'/%3E%3C/svg%3E")
+      10 10,
+    pointer;
+  cursor:
+    image-set(
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cfilter id='s' filterUnits='userSpaceOnUse' x='0' y='0' width='20' height='20'%3E%3CfeDropShadow dy='1' stdDeviation='0.75' flood-opacity='0.35'/%3E%3C/filter%3E%3Cpath d='M4 10l3.5-3.5v2.5h6v2h-6v2.5z' fill='black' stroke='white' stroke-width='2.5' stroke-linejoin='miter' paint-order='stroke' filter='url(%23s)'/%3E%3C/svg%3E")
+          1x,
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 20 20'%3E%3Cfilter id='s' filterUnits='userSpaceOnUse' x='0' y='0' width='20' height='20'%3E%3CfeDropShadow dy='1' stdDeviation='0.75' flood-opacity='0.35'/%3E%3C/filter%3E%3Cpath d='M4 10l3.5-3.5v2.5h6v2h-6v2.5z' fill='black' stroke='white' stroke-width='2.5' stroke-linejoin='miter' paint-order='stroke' filter='url(%23s)'/%3E%3C/svg%3E")
+          2x
+      )
+      10 10,
+    pointer;
+}
+
+.lightbox-cursor-next {
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cfilter id='s' filterUnits='userSpaceOnUse' x='0' y='0' width='20' height='20'%3E%3CfeDropShadow dy='1' stdDeviation='0.75' flood-opacity='0.35'/%3E%3C/filter%3E%3Cpath d='M16 10l-3.5-3.5v2.5h-6v2h6v2.5z' fill='black' stroke='white' stroke-width='2.5' stroke-linejoin='miter' paint-order='stroke' filter='url(%23s)'/%3E%3C/svg%3E")
+      10 10,
+    pointer;
+  cursor:
+    image-set(
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cfilter id='s' filterUnits='userSpaceOnUse' x='0' y='0' width='20' height='20'%3E%3CfeDropShadow dy='1' stdDeviation='0.75' flood-opacity='0.35'/%3E%3C/filter%3E%3Cpath d='M16 10l-3.5-3.5v2.5h-6v2h6v2.5z' fill='black' stroke='white' stroke-width='2.5' stroke-linejoin='miter' paint-order='stroke' filter='url(%23s)'/%3E%3C/svg%3E")
+          1x,
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 20 20'%3E%3Cfilter id='s' filterUnits='userSpaceOnUse' x='0' y='0' width='20' height='20'%3E%3CfeDropShadow dy='1' stdDeviation='0.75' flood-opacity='0.35'/%3E%3C/filter%3E%3Cpath d='M16 10l-3.5-3.5v2.5h-6v2h6v2.5z' fill='black' stroke='white' stroke-width='2.5' stroke-linejoin='miter' paint-order='stroke' filter='url(%23s)'/%3E%3C/svg%3E")
+          2x
+      )
+      10 10,
+    pointer;
+}
+
 /* Lightbox pills: the page colour at 50% over a blur; dark mode uses #111. */
 .theme-default {
   --theme-glass: rgba(255, 255, 255, 0.5);
@@ -560,17 +595,8 @@
   cursor: grabbing;
 }
 
-/* Zoomable media (postMediaInteractions, above 600px): zoom cursors on
-   single images, a pointer on strip images. */
+/* Zoomable media (postMediaInteractions, above 600px). */
 [data-post-page] [data-zoomable] {
-  cursor: zoom-in;
-}
-
-[data-post-page] [data-zoomable][data-zoomed] {
-  cursor: zoom-out;
-}
-
-[data-post-page] .content-gallery-media[data-zoomable] {
   cursor: pointer;
 }
 
