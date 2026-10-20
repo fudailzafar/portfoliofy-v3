@@ -13,7 +13,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { buildContactUrl, extractUsername } from '@/utils/extractUsername';
+import {
+  buildContactUrl,
+  CONTACT_PLATFORMS,
+  extractUsername,
+} from '@/utils/extractUsername';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SortButtons } from '../SortButtons';
 
@@ -95,18 +99,9 @@ export function ContactsTab({
                     onEdit={() => {
                       setCurrentContact({
                         ...c,
-                        type: [
-                          'Website',
-                          'Email',
-                          'LinkedIn',
-                          'GitHub',
-                          'X',
-                          'Threads',
-                          'Figma',
-                          'Instagram',
-                          'Bluesky',
-                          'Mastodon',
-                        ].includes(c.platform)
+                        type: (CONTACT_PLATFORMS as readonly string[]).includes(
+                          c.platform,
+                        )
                           ? c.platform
                           : 'Custom',
                         username: extractUsername(c.link, c.platform),
@@ -152,19 +147,7 @@ export function ContactsTab({
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {[
-                      'Custom',
-                      'Website',
-                      'Email',
-                      'LinkedIn',
-                      'GitHub',
-                      'X',
-                      'Threads',
-                      'Figma',
-                      'Instagram',
-                      'Bluesky',
-                      'Mastodon',
-                    ].map((p) => (
+                    {CONTACT_PLATFORMS.map((p) => (
                       <SelectItem key={p} value={p}>
                         {p}
                       </SelectItem>

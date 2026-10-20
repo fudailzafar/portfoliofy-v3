@@ -1,3 +1,66 @@
+// Options in the contact type picker, in display order. 'Custom' takes a
+// platform name and full URL; every other type is a handle or address.
+export const CONTACT_PLATFORMS = [
+  'Custom',
+  'Website',
+  'Email',
+  'Are.na',
+  'Bluesky',
+  'Dribbble',
+  'Facebook',
+  'Figma',
+  'GitHub',
+  'Honk',
+  'Instagram',
+  'Itch',
+  'LinkedIn',
+  'Mastodon',
+  'Telegram',
+  'Threads',
+  'TikTok',
+  'Twitch',
+  'VSCO',
+  'Vimeo',
+  'X',
+  'YouTube',
+] as const;
+
+const HANDLE_URLS: Record<string, (username: string) => string> = {
+  twitter: (u) => `https://x.com/${u}`,
+  x: (u) => `https://x.com/${u}`,
+  linkedin: (u) => `https://linkedin.com/in/${u}`,
+  github: (u) => `https://github.com/${u}`,
+  instagram: (u) => `https://instagram.com/${u}`,
+  threads: (u) => `https://threads.net/@${u}`,
+  figma: (u) => `https://figma.com/@${u}`,
+  bluesky: (u) => `https://bsky.app/profile/${u}`,
+  mastodon: (u) => `https://mastodon.social/@${u}`,
+  facebook: (u) => `https://facebook.com/${u}`,
+  dribbble: (u) => `https://dribbble.com/${u}`,
+  'are.na': (u) => `https://are.na/${u}`,
+  telegram: (u) => `https://t.me/${u}`,
+  twitch: (u) => `https://twitch.tv/${u}`,
+  itch: (u) => `https://${u}.itch.io`,
+  vimeo: (u) => `https://vimeo.com/${u}`,
+  tiktok: (u) => `https://tiktok.com/@${u}`,
+  vsco: (u) => `https://vsco.co/${u}`,
+  honk: (u) => `https://honk.me/${u}`,
+  youtube: (u) => `https://youtube.com/@${u}`,
+};
+
+// Profile hosts whose first path segment is the username.
+const HANDLE_DOMAINS = [
+  'facebook.com',
+  'dribbble.com',
+  'are.na',
+  't.me',
+  'twitch.tv',
+  'vimeo.com',
+  'tiktok.com',
+  'vsco.co',
+  'honk.me',
+];
+
 export function buildContactUrl(link: string, platform: string): string {
   if (!link) return '';
 
@@ -24,37 +87,14 @@ export function buildContactUrl(link: string, platform: string): string {
     return `mailto:${cleanLink}`;
   }
 
-  if (
-    cleanLink.includes('.') &&
-    !cleanLink.includes(' ') &&
-    !cleanLink.startsWith('@')
-  ) {
-    return `https://${cleanLink}`;
+  // A bare handle on a known platform, even one with dots (john.doe,
+  // name.bsky.social), is a username rather than a domain.
+  const toProfileUrl = HANDLE_URLS[platform.toLowerCase()];
+  if (toProfileUrl && !cleanLink.includes('/')) {
+    return toProfileUrl(cleanLink.replace(/^@/, ''));
   }
 
-  const username = cleanLink.replace(/^@/, '');
-
-  switch (platform.toLowerCase()) {
-    case 'twitter':
-    case 'x':
-      return `https://x.com/${username}`;
-    case 'linkedin':
-      return `https://linkedin.com/in/${username}`;
-    case 'github':
-      return `https://github.com/${username}`;
-    case 'instagram':
-      return `https://instagram.com/${username}`;
-    case 'threads':
-      return `https://threads.net/@${username}`;
-    case 'figma':
-      return `https://figma.com/@${username}`;
-    case 'bluesky':
-      return `https://bsky.app/profile/${username}`;
-    case 'mastodon':
-      return `https://mastodon.social/@${username}`;
-    default:
-      return `https://${cleanLink}`;
-  }
+  return `https://${cleanLink}`;
 }
 
 export function extractUsername(url: string, _platform?: string): string {
@@ -82,6 +122,12 @@ export function extractUsername(url: string, _platform?: string): string {
   // Remove trailing slashes
   cleanUrl = cleanUrl.replace(/\/+$/, '');
 
+  // itch.io puts the username in the subdomain.
+  const itch = cleanUrl.match(/^([^./]+)\.itch\.io(?:\/|$)/i);
+  if (itch) {
+    return itch[1];
+  }
+
   // If it's just a domain (like a personal website), return the domain
   if (!cleanUrl.includes('/')) {
     return cleanUrl;
@@ -100,9 +146,18 @@ export function extractUsername(url: string, _platform?: string): string {
       domain.includes('instagram.com') ||
       domain.includes('threads.net') ||
       domain.includes('figma.com') ||
-      domain.includes('bsky.app') // Bluesky typically uses bsky.app/profile/username
+      domain.includes('bsky.app') || // Bluesky typically uses bsky.app/profile/username
+      HANDLE_DOMAINS.some((d) => domain === d || domain.endsWith(`.${d}`))
     ) {
       if (domain.includes('bsky.app') && parts[1] === 'profile') {
+        return parts[2] || parts[1];
+      }
+      return parts[1] || parts[0];
+    }
+
+    // For YouTube: youtube.com/@handle, or older /c/, /channel/ and /user/ links
+    if (domain === 'youtube.com' || domain.endsWith('.youtube.com')) {
+      if (['c', 'channel', 'user'].includes(parts[1])) {
         return parts[2] || parts[1];
       }
       return parts[1] || parts[0];
