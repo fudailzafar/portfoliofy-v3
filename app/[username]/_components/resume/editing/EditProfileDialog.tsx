@@ -594,17 +594,19 @@ export function EditProfileDialog({
                           checkUsernameMutation.isPending ||
                           !activeFormValid
                         }
-                        className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+                        className="grid h-9 place-items-center rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
                       >
-                        {isSaving ? (
-                          <div className="flex items-center gap-2">
-                            <Spinner
-                              size={14}
-                              className="text-content-primary"
-                            />
-                          </div>
-                        ) : (
-                          'Save'
+                        {/* Label and spinner share one grid cell, so the width holds. */}
+                        <span
+                          className={`[grid-area:1/1] ${isSaving ? 'invisible' : ''}`}
+                        >
+                          Save
+                        </span>
+                        {isSaving && (
+                          <Spinner
+                            size={14}
+                            className="text-content-primary [grid-area:1/1]"
+                          />
                         )}
                       </button>
                     </>
@@ -612,14 +614,19 @@ export function EditProfileDialog({
                     <button
                       onClick={handleDone}
                       disabled={isClosing}
-                      className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+                      className="grid h-9 place-items-center rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
                     >
-                      {isClosing ? (
-                        <div className="flex items-center gap-2">
-                          <Spinner size={14} className="text-content-primary" />
-                        </div>
-                      ) : (
-                        'Done'
+                      {/* Label and spinner share one grid cell, so the width holds. */}
+                      <span
+                        className={`[grid-area:1/1] ${isClosing ? 'invisible' : ''}`}
+                      >
+                        Done
+                      </span>
+                      {isClosing && (
+                        <Spinner
+                          size={14}
+                          className="text-content-primary [grid-area:1/1]"
+                        />
                       )}
                     </button>
                   )}

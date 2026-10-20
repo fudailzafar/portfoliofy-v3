@@ -253,14 +253,19 @@ export function ProfileContent({
                   !activeFormValid ||
                   !activeFormDirty
                 }
-                className="h-9 rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 disabled:opacity-50 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+                className="grid h-9 place-items-center rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 disabled:opacity-50 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
               >
-                {isSaving ? (
-                  <div className="flex items-center gap-2">
-                    <Spinner size={14} className="text-content-primary" />
-                  </div>
-                ) : (
-                  'Save'
+                {/* Label and spinner share one grid cell, so the width holds. */}
+                <span
+                  className={`[grid-area:1/1] ${isSaving ? 'invisible' : ''}`}
+                >
+                  Save
+                </span>
+                {isSaving && (
+                  <Spinner
+                    size={14}
+                    className="text-content-primary [grid-area:1/1]"
+                  />
                 )}
               </button>
             </>
@@ -281,14 +286,19 @@ export function ProfileContent({
                   checkUsernameMutationIsPending ||
                   !activeFormValid
                 }
-                className="h-9 rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+                className="grid h-9 place-items-center rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
               >
-                {isSaving ? (
-                  <div className="flex items-center gap-2">
-                    <Spinner size={14} className="text-content-primary" />
-                  </div>
-                ) : (
-                  'Save'
+                {/* Label and spinner share one grid cell, so the width holds. */}
+                <span
+                  className={`[grid-area:1/1] ${isSaving ? 'invisible' : ''}`}
+                >
+                  Save
+                </span>
+                {isSaving && (
+                  <Spinner
+                    size={14}
+                    className="text-content-primary [grid-area:1/1]"
+                  />
                 )}
               </button>
             </>
@@ -296,14 +306,19 @@ export function ProfileContent({
             <button
               onClick={onDone}
               disabled={isClosing}
-              className="h-9 rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 disabled:opacity-80 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+              className="grid h-9 place-items-center rounded-md border border-border-strong bg-surface-1 px-6 text-[14px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 disabled:opacity-80 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
             >
-              {isClosing ? (
-                <div className="flex items-center gap-2">
-                  <Spinner size={14} className="text-content-primary" />
-                </div>
-              ) : (
-                'Done'
+              {/* Label and spinner share one grid cell, so the width holds. */}
+              <span
+                className={`[grid-area:1/1] ${isClosing ? 'invisible' : ''}`}
+              >
+                Done
+              </span>
+              {isClosing && (
+                <Spinner
+                  size={14}
+                  className="text-content-primary [grid-area:1/1]"
+                />
               )}
             </button>
           )}

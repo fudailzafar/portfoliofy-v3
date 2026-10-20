@@ -550,6 +550,122 @@
   }
 }
 
+/* Dialog motion, shared by components/ui/dialog and alert-dialog: the same
+   spring as the sign-in dialog (stiffness 700, damping 50), sampled into
+   linear(). The backdrop fades; the card fades and rises 20px into place, and
+   closing plays it in reverse. Older browsers fall back to an ease-out. */
+:root {
+  --dialog-spring: cubic-bezier(0.25, 1, 0.5, 1);
+  --dialog-duration: 300ms;
+}
+
+@supports (animation-timing-function: linear(0, 1)) {
+  :root {
+    --dialog-spring: linear(
+      0,
+      0.03,
+      0.101,
+      0.193,
+      0.293,
+      0.393,
+      0.486,
+      0.571,
+      0.646,
+      0.711,
+      0.766,
+      0.813,
+      0.851,
+      0.882,
+      0.908,
+      0.928,
+      0.945,
+      0.958,
+      0.968,
+      0.976,
+      0.982,
+      0.987,
+      0.99,
+      0.993,
+      0.995,
+      0.996,
+      0.998,
+      0.998,
+      0.999,
+      0.999,
+      1
+    );
+  }
+}
+
+.dialog-overlay[data-state='open'] {
+  animation: dialog-fade-in var(--dialog-duration) var(--dialog-spring);
+}
+
+.dialog-overlay[data-state='closed'] {
+  animation: dialog-fade-out var(--dialog-duration) var(--dialog-spring)
+    forwards;
+}
+
+.dialog-content[data-state='open'] {
+  animation: dialog-rise-in var(--dialog-duration) var(--dialog-spring);
+}
+
+.dialog-content[data-state='closed'] {
+  animation: dialog-rise-out var(--dialog-duration) var(--dialog-spring)
+    forwards;
+}
+
+@keyframes dialog-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Both ends spell out the centring translate the card already uses. */
+@keyframes dialog-rise-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 20px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes dialog-rise-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 20px));
+  }
+}
+
+/* Reduced motion keeps the fade and drops the rise. */
+@media (prefers-reduced-motion: reduce) {
+  .dialog-content[data-state='open'] {
+    animation-name: dialog-fade-in;
+  }
+  .dialog-content[data-state='closed'] {
+    animation-name: dialog-fade-out;
+  }
+}
+
 /* Lightbox pills: the page colour at 50% over a blur; dark mode uses #111. */
 .theme-default {
   --theme-glass: rgba(255, 255, 255, 0.5);
