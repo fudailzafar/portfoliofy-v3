@@ -46,7 +46,7 @@ async function getSingleUserLlmsTxt(
   if (bio) out += `\n${bio}\n`;
 
   const publishedPosts = (pages || [])
-    .filter((p) => !p.hidden)
+    .filter((p) => !p.hidden && !p.passwordHash)
     .map((p) => ({
       ...p,
       parsedDate: p.createdAt ? new Date(p.createdAt) : null,

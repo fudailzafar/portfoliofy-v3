@@ -1,7 +1,12 @@
 import React, { useMemo } from 'react';
 import { ResumeData } from '@/lib/server/dbActions';
-import { AttachmentSchemaType, estimateReadMinutes } from '@/lib/resume';
+import {
+  AttachmentSchemaType,
+  estimateReadMinutes,
+  isRedactedPage,
+} from '@/lib/resume';
 import Link from 'next/link';
+import { Lock } from 'lucide-react';
 
 export function PublicWritingList({
   resume,
@@ -81,7 +86,10 @@ export function PublicWritingList({
                     day: 'numeric',
                   })
                 : '';
-              const readLabel = `${estimateReadMinutes(page.content || '')} min read`;
+              const redacted = isRedactedPage(page);
+              const readLabel = redacted
+                ? 'Enter password to view'
+                : `${estimateReadMinutes(page.content || '')} min read`;
               return (
                 <div
                   key={page.id}
@@ -102,7 +110,15 @@ export function PublicWritingList({
                         href={href}
                         className={`line-clamp-2 w-fit text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-primary ${underline}`}
                       >
-                        {page.title || 'Untitled'}
+                        {redacted
+                          ? 'This page is private'
+                          : page.title || 'Untitled'}
+                        {page.passwordProtected && !redacted && (
+                          <Lock
+                            aria-label="Password protected"
+                            className="relative -top-px ml-1.5 inline h-3.5 w-3.5 text-theme-muted"
+                          />
+                        )}
                       </Link>
                       <Link
                         href={href}
@@ -124,8 +140,9 @@ export function PublicWritingList({
                     href={href}
                     tabIndex={-1}
                     aria-hidden="true"
-                    className="relative h-[90px] w-[30%] min-w-[40px] max-w-[152px] shrink-0 overflow-hidden rounded-lg bg-[var(--theme-thumb-bg)] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-[var(--theme-faint-border)] max-[480px]:w-[37.5%]"
+                    className="relative flex h-[90px] w-[30%] min-w-[40px] max-w-[152px] shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[var(--theme-thumb-bg)] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-[var(--theme-faint-border)] max-[480px]:w-[37.5%]"
                   >
+                    {redacted && <Lock className="h-4 w-4 text-theme-muted" />}
                     {page.url && (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img

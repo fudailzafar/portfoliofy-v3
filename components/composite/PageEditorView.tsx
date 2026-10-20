@@ -20,6 +20,7 @@ import {
   Strikethrough,
   Link as LinkIcon,
   CodeXml,
+  Lock,
 } from 'lucide-react';
 import { cn, getOptimizedImageUrl } from '@/lib/utils';
 import { useS3Upload } from 'next-s3-upload';
@@ -36,6 +37,7 @@ import { EmbedDialog } from '@/components/composite/EmbedDialog';
 import { PageContent } from '@/components/composite/PageContent';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { DeleteConfirmDialog } from '@/app/[username]/_components/resume/editing/dialogs';
+import { PagePasswordDialog } from '@/components/composite/PagePasswordDialog';
 import { usePagePersistence } from '@/hooks/usePagePersistence';
 import { useAnchoredMenu } from '@/hooks/useAnchoredMenu';
 import { useResumeStore } from '@/store/useResumeStore';
@@ -149,6 +151,11 @@ export function PageEditorView({
   const statusMenu = useAnchoredMenu();
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isPasswordOpen, setIsPasswordOpen] = useState(false);
+  // Kept locally: refreshing the page prop would reset unsaved edits.
+  const [passwordProtected, setPasswordProtected] = useState(
+    !!page?.passwordProtected,
+  );
   // Slug auto-follows the title until the user edits it by hand.
   const slugTouchedRef = useRef(false);
   // The field values last saved; isDirty compares against these.
@@ -177,6 +184,12 @@ export function PageEditorView({
     resetToBaseline();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
+
+  useEffect(() => {
+    setPasswordProtected(!!page?.passwordProtected);
+    // Only when a different page opens; same-page updates come from the dialog.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page?.id]);
 
   const editor = useEditor({
     extensions: [
@@ -264,7 +277,21 @@ export function PageEditorView({
         : page?.createdAt || new Date().toISOString(),
       hidden: page?.hidden ?? false,
       isBlurred: page?.isBlurred ?? false,
+      passwordProtected,
     };
+  };
+
+  // The password is saved on its own endpoint; mirror the result into the
+  // page list so the Writing tab shows the lock straight away.
+  const handlePasswordChanged = (nextProtected: boolean) => {
+    if (!page) return;
+    setPasswordProtected(nextProtected);
+    const { resume: current, applyPersistedPatch } = useResumeStore.getState();
+    applyPersistedPatch({
+      pages: (current?.pages || []).map((p) =>
+        p.id === page.id ? { ...p, passwordProtected: nextProtected } : p,
+      ),
+    });
   };
 
   // Publishes immediately, independent of the global Save. Store what the
@@ -412,6 +439,12 @@ export function PageEditorView({
             )}
           >
             {status === 'published' ? 'Published' : 'Draft'}
+            {passwordProtected && (
+              <Lock
+                aria-label="Password protected"
+                className="ml-2 h-3.5 w-3.5"
+              />
+            )}
           </button>
 
           {statusMenu.isOpen &&
@@ -442,6 +475,17 @@ export function PageEditorView({
                     className="flex w-full items-center px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 active:text-content-primary disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     Discard changes
+                  </button>
+                )}
+                {status !== 'new' && (
+                  <button
+                    onClick={() => {
+                      statusMenu.setIsOpen(false);
+                      setIsPasswordOpen(true);
+                    }}
+                    className="flex w-full items-center px-4 py-2.5 text-left text-sm text-content-secondary transition-colors hover:bg-surface-2 active:text-content-primary"
+                  >
+                    Password protect…
                   </button>
                 )}
                 {status === 'published' && (
@@ -621,6 +665,16 @@ export function PageEditorView({
           onConfirm={handleConfirmDelete}
           isLoading={isSaving}
         />
+
+        {page && (
+          <PagePasswordDialog
+            open={isPasswordOpen}
+            onOpenChange={setIsPasswordOpen}
+            pageId={page.id}
+            isProtected={passwordProtected}
+            onChanged={handlePasswordChanged}
+          />
+        )}
 
         <button
           onClick={() => editor?.chain().focus().toggleBold().run()}

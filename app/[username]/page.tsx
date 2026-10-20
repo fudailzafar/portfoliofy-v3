@@ -3,6 +3,7 @@ import { PrintResumeWrapper } from '@/app/[username]/_components/resume/PrintRes
 import { FullResume } from '@/app/[username]/_components/resume/FullResume';
 import { Metadata } from 'next';
 import { getUserData } from './utils';
+import { toOwnerResume, toPublicResume } from '@/lib/server/pagePasswords';
 import {
   getOptimizedImageUrl,
   isOwnS3ImageUrl,
@@ -149,6 +150,9 @@ export default async function ProfilePage({
 
   const isPersonalDomainView = username.includes('.') || isSubdomainView;
   const isOwner = userId === user_id && !isPersonalDomainView;
+  // Locked pages reach visitors as stubs; only the owner gets their content.
+  const ownerResume = toOwnerResume(resume.resumeData);
+  const publicResume = toPublicResume(resume.resumeData);
 
   return (
     <ProfileUrlProvider isPersonalDomainView={isPersonalDomainView}>
@@ -159,9 +163,9 @@ export default async function ProfilePage({
         />
         {/* Standard UI visible only on screen */}
         <div className="flex flex-1 flex-col print:hidden">
-          {isOwner && resume?.resumeData && (
+          {isOwner && ownerResume && (
             <EditProfileDialog
-              resume={resume.resumeData}
+              resume={ownerResume}
               username={username}
               picture={profilePicture}
               createdAt={userProfile?.createdAt}
@@ -170,7 +174,7 @@ export default async function ProfilePage({
 
           {isOwner ? (
             <LiveResumeWrapper
-              initialResume={resume?.resumeData}
+              initialResume={ownerResume}
               profilePicture={profilePicture}
               isOwner={true}
               userProfile={userProfile || undefined}
@@ -192,7 +196,7 @@ export default async function ProfilePage({
               }`}
             >
               <FullResume
-                resume={resume?.resumeData as any}
+                resume={publicResume as any}
                 profilePicture={profilePicture}
                 isOwner={false}
                 userProfile={userProfile || undefined}
@@ -209,7 +213,7 @@ export default async function ProfilePage({
 
         {/* Print-only layout */}
         <PrintResumeWrapper
-          resume={resume?.resumeData}
+          resume={userId === user_id ? ownerResume : publicResume}
           isOwner={userId === user_id}
         />
       </div>

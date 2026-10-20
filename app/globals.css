@@ -518,6 +518,38 @@
     pointer;
 }
 
+/* Padlock on the post lock screen: the shackle rises 2px, holds, then swings
+   open around its right leg (x = 13), 400ms in all. */
+.padlock-shackle {
+  transform-box: view-box;
+  transform-origin: 13px 0;
+}
+
+.padlock-shackle[data-open='true'] {
+  animation: padlock-open 400ms forwards;
+}
+
+@keyframes padlock-open {
+  0% {
+    transform: none;
+    animation-timing-function: ease-out;
+  }
+  25%,
+  31% {
+    transform: translateY(-2px);
+    animation-timing-function: ease-in-out;
+  }
+  100% {
+    transform: translateY(-2px) scaleX(-1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .padlock-shackle[data-open='true'] {
+    animation-duration: 1ms;
+  }
+}
+
 /* Lightbox pills: the page colour at 50% over a blur; dark mode uses #111. */
 .theme-default {
   --theme-glass: rgba(255, 255, 255, 0.5);

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { AttachmentSchemaType, estimateReadMinutes } from '@/lib/resume';
-import { Pen } from 'lucide-react';
+import { Pen, Lock } from 'lucide-react';
 import { usePagePersistence } from '@/hooks/usePagePersistence';
 import { DeleteConfirmDialog } from '../dialogs';
 import { withErrorToast } from '@/lib/errorToast';
@@ -133,6 +133,12 @@ export function WritingTab({
                 <div className="flex flex-col">
                   <span className="text-sm text-content-primary">
                     {page.title || 'Untitled'}
+                    {page.passwordProtected && (
+                      <Lock
+                        aria-label="Password protected"
+                        className="relative -top-px ml-1.5 inline h-3.5 w-3.5 text-content-muted"
+                      />
+                    )}
                   </span>
                   <div className="mt-1 flex items-center gap-1.5 text-sm text-content-muted">
                     {formatPageDate(page.createdAt) && (

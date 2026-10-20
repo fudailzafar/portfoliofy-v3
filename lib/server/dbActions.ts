@@ -3,6 +3,7 @@ import { ResumeDataSchema, migrateEmbeddedPages } from '@/lib/resume';
 import { z } from 'zod';
 import { RESERVED_USERNAMES } from '../routes';
 import { sanitizeResumeData } from './sanitize';
+import { hashPagePassword, withStoredPagePasswords } from './pagePasswords';
 import {
   normalizeUsername,
   isValidUsernameFormat,
@@ -60,13 +61,24 @@ export async function getResume(userId: string): Promise<Resume | undefined> {
 export async function storeResume(
   userId: string,
   resumeData: Resume,
+  { keepStoredPagePasswords = true } = {},
 ): Promise<void> {
   try {
     const validatedData = ResumeSchema.parse(resumeData);
 
     // Defensive: heal any embedded-page-in-attachments data a stale client
     // might still send, so a save always persists the current shape.
-    const migratedResumeData = migrateEmbeddedPages(validatedData.resumeData);
+    let migratedResumeData = migrateEmbeddedPages(validatedData.resumeData);
+
+    // Page passwords change only through setPagePassword; an ordinary save
+    // keeps whatever is stored, whatever the client sent.
+    if (keepStoredPagePasswords) {
+      const stored = await getResume(userId);
+      migratedResumeData = withStoredPagePasswords(
+        migratedResumeData,
+        stored?.resumeData,
+      );
+    }
 
     // Strip untrusted markup before it ever reaches the database, so every
     // render path (public profile, print view, editor preview) is safe.
@@ -103,6 +115,33 @@ export async function storeResume(
     console.error('Error storing resume:', error);
     throw new Error('Failed to store resume');
   }
+}
+
+// Sets (or, with null, removes) a page's password. Returns false if the
+// page doesn't exist.
+export async function setPagePassword(
+  userId: string,
+  pageId: string,
+  password: string | null,
+): Promise<boolean> {
+  const stored = await getResume(userId);
+  const pages = stored?.resumeData?.pages;
+  if (!stored?.resumeData || !pages?.some((p) => p.id === pageId)) {
+    return false;
+  }
+  const passwordHash = password ? hashPagePassword(password) : undefined;
+  await storeResume(
+    userId,
+    {
+      ...stored,
+      resumeData: {
+        ...stored.resumeData,
+        pages: pages.map((p) => (p.id === pageId ? { ...p, passwordHash } : p)),
+      },
+    },
+    { keepStoredPagePasswords: false },
+  );
+  return true;
 }
 
 export const createUsernameLookup = async ({
