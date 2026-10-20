@@ -231,12 +231,14 @@ export function withPageRemoved(
   return patch;
 }
 
-// Every indexable page on the resume, for sitemap generation. Password
-// protected pages are left out so search engines never list them.
+// Pages search engines may list: published, shown on the Writing tab and not
+// password protected. Drafts would otherwise leak their URLs.
 export function getAllPageAttachments(
   resumeData: ResumeDataSchemaType | null | undefined,
 ): AttachmentSchemaType[] {
-  return (resumeData?.pages || []).filter((p) => p.slug && !p.passwordHash);
+  return (resumeData?.pages || []).filter(
+    (p) => p.slug && !p.hidden && !p.isBlurred && !p.passwordHash,
+  );
 }
 
 export function slugify(text: string): string {

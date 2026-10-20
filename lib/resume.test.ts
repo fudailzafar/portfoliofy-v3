@@ -10,6 +10,7 @@ import {
   slugify,
   dedupeSlug,
   estimateReadMinutes,
+  getAllPageAttachments,
 } from './resume';
 
 const baseResume = {
@@ -464,5 +465,29 @@ describe('estimateReadMinutes', () => {
   it('uses a 200-words-per-minute formula', () => {
     const html = Array(650).fill('word').join(' ');
     expect(estimateReadMinutes(html)).toBe(4); // ceil(650 / 200)
+  });
+});
+
+describe('getAllPageAttachments (sitemap)', () => {
+  const page = (id: string, extra: Record<string, unknown> = {}) => ({
+    id,
+    type: 'page' as const,
+    slug: id,
+    hidden: false,
+    isBlurred: false,
+    ...extra,
+  });
+
+  it('lists only published, visible, unprotected pages', () => {
+    const slugs = getAllPageAttachments({
+      pages: [
+        page('live'),
+        page('draft', { hidden: true }),
+        page('unlisted', { isBlurred: true }),
+        page('locked', { passwordHash: 'scrypt$aa$bb' }),
+        page('no-slug', { slug: undefined }),
+      ],
+    } as any).map((p) => p.slug);
+    expect(slugs).toEqual(['live']);
   });
 });
