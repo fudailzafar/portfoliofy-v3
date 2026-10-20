@@ -20,9 +20,14 @@ export async function GET(
       ? findPageBySlug(resume.resumeData, slug)
       : undefined;
 
-    const title = found?.title || 'Untitled';
+    // Link previews must not leak a protected page, even to someone who has
+    // unlocked it: this image is public.
+    const isProtected = !!found?.passwordHash;
+    const title = isProtected ? 'Private page' : found?.title || 'Untitled';
     const name = resume?.resumeData?.header?.name || username;
-    const readMinutes = estimateReadMinutes(found?.content || '');
+    const subtitle = isProtected
+      ? 'Password protected'
+      : `${estimateReadMinutes(found?.content || '')} min read`;
 
     // ImageResponse fetches `src` server-side, so only trust our own S3 URLs.
     const rawProfileImage =
@@ -148,7 +153,7 @@ export async function GET(
               letterSpacing: '-0.01em',
             }}
           >
-            {readMinutes} min read
+            {subtitle}
           </div>
         </div>
       </div>,

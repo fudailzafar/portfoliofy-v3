@@ -70,6 +70,11 @@ export const AttachmentSchema = z.object({
     .optional()
     .default(false)
     .describe('Whether the page is hidden/blurred from public view'),
+  // Server-only: set through /api/pages/[pageId]/password and stripped from
+  // every response (see lib/server/pagePasswords.ts).
+  passwordHash: z.string().optional(),
+  // Derived on the way out, never stored: tells clients the page is locked.
+  passwordProtected: z.boolean().optional(),
 });
 
 export type AttachmentSchemaType = z.infer<typeof AttachmentSchema>;
@@ -167,6 +172,12 @@ export function estimateReadMinutes(html: string): number {
   return Math.max(1, Math.ceil(words.length / 200));
 }
 
+// A locked page as visitors receive it: toPublicResume keeps only id, slug
+// and date, so there is no title or content to show.
+export function isRedactedPage(page: AttachmentSchemaType): boolean {
+  return !!page.passwordProtected && page.content === undefined;
+}
+
 // Static routes under /[username]/ that would shadow a page with that slug.
 export const RESERVED_PAGE_SLUGS = ['og'];
 
@@ -220,11 +231,12 @@ export function withPageRemoved(
   return patch;
 }
 
-// Every page on the resume, for sitemap generation.
+// Every indexable page on the resume, for sitemap generation. Password
+// protected pages are left out so search engines never list them.
 export function getAllPageAttachments(
   resumeData: ResumeDataSchemaType | null | undefined,
 ): AttachmentSchemaType[] {
-  return (resumeData?.pages || []).filter((p) => p.slug);
+  return (resumeData?.pages || []).filter((p) => p.slug && !p.passwordHash);
 }
 
 export function slugify(text: string): string {

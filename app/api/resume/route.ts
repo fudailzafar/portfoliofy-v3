@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { revalidateTag } from 'next/cache';
 import { checkRateLimit } from '@/lib/server/rateLimit';
+import { toOwnerResume } from '@/lib/server/pagePasswords';
 
 const RESUME_SAVE_MAX_REQUESTS = 30;
 const RESUME_SAVE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
@@ -20,7 +21,12 @@ export async function GET(): Promise<NextResponse<GetResumeResponse>> {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     const resume = await getResume(session.user.id);
-    return NextResponse.json({ resume });
+    return NextResponse.json({
+      resume: resume && {
+        ...resume,
+        resumeData: toOwnerResume(resume.resumeData),
+      },
+    });
   } catch (error) {
     console.error('Error retrieving resume:', error);
     return NextResponse.json(

@@ -1,34 +1,16 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { getUserData } from '../utils';
-import { findPageBySlug, estimateReadMinutes } from '@/lib/resume';
-import {
-  getOptimizedImageUrl,
-  isOwnS3ImageUrl,
-  getCanonicalUrl,
-} from '@/lib/utils';
+import { isOwnS3ImageUrl, getCanonicalUrl } from '@/lib/utils';
 import { getCachedCustomDomainByUserId } from '@/lib/server/cachedFunctions';
-import { PageContent } from '@/components/composite/PageContent';
-import { ShareButton } from './ShareButton';
-import { PostStatusBadge } from './PostStatusBadge';
-import { SITE_URL, classifyHost } from '@/lib/site';
-
-const parsePageDate = (dateStr?: string) => {
-  if (!dateStr) return null;
-  const parsed = new Date(dateStr);
-  return isNaN(parsed.getTime()) ? null : parsed;
-};
-
-async function resolvePage(username: string, slug: string) {
-  const { user_id, resume, userProfile } = await getUserData(username);
-  if (!user_id || !resume?.resumeData) return null;
-
-  const page = findPageBySlug(resume.resumeData, slug);
-  if (!page || page.hidden) return null;
-
-  return { user_id, page, resumeData: resume.resumeData, userProfile };
-}
+import { SITE_URL } from '@/lib/site';
+import { PageLockScreen } from './PageLockScreen';
+import { PostBody } from './PostBody';
+import {
+  getPostViewProps,
+  isPageLocked,
+  postRootClassName,
+  resolvePage,
+} from './postView';
 
 export async function generateMetadata({
   params,
@@ -52,9 +34,35 @@ export async function generateMetadata({
 
   const customDomain = await getCachedCustomDomainByUserId(resolved.user_id);
   const canonicalUrl = getCanonicalUrl(username, customDomain, slug);
+  // Protected pages are never indexed; while locked they reveal nothing.
+  const isProtected = !!resolved.page.passwordHash;
+
+  if (await isPageLocked(resolved.page, resolved.user_id)) {
+    return {
+      title: 'This page is password protected',
+      robots: { index: false, follow: false },
+      icons: customFavicon ? { icon: customFavicon } : undefined,
+      alternates: { canonical: canonicalUrl },
+      openGraph: {
+        type: 'website',
+        title: 'This page is password protected',
+        images: [
+          {
+            url: `${SITE_URL}/${username}/og`,
+            width: 1200,
+            height: 630,
+          },
+        ],
+      },
+      other: {
+        'og:logo': customFavicon || `${SITE_URL}/favicon.ico`,
+      },
+    };
+  }
 
   return {
     title: `${resolved.page.title}`,
+    ...(isProtected && { robots: { index: false, follow: false } }),
     description: stripHtml(resolved.page.content).slice(0, 200),
     icons: customFavicon ? { icon: customFavicon } : undefined,
     alternates: { canonical: canonicalUrl },
@@ -87,22 +95,24 @@ export default async function PageDetail({
 
   if (!resolved) notFound();
 
-  const { user_id, page, resumeData, userProfile } = resolved;
-  const design = resumeData.design;
-  const avatarUrl = getOptimizedImageUrl(
-    userProfile?.avatarUrl || userProfile?.image || undefined,
-  );
+  const { user_id, page, resumeData } = resolved;
+  const rootClassName = postRootClassName(resumeData.design);
+  const view = await getPostViewProps(username, resolved);
 
-  const headersList = await import('next/headers').then((m) => m.headers());
-  const isSubdomainView =
-    classifyHost(headersList.get('host')).kind === 'subdomain';
-  const isPersonalDomainView = username.includes('.') || isSubdomainView;
-  // Same rule as the profile: a personal domain can turn social bits off.
-  const statusEmoji =
-    isPersonalDomainView && design?.hideSocialFeatures
-      ? null
-      : userProfile?.statusEmoji;
-  const profileHref = isPersonalDomainView ? '/' : `/${username}`;
+  if (await isPageLocked(page, user_id)) {
+    return (
+      <div data-post-page className={rootClassName}>
+        <PageLockScreen
+          username={username}
+          slug={slug}
+          ownerName={view.ownerName}
+          avatarUrl={view.avatarUrl}
+          statusEmoji={view.statusEmoji}
+          profileHref={view.profileHref}
+        />
+      </div>
+    );
+  }
 
   const stripHtml = (html?: string) =>
     html ? html.replace(/<[^>]*>?/gm, '').trim() : '';
@@ -128,111 +138,13 @@ export default async function PageDetail({
     mainEntityOfPage: postCanonicalUrl,
   };
 
-  const publishedPages = (resumeData.pages || [])
-    .filter((p) => !p.hidden && !p.isBlurred)
-    .map((p) => ({ ...p, parsedDate: parsePageDate(p.createdAt) }))
-    .sort(
-      (a, b) => (b.parsedDate?.getTime() || 0) - (a.parsedDate?.getTime() || 0),
-    );
-  const currentIndex = publishedPages.findIndex((p) => p.id === page.id);
-
-  const nextPage =
-    currentIndex !== -1 && publishedPages.length > 1
-      ? currentIndex === 0
-        ? publishedPages[publishedPages.length - 1]
-        : publishedPages[currentIndex - 1]
-      : null;
-  const nextPageHref = nextPage
-    ? isPersonalDomainView
-      ? `/${nextPage.slug || nextPage.id}`
-      : `/${username}/${nextPage.slug || nextPage.id}`
-    : null;
-
   return (
-    <div
-      data-post-page
-      className={`flex min-h-screen flex-col bg-theme-bg ${
-        design?.typography === 'serif'
-          ? 'font-serif'
-          : design?.typography === 'mono'
-            ? 'font-mono'
-            : 'font-sans'
-      } typography-${design?.typography || 'sans'} theme-${design?.theme || 'default'}`}
-    >
+    <div data-post-page className={rootClassName}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {/* Vertical insets: 24px top on phones, 48px up to 636px,
-          then growing to 72px; 96px at the bottom until 685px, then 72px. */}
-      <div className="mx-auto w-full max-w-[540px] flex-1 px-6 pb-24 pt-6 min-[481px]:pt-12 min-[637px]:pt-[calc(50vw-270px)] sm:px-0 min-[685px]:pb-[72px] min-[685px]:pt-[72px]">
-        <Link
-          href={profileHref}
-          className="flex w-fit flex-col items-start gap-4"
-        >
-          {avatarUrl ? (
-            <span className="relative">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={avatarUrl}
-                alt={resumeData.header.name}
-                className="h-12 w-12 rounded-full object-cover"
-              />
-              {statusEmoji && <PostStatusBadge emoji={statusEmoji} />}
-            </span>
-          ) : null}
-          <span className="text-sm text-theme-muted hover:underline hover:underline-offset-4">
-            {resumeData.header.name}
-          </span>
-        </Link>
-
-        <h1 className="mb-6 text-xl font-normal leading-6 text-theme-primary">
-          {page.title}
-        </h1>
-
-        <PageContent html={page.content || ''} />
-
-        {nextPage && nextPageHref && (
-          <div className="mt-16">
-            <p className="text-xs font-normal text-theme-muted">
-              More from {resumeData.header.name}
-            </p>
-            <Link
-              href={nextPageHref}
-              className="mt-4 flex h-[90px] w-full overflow-hidden rounded-lg border border-theme-border bg-theme-border"
-            >
-              <div className="h-full w-[108px] shrink-0 overflow-hidden bg-[color-mix(in_srgb,var(--theme-border)_40%,transparent)] sm:w-[152px]">
-                {nextPage.url && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={nextPage.url}
-                    alt={nextPage.title || 'Thumbnail'}
-                    className="h-full w-full object-cover"
-                  />
-                )}
-              </div>
-              <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4">
-                <h4 className="line-clamp-1 text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-primary">
-                  {nextPage.title || 'Untitled'}
-                </h4>
-                <p className="text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-muted">
-                  {estimateReadMinutes(nextPage.content || '')} min read
-                </p>
-              </div>
-            </Link>
-          </div>
-        )}
-
-        <div className="mt-12 flex items-center justify-center gap-6">
-          <Link
-            href={profileHref}
-            className="font-regular text-sm text-theme-muted hover:underline hover:underline-offset-4"
-          >
-            Back to profile
-          </Link>
-          <ShareButton />
-        </div>
-      </div>
+      <PostBody {...view} />
     </div>
   );
 }
