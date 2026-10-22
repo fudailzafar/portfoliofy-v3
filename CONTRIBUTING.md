@@ -63,6 +63,8 @@ If your contribution adds a new portfolio section (e.g. "Languages," "Certificat
 
 ## Code style
 
+For colours, type, spacing, motion and component patterns, follow [DESIGN.md](./DESIGN.md).
+
 - TypeScript strict mode — avoid `any` where a real type is available.
 - Tailwind CSS for styling; match the utility-class conventions already used in the file you're editing rather than introducing a new one.
 - Reuse existing hooks/components (`useResumeList`, `useTabEditor`, `ListTabLayout`, etc.) instead of re-implementing the same CRUD/list/form logic per section.
