@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import { getUserData } from '@/app/[username]/utils';
-import { estimateReadMinutes } from '@/lib/resume';
+import { estimateReadMinutes, getAllPageAttachments } from '@/lib/resume';
 import { SITE_URL, classifyHost } from '@/lib/site';
 
 function stripHtml(html?: string): string {
@@ -38,15 +38,14 @@ async function getSingleUserLlmsTxt(
   const { resume } = await getUserData(identifier);
   if (!resume?.resumeData) return getMainDomainLlmsTxt();
 
-  const { header, summary, pages } = resume.resumeData;
+  const { header, summary } = resume.resumeData;
   const bio = stripHtml(summary).slice(0, 300);
 
   let out = `# ${header.name}\n`;
   if (header.shortAbout) out += `\n> ${header.shortAbout}\n`;
   if (bio) out += `\n${bio}\n`;
 
-  const publishedPosts = (pages || [])
-    .filter((p) => !p.hidden && !p.passwordHash)
+  const publishedPosts = getAllPageAttachments(resume.resumeData)
     .map((p) => ({
       ...p,
       parsedDate: p.createdAt ? new Date(p.createdAt) : null,
