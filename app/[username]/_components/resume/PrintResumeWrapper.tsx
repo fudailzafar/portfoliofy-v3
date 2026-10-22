@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { PrintResume } from './PrintResume';
 import { useResumeStore } from '@/store/useResumeStore';
 import { ResumeData } from '@/lib/server/dbActions';
@@ -14,6 +16,28 @@ export function PrintResumeWrapper({
 }) {
   const storeResume = useResumeStore((state) => state.resume);
   const { printHiddenSections } = useResumeStore();
+  // Rendered only while printing, so crawlers and agents reading the HTML
+  // don't get every section twice. flushSync commits before the browser
+  // lays out the print copy.
+  const [printing, setPrinting] = useState(false);
+
+  useEffect(() => {
+    const start = () => flushSync(() => setPrinting(true));
+    const stop = () => setPrinting(false);
+    const media = window.matchMedia('print');
+    const onMediaChange = (e: MediaQueryListEvent) =>
+      e.matches ? start() : stop();
+    window.addEventListener('beforeprint', start);
+    window.addEventListener('afterprint', stop);
+    media.addEventListener('change', onMediaChange);
+    return () => {
+      window.removeEventListener('beforeprint', start);
+      window.removeEventListener('afterprint', stop);
+      media.removeEventListener('change', onMediaChange);
+    };
+  }, []);
+
+  if (!printing) return null;
 
   const displayResume = isOwner && storeResume ? storeResume : resume;
   const typography = displayResume?.design?.typography || 'sans';
