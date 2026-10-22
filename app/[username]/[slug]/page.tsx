@@ -11,6 +11,7 @@ import {
   postRootClassName,
   resolvePage,
 } from './postView';
+import { serializeJsonLd } from '@/lib/jsonLd';
 
 export async function generateMetadata({
   params,
@@ -142,7 +143,7 @@ export default async function PageDetail({
     <div data-post-page className={rootClassName}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <PostBody {...view} />
     </div>

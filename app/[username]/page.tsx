@@ -17,6 +17,7 @@ import { recordPageView } from '@/lib/server/dbActions';
 import { getVisitorKey } from '@/lib/server/visitorKey';
 import { ProfileUrlProvider } from '@/lib/ProfileUrlContext';
 import { SITE_URL, classifyHost } from '@/lib/site';
+import { serializeJsonLd } from '@/lib/jsonLd';
 
 const EditProfileDialog = dynamic(() =>
   import('@/app/[username]/_components/resume/editing/EditProfileDialog').then(
@@ -159,7 +160,7 @@ export default async function ProfilePage({
       <div className="flex min-h-screen flex-col font-sans">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
         {/* Standard UI visible only on screen */}
         <div className="flex flex-1 flex-col print:hidden">
