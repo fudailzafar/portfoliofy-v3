@@ -1,14 +1,57 @@
 import Link from 'next/link';
 import { Footer } from '@/components/layout/Footer';
 import { Metadata } from 'next';
+import { serializeJsonLd } from '@/lib/jsonLd';
 
 export const metadata: Metadata = {
   title: 'FAQs',
 };
 
+// Plain-text copy of the questions below, for search engines and agents.
+// Keep it in step with the page.
+const FAQ_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    [
+      'What do you call this platform?',
+      'It’s simply referred to as Portfoliofy. For example you could say, “I just created my Portfoliofy account!”.',
+    ],
+    ['Who’s behind Portfoliofy?', 'Just me, Fudail.'],
+    [
+      'Why did you build Portfoliofy?',
+      'Personally, I wanted an easy to update page where I could list some projects, work history, and other bits that might make me sound competent. Something easy to share, less garish than LinkedIn, and more dynamic than a static PDF.',
+    ],
+    [
+      'Who should use Portfoliofy?',
+      'If the above resonates with you, you should try using Portfoliofy.',
+    ],
+    [
+      'Where can I get updates on Portfoliofy?',
+      'Follow @fudailzafar on Twitter or LinkedIn for updates.',
+    ],
+    [
+      'I’d like to report a profile for inappropriate content or harassment, who can I reach out to?',
+      'Please reach out to fudail.zafar@gmail.com. We take all reports very seriously.',
+    ],
+    [
+      'I have more questions, who should I call?',
+      'Email me, fudail.zafar@gmail.com.',
+    ],
+  ].map(([name, text]) => ({
+    '@type': 'Question',
+    name,
+    acceptedAnswer: { '@type': 'Answer', text },
+  })),
+};
+
 export default function FAQPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#fff] dark:bg-[#222]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(FAQ_JSON_LD) }}
+      />
       <main className="mx-auto w-full max-w-[540px] flex-1 px-6 py-[72px] font-sans sm:px-0">
         <h1 className="mb-8 text-[20px] font-medium text-[#111] dark:text-[#eee]">
           FAQs
