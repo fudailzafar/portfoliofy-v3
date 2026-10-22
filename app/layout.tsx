@@ -102,48 +102,6 @@ export default async function RootLayout({
           className={`${graphik.variable} ${signifier.variable} ${diatypeMono.variable}`}
         >
           <head>
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  '@context': 'https://schema.org',
-                  '@type': 'Organization',
-                  url: SITE_URL,
-                  logo: `${SITE_URL}/logo.png`,
-                  name: 'Portfoliofy',
-                  description:
-                    'Portfoliofy is a drag-and-drop portfolio builder for professionals.',
-                  dateModified: new Date().toISOString(),
-                }),
-              }}
-            />
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  '@context': 'https://schema.org',
-                  '@type': 'FAQPage',
-                  mainEntity: [
-                    {
-                      '@type': 'Question',
-                      name: 'What is Portfoliofy?',
-                      acceptedAnswer: {
-                        '@type': 'Answer',
-                        text: 'Portfoliofy is a drag-and-drop portfolio builder that helps professionals put together a polished, customizable profile in minutes.',
-                      },
-                    },
-                    {
-                      '@type': 'Question',
-                      name: 'How do I create a profile?',
-                      acceptedAnswer: {
-                        '@type': 'Answer',
-                        text: 'You can create a profile by signing up and building it out with our drag-and-drop editor — most people have something worth sharing in just a few minutes.',
-                      },
-                    },
-                  ],
-                }),
-              }}
-            />
             {/* rest of your scripts go under */}
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}

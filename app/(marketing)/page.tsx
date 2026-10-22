@@ -4,8 +4,19 @@ import Link from 'next/link';
 import { auth } from '@/auth';
 import { getUsernameById } from '@/lib/server/dbActions';
 import { ClaimDialog } from '@/components/auth/ClaimDialog';
-import { SITE_HOST } from '@/lib/site';
+import { SITE_HOST, SITE_URL } from '@/lib/site';
 import type { CSSProperties, ReactNode } from 'react';
+import { serializeJsonLd } from '@/lib/jsonLd';
+
+const ORGANIZATION_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo.png`,
+  name: 'Portfoliofy',
+  description:
+    'Portfoliofy is a drag-and-drop portfolio builder for professionals.',
+};
 
 const PrintPaper = ({ className }: { className?: string }) => (
   <div className={`print-paper ${className || ''}`}>
@@ -206,6 +217,12 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#fff] dark:bg-[#222]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(ORGANIZATION_JSON_LD),
+        }}
+      />
       {needsClaim && <ClaimDialog />}
       <style dangerouslySetInnerHTML={{ __html: LANDING_STYLES }} />
       {/* Top padding: 72px, easing to 48px at 636px wide, 16px on phones. */}
