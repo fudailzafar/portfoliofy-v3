@@ -17,7 +17,7 @@ import { recordPageView } from '@/lib/server/dbActions';
 import { getVisitorKey } from '@/lib/server/visitorKey';
 import { ProfileUrlProvider } from '@/lib/ProfileUrlContext';
 import { SITE_URL, classifyHost } from '@/lib/site';
-import { serializeJsonLd } from '@/lib/jsonLd';
+import { buildProfileJsonLd, serializeJsonLd } from '@/lib/jsonLd';
 
 const EditProfileDialog = dynamic(() =>
   import('@/app/[username]/_components/resume/editing/EditProfileDialog').then(
@@ -114,36 +114,16 @@ export default async function ProfilePage({
   const rawProfilePicture = userProfile?.avatarUrl || userProfile?.image;
   const profilePicture = getOptimizedImageUrl(rawProfilePicture) || '';
 
-  const stripHtml = (html: string) =>
-    html ? html.replace(/<[^>]*>?/gm, '') : '';
-
   const customDomain = await getCachedCustomDomainByUserId(user_id);
   const canonicalUrl = getCanonicalUrl(username, customDomain);
 
-  const sameAs = (resume.resumeData.contacts || [])
-    .filter(
-      (c: any) =>
-        !c.hidden &&
-        c.platform?.toLowerCase() !== 'email' &&
-        typeof c.link === 'string' &&
-        c.link.startsWith('http'),
-    )
-    .map((c: any) => c.link);
-
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: resume.resumeData.header.name,
-    image: profilePicture,
-    jobTitle: resume.resumeData.header.shortAbout,
-    description: stripHtml(resume.resumeData.summary),
-    email: resume.resumeData.contacts?.find(
-      (c: any) => c.platform.toLowerCase() === 'email',
-    )?.link,
+  const publicResume = toPublicResume(resume.resumeData);
+  const jsonLd = buildProfileJsonLd({
+    resume: publicResume,
     url: canonicalUrl,
-    ...(sameAs.length > 0 && { sameAs }),
-    skills: resume.resumeData.header.skills,
-  };
+    image: profilePicture || undefined,
+    dateCreated: userProfile?.createdAt,
+  });
 
   const headersList = await import('next/headers').then((m) => m.headers());
   const isSubdomainView =
@@ -153,7 +133,6 @@ export default async function ProfilePage({
   const isOwner = userId === user_id && !isPersonalDomainView;
   // Locked pages reach visitors as stubs; only the owner gets their content.
   const ownerResume = toOwnerResume(resume.resumeData);
-  const publicResume = toPublicResume(resume.resumeData);
 
   return (
     <ProfileUrlProvider isPersonalDomainView={isPersonalDomainView}>
