@@ -1,7 +1,8 @@
-const CACHE_NAME = 'portfoliofy-cache-v1';
+const CACHE_NAME = 'portfoliofy-cache-v2';
+const OFFLINE_URL = '/offline.html';
 
 // Add core assets to cache
-const urlsToCache = ['/', '/logo.png', '/favicon.ico'];
+const urlsToCache = ['/', '/logo.png', '/favicon.ico', OFFLINE_URL];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -49,9 +50,16 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       })
-      .catch(() => {
+      .catch(async () => {
         // Fallback to cache if offline
-        return caches.match(event.request);
+        const cached = await caches.match(event.request);
+        if (cached) return cached;
+        // A page we never cached: show the offline page instead of the
+        // browser's error screen.
+        if (event.request.mode === 'navigate') {
+          return caches.match(OFFLINE_URL);
+        }
+        return Response.error();
       }),
   );
 });
