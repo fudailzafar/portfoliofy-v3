@@ -1,6 +1,7 @@
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import sql from '@/lib/server/db';
+import { deleteUserUploads } from '@/lib/server/userUploads';
 import { releaseUserDomainFromVercel } from '@/lib/server/vercelDomains';
 
 export async function DELETE() {
@@ -11,6 +12,10 @@ export async function DELETE() {
     }
 
     const userId = session.user.id;
+
+    // Erase their uploads first: older files are only found through the URLs
+    // in their profile, and if this fails the account stays intact to retry.
+    await deleteUserUploads(userId);
 
     // Release the custom domain from Vercel while we still know which one it is.
     await releaseUserDomainFromVercel(userId);
