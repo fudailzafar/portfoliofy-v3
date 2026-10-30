@@ -28,15 +28,9 @@ export default function DeleteAccountPage() {
 
           <p>
             Deleting your account immediately and permanently removes your
-            account, your profile, and all your pages and posts. If you
-            connected a custom domain, it is disconnected. This cannot be
-            undone.
-          </p>
-
-          <p>
-            Images you uploaded stop appearing anywhere once your account is
-            deleted. To have the files themselves erased from our storage too,
-            email us after deleting your account.
+            account, your profile, all your pages and posts, and every image or
+            file you uploaded. If you connected a custom domain, it is
+            disconnected. This cannot be undone.
           </p>
 
           <p>
