@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>You're offline · Portfoliofy</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text: #111111;
+        --muted: #666666;
+        --border: #e5e5e5;
+        --accent: #0788f5;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #222222;
+          --text: #eeeeee;
+          --muted: #aaaaaa;
+          --border: #333333;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+      }
+      main {
+        max-width: 320px;
+        text-align: center;
+      }
+      svg {
+        width: 56px;
+        height: 56px;
+      }
+      h1 {
+        margin: 24px 0 8px;
+        font-size: 20px;
+        font-weight: 500;
+      }
+      p {
+        margin: 0 0 24px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+      button {
+        height: 36px;
+        padding: 0 16px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: transparent;
+        color: var(--text);
+        font: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <svg viewBox="0 0 512 512" aria-hidden="true">
+        <g
+          transform="rotate(15 256 256)"
+          fill="none"
+          stroke-width="30"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect
+            x="118"
+            y="100"
+            width="276"
+            height="312"
+            rx="52"
+            stroke="currentColor"
+          />
+          <line x1="182" y1="190" x2="330" y2="190" stroke="#0788f5" />
+          <line x1="182" y1="256" x2="330" y2="256" stroke="currentColor" />
+          <line x1="182" y1="322" x2="268" y2="322" stroke="currentColor" />
+        </g>
+      </svg>
+      <h1>You're offline</h1>
+      <p>Check your connection, then try again.</p>
+      <button type="button" onclick="location.reload()">Try again</button>
+    </main>
+  </body>
+</html>
