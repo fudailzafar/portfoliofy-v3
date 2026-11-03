@@ -1,5 +1,5 @@
 import { ResumeDataSchemaType } from '@/lib/resume';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
 import { extractUsername, buildContactUrl } from '@/utils/extractUsername';
 
 export function Contact({
@@ -49,7 +49,7 @@ export function Contact({
                     {extractUsername(contact.link, contact.platform)}
                   </span>
                 </a>
-                <ArrowUpRight className="ml-0.5 inline-block h-3 w-3 shrink-0 align-baseline text-theme-primary" />
+                <ArrowUpRightIcon className="ml-0.5 inline-block h-3 w-3 shrink-0 align-baseline text-theme-primary" />
               </div>
             </div>
           </div>

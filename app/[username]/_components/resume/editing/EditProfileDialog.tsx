@@ -17,7 +17,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Spinner } from '@/components/ui/spinner';
-import { Pencil } from 'lucide-react';
+import { PencilSimpleIcon } from '@phosphor-icons/react/ssr';
 import { SIDEBAR_SLIDE, useSidebarStore } from '@/store/useSidebarStore';
 import { createPortal } from 'react-dom';
 import { useResumeStore } from '@/store/useResumeStore';
@@ -462,10 +462,7 @@ export function EditProfileDialog({
                   }}
                   className="flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 dark:border-none dark:bg-[#333] print:hidden"
                 >
-                  <Pencil
-                    className="h-[18px] w-[18px] text-content-primary"
-                    strokeWidth={1.5}
-                  />
+                  <PencilSimpleIcon className="h-[18px] w-[18px] text-content-primary" />
                 </motion.button>
               </TooltipTrigger>
             </DialogTrigger>

@@ -15,7 +15,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { FileBadge } from 'lucide-react';
+import { CertificateIcon } from '@phosphor-icons/react/ssr';
 import {
   Select,
   SelectContent,
@@ -77,7 +77,7 @@ export function CertificationsTab({
       }}
       addButtonText="Add certification"
       emptyState={{
-        icon: FileBadge,
+        icon: CertificateIcon,
         buttonText: 'Add a certification you received',
       }}
       renderList={() => (

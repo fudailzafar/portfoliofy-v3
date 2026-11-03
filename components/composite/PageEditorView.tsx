@@ -13,15 +13,15 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import {
-  ArrowLeft,
-  X,
-  Bold,
-  Italic,
-  Strikethrough,
-  Link as LinkIcon,
-  CodeXml,
-  Lock,
-} from 'lucide-react';
+  ArrowLeftIcon,
+  XIcon,
+  TextBIcon,
+  TextItalicIcon,
+  TextStrikethroughIcon,
+  LinkSimpleIcon,
+  CodeIcon,
+  LockIcon,
+} from '@phosphor-icons/react/ssr';
 import { cn, getOptimizedImageUrl } from '@/lib/utils';
 import { useS3Upload } from 'next-s3-upload';
 import { Embed, EmbedProvider } from '@/components/composite/tiptap-embed';
@@ -422,7 +422,7 @@ export function PageEditorView({
           onClick={onClose}
           className="flex h-full w-14 shrink-0 items-center justify-center border-r border-border-strong text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeftIcon className="h-5 w-5" />
         </button>
 
         <div className="relative h-full shrink-0">
@@ -440,7 +440,7 @@ export function PageEditorView({
           >
             {status === 'published' ? 'Published' : 'Draft'}
             {passwordProtected && (
-              <Lock
+              <LockIcon
                 aria-label="Password protected"
                 className="ml-2 h-3.5 w-3.5"
               />
@@ -633,7 +633,7 @@ export function PageEditorView({
                 onClick={() => setIsPreviewOpen(false)}
                 className="flex h-8 w-8 items-center justify-center rounded-full text-theme-muted transition-colors hover:bg-theme-border hover:text-theme-primary"
               >
-                <X className="h-4 w-4" />
+                <XIcon className="h-4 w-4" />
               </button>
             </div>
             <div
@@ -683,7 +683,7 @@ export function PageEditorView({
             editor?.isActive('bold') && 'bg-surface-2 text-content-primary',
           )}
         >
-          <Bold className="h-4 w-4" />
+          <TextBIcon className="h-4 w-4" />
         </button>
 
         <button
@@ -693,7 +693,7 @@ export function PageEditorView({
             editor?.isActive('italic') && 'bg-surface-2 text-content-primary',
           )}
         >
-          <Italic className="h-4 w-4" />
+          <TextItalicIcon className="h-4 w-4" />
         </button>
 
         <button
@@ -703,7 +703,7 @@ export function PageEditorView({
             editor?.isActive('strike') && 'bg-surface-2 text-content-primary',
           )}
         >
-          <Strikethrough className="h-4 w-4" />
+          <TextStrikethroughIcon className="h-4 w-4" />
         </button>
 
         <button
@@ -713,7 +713,7 @@ export function PageEditorView({
             editor?.isActive('code') && 'bg-surface-2 text-content-primary',
           )}
         >
-          <CodeXml className="h-4 w-4" />
+          <CodeIcon className="h-4 w-4" />
         </button>
 
         <button
@@ -723,7 +723,7 @@ export function PageEditorView({
             editor?.isActive('link') && 'bg-surface-2 text-content-primary',
           )}
         >
-          <LinkIcon className="h-4 w-4" />
+          <LinkSimpleIcon className="h-4 w-4" />
         </button>
       </div>
 
@@ -780,7 +780,7 @@ export function PageEditorView({
                     onClick={() => setThumbnailUrl('')}
                     className="absolute right-2 top-2 rounded-full bg-black/50 p-1.5 text-white opacity-0 transition-opacity hover:bg-black/70 group-hover:opacity-100"
                   >
-                    <X className="h-3 w-3" />
+                    <XIcon className="h-3 w-3" />
                   </button>
                 </div>
               ) : (

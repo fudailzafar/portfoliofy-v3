@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { FileUp } from 'lucide-react';
+import { FileArrowUpIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
@@ -199,7 +199,7 @@ export function ImportDataTab() {
         ) : (
           <div className="flex flex-col items-center gap-3 text-content-secondary">
             <div className="rounded-full bg-surface-3 p-3">
-              <FileUp className="h-6 w-6 text-content-primary" />
+              <FileArrowUpIcon className="h-6 w-6 text-content-primary" />
             </div>
             <div className="text-center">
               <p className="font-medium text-content-primary">

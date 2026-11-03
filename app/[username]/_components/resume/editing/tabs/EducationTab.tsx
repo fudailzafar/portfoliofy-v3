@@ -10,7 +10,7 @@ import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
 import { Label } from '@/components/ui/label';
-import { GraduationCap } from 'lucide-react';
+import { GraduationCapIcon } from '@phosphor-icons/react/ssr';
 import {
   Select,
   SelectContent,
@@ -79,7 +79,7 @@ export function EducationTab({
       }}
       addButtonText="Add education"
       emptyState={{
-        icon: GraduationCap,
+        icon: GraduationCapIcon,
         buttonText: 'Add a school you attended',
       }}
       renderList={() => (

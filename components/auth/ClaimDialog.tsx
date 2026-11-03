@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { claimUsernameAndInitProfile } from '@/app/actions/claim';
 import { toast } from 'sonner';
-import { Check } from 'lucide-react';
+import { CheckIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
 import { signOut } from 'next-auth/react';
 import { cn } from '@/lib/utils';
@@ -144,7 +144,7 @@ export function ClaimDialog() {
               )}
               {status === 'available' && (
                 <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-green-500 p-0.5">
-                  <Check className="h-3 w-3 text-surface-1" strokeWidth={3} />
+                  <CheckIcon className="h-3 w-3 text-surface-1" weight="bold" />
                 </div>
               )}
             </div>
@@ -169,7 +169,7 @@ export function ClaimDialog() {
               />
               {displayName.length > 0 && (
                 <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-green-500 p-0.5">
-                  <Check className="h-3 w-3 text-surface-1" strokeWidth={3} />
+                  <CheckIcon className="h-3 w-3 text-surface-1" weight="bold" />
                 </div>
               )}
             </div>

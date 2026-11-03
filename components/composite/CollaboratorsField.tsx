@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { X } from 'lucide-react';
+import { XIcon } from '@phosphor-icons/react/ssr';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AvatarPlaceholderIcon } from '@/components/composite/AvatarPlaceholderIcon';
 import { Label } from '@/components/ui/label';
@@ -95,7 +95,7 @@ export function CollaboratorsField({
                   className="text-content-muted active:text-content-primary"
                   aria-label={`Remove ${collaborator.name}`}
                 >
-                  <X className="size-3" />
+                  <XIcon className="size-3" />
                 </button>
               </div>
             ))}
