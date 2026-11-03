@@ -42,18 +42,31 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     // Shown in Android's install prompt.
     screenshots: [
-      ['01-profile', 'Your profile'],
-      ['02-work', 'Work experience'],
-      ['03-writing', 'Writing'],
-      ['04-post', 'A post'],
-      ['05-private', 'Private pages'],
-      ['06-light-dark', 'Light and dark themes'],
-    ].map(([file, label]) => ({
-      src: `/screenshots/${file}.png`,
-      sizes: '1080x1920',
-      type: 'image/png',
-      form_factor: 'narrow' as const,
-      label,
-    })),
+      ...[
+        ['01-profile', 'Your profile'],
+        ['02-work', 'Work experience'],
+        ['03-writing', 'Writing'],
+        ['04-post', 'A post'],
+        ['05-private', 'Private pages'],
+        ['06-light-dark', 'Light and dark themes'],
+      ].map(([file, label]) => ({
+        src: `/screenshots/${file}.png`,
+        sizes: '1080x1920',
+        type: 'image/png',
+        form_factor: 'narrow' as const,
+        label,
+      })),
+      // Desktop install prompt.
+      ...[
+        ['wide-home', 'Build a profile that looks like you'],
+        ['wide-profile', 'A profile on desktop'],
+      ].map(([file, label]) => ({
+        src: `/screenshots/${file}.png`,
+        sizes: '1920x1080',
+        type: 'image/png',
+        form_factor: 'wide' as const,
+        label,
+      })),
+    ],
   };
 }
