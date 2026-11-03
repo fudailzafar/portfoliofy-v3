@@ -102,6 +102,12 @@ export default async function RootLayout({
           className={`${graphik.variable} ${signifier.variable} ${diatypeMono.variable}`}
         >
           <head>
+            {/* Registered in the HTML so install checks find it before React loads. */}
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `if('serviceWorker' in navigator&&location.protocol==='https:'){navigator.serviceWorker.register('/sw.js')}`,
+              }}
+            />
             {/* rest of your scripts go under */}
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
