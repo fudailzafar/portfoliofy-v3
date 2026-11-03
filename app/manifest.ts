@@ -9,6 +9,14 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: '/',
     scope: '/',
     display: 'standalone',
+    display_override: ['standalone'],
+    orientation: 'portrait',
+    lang: 'en',
+    dir: 'ltr',
+    categories: ['productivity', 'business'],
+    prefer_related_applications: false,
+    // Reopen the running app instead of starting a second copy.
+    launch_handler: { client_mode: 'focus-existing' },
     // Also the Android app's splash screen and status bar colour.
     background_color: '#222222',
     theme_color: '#222222',
