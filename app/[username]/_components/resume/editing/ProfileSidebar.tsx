@@ -21,11 +21,7 @@ import { SidebarButton } from './SidebarButton';
 import React, { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { useResumeStore } from '@/store/useResumeStore';
-import {
-  UserIcon,
-  PencilSimpleIcon,
-  GearSixIcon,
-} from '@phosphor-icons/react/ssr';
+import { UserIcon, PencilSimpleIcon, NutIcon } from '@phosphor-icons/react/ssr';
 import {
   Tooltip,
   TooltipContent,
@@ -100,7 +96,7 @@ export function ProfileSidebar({
   const groups = [
     { id: 'profile', label: 'Profile', icon: UserIcon },
     { id: 'writing', label: 'Writing', icon: PencilSimpleIcon },
-    { id: 'account', label: 'Account', icon: GearSixIcon },
+    { id: 'account', label: 'Account', icon: NutIcon },
   ] as const;
 
   return (
