@@ -6,7 +6,7 @@ import {
   isRedactedPage,
 } from '@/lib/resume';
 import Link from 'next/link';
-import { Lock } from 'lucide-react';
+import { LockIcon } from '@phosphor-icons/react/ssr';
 
 export function PublicWritingList({
   resume,
@@ -114,7 +114,7 @@ export function PublicWritingList({
                           ? 'This page is private'
                           : page.title || 'Untitled'}
                         {page.passwordProtected && !redacted && (
-                          <Lock
+                          <LockIcon
                             aria-label="Password protected"
                             className="relative -top-px ml-1.5 inline h-3.5 w-3.5 text-theme-muted"
                           />
@@ -142,7 +142,9 @@ export function PublicWritingList({
                     aria-hidden="true"
                     className="relative flex h-[90px] w-[30%] min-w-[40px] max-w-[152px] shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[var(--theme-thumb-bg)] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-[var(--theme-faint-border)] max-[480px]:w-[37.5%]"
                   >
-                    {redacted && <Lock className="h-4 w-4 text-theme-muted" />}
+                    {redacted && (
+                      <LockIcon className="h-4 w-4 text-theme-muted" />
+                    )}
                     {page.url && (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img

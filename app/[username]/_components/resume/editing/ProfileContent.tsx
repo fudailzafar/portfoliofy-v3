@@ -23,6 +23,7 @@ import {
   ExhibitionsTab,
 } from './tabs';
 import { ImportDataTab } from './ImportDataTab';
+import { CaretLeftIcon } from '@phosphor-icons/react/ssr';
 
 interface ProfileContentProps {
   activeTab: string;
@@ -95,19 +96,7 @@ export function ProfileContent({
             onClick={() => setShowMobileMenu(true)}
             className="flex items-center text-sm font-medium text-content-primary hover:text-content-secondary"
           >
-            <svg
-              className="mr-1 h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
+            <CaretLeftIcon className="mr-1 h-5 w-5" />
           </button>
         </div>
 

@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { HeartHandshake } from 'lucide-react';
+import { HandHeartIcon } from '@phosphor-icons/react/ssr';
 import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
 
 const isVolunteeringValid = (item: any) =>
@@ -83,7 +83,7 @@ export function VolunteeringTab({
       }}
       addButtonText="Add volunteering"
       emptyState={{
-        icon: HeartHandshake,
+        icon: HandHeartIcon,
         buttonText: 'Add volunteering',
       }}
       renderList={() => (

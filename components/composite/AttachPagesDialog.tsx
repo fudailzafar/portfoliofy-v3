@@ -8,7 +8,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { AttachmentSchemaType, estimateReadMinutes } from '@/lib/resume';
-import { Check, PencilIcon } from 'lucide-react';
+import { CheckIcon, PencilSimpleIcon } from '@phosphor-icons/react/ssr';
 import { cn } from '@/lib/utils';
 
 interface AttachPagesDialogProps {
@@ -60,7 +60,7 @@ export function AttachPagesDialog({
           <DialogDescription className="mt-3">
             Select 1 or more pages to attach to this experience. To create or
             manage pages, visit the{' '}
-            <PencilIcon
+            <PencilSimpleIcon
               size={15}
               className="mx-1 inline text-content-primary"
             />
@@ -94,7 +94,7 @@ export function AttachPagesDialog({
                         isSelected ? 'bg-blue-600 text-white' : 'bg-surface-3',
                       )}
                     >
-                      {isSelected && <Check className="h-3 w-3" />}
+                      {isSelected && <CheckIcon className="h-3 w-3" />}
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm text-content-primary">

@@ -4,7 +4,11 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import { Button } from '@/components/ui/button';
-import { List, ListOrdered, Link as LinkIcon } from 'lucide-react';
+import {
+  ListBulletsIcon,
+  ListNumbersIcon,
+  LinkSimpleIcon,
+} from '@phosphor-icons/react/ssr';
 import { cn, ensureHttps } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
 
@@ -109,7 +113,7 @@ export function RichTextEditor({
           )}
           aria-label="Toggle bullet list"
         >
-          <List className="h-4 w-4" />
+          <ListBulletsIcon className="h-4 w-4" />
         </Button>
         <Button
           type="button"
@@ -123,7 +127,7 @@ export function RichTextEditor({
           )}
           aria-label="Toggle ordered list"
         >
-          <ListOrdered className="h-4 w-4" />
+          <ListNumbersIcon className="h-4 w-4" />
         </Button>
         <Button
           type="button"
@@ -136,7 +140,7 @@ export function RichTextEditor({
           )}
           aria-label="Add or edit link"
         >
-          <LinkIcon className="h-4 w-4" />
+          <LinkSimpleIcon className="h-4 w-4" />
         </Button>
       </div>
       <EditorContent editor={editor} />

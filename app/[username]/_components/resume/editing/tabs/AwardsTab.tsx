@@ -15,7 +15,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { Award } from 'lucide-react';
+import { MedalIcon } from '@phosphor-icons/react/ssr';
 import {
   Select,
   SelectContent,
@@ -71,7 +71,7 @@ export function AwardsTab({
       }}
       addButtonText="Add award"
       emptyState={{
-        icon: Award,
+        icon: MedalIcon,
         buttonText: 'Add an award you received',
       }}
       renderList={() => (

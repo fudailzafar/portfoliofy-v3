@@ -7,7 +7,7 @@ import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
 import { Label } from '@/components/ui/label';
-import { Palette } from 'lucide-react';
+import { PaletteIcon } from '@phosphor-icons/react/ssr';
 import {
   Select,
   SelectContent,
@@ -78,7 +78,7 @@ export function ExhibitionsTab({
       }}
       addButtonText="Add exhibition"
       emptyState={{
-        icon: Palette,
+        icon: PaletteIcon,
         buttonText: 'Add an exhibition you were in',
       }}
       renderList={() => (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
 import { AttachmentsPreview } from '../AttachmentsPreview';
 import { AvatarStack } from '@/components/composite/AvatarStack';
 import { CollaboratorSchemaType } from '@/lib/resume';
@@ -63,7 +63,7 @@ export function PreviewListItem({
             </p>
           )}
           {link && (
-            <ArrowUpRight className="ml-0.5 inline-block h-3 w-3 shrink-0 align-baseline text-theme-primary" />
+            <ArrowUpRightIcon className="ml-0.5 inline-block h-3 w-3 shrink-0 align-baseline text-theme-primary" />
           )}
         </div>
 

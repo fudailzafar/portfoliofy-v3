@@ -5,7 +5,7 @@ import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { MessageCircle, ArrowUpRight } from 'lucide-react';
+import { ChatCircleIcon, ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
 import {
   Select,
   SelectContent,
@@ -58,7 +58,7 @@ export function ContactsTab({
       }}
       addButtonText="Add link"
       emptyState={{
-        icon: MessageCircle,
+        icon: ChatCircleIcon,
         buttonText: 'Let others know how to reach you',
       }}
       renderList={() => (
@@ -88,7 +88,7 @@ export function ContactsTab({
                     >
                       <span className="font-regular text-sm text-content-primary">
                         {extractUsername(c.link, c.platform)}
-                        <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                        <ArrowUpRightIcon className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                       </span>
                     </a>
                   </div>
