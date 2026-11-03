@@ -118,14 +118,13 @@ export function ProfileSidebar({
                   <button
                     onClick={() => handleGroupChange(group.id)}
                     aria-label={group.label}
-                    className={cn(
-                      'flex size-10 items-center justify-center rounded-full transition-colors',
-                      isActive ? 'text-content-primary' : 'text-content-muted',
-                    )}
+                    aria-pressed={isActive}
+                    className="flex size-10 items-center justify-center rounded-full text-content-primary"
                   >
+                    {/* The active tab shows as filled; colour stays the same. */}
                     <Icon
                       className="size-[18px] sm:size-6"
-                      weight={isActive ? 'bold' : 'regular'}
+                      weight={isActive ? 'fill' : 'regular'}
                     />
                   </button>
                 </TooltipTrigger>
