@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
 import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
-import { X } from 'lucide-react';
+import { XIcon, CheckIcon } from '@phosphor-icons/react/ssr';
 import { useS3Upload } from 'next-s3-upload';
 import { getOptimizedImageUrl, readImageDimensions } from '@/lib/utils';
 import { SITE_HOST } from '@/lib/site';
@@ -193,18 +193,11 @@ export function PersonalDomainTab({ username }: { username: string }) {
                 ) : domainStatus?.verified ? (
                   <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
                     <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#6b8949] text-surface-1">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                      <CheckIcon
+                        weight="bold"
                         aria-hidden="true"
                         className="h-2.5 w-2.5"
-                      >
-                        <path d="M20 6L9 17l-5-5" />
-                      </svg>
+                      />
                     </div>
                   </div>
                 ) : domainStatus ? (
@@ -391,7 +384,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                           disabled={isUploading}
                           className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-white transition-colors hover:bg-black/90"
                         >
-                          <X className="h-3.5 w-3.5" />
+                          <XIcon className="h-3.5 w-3.5" />
                         </button>
                       </>
                     ) : (

@@ -7,7 +7,11 @@ import { MediaUploadDialog } from './MediaUploadDialog';
 import { AttachPagesDialog } from './AttachPagesDialog';
 import { PageAttachmentCard } from './PageAttachmentCard';
 import { useResumeStore } from '@/store/useResumeStore';
-import { ArrowLeft, ArrowRight, X } from 'lucide-react';
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  XIcon,
+} from '@phosphor-icons/react/ssr';
 import { cn } from '@/lib/utils';
 
 interface SectionAttachmentsProps {
@@ -138,7 +142,7 @@ export function SectionAttachments({
                         }}
                         className="flex items-center justify-center px-1 py-1 transition-colors hover:bg-white/20"
                       >
-                        <ArrowLeft className="h-3 w-3" />
+                        <ArrowLeftIcon className="h-3 w-3" />
                       </button>
                     )}
                     {index < attachedPages.length - 1 && (
@@ -149,7 +153,7 @@ export function SectionAttachments({
                         }}
                         className="flex items-center justify-center px-1 py-1 transition-colors hover:bg-white/20"
                       >
-                        <ArrowRight className="h-3 w-3" />
+                        <ArrowRightIcon className="h-3 w-3" />
                       </button>
                     )}
                   </div>
@@ -162,7 +166,7 @@ export function SectionAttachments({
                   }}
                   className="rounded-full border border-white/20 bg-black/60 p-1 text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20"
                 >
-                  <X className="h-3 w-3" />
+                  <XIcon className="h-3 w-3" />
                 </button>
               </div>
             </div>
@@ -209,7 +213,7 @@ export function SectionAttachments({
                           }}
                           className="flex items-center justify-center px-1 py-1 transition-colors hover:bg-white/20"
                         >
-                          <ArrowLeft className="h-3 w-3" />
+                          <ArrowLeftIcon className="h-3 w-3" />
                         </button>
                       )}
                       {index < attachments.length - 1 && (
@@ -220,7 +224,7 @@ export function SectionAttachments({
                           }}
                           className="flex items-center justify-center px-1 py-1 transition-colors hover:bg-white/20"
                         >
-                          <ArrowRight className="h-3 w-3" />
+                          <ArrowRightIcon className="h-3 w-3" />
                         </button>
                       )}
                     </div>
@@ -233,7 +237,7 @@ export function SectionAttachments({
                     }}
                     className="rounded-full border border-white/20 bg-black/60 p-1 text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20"
                   >
-                    <X className="h-3 w-3" />
+                    <XIcon className="h-3 w-3" />
                   </button>
                 </div>
               </div>

@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { usePresignedUpload } from 'next-s3-upload';
-import { X, Equal } from 'lucide-react';
+import { XIcon, DotsSixVerticalIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
 import { AttachmentSchemaType } from '@/lib/resume';
 import {
@@ -110,7 +110,7 @@ function SortableAttachmentRow({
         onClick={() => onRemove(attachment.id)}
         className="p-2 text-content-muted transition-colors hover:text-red-500"
       >
-        <X className="h-4 w-4" />
+        <XIcon className="h-4 w-4" />
       </button>
 
       {/* touch-none: otherwise a finger drag scrolls the list and cancels the drag. */}
@@ -119,7 +119,7 @@ function SortableAttachmentRow({
         {...listeners}
         className="-m-2 flex size-11 shrink-0 cursor-grab touch-none select-none items-center justify-center rounded-md text-content-muted transition-colors hover:bg-surface-2"
       >
-        <Equal className="h-4 w-4" />
+        <DotsSixVerticalIcon className="h-4 w-4" />
       </div>
     </div>
   );

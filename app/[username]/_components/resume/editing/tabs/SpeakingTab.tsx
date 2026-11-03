@@ -7,7 +7,7 @@ import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
 import { Label } from '@/components/ui/label';
-import { Mic } from 'lucide-react';
+import { MicrophoneIcon } from '@phosphor-icons/react/ssr';
 import {
   Select,
   SelectContent,
@@ -71,7 +71,7 @@ export function SpeakingTab({
       }}
       addButtonText="Add engagement"
       emptyState={{
-        icon: Mic,
+        icon: MicrophoneIcon,
         buttonText: "Add a talk you've given",
       }}
       renderList={() => (

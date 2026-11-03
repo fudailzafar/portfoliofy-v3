@@ -15,7 +15,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { FolderCode } from 'lucide-react';
+import { FolderSimpleIcon } from '@phosphor-icons/react/ssr';
 import {
   Select,
   SelectContent,
@@ -75,7 +75,7 @@ export function SideProjectsTab({
       }}
       addButtonText="Add side project"
       emptyState={{
-        icon: FolderCode,
+        icon: FolderSimpleIcon,
         buttonText: "Add a side project you're proud of",
       }}
       renderList={() => (

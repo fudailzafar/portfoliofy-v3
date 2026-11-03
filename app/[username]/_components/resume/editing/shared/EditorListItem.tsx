@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
 import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { AvatarStack } from '@/components/composite/AvatarStack';
 import { EditDeleteButtons } from '../EditDeleteButtons';
@@ -68,7 +68,7 @@ export function EditorListItem({
                       {subtitle}
                     </span>
                   )}
-                  <ArrowUpRight className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
+                  <ArrowUpRightIcon className="relative -top-0.5 ml-1 inline-block h-4 w-4 text-content-primary" />
                 </span>
               </a>
             ) : (

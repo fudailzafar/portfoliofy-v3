@@ -21,7 +21,11 @@ import { SidebarButton } from './SidebarButton';
 import React, { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { useResumeStore } from '@/store/useResumeStore';
-import { User, Pencil, Bolt } from 'lucide-react';
+import {
+  UserIcon,
+  PencilSimpleIcon,
+  GearSixIcon,
+} from '@phosphor-icons/react/ssr';
 import {
   Tooltip,
   TooltipContent,
@@ -94,9 +98,9 @@ export function ProfileSidebar({
   const isWritingEnabled = resume?.preferences?.writingEnabled !== false;
 
   const groups = [
-    { id: 'profile', label: 'Profile', icon: User },
-    { id: 'writing', label: 'Writing', icon: Pencil },
-    { id: 'account', label: 'Account', icon: Bolt },
+    { id: 'profile', label: 'Profile', icon: UserIcon },
+    { id: 'writing', label: 'Writing', icon: PencilSimpleIcon },
+    { id: 'account', label: 'Account', icon: GearSixIcon },
   ] as const;
 
   return (
@@ -125,7 +129,7 @@ export function ProfileSidebar({
                   >
                     <Icon
                       className="size-[18px] sm:size-6"
-                      strokeWidth={isActive ? 2.25 : 1.75}
+                      weight={isActive ? 'bold' : 'regular'}
                     />
                   </button>
                 </TooltipTrigger>

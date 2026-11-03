@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { Link as LinkIcon } from 'lucide-react';
+import { LinkSimpleIcon } from '@phosphor-icons/react/ssr';
 import { cn } from '@/lib/utils';
 import { EmbedProvider, parseEmbedUrl } from './tiptap-embed';
 
@@ -112,7 +112,7 @@ export function EmbedDialog({
           <div>
             <h2 className="flex items-center gap-2 text-lg font-semibold text-content-primary">
               Embed from {active.label}
-              <LinkIcon className="h-4 w-4 text-content-muted" />
+              <LinkSimpleIcon className="h-4 w-4 text-content-muted" />
             </h2>
             <p className="mt-2 text-sm text-content-secondary">
               {active.description}

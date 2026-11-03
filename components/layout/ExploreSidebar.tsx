@@ -2,7 +2,7 @@ import { useState, UIEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { ExploreSort, useExplore } from '@/hooks/useExplore';
 import { getOptimizedImageUrl } from '@/lib/utils';
-import { X } from 'lucide-react';
+import { XIcon } from '@phosphor-icons/react/ssr';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Twemoji from 'react-twemoji';
@@ -90,7 +90,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                 onClick={() => setQuery('')}
                 className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-content-muted transition-colors hover:bg-surface-3 hover:text-content-secondary"
               >
-                <X size={14} />
+                <XIcon size={14} />
               </button>
             )}
           </div>

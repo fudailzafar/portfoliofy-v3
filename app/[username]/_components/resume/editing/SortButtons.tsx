@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowUpToLine, ArrowDownToLine } from 'lucide-react';
+import { ArrowLineUpIcon, ArrowLineDownIcon } from '@phosphor-icons/react/ssr';
 import {
   Tooltip,
   TooltipContent,
@@ -32,7 +32,7 @@ export function SortButtons({
                 className="flex items-center gap-1 hover:underline hover:underline-offset-4 sm:transition-colors sm:hover:text-content-primary sm:hover:no-underline"
                 aria-label="Move item up"
               >
-                <ArrowUpToLine className="hidden h-[15px] w-[15px] sm:inline-block" />
+                <ArrowLineUpIcon className="hidden h-[15px] w-[15px] sm:inline-block" />
                 <span className="sm:hidden">Move up</span>
               </button>
             </TooltipTrigger>
@@ -55,7 +55,7 @@ export function SortButtons({
                 className="flex items-center gap-1 hover:underline hover:underline-offset-4 sm:transition-colors sm:hover:text-content-primary sm:hover:no-underline"
                 aria-label="Move item down"
               >
-                <ArrowDownToLine className="hidden h-[15px] w-[15px] sm:inline-block" />
+                <ArrowLineDownIcon className="hidden h-[15px] w-[15px] sm:inline-block" />
                 <span className="sm:hidden">Move down</span>
               </button>
             </TooltipTrigger>
