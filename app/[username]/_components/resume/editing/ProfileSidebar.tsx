@@ -123,7 +123,7 @@ export function ProfileSidebar({
                   >
                     {/* The active tab shows as filled; colour stays the same. */}
                     <Icon
-                      className="size-[18px] sm:size-6"
+                      className="size-6"
                       weight={isActive ? 'fill' : 'regular'}
                     />
                   </button>
