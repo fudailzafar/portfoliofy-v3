@@ -40,5 +40,20 @@ export default function manifest(): MetadataRoute.Manifest {
         purpose: 'maskable',
       },
     ],
+    // Shown in Android's install prompt.
+    screenshots: [
+      ['01-profile', 'Your profile'],
+      ['02-work', 'Work experience'],
+      ['03-writing', 'Writing'],
+      ['04-post', 'A post'],
+      ['05-private', 'Private pages'],
+      ['06-light-dark', 'Light and dark themes'],
+    ].map(([file, label]) => ({
+      src: `/screenshots/${file}.png`,
+      sizes: '1080x1920',
+      type: 'image/png',
+      form_factor: 'narrow' as const,
+      label,
+    })),
   };
 }
