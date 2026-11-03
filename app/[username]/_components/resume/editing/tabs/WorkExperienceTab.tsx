@@ -16,7 +16,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { Briefcase } from 'lucide-react';
+import { BriefcaseIcon } from '@phosphor-icons/react/ssr';
 import {
   Select,
   SelectContent,
@@ -80,7 +80,7 @@ export function WorkExperienceTab({
       }}
       addButtonText="Add workplace"
       emptyState={{
-        icon: Briefcase,
+        icon: BriefcaseIcon,
         buttonText: "Add a job you've had",
       }}
       renderList={() => (

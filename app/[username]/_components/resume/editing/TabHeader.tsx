@@ -1,4 +1,4 @@
-import { ChevronLeft } from 'lucide-react';
+import { CaretLeftIcon } from '@phosphor-icons/react/ssr';
 
 interface TabHeaderProps {
   title: string;
@@ -26,7 +26,7 @@ export function TabHeader({
             aria-label="Back"
             className="-ml-1.5 flex h-8 w-8 items-center justify-center rounded-md text-content-secondary transition-colors hover:bg-surface-2 hover:text-content-primary"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <CaretLeftIcon className="h-5 w-5" />
           </button>
         )}
         <h2 className="text-xl font-bold text-content-primary sm:text-2xl">

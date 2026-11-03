@@ -8,9 +8,15 @@ const securityHeaders = [
   // Limit referrer info sent to third parties
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   // Disable browser features we don't need
-  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), microphone=(), geolocation=()',
+  },
   // Enforce HTTPS for 2 years (already present via host; explicit here for completeness)
-  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+  {
+    key: 'Strict-Transport-Security',
+    value: 'max-age=63072000; includeSubDomains; preload',
+  },
 ];
 
 const nextConfig = {
@@ -30,7 +36,8 @@ const nextConfig = {
     return [
       {
         source: '/press',
-        destination: 'https://app.notion.com/p/Portfoliofy-Press-Kit-081c5b565052824990a60106e1d1c9de?source=copy_link',
+        destination:
+          'https://app.notion.com/p/Portfoliofy-Press-Kit-081c5b565052824990a60106e1d1c9de?source=copy_link',
         permanent: false,
       },
     ];
@@ -39,9 +46,8 @@ const nextConfig = {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
-    optimizePackageImports: ['lucide-react'],
+    optimizePackageImports: ['@phosphor-icons/react'],
   },
 };
 
 export default nextConfig;
-

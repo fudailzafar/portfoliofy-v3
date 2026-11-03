@@ -7,7 +7,7 @@ import { EditorListItem } from '../shared/EditorListItem';
 import { SectionAttachments } from '@/components/composite/SectionAttachments';
 import { CollaboratorsField } from '@/components/composite/CollaboratorsField';
 import { Label } from '@/components/ui/label';
-import { Pen } from 'lucide-react';
+import { PenNibIcon } from '@phosphor-icons/react/ssr';
 import {
   Select,
   SelectContent,
@@ -73,7 +73,7 @@ export function WritingPiecesTab({
       }}
       addButtonText="Add piece"
       emptyState={{
-        icon: Pen,
+        icon: PenNibIcon,
         buttonText: "Add something great you've written",
       }}
       renderList={() => (

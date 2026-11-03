@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { AttachmentSchemaType, estimateReadMinutes } from '@/lib/resume';
-import { Pen, Lock } from 'lucide-react';
+import { PenNibIcon, LockIcon } from '@phosphor-icons/react/ssr';
 import { usePagePersistence } from '@/hooks/usePagePersistence';
 import { DeleteConfirmDialog } from '../dialogs';
 import { withErrorToast } from '@/lib/errorToast';
@@ -114,7 +114,7 @@ export function WritingTab({
 
       {filteredPages.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-content-muted">
-          <Pen className="mb-4 h-8 w-8" />
+          <PenNibIcon className="mb-4 h-8 w-8" />
           <p className="text-sm">
             No {filter !== 'all' ? filter : ''} pages found.
           </p>
@@ -134,7 +134,7 @@ export function WritingTab({
                   <span className="text-sm text-content-primary">
                     {page.title || 'Untitled'}
                     {page.passwordProtected && (
-                      <Lock
+                      <LockIcon
                         aria-label="Password protected"
                         className="relative -top-px ml-1.5 inline h-3.5 w-3.5 text-content-muted"
                       />

@@ -19,7 +19,7 @@ const StatusEditor = dynamic(
   { ssr: false },
 );
 import { AnimatePresence } from 'framer-motion';
-import { SmilePlus } from 'lucide-react';
+import { SmileyIcon } from '@phosphor-icons/react/ssr';
 import { ensureHttps } from '@/lib/utils';
 
 function getRelativeTime(dateInput: Date | string | null | undefined): string {
@@ -97,7 +97,7 @@ export function Header({
                         className="flex items-center justify-center leading-none"
                         options={{ className: 'h-[1em] w-[1em]' }}
                       >
-                        {currentStatus.emoji || <SmilePlus size={16} />}
+                        {currentStatus.emoji || <SmileyIcon size={16} />}
                       </Twemoji>
                     </button>
                   </TooltipTrigger>
