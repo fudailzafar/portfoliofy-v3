@@ -58,8 +58,8 @@ export default function manifest(): MetadataRoute.Manifest {
       })),
       // Desktop install prompt.
       ...[
-        ['wide-home', 'Build a profile that looks like you'],
-        ['wide-profile', 'A profile on desktop'],
+        ['wide-01-home', 'Your work, in one link'],
+        ['wide-02-profile', 'Reads well on any screen'],
       ].map(([file, label]) => ({
         src: `/screenshots/${file}.png`,
         sizes: '1920x1080',
