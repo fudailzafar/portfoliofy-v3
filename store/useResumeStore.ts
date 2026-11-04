@@ -5,13 +5,17 @@ type ResumeData = ResumeDataSchemaType;
 
 interface ResumeStore {
   resume: ResumeData | null;
+  // The saved version `resume` was loaded from. A background refetch must not
+  // move this past unsaved edits, or a save could overwrite newer changes.
+  resumeVersion: number | undefined;
   activeTab: string;
   hasUnsavedChanges: boolean;
   uname: string;
 
   // Actions
   initResume: (resume: ResumeData, initialUname: string) => void;
-  setResume: (resume: ResumeData) => void;
+  setResume: (resume: ResumeData, version?: number) => void;
+  setResumeVersion: (version: number) => void;
   applyPersistedPatch: (data: Partial<ResumeData>) => void;
   setActiveTab: (tab: string) => void;
   setHasUnsavedChanges: (has: boolean) => void;
@@ -52,12 +56,18 @@ interface ResumeStore {
 
 export const useResumeStore = create<ResumeStore>((set) => ({
   resume: null,
+  resumeVersion: undefined,
   activeTab: 'general',
   hasUnsavedChanges: false,
   uname: '',
 
   initResume: (resume, initialUname) => set({ resume, uname: initialUname }),
-  setResume: (resume) => set({ resume }),
+  setResume: (resume, version) =>
+    set((state) => ({
+      resume,
+      resumeVersion: version ?? state.resumeVersion,
+    })),
+  setResumeVersion: (resumeVersion) => set({ resumeVersion }),
   applyPersistedPatch: (data) =>
     set((state) =>
       state.resume ? { resume: { ...state.resume, ...data } } : state,

@@ -10,6 +10,8 @@ import {
   createUsernameLookup,
   checkUsernameAvailability,
   updateUsername,
+  storeResume,
+  ResumeConflictError,
 } from './dbActions';
 
 describe('setCustomDomain', () => {
@@ -158,5 +160,46 @@ describe('username validation', () => {
       expect(updatedValues).toContain('newname');
       expect(updatedValues).not.toContain('NewName');
     });
+  });
+});
+
+describe('storeResume', () => {
+  const save = { status: 'live' as const, version: 3, resumeData: null };
+
+  beforeEach(() => {
+    sqlMock.mockReset();
+  });
+
+  it('returns the new version', async () => {
+    sqlMock.mockResolvedValueOnce([{ version: 4 }]);
+
+    await expect(
+      storeResume('user-1', save, { keepStoredPagePasswords: false }),
+    ).resolves.toBe(4);
+  });
+
+  it('refuses to overwrite a newer version', async () => {
+    sqlMock.mockResolvedValueOnce([]);
+
+    await expect(
+      storeResume('user-1', save, { keepStoredPagePasswords: false }),
+    ).rejects.toBeInstanceOf(ResumeConflictError);
+  });
+
+  it('snapshots the profile before an AI edit replaces it', async () => {
+    sqlMock
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{ version: 4 }]);
+
+    await storeResume('user-1', save, {
+      keepStoredPagePasswords: false,
+      snapshotSource: 'mcp',
+    });
+
+    const statements = sqlMock.mock.calls.map(([parts]) => parts.join('?'));
+    expect(statements[0]).toContain('INSERT INTO resume_history');
+    expect(statements[1]).toContain('DELETE FROM resume_history');
+    expect(statements[2]).toContain('INSERT INTO resumes');
   });
 });

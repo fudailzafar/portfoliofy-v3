@@ -1,4 +1,9 @@
-import { getResume, Resume, storeResume } from '@/lib/server/dbActions';
+import {
+  getResume,
+  Resume,
+  ResumeConflictError,
+  storeResume,
+} from '@/lib/server/dbActions';
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -11,7 +16,7 @@ const RESUME_SAVE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 export type GetResumeResponse = { resume?: Resume } | { error: string };
 export type PostResumeResponse =
-  | { success: true }
+  | { success: true; version: number }
   | { error: string; details?: z.ZodError['errors'] };
 
 export async function GET(): Promise<NextResponse<GetResumeResponse>> {
@@ -72,16 +77,19 @@ export async function POST(
       );
     }
 
-    await storeResume(session.user.id, body as Resume);
+    const version = await storeResume(session.user.id, body as Resume);
     // @ts-expect-error Next.js 16 Canary types require second profile argument
     revalidateTag(`resume-v2-${session.user.id}`);
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, version });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid data format', details: error.errors },
         { status: 400 },
       );
+    }
+    if (error instanceof ResumeConflictError) {
+      return NextResponse.json({ error: error.message }, { status: 409 });
     }
     console.error('Error in POST /api/resume:', error);
     return NextResponse.json(

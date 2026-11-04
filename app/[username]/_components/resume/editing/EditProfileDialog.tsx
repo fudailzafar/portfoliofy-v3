@@ -140,6 +140,7 @@ export function EditProfileDialog({
 
   // Use React Query's fresh data if available, otherwise fallback to server component's initial data
   const freshResume = resumeQuery.data?.resume?.resumeData || resume;
+  const freshVersion = resumeQuery.data?.resume?.version;
 
   useEffect(() => {
     initResume(resume, username);
@@ -148,9 +149,9 @@ export function EditProfileDialog({
 
   useEffect(() => {
     if (!hasUnsavedChanges) {
-      setResume(freshResume);
+      setResume(freshResume, freshVersion);
     }
-  }, [freshResume, setResume, hasUnsavedChanges]);
+  }, [freshResume, freshVersion, setResume, hasUnsavedChanges]);
 
   const [open, setOpen] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(true);
