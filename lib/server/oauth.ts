@@ -127,7 +127,13 @@ export async function registerClient(
   const clientId = `pfy_${crypto.randomBytes(16).toString('hex')}`;
   await sql`
     INSERT INTO oauth_clients (client_id, client_name, redirect_uris)
-    VALUES (${clientId}, ${clientName}, ${sql.array(redirectUris)}::text[])
+    VALUES (
+      ${clientId},
+      ${clientName},
+      -- Sent as JSON text: sql.array fails on the first query of a new connection,
+      -- before postgres.js has loaded its array types.
+      ARRAY(SELECT jsonb_array_elements_text(${JSON.stringify(redirectUris)}::text::jsonb))
+    )
   `;
   return { clientId, clientName, redirectUris };
 }

@@ -104,7 +104,7 @@ export async function deleteUserUploads(userId: string): Promise<number> {
     // Skip anything in another user's folder or used on another profile.
     const shared = await sql`
       SELECT k.key
-      FROM unnest(${sql.array(legacyKeys)}::text[]) AS k(key)
+      FROM jsonb_array_elements_text(${JSON.stringify(legacyKeys)}::text::jsonb) AS k(key)
       WHERE EXISTS (
         SELECT 1
         FROM users u
