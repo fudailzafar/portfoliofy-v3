@@ -8,27 +8,16 @@ import {
 } from '@/lib/server/dbActions';
 import { toOwnerResume } from '@/lib/server/pagePasswords';
 import { SITE_URL } from '@/lib/site';
+import {
+  errorResult,
+  jsonResult,
+  McpContext,
+  requireUser,
+} from './toolResults';
 
 const READ_ONLY = { readOnlyHint: true, openWorldHint: false };
 
-// Tool context carries the verified token; withMcpAuth guarantees it exists.
-function userIdFrom(ctx: {
-  http?: { authInfo?: { extra?: unknown } };
-}): string {
-  const extra = ctx.http?.authInfo?.extra as { userId?: string } | undefined;
-  if (!extra?.userId) throw new Error('Not signed in');
-  return extra.userId;
-}
-
-function jsonResult(data: unknown) {
-  return {
-    content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }],
-  };
-}
-
-function errorResult(message: string) {
-  return { content: [{ type: 'text' as const, text: message }], isError: true };
-}
+const READ_SCOPE = 'profile:read';
 
 function pageSummary(
   page: AttachmentSchemaType & { passwordProtected?: boolean },
@@ -61,7 +50,7 @@ export function registerReadTools(server: McpServer) {
       annotations: READ_ONLY,
     },
     async (_args, ctx) => {
-      const userId = userIdFrom(ctx);
+      const userId = requireUser(ctx, READ_SCOPE);
       const [loaded, username] = await Promise.all([
         loadOwnerResume(userId),
         getUsernameById(userId),
@@ -90,7 +79,7 @@ export function registerReadTools(server: McpServer) {
       annotations: READ_ONLY,
     },
     async (_args, ctx) => {
-      const loaded = await loadOwnerResume(userIdFrom(ctx));
+      const loaded = await loadOwnerResume(requireUser(ctx, READ_SCOPE));
       return jsonResult((loaded?.resumeData.pages ?? []).map(pageSummary));
     },
   );
@@ -105,7 +94,7 @@ export function registerReadTools(server: McpServer) {
       annotations: READ_ONLY,
     },
     async ({ pageId }, ctx) => {
-      const loaded = await loadOwnerResume(userIdFrom(ctx));
+      const loaded = await loadOwnerResume(requireUser(ctx, READ_SCOPE));
       const page = loaded?.resumeData.pages?.find((p) => p.id === pageId);
       if (!page) return errorResult('No page with that id.');
       return jsonResult({ ...pageSummary(page), content: page.content });
@@ -124,7 +113,11 @@ export function registerReadTools(server: McpServer) {
       annotations: READ_ONLY,
     },
     async ({ range }, ctx) => {
-      const series = await getPageViewSeries(userIdFrom(ctx), range, false);
+      const series = await getPageViewSeries(
+        requireUser(ctx, READ_SCOPE),
+        range,
+        false,
+      );
       return jsonResult({
         range,
         total: series.reduce((sum, day) => sum + day.views, 0),

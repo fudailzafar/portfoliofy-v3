@@ -1,3 +1,4 @@
+import { revalidateTag } from 'next/cache';
 import sql from './db';
 import { ResumeDataSchema, migrateEmbeddedPages } from '@/lib/resume';
 import { z } from 'zod';
@@ -96,6 +97,98 @@ async function snapshotResume(
         LIMIT ${RESUME_HISTORY_LIMIT}
       )
   `;
+}
+
+export interface ResumeHistoryEntry {
+  id: string;
+  version: number;
+  source: string;
+  createdAt: Date;
+}
+
+export async function listResumeHistory(
+  userId: string,
+): Promise<ResumeHistoryEntry[]> {
+  const rows = await sql`
+    SELECT id, version, source, created_at
+    FROM resume_history
+    WHERE user_id = ${userId}
+    ORDER BY created_at DESC, id DESC
+    LIMIT ${RESUME_HISTORY_LIMIT}
+  `;
+  return rows.map((row) => ({
+    id: String(row.id),
+    version: row.version,
+    source: row.source,
+    createdAt: row.createdAt,
+  }));
+}
+
+type RestoreResult = { version: number } | { error: string };
+
+function parseSnapshotData(resumeData: unknown) {
+  return typeof resumeData === 'string' ? JSON.parse(resumeData) : resumeData;
+}
+
+/**
+ * Restores the profile from before the latest AI change, then forgets that
+ * snapshot. Only runs if that change is still the newest thing on the profile,
+ * so it can never wipe edits made afterwards.
+ */
+export async function undoLastResumeChange(
+  userId: string,
+): Promise<RestoreResult> {
+  const [snapshot] = await sql`
+    SELECT id, version, status, resume_data as "resumeData"
+    FROM resume_history
+    WHERE user_id = ${userId}
+    ORDER BY created_at DESC, id DESC
+    LIMIT 1
+  `;
+  if (!snapshot) return { error: 'There is no AI change to undo.' };
+
+  const current = await getResume(userId);
+  if (!current || current.version !== snapshot.version + 1) {
+    return {
+      error:
+        'The profile has changed since the last AI change, so undoing it could lose newer edits. Use list_history and restore_version if the user wants an older version.',
+    };
+  }
+
+  const version = await storeResume(userId, {
+    status: snapshot.status,
+    resumeData: parseSnapshotData(snapshot.resumeData),
+    version: current.version,
+  });
+  await sql`DELETE FROM resume_history WHERE id = ${snapshot.id}`;
+  return { version };
+}
+
+/** Replaces the profile with a saved version, saving the current one first. */
+export async function restoreResumeSnapshot(
+  userId: string,
+  historyId: string,
+): Promise<RestoreResult> {
+  const [snapshot] = /^\d+$/.test(historyId)
+    ? await sql`
+        SELECT status, resume_data as "resumeData"
+        FROM resume_history
+        WHERE id = ${historyId}::bigint AND user_id = ${userId}
+      `
+    : [];
+  if (!snapshot) return { error: 'No saved version has that id.' };
+
+  const current = await getResume(userId);
+  const version = await storeResume(
+    userId,
+    {
+      status: snapshot.status,
+      resumeData: parseSnapshotData(snapshot.resumeData),
+      version: current?.version,
+    },
+    { snapshotSource: 'mcp' },
+  );
+  return { version };
 }
 
 /**
@@ -218,6 +311,24 @@ export async function setPagePassword(
     if (error instanceof ResumeConflictError) return attempt();
     throw error;
   }
+}
+
+// Empty text clears the status.
+export async function setUserStatus(
+  userId: string,
+  emoji: string | null | undefined,
+  text: string | null | undefined,
+): Promise<void> {
+  await sql`
+    UPDATE users
+    SET
+      status_emoji = ${emoji || null},
+      status_text = ${text || null},
+      status_updated_at = ${text ? new Date().toISOString() : null}
+    WHERE id = ${userId}
+  `;
+  // @ts-expect-error Next.js 16 Canary types require second profile argument
+  revalidateTag(`user-${userId}`);
 }
 
 export const createUsernameLookup = async ({
