@@ -33,7 +33,9 @@ export default async function middleware(req: NextRequest) {
         req.nextUrl.pathname.startsWith('/api/explore') ||
         req.nextUrl.pathname.startsWith('/api/collaborators/info') ||
         // Has no session; the route checks CRON_SECRET itself.
-        req.nextUrl.pathname.startsWith('/api/cron')
+        req.nextUrl.pathname.startsWith('/api/cron') ||
+        // AI apps use OAuth tokens, and need a 401 here rather than a redirect.
+        req.nextUrl.pathname.startsWith('/api/mcp')
       ) {
         return;
       }

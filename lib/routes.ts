@@ -15,4 +15,5 @@ export const RESERVED_USERNAMES = [
   'press',
   'about',
   'delete-account',
+  'oauth',
 ];
