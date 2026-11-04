@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
+import { ConnectedApps } from '../ConnectedApps';
 import {
   Select,
   SelectContent,
@@ -81,6 +82,8 @@ export function SettingsTab({
             </div>
           </div>
         </div>
+
+        <ConnectedApps />
 
         <div className="w-full min-w-0 space-y-6">
           <div className="flex flex-col gap-4">

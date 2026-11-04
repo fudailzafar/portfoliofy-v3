@@ -54,6 +54,13 @@ export default function PrivacyPage() {
               to this website storing these cookies.
             </li>
             <li>
+              If you connect an AI app to your account, it can read and change
+              the things you approve, and we keep a saved copy of your profile
+              from before each change it makes. That app handles what it reads
+              under its own privacy policy. You can disconnect an app at any
+              time in Settings.
+            </li>
+            <li>
               We do not accept responsibility or liability for any externally
               linked sites and their respective privacy policies.
             </li>

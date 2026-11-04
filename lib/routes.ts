@@ -16,4 +16,5 @@ export const RESERVED_USERNAMES = [
   'about',
   'delete-account',
   'oauth',
+  'connect',
 ];
