@@ -127,7 +127,7 @@ export async function registerClient(
   const clientId = `pfy_${crypto.randomBytes(16).toString('hex')}`;
   await sql`
     INSERT INTO oauth_clients (client_id, client_name, redirect_uris)
-    VALUES (${clientId}, ${clientName}, ${sql.array(redirectUris)})
+    VALUES (${clientId}, ${clientName}, ${sql.array(redirectUris)}::text[])
   `;
   return { clientId, clientName, redirectUris };
 }
