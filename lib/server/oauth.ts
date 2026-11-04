@@ -6,7 +6,7 @@ import crypto from 'crypto';
 import sql from '@/lib/server/db';
 
 export const MCP_PATH = '/api/mcp';
-export const OAUTH_SCOPES = ['profile:read'];
+export const OAUTH_SCOPES = ['profile:read', 'profile:write'];
 
 export const OAUTH_CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',

@@ -79,7 +79,7 @@ describe('verifyPkce', () => {
 
 describe('resolveScopes', () => {
   it('defaults to every scope and drops unknown ones', () => {
-    expect(resolveScopes()).toEqual(['profile:read']);
+    expect(resolveScopes()).toEqual(['profile:read', 'profile:write']);
     expect(resolveScopes('profile:read admin')).toEqual(['profile:read']);
     expect(resolveScopes('admin')).toEqual([]);
   });
@@ -103,7 +103,10 @@ describe('validateAuthorization', () => {
   it('accepts a well-formed request', async () => {
     sqlMock.mockResolvedValueOnce([clientRow]);
     const result = await validateAuthorization(request, ORIGIN);
-    expect('valid' in result && result.valid.scopes).toEqual(['profile:read']);
+    expect('valid' in result && result.valid.scopes).toEqual([
+      'profile:read',
+      'profile:write',
+    ]);
   });
 
   it.each([

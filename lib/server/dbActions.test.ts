@@ -4,6 +4,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 // function call under the hood — a plain vi.fn() works as the mock.
 const { sqlMock } = vi.hoisted(() => ({ sqlMock: vi.fn() }));
 vi.mock('@/lib/server/db', () => ({ default: sqlMock }));
+vi.mock('next/cache', () => ({ revalidateTag: vi.fn() }));
 
 import {
   setCustomDomain,
@@ -12,6 +13,8 @@ import {
   updateUsername,
   storeResume,
   ResumeConflictError,
+  undoLastResumeChange,
+  restoreResumeSnapshot,
 } from './dbActions';
 
 describe('setCustomDomain', () => {
@@ -201,5 +204,70 @@ describe('storeResume', () => {
     expect(statements[0]).toContain('INSERT INTO resume_history');
     expect(statements[1]).toContain('DELETE FROM resume_history');
     expect(statements[2]).toContain('INSERT INTO resumes');
+  });
+});
+
+describe('undoLastResumeChange', () => {
+  const snapshot = { id: 7, version: 4, status: 'live', resumeData: null };
+
+  beforeEach(() => {
+    sqlMock.mockReset();
+  });
+
+  it('says so when there is nothing to undo', async () => {
+    sqlMock.mockResolvedValueOnce([]);
+    await expect(undoLastResumeChange('user-1')).resolves.toEqual({
+      error: 'There is no AI change to undo.',
+    });
+  });
+
+  it('refuses when the profile changed after the AI edit', async () => {
+    sqlMock
+      .mockResolvedValueOnce([snapshot])
+      .mockResolvedValueOnce([
+        { status: 'live', resumeData: null, version: 6 },
+      ]);
+
+    const result = await undoLastResumeChange('user-1');
+
+    expect(result).toHaveProperty('error');
+    // Read twice, wrote nothing.
+    expect(sqlMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('restores the snapshot and forgets it', async () => {
+    sqlMock
+      .mockResolvedValueOnce([snapshot])
+      .mockResolvedValueOnce([{ status: 'live', resumeData: null, version: 5 }])
+      // storeResume re-reads the stored profile for page passwords.
+      .mockResolvedValueOnce([{ status: 'live', resumeData: null, version: 5 }])
+      .mockResolvedValueOnce([{ version: 6 }])
+      .mockResolvedValueOnce([]);
+
+    await expect(undoLastResumeChange('user-1')).resolves.toEqual({
+      version: 6,
+    });
+
+    const lastCall = sqlMock.mock.calls.at(-1)!;
+    expect(lastCall[0].join('?')).toContain('DELETE FROM resume_history');
+  });
+});
+
+describe('restoreResumeSnapshot', () => {
+  beforeEach(() => {
+    sqlMock.mockReset();
+  });
+
+  it('rejects an id that is not a saved version', async () => {
+    await expect(
+      restoreResumeSnapshot('user-1', 'not-a-number'),
+    ).resolves.toEqual({ error: 'No saved version has that id.' });
+    expect(sqlMock).not.toHaveBeenCalled();
+  });
+
+  it("only looks in the user's own history", async () => {
+    sqlMock.mockResolvedValueOnce([]);
+    await restoreResumeSnapshot('user-1', '7');
+    expect(sqlMock.mock.calls[0][0].join('?')).toContain('user_id =');
   });
 });

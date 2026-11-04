@@ -16,6 +16,8 @@ export const metadata: Metadata = {
 const SCOPE_DESCRIPTIONS: Record<string, string> = {
   'profile:read':
     'Read your profile, your pages and drafts, and your profile views',
+  'profile:write':
+    'Change your profile, status and pages. Profile changes go live straight away',
 };
 
 function returnHost(redirectUri: string): string {

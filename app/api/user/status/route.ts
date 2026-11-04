@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import sql from '@/lib/server/db';
-import { revalidateTag } from 'next/cache';
+import { setUserStatus } from '@/lib/server/dbActions';
 
 export async function PUT(req: Request) {
   try {
@@ -16,17 +15,7 @@ export async function PUT(req: Request) {
     const { status_emoji, status_text } = body;
 
     // Both fields can be empty/null to clear the status, or provided to update
-    await sql`
-      UPDATE users 
-      SET 
-        status_emoji = ${status_emoji || null},
-        status_text = ${status_text || null},
-        status_updated_at = ${status_text ? new Date().toISOString() : null}
-      WHERE id = ${userId}
-    `;
-
-    // @ts-expect-error Next.js 16 Canary types require second profile argument
-    revalidateTag(`user-${userId}`);
+    await setUserStatus(userId, status_emoji, status_text);
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -1,15 +1,20 @@
 import { createMcpHandler, getPublicOrigin, withMcpAuth } from 'mcp-handler';
 import { NextResponse } from 'next/server';
 import { registerReadTools } from '@/lib/server/mcp/readTools';
-import { MCP_PATH, OAUTH_SCOPES, verifyAccessToken } from '@/lib/server/oauth';
+import { registerWriteTools } from '@/lib/server/mcp/writeTools';
+import { MCP_PATH, verifyAccessToken } from '@/lib/server/oauth';
 import { checkRateLimit } from '@/lib/server/rateLimit';
 
 const MCP_MAX_REQUESTS = 120;
 const MCP_WINDOW_MS = 60 * 1000;
 
-const handler = createMcpHandler(registerReadTools, {
-  serverInfo: { name: 'portfoliofy', version: '1.0.0' },
-});
+const handler = createMcpHandler(
+  (server) => {
+    registerReadTools(server);
+    registerWriteTools(server);
+  },
+  { serverInfo: { name: 'portfoliofy', version: '1.0.0' } },
+);
 
 async function rateLimited(req: Request): Promise<Response> {
   const { userId } = req.auth?.extra as { userId: string };
@@ -49,7 +54,9 @@ const authedHandler = withMcpAuth(
       extra: { userId: info.userId },
     };
   },
-  { required: true, requiredScopes: OAUTH_SCOPES },
+  // Scopes are checked per tool. Naming them here would make the 401 tell
+  // apps to request only those, instead of reading scopes_supported.
+  { required: true },
 );
 
 export { authedHandler as GET, authedHandler as POST, authedHandler as DELETE };
