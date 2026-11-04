@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Resume, ResumeData } from '@/lib/server/dbActions';
 import { ResumeDataSchema } from '@/lib/resume';
+import { useResumeStore } from '@/store/useResumeStore';
 
 // Fetch resume data
 const fetchResume = async (): Promise<{
@@ -81,6 +82,9 @@ export function useUserActions() {
         new Error(errData.error || 'Unknown error occurred'),
       );
     }
+
+    const { version } = (await response.json()) as { version: number };
+    return version;
   };
 
   const internalUsernameUpdate = async (newUsername: string) => {
@@ -125,29 +129,34 @@ export function useUserActions() {
   const saveResumeDataChanges = async (newResumeData: ResumeData) => {
     // Validate the resume data using Zod schema
     try {
-      // Validate the resume data
       ResumeDataSchema.parse(newResumeData);
-
-      // If validation passes, construct the updated resume
-      // Fallback to a default structure if the user doesn't have a resume yet
-      const baseResume: Resume = resumeQuery.data?.resume || {
-        status: 'live',
-      };
-
-      const updatedResume: Resume = {
-        ...baseResume,
-        resumeData: newResumeData,
-      };
-
-      await internalResumeUpdate(updatedResume);
-
-      return { success: true };
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(`Validation failed: ${error.message}`);
       }
       throw error;
     }
+
+    // If validation passes, construct the updated resume
+    // Fallback to a default structure if the user doesn't have a resume yet
+    const baseResume: Resume = resumeQuery.data?.resume || {
+      status: 'live',
+    };
+
+    const updatedResume: Resume = {
+      ...baseResume,
+      resumeData: newResumeData,
+      version: useResumeStore.getState().resumeVersion,
+    };
+
+    const version = await internalResumeUpdate(updatedResume);
+    useResumeStore.getState().setResumeVersion(version);
+    // Update the cache now, so the next save can't race the refetch below.
+    queryClient.setQueryData(['resume'], {
+      resume: { ...updatedResume, version },
+    });
+
+    return { success: true };
   };
 
   // Mutation for saving resume data changes

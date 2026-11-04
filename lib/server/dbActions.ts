@@ -15,7 +15,24 @@ const FORBIDDEN_USERNAMES = RESERVED_USERNAMES;
 const ResumeSchema = z.object({
   status: z.enum(['live', 'draft']).default('draft'),
   resumeData: ResumeDataSchema.nullish(),
+  // Increases on every save; see storeResume.
+  version: z.number().int().optional(),
 });
+
+// Older snapshots beyond this many are dropped, per user.
+const RESUME_HISTORY_LIMIT = 50;
+
+export type ResumeHistorySource = 'mcp';
+
+/** The profile changed after this copy of it was loaded. */
+export class ResumeConflictError extends Error {
+  constructor() {
+    super(
+      'Your profile changed somewhere else, so this save was stopped. Refresh to get the latest version.',
+    );
+    this.name = 'ResumeConflictError';
+  }
+}
 
 // Type inference for the resume data
 export type ResumeData = z.infer<typeof ResumeDataSchema>;
@@ -24,7 +41,7 @@ export type Resume = z.infer<typeof ResumeSchema>;
 export async function getResume(userId: string): Promise<Resume | undefined> {
   try {
     const [row] = await sql`
-      SELECT status, resume_data as "resumeData"
+      SELECT status, resume_data as "resumeData", version
       FROM resumes
       WHERE user_id = ${userId}
     `;
@@ -58,11 +75,47 @@ export async function getResume(userId: string): Promise<Resume | undefined> {
   }
 }
 
+/** Saves the profile as it is now, so a change made after this can be undone. */
+async function snapshotResume(
+  userId: string,
+  source: ResumeHistorySource,
+): Promise<void> {
+  await sql`
+    INSERT INTO resume_history (user_id, version, status, resume_data, source)
+    SELECT user_id, version, status, resume_data, ${source}
+    FROM resumes
+    WHERE user_id = ${userId}
+  `;
+  await sql`
+    DELETE FROM resume_history
+    WHERE user_id = ${userId}
+      AND id NOT IN (
+        SELECT id FROM resume_history
+        WHERE user_id = ${userId}
+        ORDER BY created_at DESC, id DESC
+        LIMIT ${RESUME_HISTORY_LIMIT}
+      )
+  `;
+}
+
+/**
+ * Saves the profile and returns its new version. When `resumeData.version` is
+ * set, the save only applies if the stored profile is still at that version;
+ * otherwise it throws ResumeConflictError rather than overwrite newer changes.
+ */
 export async function storeResume(
   userId: string,
   resumeData: Resume,
-  { keepStoredPagePasswords = true } = {},
-): Promise<void> {
+  {
+    keepStoredPagePasswords = true,
+    bumpVersion = true,
+    snapshotSource,
+  }: {
+    keepStoredPagePasswords?: boolean;
+    bumpVersion?: boolean;
+    snapshotSource?: ResumeHistorySource;
+  } = {},
+): Promise<number> {
   try {
     const validatedData = ResumeSchema.parse(resumeData);
 
@@ -88,7 +141,10 @@ export async function storeResume(
       ? JSON.stringify(safeResumeData)
       : null;
 
-    await sql`
+    if (snapshotSource) await snapshotResume(userId, snapshotSource);
+
+    const expectedVersion = validatedData.version ?? null;
+    const [saved] = await sql`
       INSERT INTO resumes (user_id, status, resume_data)
       VALUES (
         ${userId},
@@ -98,8 +154,13 @@ export async function storeResume(
       ON CONFLICT (user_id) DO UPDATE SET
         status = EXCLUDED.status,
         resume_data = EXCLUDED.resume_data,
-        updated_at = NOW()
+        updated_at = NOW(),
+        version = resumes.version + ${bumpVersion ? 1 : 0}
+      WHERE ${expectedVersion}::int IS NULL
+        OR resumes.version = ${expectedVersion}::int
+      RETURNING version
     `;
+    if (!saved) throw new ResumeConflictError();
 
     if (safeResumeData?.header?.name) {
       await sql`
@@ -108,8 +169,10 @@ export async function storeResume(
         WHERE id = ${userId}
       `;
     }
+
+    return saved.version;
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    if (error instanceof z.ZodError || error instanceof ResumeConflictError) {
       throw error;
     }
     console.error('Error storing resume:', error);
@@ -124,24 +187,37 @@ export async function setPagePassword(
   pageId: string,
   password: string | null,
 ): Promise<boolean> {
-  const stored = await getResume(userId);
-  const pages = stored?.resumeData?.pages;
-  if (!stored?.resumeData || !pages?.some((p) => p.id === pageId)) {
-    return false;
-  }
   const passwordHash = password ? hashPagePassword(password) : undefined;
-  await storeResume(
-    userId,
-    {
-      ...stored,
-      resumeData: {
-        ...stored.resumeData,
-        pages: pages.map((p) => (p.id === pageId ? { ...p, passwordHash } : p)),
+  const attempt = async (): Promise<boolean> => {
+    const stored = await getResume(userId);
+    const pages = stored?.resumeData?.pages;
+    if (!stored?.resumeData || !pages?.some((p) => p.id === pageId)) {
+      return false;
+    }
+    await storeResume(
+      userId,
+      {
+        ...stored,
+        resumeData: {
+          ...stored.resumeData,
+          pages: pages.map((p) =>
+            p.id === pageId ? { ...p, passwordHash } : p,
+          ),
+        },
       },
-    },
-    { keepStoredPagePasswords: false },
-  );
-  return true;
+      // Ordinary saves keep stored passwords, so an open editor doesn't need
+      // to treat this as a newer version of the profile.
+      { keepStoredPagePasswords: false, bumpVersion: false },
+    );
+    return true;
+  };
+
+  try {
+    return await attempt();
+  } catch (error) {
+    if (error instanceof ResumeConflictError) return attempt();
+    throw error;
+  }
 }
 
 export const createUsernameLookup = async ({
