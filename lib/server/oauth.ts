@@ -329,3 +329,60 @@ export async function verifyAccessToken(
     resource: row.resource,
   };
 }
+
+export interface ConnectedApp {
+  clientId: string;
+  clientName: string;
+  scopes: string[];
+  connectedAt: Date;
+  lastUsedAt: Date | null;
+}
+
+/** Apps that can still act for this user, newest first. */
+export async function listConnectedApps(
+  userId: string,
+): Promise<ConnectedApp[]> {
+  const rows = await sql`
+    SELECT
+      c.client_id,
+      c.client_name,
+      string_agg(DISTINCT t.scope, ' ') AS scope,
+      min(t.created_at) AS connected_at,
+      max(t.last_used_at) AS last_used_at
+    FROM oauth_tokens t
+    JOIN oauth_clients c ON c.client_id = t.client_id
+    WHERE t.user_id = ${userId}
+      AND t.revoked_at IS NULL
+      AND t.refresh_expires_at > now()
+    GROUP BY c.client_id, c.client_name
+    ORDER BY connected_at DESC
+  `;
+  return rows.map((row) => ({
+    clientId: row.clientId,
+    clientName: row.clientName,
+    scopes: [...new Set<string>(row.scope.split(' '))],
+    connectedAt: row.connectedAt,
+    lastUsedAt: row.lastUsedAt,
+  }));
+}
+
+/** Cuts an app off at once, including any code it hasn't exchanged yet. */
+export async function disconnectApp(
+  userId: string,
+  clientId: string,
+): Promise<void> {
+  await sql`
+    UPDATE oauth_tokens
+    SET revoked_at = now()
+    WHERE user_id = ${userId}
+      AND client_id = ${clientId}
+      AND revoked_at IS NULL
+  `;
+  await sql`
+    UPDATE oauth_codes
+    SET consumed_at = now()
+    WHERE user_id = ${userId}
+      AND client_id = ${clientId}
+      AND consumed_at IS NULL
+  `;
+}

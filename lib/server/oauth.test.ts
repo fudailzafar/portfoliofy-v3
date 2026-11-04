@@ -6,8 +6,10 @@ vi.mock('@/lib/server/db', () => ({ default: sqlMock }));
 
 import {
   buildRedirectUrl,
+  disconnectApp,
   exchangeAuthorizationCode,
   isAllowedRedirectUri,
+  listConnectedApps,
   refreshTokens,
   resolveScopes,
   validateAuthorization,
@@ -188,5 +190,32 @@ describe('verifyAccessToken', () => {
 
     sqlMock.mockResolvedValueOnce([]);
     await expect(verifyAccessToken('token')).resolves.toBeNull();
+  });
+});
+
+describe('connected apps', () => {
+  it('lists each app with its scopes once', async () => {
+    sqlMock.mockResolvedValueOnce([
+      {
+        clientId: 'pfy_1',
+        clientName: 'Claude',
+        scope: 'profile:read profile:read profile:write',
+        connectedAt: new Date(0),
+        lastUsedAt: null,
+      },
+    ]);
+    const [app] = await listConnectedApps('user-1');
+    expect(app.scopes).toEqual(['profile:read', 'profile:write']);
+  });
+
+  it("revokes only this user's tokens and unused codes for the app", async () => {
+    sqlMock.mockResolvedValue([]);
+    await disconnectApp('user-1', 'pfy_1');
+
+    const [tokens, codes] = sqlMock.mock.calls;
+    expect(tokens[0].join('?')).toContain('UPDATE oauth_tokens');
+    expect(tokens.slice(1)).toEqual(['user-1', 'pfy_1']);
+    expect(codes[0].join('?')).toContain('UPDATE oauth_codes');
+    expect(codes.slice(1)).toEqual(['user-1', 'pfy_1']);
   });
 });
