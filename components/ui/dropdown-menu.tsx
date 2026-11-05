@@ -11,13 +11,13 @@ const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
+>(({ className, sideOffset = 8, ...props }, ref) => (
   <DropdownMenuPrimitive.Portal>
     <DropdownMenuPrimitive.Content
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        'z-[100] min-w-[11rem] overflow-hidden rounded-md border border-border-strong bg-surface-1 p-1 shadow-lg',
+        'z-[100] min-w-[11rem] overflow-hidden rounded-xl border border-border-strong bg-surface-1 py-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.12)]',
         className,
       )}
       {...props}
@@ -33,7 +33,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      'flex cursor-pointer select-none items-center rounded-sm px-3 py-2 text-sm text-content-secondary outline-none transition-colors data-[highlighted]:bg-surface-2 data-[highlighted]:text-content-primary',
+      'flex cursor-pointer select-none items-center px-4 py-2 text-sm text-content-primary outline-none transition-colors data-[highlighted]:bg-border-subtle',
       className,
     )}
     {...props}
