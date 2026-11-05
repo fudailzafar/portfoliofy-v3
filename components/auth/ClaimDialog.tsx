@@ -85,7 +85,6 @@ export function ClaimDialog() {
         return;
       }
 
-      toast.success('Handle claimed successfully!');
       window.location.href = `/${cleanUsername}`;
     } catch (err) {
       toast.error('Something went wrong. Please try again.');

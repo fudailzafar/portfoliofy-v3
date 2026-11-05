@@ -310,7 +310,6 @@ export function EditProfileDialog({
         setLocalPicture(url);
         lastSavedPictureRef.current = url;
         URL.revokeObjectURL(blobUrl);
-        toast.success('Profile picture updated');
       } catch {
         setLocalPicture(lastSavedPictureRef.current);
         URL.revokeObjectURL(blobUrl);
@@ -352,7 +351,6 @@ export function EditProfileDialog({
     try {
       const res = await fetch('/api/user', { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete account');
-      toast.success('Account deleted successfully');
       setOpen(false);
       await signOut({ callbackUrl: '/' });
       window.location.href = '/';

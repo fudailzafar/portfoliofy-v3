@@ -79,7 +79,6 @@ export function StatusEditor({
       if (!res.ok) throw new Error('Failed to update status');
       onSave(emoji, text, new Date());
       onClose();
-      toast.success('Status updated');
     } catch (error) {
       toast.error('Failed to update status');
     }
@@ -95,7 +94,6 @@ export function StatusEditor({
       if (!res.ok) throw new Error('Failed to clear status');
       onSave(null, null, null);
       onClose();
-      toast.success('Status cleared');
     } catch (error) {
       toast.error('Failed to clear status');
     }

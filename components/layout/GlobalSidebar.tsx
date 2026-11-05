@@ -7,7 +7,6 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthDialog } from '@/components/auth/AuthDialog';
 import { ExploreSidebar } from './ExploreSidebar';
-import { toast } from 'sonner';
 import { useUserActions } from '@/hooks/useUserActions';
 import { SITE_HOST } from '@/lib/site';
 
@@ -132,7 +131,6 @@ export function GlobalSidebar() {
                         navigator.clipboard.writeText(
                           `${SITE_HOST}/${currentUsername}`,
                         );
-                        toast.success('Copied to clipboard');
                         setIsCopied(true);
                         setTimeout(() => setIsCopied(false), 2000);
                       }}

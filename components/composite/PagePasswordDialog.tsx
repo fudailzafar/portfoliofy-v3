@@ -51,13 +51,6 @@ export function PagePasswordDialog({
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Request failed');
       onChanged(data.passwordProtected);
-      toast.success(
-        data.passwordProtected
-          ? isProtected
-            ? 'Password changed'
-            : 'Page is now password protected'
-          : 'Password removed',
-      );
       onOpenChange(false);
     } catch (error) {
       toast.error(
