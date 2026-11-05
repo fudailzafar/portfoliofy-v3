@@ -6,6 +6,9 @@ import { ListTabLayout } from '@/components/composite/ListTabLayout';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { ChatCircleIcon, ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
+import { ValidCheck } from '@/components/ui/valid-check';
+import { isValidEmail } from '@/lib/validation/email';
+import { cn } from '@/lib/utils';
 import {
   Select,
   SelectContent,
@@ -42,6 +45,8 @@ export function ContactsTab({
     current: currentContact,
     setCurrent: setCurrentContact,
   } = useTabEditor<any>({ isValid: isContactValid, onCommit: saveContact });
+
+  const isEmailContact = currentContact?.type === 'Email';
 
   return (
     <ListTabLayout
@@ -233,23 +238,36 @@ export function ContactsTab({
               ) : (
                 <div className="space-y-2">
                   <Label className="text-[13px] text-content-muted">
-                    Username or Profile URL*
+                    {isEmailContact
+                      ? 'Email address*'
+                      : 'Username or Profile URL*'}
                   </Label>
-                  <Input
-                    value={currentContact.username || ''}
-                    onChange={(e) => {
-                      const newUsername = e.target.value;
-                      setCurrentContact({
-                        ...currentContact,
-                        username: newUsername,
-                        link: buildContactUrl(
-                          newUsername,
-                          currentContact.platform || '',
-                        ),
-                      });
-                    }}
-                    className="h-10 text-[14px]"
-                  />
+                  <div className="relative">
+                    <Input
+                      type={isEmailContact ? 'email' : 'text'}
+                      spellCheck={!isEmailContact}
+                      value={currentContact.username || ''}
+                      onChange={(e) => {
+                        const newUsername = e.target.value;
+                        setCurrentContact({
+                          ...currentContact,
+                          username: newUsername,
+                          link: buildContactUrl(
+                            newUsername,
+                            currentContact.platform || '',
+                          ),
+                        });
+                      }}
+                      className={cn(
+                        'h-10 text-[14px]',
+                        isEmailContact && 'pr-10',
+                      )}
+                    />
+                    {isEmailContact &&
+                      isValidEmail(currentContact.username || '') && (
+                        <ValidCheck className="absolute right-3 top-1/2 -translate-y-1/2" />
+                      )}
+                  </div>
                 </div>
               )}
             </div>

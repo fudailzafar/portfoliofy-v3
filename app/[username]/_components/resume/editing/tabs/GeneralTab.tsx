@@ -13,7 +13,9 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { CheckIcon, XIcon, CameraIcon } from '@phosphor-icons/react/ssr';
+import { CameraIcon } from '@phosphor-icons/react/ssr';
+import { ValidCheck } from '@/components/ui/valid-check';
+import { cn } from '@/lib/utils';
 import { isValidWebsite, normalizeWebsite } from '@/lib/validation/url';
 
 export function GeneralTab({
@@ -44,6 +46,8 @@ export function GeneralTab({
   const updateResume = useResumeStore((state) => state.updateResume);
 
   const isInitialUsername = uname === initialUsername;
+  const isUsernameTaken =
+    !isInitialUsername && !!uname && !isCheckingUsername && !isValidUsername;
 
   if (!resume) return null;
 
@@ -112,10 +116,20 @@ export function GeneralTab({
 
       <div className="w-full min-w-0 space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="uname" className="text-xs text-content-secondary">
-            Username*
-          </Label>
-          <div className="relative flex items-center overflow-hidden rounded-md bg-surface-3 dark:border-none dark:bg-border-subtle">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="uname" className="text-xs text-content-secondary">
+              Username*
+            </Label>
+            {isUsernameTaken && (
+              <span className="text-xs text-red-500">Username is taken</span>
+            )}
+          </div>
+          <div
+            className={cn(
+              'relative flex items-center overflow-hidden rounded-md bg-surface-3 dark:border-none dark:bg-border-subtle',
+              isUsernameTaken && 'ring-1 ring-red-500',
+            )}
+          >
             <Input
               id="uname"
               placeholder="your-username"
@@ -133,14 +147,8 @@ export function GeneralTab({
                   <Spinner size={16} className="text-content-muted" />
                 </div>
               ) : isValidUsername ? (
-                <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-green-500 p-0.5">
-                  <CheckIcon className="h-3 w-3 text-surface-1" weight="bold" />
-                </div>
-              ) : (
-                <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-red-500 p-0.5">
-                  <XIcon className="h-3 w-3 text-surface-1" weight="bold" />
-                </div>
-              )}
+                <ValidCheck className="absolute right-3 top-1/2 -translate-y-1/2" />
+              ) : null}
             </div>
           </div>
         </div>
