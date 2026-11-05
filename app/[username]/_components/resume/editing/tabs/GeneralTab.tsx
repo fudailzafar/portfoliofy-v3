@@ -63,7 +63,8 @@ export function GeneralTab({
           id="avatar-upload"
           type="file"
           accept="image/*"
-          className="sr-only"
+          aria-label="Upload profile picture"
+          className="peer sr-only"
           onChange={(e) => {
             handlePictureUpload(e);
             e.target.value = '';
@@ -86,7 +87,7 @@ export function GeneralTab({
           /* ── No image: clickable camera placeholder ── */
           <label
             htmlFor="avatar-upload"
-            className="group relative flex size-20 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-surface-2"
+            className="group relative flex size-20 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-surface-2 peer-focus-visible:ring-2 peer-focus-visible:ring-ring"
           >
             {isUploadingPicture ? (
               <Spinner size={20} className="text-content-secondary" />
@@ -100,37 +101,13 @@ export function GeneralTab({
           </label>
         )}
 
-        {/* Action buttons */}
-        <div className="flex flex-col gap-2">
-          {localPicture ? (
-            /* Image exists: show Upload (replace) + Remove */
-            <>
-              <button
-                className="h-8 cursor-pointer rounded-md border border-border-strong bg-surface-1 px-4 text-[13px] text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
-                onClick={removePicture}
-                disabled={isUploadingPicture}
-              >
-                Remove image
-              </button>
-            </>
-          ) : (
-            /* No image: show Upload image */
-            <>
-              <button
-                className="h-8 cursor-pointer rounded-md border border-border-strong bg-surface-1 px-4 text-[13px] text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
-                onClick={() =>
-                  document.getElementById('avatar-upload')?.click()
-                }
-                disabled={isUploadingPicture}
-              >
-                {isUploadingPicture ? 'Removing…' : 'Upload image'}
-              </button>
-              <p className="text-[11px] leading-tight text-content-muted">
-                JPG, PNG or GIF · max 5MB
-              </p>
-            </>
-          )}
-        </div>
+        <button
+          className="h-8 cursor-pointer rounded-md border border-border-strong bg-surface-1 px-4 text-[13px] text-content-primary shadow-sm transition-all active:bg-surface-2 disabled:cursor-not-allowed disabled:text-content-muted disabled:shadow-none dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+          onClick={removePicture}
+          disabled={!localPicture || isUploadingPicture}
+        >
+          Remove image
+        </button>
       </div>
 
       <div className="w-full min-w-0 space-y-6">
