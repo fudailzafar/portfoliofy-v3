@@ -203,7 +203,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                     setCustomDomain(e.target.value.toLowerCase())
                   }
                   placeholder="yourname.com"
-                  className={`h-9 w-full dark:border-none dark:bg-border-subtle ${domainStatus ? 'pl-9 text-content-secondary' : 'pr-9'}`}
+                  className={`h-9 w-full font-mono dark:border-none dark:bg-border-subtle ${domainStatus ? 'pl-9 text-content-secondary' : 'pr-9'}`}
                   disabled={!!domainStatus}
                 />
                 {!domainStatus &&
@@ -256,7 +256,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                         href={`https://${customDomain}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium decoration-[#6b8949] underline-offset-4 hover:underline"
+                        className="font-mono font-medium decoration-[#6b8949] underline-offset-4 hover:underline"
                       >
                         {customDomain}
                       </a>
