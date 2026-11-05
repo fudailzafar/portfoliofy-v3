@@ -277,7 +277,44 @@ export async function exchangeAuthorizationCode(
   ) {
     return null;
   }
-  return issueTokens(clientId, row.userId, row.scope, row.resource);
+  const tokens = await issueTokens(
+    clientId,
+    row.userId,
+    row.scope,
+    row.resource,
+  );
+  await revokeOlderConnections(row.userId, clientId, tokens.access_token);
+  return tokens;
+}
+
+/**
+ * Apps register a new client each time they connect, so reconnecting would
+ * otherwise leave a stale entry. Clients count as the same app only if the name
+ * and a return address both match: the code for an approved connection goes to
+ * that address, so another app can't use a borrowed name to cut this one off.
+ * Runs after the new tokens exist, and a failure here must not lose them.
+ */
+async function revokeOlderConnections(
+  userId: string,
+  clientId: string,
+  currentAccessToken: string,
+): Promise<void> {
+  try {
+    await sql`
+      UPDATE oauth_tokens t
+      SET revoked_at = now()
+      FROM oauth_clients old_client, oauth_clients new_client
+      WHERE t.user_id = ${userId}
+        AND t.revoked_at IS NULL
+        AND t.access_hash <> ${hashSecret(currentAccessToken)}
+        AND t.client_id = old_client.client_id
+        AND new_client.client_id = ${clientId}
+        AND old_client.client_name = new_client.client_name
+        AND old_client.redirect_uris && new_client.redirect_uris
+    `;
+  } catch (error) {
+    console.error('Error revoking older OAuth connections:', error);
+  }
 }
 
 /** Rotates tokens: the refresh token used here stops working. */
