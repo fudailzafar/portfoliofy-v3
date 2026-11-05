@@ -142,6 +142,40 @@ describe('exchangeAuthorizationCode', () => {
     expect(tokens?.scope).toBe('profile:read');
   });
 
+  it('replaces older connections from the same app', async () => {
+    sqlMock
+      .mockResolvedValueOnce([codeRow])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([]);
+
+    await exchangeAuthorizationCode(
+      'code',
+      'pfy_1',
+      codeRow.redirectUri,
+      VERIFIER,
+    );
+
+    const revoke = sqlMock.mock.calls[2];
+    expect(revoke[0].join('?')).toContain('old_client.client_name');
+    expect(revoke[0].join('?')).toContain('old_client.redirect_uris &&');
+    expect(revoke.slice(1, 2)).toEqual(['user-1']);
+  });
+
+  it('still returns tokens if revoking older connections fails', async () => {
+    sqlMock
+      .mockResolvedValueOnce([codeRow])
+      .mockResolvedValueOnce([])
+      .mockRejectedValueOnce(new Error('database down'));
+
+    const tokens = await exchangeAuthorizationCode(
+      'code',
+      'pfy_1',
+      codeRow.redirectUri,
+      VERIFIER,
+    );
+    expect(tokens?.token_type).toBe('Bearer');
+  });
+
   it('rejects a used or expired code', async () => {
     sqlMock.mockResolvedValueOnce([]);
     await expect(
