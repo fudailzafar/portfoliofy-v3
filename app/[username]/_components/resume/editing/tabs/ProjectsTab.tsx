@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTabEditor } from '@/hooks/useTabEditor';
 import { useResumeList } from '@/hooks/useResumeList';
+import { useResumeStore } from '@/store/useResumeStore';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
 import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
@@ -48,6 +49,8 @@ export function ProjectsTab({
     current: currentProject,
     setCurrent: setCurrentProject,
   } = useTabEditor<any>({ isValid: isProjectValid, onCommit: saveProject });
+
+  const moveItemToSection = useResumeStore((s) => s.moveItemToSection);
 
   const sortedProjects = useMemo(() => sortByDateDesc(projects), [projects]);
 
@@ -102,6 +105,17 @@ export function ProjectsTab({
                     setProjectsView('form');
                   }}
                   onDelete={() => setProjectToDelete(project.id)}
+                  menuActions={[
+                    {
+                      label: 'Move to Side Projects',
+                      onSelect: () =>
+                        moveItemToSection(
+                          'projects',
+                          'sideProjects',
+                          project.id,
+                        ),
+                    },
+                  ]}
                 />
               );
             },
