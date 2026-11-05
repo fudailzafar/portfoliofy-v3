@@ -28,10 +28,10 @@ export function Footer({ className }: { className?: string }) {
             Terms
           </Link>
           <Link
-            href="/press"
+            href="/connect"
             className="underline-offset-[3px] hover:underline"
           >
-            Press
+            MCP
           </Link>
           <Link
             href="/support"

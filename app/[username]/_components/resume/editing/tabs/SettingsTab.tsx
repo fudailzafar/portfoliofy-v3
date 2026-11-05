@@ -70,7 +70,7 @@ export function SettingsTab({
                 </p>
               </div>
               <Select value={theme} onValueChange={setTheme}>
-                <SelectTrigger className="w-[120px] bg-transparent text-content-primary">
+                <SelectTrigger className="w-[120px] border border-border-strong bg-surface-card text-content-primary shadow-sm dark:border-none dark:bg-border-subtle">
                   <SelectValue placeholder="System" />
                 </SelectTrigger>
                 <SelectContent>
@@ -109,7 +109,7 @@ export function SettingsTab({
 
                 <button
                   onClick={() => setIsConfirmingDelete(true)}
-                  className="h-9 w-[120px] shrink-0 items-center justify-center rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:text-red-600 dark:active:bg-border-strong"
+                  className="h-9 w-[120px] shrink-0 items-center justify-center rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-red-600 shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
                 >
                   Delete
                 </button>
@@ -140,7 +140,7 @@ export function SettingsTab({
                   <button
                     onClick={onConfirmDelete}
                     disabled={!usernameMatches || isDeletingAccount}
-                    className="h-9 w-auto min-w-[120px] whitespace-nowrap rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:text-red-600 dark:active:bg-border-strong"
+                    className="h-9 w-auto min-w-[120px] whitespace-nowrap rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-red-600 shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
                   >
                     {isDeletingAccount ? (
                       <span className="flex items-center justify-center">

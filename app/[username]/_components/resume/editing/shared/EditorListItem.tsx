@@ -97,8 +97,10 @@ export function EditorListItem({
             />
           )}
 
+          {/* The editor sits outside a profile's theme, so the cards get the
+              default one to match how they look on a public profile. */}
           {attachments && attachments.length > 0 && (
-            <div className="mt-4">
+            <div className="theme-default mt-4">
               <AttachmentsPreview attachments={attachments} />
             </div>
           )}
