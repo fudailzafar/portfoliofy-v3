@@ -119,9 +119,11 @@ export function ProfileSidebar({
                     onClick={() => handleGroupChange(group.id)}
                     aria-label={group.label}
                     aria-pressed={isActive}
-                    className="flex size-10 items-center justify-center rounded-full text-content-primary"
+                    className={cn(
+                      'flex size-10 items-center justify-center rounded-full transition-colors',
+                      isActive ? 'text-content-primary' : 'text-content-muted',
+                    )}
                   >
-                    {/* The active tab shows as filled; colour stays the same. */}
                     <Icon
                       className="size-6"
                       weight={isActive ? 'fill' : 'regular'}
