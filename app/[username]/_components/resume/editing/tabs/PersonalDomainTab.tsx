@@ -54,7 +54,6 @@ export function PersonalDomainTab({ username }: { username: string }) {
       });
       updateDesign({ [key]: url });
       setHasUnsavedChanges(true);
-      toast.success(`${label.split(' (')[0]} updated`);
     } catch {
       toast.error('Failed to upload image');
     } finally {
@@ -107,7 +106,6 @@ export function PersonalDomainTab({ username }: { username: string }) {
       if (data.error) {
         toast.error(data.error);
       } else {
-        toast.success('Domain added successfully');
         fetchDomain();
       }
     } catch {
@@ -121,7 +119,6 @@ export function PersonalDomainTab({ username }: { username: string }) {
     try {
       const res = await fetch('/api/domain', { method: 'DELETE' });
       if (res.ok) {
-        toast.success('Domain removed');
         setCustomDomain('');
         setDomainStatus(null);
       }
@@ -133,7 +130,6 @@ export function PersonalDomainTab({ username }: { username: string }) {
 
   const copyValue = (value: string) => {
     navigator.clipboard.writeText(value);
-    toast.success('Copied to clipboard');
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };

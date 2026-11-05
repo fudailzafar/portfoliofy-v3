@@ -5,7 +5,6 @@ import { PenNibIcon, LockIcon } from '@phosphor-icons/react/ssr';
 import { usePagePersistence } from '@/hooks/usePagePersistence';
 import { DeleteConfirmDialog } from '../dialogs';
 import { withErrorToast } from '@/lib/errorToast';
-import { toast } from 'sonner';
 
 function formatPageDate(createdAt?: string): string | null {
   if (!createdAt) return null;
@@ -89,11 +88,10 @@ export function WritingTab({
   const handleConfirmDelete = async () => {
     if (!pendingDeletePageId) return;
     setIsDeletingPage(true);
-    const ok = await withErrorToast(
+    await withErrorToast(
       () => deletePage(pendingDeletePageId),
       'Failed to delete page',
     );
-    if (ok.ok) toast.success('Page deleted');
     setIsDeletingPage(false);
     setPendingDeletePageId(null);
   };

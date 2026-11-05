@@ -42,7 +42,6 @@ import { usePagePersistence } from '@/hooks/usePagePersistence';
 import { useAnchoredMenu } from '@/hooks/useAnchoredMenu';
 import { useResumeStore } from '@/store/useResumeStore';
 import { withErrorToast } from '@/lib/errorToast';
-import { toast } from 'sonner';
 
 function toDateInputValue(isoString?: string): string {
   if (!isoString) return '';
@@ -297,12 +296,10 @@ export function PageEditorView({
   // Publishes immediately, independent of the global Save. Store what the
   // server returned so the status shown matches what was actually saved.
   const handlePublish = async () => {
-    const wasPublished = status === 'published';
     await withErrorToast(async () => {
       const built = buildPage();
       const published = await publishPage(built);
       setEditingPage({ attachment: published });
-      toast.success(wasPublished ? 'Changes published' : 'Page published');
     }, 'Failed to publish page');
   };
 
@@ -314,7 +311,6 @@ export function PageEditorView({
       const built = buildPage();
       const unpublished = await unpublishPage(built);
       setEditingPage({ attachment: unpublished });
-      toast.success('Page unpublished');
     }, 'Failed to unpublish page');
   };
 
@@ -322,7 +318,6 @@ export function PageEditorView({
     if (!page) return;
     await withErrorToast(async () => {
       await deletePage(page.id);
-      toast.success('Page deleted');
       setIsDeleteConfirmOpen(false);
       onClose();
     }, 'Failed to delete page');
