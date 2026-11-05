@@ -69,6 +69,35 @@ describe('POST /api/auth/email-link', () => {
     );
   });
 
+  it('sends the person back to the connect screen when asked to', async () => {
+    const next = '/oauth/authorize?client_id=pfy_1&state=abc';
+
+    await POST(makeRequest({ email: 'jane@example.com', next }));
+
+    expect(sendLoginEmailMock).toHaveBeenCalledWith(
+      'jane@example.com',
+      `http://localhost:3000/verify-login?token=tok_123&next=${encodeURIComponent(next)}`,
+      'signup',
+    );
+  });
+
+  it.each([
+    'https://evil.com/oauth/authorize?x=1',
+    '//evil.com/oauth/authorize?x=1',
+    '/api/user?x=1',
+  ])(
+    'ignores a destination that is not the connect screen: %s',
+    async (next) => {
+      await POST(makeRequest({ email: 'jane@example.com', next }));
+
+      expect(sendLoginEmailMock).toHaveBeenCalledWith(
+        'jane@example.com',
+        'http://localhost:3000/verify-login?token=tok_123',
+        'signup',
+      );
+    },
+  );
+
   it('only returns the link to the browser in development', async () => {
     vi.stubEnv('NODE_ENV', 'production');
     const prod = await (

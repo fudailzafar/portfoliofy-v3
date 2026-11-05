@@ -58,8 +58,14 @@ export async function resolveEmailUserId(email: string): Promise<string> {
   return `email_${createHash('sha256').update(email).digest('hex').slice(0, 32)}`;
 }
 
-export function buildLoginLink(origin: string, token: string): string {
-  return `${origin}/verify-login?token=${encodeURIComponent(token)}`;
+/** `next` is a path from safeNextPath, for sign-ins that began in an AI app. */
+export function buildLoginLink(
+  origin: string,
+  token: string,
+  next?: string | null,
+): string {
+  const link = `${origin}/verify-login?token=${encodeURIComponent(token)}`;
+  return next ? `${link}&next=${encodeURIComponent(next)}` : link;
 }
 
 /**
