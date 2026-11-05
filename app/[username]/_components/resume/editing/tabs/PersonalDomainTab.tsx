@@ -6,7 +6,9 @@ import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
 import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
-import { XIcon, CheckIcon } from '@phosphor-icons/react/ssr';
+import { XIcon } from '@phosphor-icons/react/ssr';
+import { ValidCheck } from '@/components/ui/valid-check';
+import { isValidDomainFormat } from '@/lib/validation/domain';
 import { useS3Upload } from 'next-s3-upload';
 import { getOptimizedImageUrl, readImageDimensions } from '@/lib/utils';
 import { SITE_HOST } from '@/lib/site';
@@ -187,15 +189,7 @@ export function PersonalDomainTab({ username }: { username: string }) {
                     <Spinner size={14} />
                   </div>
                 ) : domainStatus?.verified ? (
-                  <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
-                    <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#6b8949] text-surface-1">
-                      <CheckIcon
-                        weight="bold"
-                        aria-hidden="true"
-                        className="h-2.5 w-2.5"
-                      />
-                    </div>
-                  </div>
+                  <ValidCheck className="absolute left-2.5 top-1/2 z-10 -translate-y-1/2" />
                 ) : domainStatus ? (
                   <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
                     <div className="flex h-[14px] w-[14px] items-center justify-center rounded-full bg-[#ebd955] text-[10px] font-bold text-surface-1">
@@ -209,9 +203,14 @@ export function PersonalDomainTab({ username }: { username: string }) {
                     setCustomDomain(e.target.value.toLowerCase())
                   }
                   placeholder="yourname.com"
-                  className={`h-9 w-full dark:border-none dark:bg-border-subtle ${domainStatus ? 'pl-9 text-content-secondary' : ''}`}
+                  className={`h-9 w-full dark:border-none dark:bg-border-subtle ${domainStatus ? 'pl-9 text-content-secondary' : 'pr-9'}`}
                   disabled={!!domainStatus}
                 />
+                {!domainStatus &&
+                  !isVerifyingDomain &&
+                  isValidDomainFormat(customDomain) && (
+                    <ValidCheck className="absolute right-2.5 top-1/2 z-10 -translate-y-1/2" />
+                  )}
               </div>
               {!domainStatus ? (
                 <button
