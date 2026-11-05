@@ -67,26 +67,6 @@ export function ConnectedApps() {
 
   return (
     <div className="w-full min-w-0 space-y-4">
-      <div>
-        <h4 className="text-sm text-content-primary">Connected apps</h4>
-        <p className="text-sm text-content-muted">
-          {isError
-            ? 'Connected apps could not be loaded. Try again later.'
-            : apps?.length
-              ? 'These apps can act on your profile.'
-              : 'Update your profile by chatting with an AI app. '}
-          {!isError && !apps?.length && (
-            <Link
-              href="/connect"
-              target="_blank"
-              className="text-content-primary underline underline-offset-[3px]"
-            >
-              See how
-            </Link>
-          )}
-        </p>
-      </div>
-
       {isLoading && <Spinner size={14} className="text-content-muted" />}
 
       {apps?.map((app) => {
