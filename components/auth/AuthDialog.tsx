@@ -1,9 +1,12 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
+import { Spinner } from '@/components/ui/spinner';
+import { ValidCheck } from '@/components/ui/valid-check';
+import { isValidEmail, normalizeEmail } from '@/lib/validation/email';
 
 interface AuthDialogProps {
   open: boolean;
@@ -12,15 +15,92 @@ interface AuthDialogProps {
 }
 
 const SPRING = { type: 'spring', stiffness: 700, damping: 50 } as const;
+// Read.cv's bouncier spring for small pop-ins like the checkmark.
+const POP_SPRING = { type: 'spring', stiffness: 700, damping: 25 } as const;
+
+// Off unless set, so the email option only appears where it is configured.
+const EMAIL_AUTH_ENABLED = process.env.NEXT_PUBLIC_EMAIL_AUTH === 'true';
+
+type Step = 0 | 1 | 2; // choose → email → check inbox
+
+const TITLE_CLASS =
+  'mb-1 text-[18px] font-medium leading-[1.6] text-[#111] dark:text-[#eee]';
+const TEXT_BUTTON_CLASS =
+  'text-[#111] outline-none hover:underline hover:underline-offset-4 focus-visible:underline dark:text-[#eee]';
+// Read.cv's .button: white with a hairline border, #333 and borderless in dark.
+const BUTTON_CLASS =
+  'relative flex h-8 items-center justify-center rounded-lg border border-[#e5e5e5] bg-[#fff] px-3 font-medium text-[#111] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#111]/20 active:bg-[#f2f2f2] disabled:text-[#aaa] dark:border-none dark:bg-[#333] dark:text-[#eee] dark:focus-visible:ring-[#eee]/20 dark:active:bg-[#444] dark:disabled:text-[#777]';
 
 export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const [step, setStep] = useState<Step>(0);
+  const [email, setEmail] = useState('');
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
+  const [devLink, setDevLink] = useState('');
+
   const title =
     mode === 'login' ? 'Login to your account' : 'Create a new profile';
+  const normalizedEmail = normalizeEmail(email);
+  const emailIsValid = isValidEmail(normalizedEmail);
+
+  // Start from the first step every time the dialog opens.
+  useEffect(() => {
+    if (open) return;
+    setStep(0);
+    setEmail('');
+    setError('');
+    setDevLink('');
+    setSending(false);
+  }, [open]);
+
+  useEffect(() => {
+    // preventScroll: the panel is still sliding in, and focusing it would make
+    // the clipped wrapper scroll sideways to reveal it.
+    if (open && step === 1) inputRef.current?.focus({ preventScroll: true });
+  }, [open, step]);
 
   const handleGoogleSignIn = () => {
     signIn('google', { callbackUrl: '/auth/post-login' });
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailIsValid || sending) return;
+
+    setSending(true);
+    setError('');
+    try {
+      const res = await fetch('/api/auth/email-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: normalizedEmail, mode }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.error ?? "We couldn't send the link. Try again.");
+        return;
+      }
+      setDevLink(data.devLink ?? '');
+      setStep(2);
+    } catch {
+      setError("We couldn't send the link. Try again.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  // Each panel slides in from the side; inactive ones are inert. They share one
+  // grid cell, so the card keeps the tallest step's height, like Read.cv.
+  const panelProps = (index: Step) => ({
+    className: 'col-start-1 row-start-1 flex flex-col p-6',
+    inert: step !== index,
+    initial: false,
+    animate: { x: `${(index - step) * 100}%` },
+    transition: SPRING,
+  });
 
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
@@ -48,38 +128,179 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
                   cardRef.current?.focus();
                 }}
               >
-                {/* CSS centres the card; motion only animates the 20px rise. */}
+                {/* CSS centres the card; motion only adds the 20px rise. Animating
+                    y from calc(-50% + 20px) to -50% never completes in Framer. */}
                 <div
                   ref={cardRef}
                   className="fixed left-1/2 top-1/2 z-50 w-[calc(100vw-24px)] max-w-[375px] -translate-x-1/2 -translate-y-1/2 font-sans text-[14px] leading-[1.6] text-[#111] outline-none dark:text-[#eee] print:hidden"
                 >
                   <motion.div
-                    className="rounded-2xl bg-[#fff] p-6 dark:bg-[#222]"
+                    className="grid overflow-hidden rounded-2xl bg-[#fff] dark:bg-[#222]"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
                     transition={SPRING}
                   >
-                    <DialogPrimitive.Title className="mb-1 text-[18px] font-medium leading-[1.6] text-[#111] dark:text-[#eee]">
-                      {title}
-                      <span aria-hidden="true" className="whitespace-nowrap">
-                        {' '}
-                        {mode === 'login' ? '👋' : '✨'}
-                      </span>
-                    </DialogPrimitive.Title>
-                    <p className="text-[#666] dark:text-[#aaa]">
-                      By continuing you agree to our terms of service and
-                      privacy policy.
-                    </p>
+                    <motion.div {...panelProps(0)}>
+                      <DialogPrimitive.Title className={TITLE_CLASS}>
+                        {title}
+                        <span aria-hidden="true" className="whitespace-nowrap">
+                          {' '}
+                          {mode === 'login' ? '👋' : '✨'}
+                        </span>
+                      </DialogPrimitive.Title>
+                      <p className="text-[#666] dark:text-[#aaa]">
+                        By continuing you agree to our terms of service and
+                        privacy policy.
+                      </p>
 
-                    <button
-                      type="button"
-                      onClick={handleGoogleSignIn}
-                      className="mt-4 flex h-9 w-full items-center justify-center rounded-lg border border-[#e5e5e5] bg-[#fff] px-3 font-medium text-[#666] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#111]/20 active:bg-[#f2f2f2] dark:border-none dark:bg-[#333] dark:text-[#aaa] dark:focus-visible:ring-[#eee]/20 dark:active:bg-[#444]"
-                    >
-                      <GoogleIcon />
-                      Continue with Google
-                    </button>
+                      <button
+                        type="button"
+                        onClick={handleGoogleSignIn}
+                        className="mt-4 flex h-9 w-full items-center justify-center rounded-lg border border-[#e5e5e5] bg-[#fff] px-3 font-medium text-[#666] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#111]/20 active:bg-[#f2f2f2] dark:border-none dark:bg-[#333] dark:text-[#aaa] dark:focus-visible:ring-[#eee]/20 dark:active:bg-[#444]"
+                      >
+                        <GoogleIcon />
+                        Continue with Google
+                      </button>
+
+                      {EMAIL_AUTH_ENABLED && (
+                        <div className="mt-2 flex h-8 items-center justify-center">
+                          <button
+                            type="button"
+                            onClick={() => setStep(1)}
+                            className={TEXT_BUTTON_CLASS}
+                          >
+                            Continue with email
+                          </button>
+                        </div>
+                      )}
+                    </motion.div>
+
+                    <motion.div {...panelProps(1)}>
+                      <DialogPrimitive.Title className={TITLE_CLASS}>
+                        Continue with an email link{' '}
+                        <span aria-hidden="true">💌</span>
+                      </DialogPrimitive.Title>
+                      <p className="text-[#666] dark:text-[#aaa]">
+                        Enter your email and we&apos;ll send you a link to{' '}
+                        {mode === 'login'
+                          ? 'log in to your account.'
+                          : 'create a new profile.'}
+                      </p>
+
+                      <form onSubmit={handleSubmit}>
+                        <div className="relative mt-3">
+                          <input
+                            ref={inputRef}
+                            type="email"
+                            inputMode="email"
+                            autoComplete="email"
+                            spellCheck={false}
+                            placeholder="Email address"
+                            aria-label="Email address"
+                            aria-invalid={!!error}
+                            value={email}
+                            onChange={(e) => {
+                              setEmail(e.target.value);
+                              setError('');
+                            }}
+                            // 16px on phones so iOS doesn't zoom into the field.
+                            className={`h-9 w-full rounded-lg bg-[#f2f2f2] px-3 pr-9 text-[16px] text-[#111] outline-none placeholder:text-[#aaa] focus-visible:ring-2 focus-visible:ring-[#111]/20 dark:bg-[#333] dark:text-[#eee] dark:focus-visible:ring-[#eee]/20 sm:text-[14px] ${error ? 'shadow-[0_0_0_2px_#f04848]' : ''}`}
+                          />
+                          <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2">
+                            <AnimatePresence>
+                              {emailIsValid && (
+                                <motion.span
+                                  className="block"
+                                  initial={{ opacity: 0, scale: 0.5 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  exit={{ opacity: 0, scale: 0.5 }}
+                                  transition={POP_SPRING}
+                                >
+                                  <ValidCheck />
+                                </motion.span>
+                              )}
+                            </AnimatePresence>
+                          </span>
+                        </div>
+
+                        {error && (
+                          <p
+                            role="alert"
+                            className="mt-2 text-[13px] text-[#f04848]"
+                          >
+                            {error}
+                          </p>
+                        )}
+
+                        <div className="mt-3 flex items-center justify-end gap-4">
+                          <button
+                            type="button"
+                            onClick={() => setStep(0)}
+                            className={TEXT_BUTTON_CLASS}
+                          >
+                            Back
+                          </button>
+                          <button
+                            type="submit"
+                            disabled={!emailIsValid || sending}
+                            aria-busy={sending}
+                            className={BUTTON_CLASS}
+                          >
+                            {/* The label stays (hidden) so the width holds. */}
+                            <span className={sending ? 'text-transparent' : ''}>
+                              Submit
+                            </span>
+                            {sending && (
+                              <Spinner
+                                size={14}
+                                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[#111] dark:text-[#eee]"
+                              />
+                            )}
+                          </button>
+                        </div>
+                      </form>
+                    </motion.div>
+
+                    <motion.div {...panelProps(2)}>
+                      <DialogPrimitive.Title className={TITLE_CLASS}>
+                        Check your inbox! <span aria-hidden="true">🍄</span>
+                      </DialogPrimitive.Title>
+                      <p className="text-[#666] dark:text-[#aaa]">
+                        Open the link sent to{' '}
+                        <span className="break-all text-[#111] dark:text-[#eee]">
+                          {normalizedEmail}
+                        </span>{' '}
+                        in this browser.
+                      </p>
+
+                      {devLink && (
+                        <a
+                          href={devLink}
+                          className="mt-3 block text-[13px] text-[#666] underline underline-offset-4 dark:text-[#aaa]"
+                        >
+                          Development only: open the link here
+                        </a>
+                      )}
+
+                      {/* Pinned to the bottom of the card, as on Read.cv. */}
+                      <div className="mt-auto flex items-center justify-end gap-4 pt-3">
+                        <button
+                          type="button"
+                          onClick={() => setStep(1)}
+                          className={TEXT_BUTTON_CLASS}
+                        >
+                          Back
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onOpenChange(false)}
+                          className={BUTTON_CLASS}
+                        >
+                          Done
+                        </button>
+                      </div>
+                    </motion.div>
                   </motion.div>
                 </div>
               </DialogPrimitive.Content>
