@@ -124,7 +124,7 @@ export function SectionAttachments({
       </div>
 
       {attachedPages.length > 0 && (
-        <div className="custom-scrollbar mb-2 flex max-w-full snap-x gap-3 overflow-x-auto pb-2">
+        <div className="theme-default custom-scrollbar mb-2 flex max-w-full snap-x gap-3 overflow-x-auto pb-2">
           {attachedPages.map((page, index) => (
             <div
               key={page.id}

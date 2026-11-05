@@ -69,6 +69,25 @@ export function ConnectedApps() {
     <div className="w-full min-w-0 space-y-4">
       {isLoading && <Spinner size={14} className="text-content-muted" />}
 
+      {/* Not shown on an error: the list might not really be empty. */}
+      {!isLoading && !isError && apps?.length === 0 && (
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <h4 className="text-sm text-content-primary">Connect an AI app</h4>
+            <p className="text-sm text-content-muted">
+              Update your profile by chatting with an AI app.
+            </p>
+          </div>
+          <Link
+            href="/connect"
+            target="_blank"
+            className="flex h-9 w-[120px] shrink-0 items-center justify-center rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+          >
+            See how
+          </Link>
+        </div>
+      )}
+
       {apps?.map((app) => {
         const isDisconnecting =
           disconnect.isPending && disconnect.variables === app.clientId;

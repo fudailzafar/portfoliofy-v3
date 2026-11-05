@@ -116,7 +116,7 @@ export function InsightsTab() {
               }
               disabled={!data?.hasCustomDomain}
             >
-              <SelectTrigger className="h-9 w-[160px] bg-transparent text-content-primary">
+              <SelectTrigger className="h-9 w-[160px] border border-border-strong bg-surface-card text-content-primary shadow-sm dark:border-none dark:bg-border-subtle">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -131,7 +131,7 @@ export function InsightsTab() {
               value={range}
               onValueChange={(value) => setRange(value as PageViewRange)}
             >
-              <SelectTrigger className="h-9 w-[130px] bg-transparent text-content-primary">
+              <SelectTrigger className="h-9 w-[130px] border border-border-strong bg-surface-card text-content-primary shadow-sm dark:border-none dark:bg-border-subtle">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { Footer } from '@/components/layout/Footer';
 import { SITE_URL } from '@/lib/site';
+import { CopyBlock } from './CopyBlock';
 
 export const metadata: Metadata = {
   title: 'Connect an AI app',
@@ -13,8 +14,6 @@ const LINK_CLASS =
   'text-[#111] underline underline-offset-[3px] dark:text-[#eee]';
 const HEADING_CLASS =
   'pt-4 text-[14px] font-medium text-[#111] dark:text-[#eee]';
-const CODE_CLASS =
-  'overflow-x-auto rounded-md bg-[#f5f5f5] p-3 font-mono text-[13px] text-[#111] dark:bg-[#2c2c2c] dark:text-[#eee]';
 
 export default function ConnectPage() {
   return (
@@ -32,7 +31,7 @@ export default function ConnectPage() {
           </p>
 
           <p className={HEADING_CLASS}>Connection address</p>
-          <pre className={CODE_CLASS}>{MCP_URL}</pre>
+          <CopyBlock text={MCP_URL} />
 
           <p className={HEADING_CLASS}>Claude</p>
           <ol className="list-decimal space-y-2 pl-5">
@@ -42,19 +41,19 @@ export default function ConnectPage() {
           </ol>
 
           <p className={HEADING_CLASS}>Claude Code</p>
-          <pre className={CODE_CLASS}>
-            {`claude mcp add --transport http portfoliofy ${MCP_URL}`}
-          </pre>
+          <CopyBlock
+            text={`claude mcp add --transport http portfoliofy ${MCP_URL}`}
+          />
 
           <p className={HEADING_CLASS}>Cursor</p>
           <p>Add this to your MCP settings:</p>
-          <pre className={CODE_CLASS}>
-            {JSON.stringify(
+          <CopyBlock
+            text={JSON.stringify(
               { mcpServers: { portfoliofy: { url: MCP_URL } } },
               null,
               2,
             )}
-          </pre>
+          />
 
           <p className={HEADING_CLASS}>Other apps</p>
           <p>
