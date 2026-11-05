@@ -7,6 +7,7 @@ import {
   normalizeEmail,
   sendLoginEmail,
 } from '@/lib/server/emailAuth';
+import { safeNextPath } from '@/lib/validation/redirect';
 
 const IP_MAX_REQUESTS = 10;
 const EMAIL_MAX_REQUESTS = 3;
@@ -44,7 +45,8 @@ export async function POST(request: Request) {
 
   try {
     const token = await createLoginToken(email);
-    const link = buildLoginLink(origin, token);
+    // Anything but the connect screen is dropped, not rejected.
+    const link = buildLoginLink(origin, token, safeNextPath(body?.next));
     await sendLoginEmail(email, link, mode);
 
     // Same response whether or not the email has an account. In development

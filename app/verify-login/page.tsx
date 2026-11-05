@@ -5,9 +5,13 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { Spinner } from '@/components/ui/spinner';
+import { safeNextPath } from '@/lib/validation/redirect';
 
 function VerifyLogin() {
-  const token = useSearchParams().get('token');
+  const params = useSearchParams();
+  const token = params.get('token');
+  // Set when the sign-in began on the connect screen for an AI app.
+  const next = safeNextPath(params.get('next'));
   const [failed, setFailed] = useState(!token);
   // Strict Mode runs effects twice in development; a token only works once.
   const started = useRef(false);
@@ -22,9 +26,9 @@ function VerifyLogin() {
         return;
       }
       // Full navigation so the new session is picked up everywhere.
-      window.location.replace('/auth/post-login');
+      window.location.replace(next ?? '/auth/post-login');
     });
-  }, [token]);
+  }, [token, next]);
 
   if (failed) {
     return (

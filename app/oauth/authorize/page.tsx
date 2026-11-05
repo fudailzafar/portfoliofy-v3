@@ -6,7 +6,7 @@ import { getUsernameById } from '@/lib/server/dbActions';
 import { AuthorizationParams, validateAuthorization } from '@/lib/server/oauth';
 import { requestOrigin } from '@/lib/server/requestOrigin';
 import { ConsentForm } from './ConsentForm';
-import { SignInButton } from './SignInButton';
+import { SignInOptions } from './SignInOptions';
 
 export const metadata: Metadata = {
   title: 'Connect an app',
@@ -88,7 +88,7 @@ export default async function AuthorizePage({
     return (
       <ConsentLayout title={`Sign in to connect ${client.clientName}`}>
         <p>You&apos;ll choose what it can access on the next step.</p>
-        <SignInButton callbackUrl={`/oauth/authorize?${search}`} />
+        <SignInOptions returnTo={`/oauth/authorize?${search}`} />
       </ConsentLayout>
     );
   }
