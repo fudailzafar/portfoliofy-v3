@@ -3,6 +3,7 @@ import { ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
 import { AttachmentsPreview } from '../../preview/AttachmentsPreview';
 import { AvatarStack } from '@/components/composite/AvatarStack';
 import { EditDeleteButtons } from '../EditDeleteButtons';
+import { ItemAction, ItemActionsMenu } from '../ItemActionsMenu';
 import { SortButtons } from '../SortButtons';
 import { ensureHttps } from '@/lib/utils';
 
@@ -23,6 +24,7 @@ export interface EditorListItemProps {
   onToggleVisibility: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  menuActions?: ItemAction[];
 }
 
 export function EditorListItem({
@@ -42,6 +44,7 @@ export function EditorListItem({
   onToggleVisibility,
   onEdit,
   onDelete,
+  menuActions,
 }: EditorListItemProps) {
   return (
     <div className="group mb-5 flex flex-col gap-4 border-b border-border-subtle pb-5 last:mb-0 last:border-b-0 last:pb-0 sm:flex-row sm:gap-12">
@@ -119,6 +122,7 @@ export function EditorListItem({
             onMoveUp={onMoveUp}
             onMoveDown={onMoveDown}
           />
+          {menuActions && <ItemActionsMenu actions={menuActions} />}
         </EditDeleteButtons>
       </div>
     </div>

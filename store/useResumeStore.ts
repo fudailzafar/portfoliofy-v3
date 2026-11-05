@@ -24,6 +24,11 @@ interface ResumeStore {
   updateHeader: (header: Partial<ResumeData['header']>) => void;
   updateDesign: (design: Partial<ResumeData['design']>) => void;
   deleteItemFromSection: (sectionKey: keyof ResumeData, id: string) => void;
+  moveItemToSection: (
+    from: 'projects' | 'sideProjects',
+    to: 'projects' | 'sideProjects',
+    id: string,
+  ) => void;
 
   editingPage: {
     attachment: AttachmentSchemaType | undefined;
@@ -105,6 +110,20 @@ export const useResumeStore = create<ResumeStore>((set) => ({
       if (!state.resume) return state;
       return {
         resume: { ...state.resume, ...data },
+        hasUnsavedChanges: true,
+      };
+    }),
+
+  moveItemToSection: (from, to, id) =>
+    set((state) => {
+      const item = state.resume?.[from]?.find((i) => i.id === id);
+      if (!state.resume || !item) return state;
+      return {
+        resume: {
+          ...state.resume,
+          [from]: state.resume[from].filter((i) => i.id !== id),
+          [to]: [...(state.resume[to] ?? []), item],
+        },
         hasUnsavedChanges: true,
       };
     }),
