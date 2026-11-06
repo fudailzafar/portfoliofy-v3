@@ -64,11 +64,11 @@ Tailwind's opacity modifier (`/20`) doesn't work on these variables. Use `color-
 
 ## Typography
 
-| Option | Typeface (`next/font`) | Variable              | Body   | Secondary | Line height |
-| ------ | ---------------------- | --------------------- | ------ | --------- | ----------- |
-| Sans   | Inter 400, 500, 600    | `--font-graphik`      | 14px   | 12px      | 1.6         |
-| Serif  | Fraunces 400, 500      | `--font-signifier`    | 15px   | 13px      | 1.49        |
-| Mono   | JetBrains Mono 400     | `--font-diatype-mono` | 13.5px | 11.5px    | 1.65        |
+| Option | Typeface (`next/font`) | Variable               | Body   | Secondary | Line height |
+| ------ | ---------------------- | ---------------------- | ------ | --------- | ----------- |
+| Sans   | Inter 400, 500, 600    | `--font-body`          | 14px   | 12px      | 1.6         |
+| Serif  | Fraunces 400, 500      | `--font-serif-display` | 15px   | 13px      | 1.49        |
+| Mono   | JetBrains Mono 400     | `--font-code`          | 13.5px | 11.5px    | 1.65        |
 
 - A profile's `typography-<option>` class sets `--type-size`, `--secondary-type-size` and `--line-height`. Profile text uses `text-[length:var(--type-size)] leading-[var(--line-height)]`.
 - **Weights:** `font-semibold` and `font-bold` deliberately render at 400. Emphasis comes from `font-medium` (500). Use `font-[600]` only where a real semibold is intended, such as the landing page highlight.
