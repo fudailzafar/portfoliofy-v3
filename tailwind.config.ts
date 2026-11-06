@@ -11,9 +11,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-graphik)', 'sans-serif'],
-        serif: ['var(--font-signifier)', 'serif'],
-        mono: ['var(--font-diatype-mono)', 'monospace'],
+        sans: ['var(--font-body)', 'sans-serif'],
+        serif: ['var(--font-serif-display)', 'serif'],
+        mono: ['var(--font-code)', 'monospace'],
       },
       fontWeight: {
         thin: '400',

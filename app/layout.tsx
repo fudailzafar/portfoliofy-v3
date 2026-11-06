@@ -13,24 +13,24 @@ import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { SITE_URL, classifyHost } from '@/lib/site';
 
 // 600 is only for emphasis inside the landing-page search tile
-const graphik = Inter({
+const fontSans = Inter({
   weight: ['400', '500', '600'],
   style: ['normal', 'italic'],
   subsets: ['latin'],
-  variable: '--font-graphik',
+  variable: '--font-body',
 });
 
-const signifier = Fraunces({
+const fontSerif = Fraunces({
   weight: ['400', '500'],
   style: ['normal', 'italic'],
   subsets: ['latin'],
-  variable: '--font-signifier',
+  variable: '--font-serif-display',
 });
 
-const diatypeMono = JetBrains_Mono({
+const fontMono = JetBrains_Mono({
   weight: ['400'],
   subsets: ['latin'],
-  variable: '--font-diatype-mono',
+  variable: '--font-code',
 });
 
 export const metadata: Metadata = {
@@ -99,7 +99,7 @@ export default async function RootLayout({
       <ReactQueryClientProvider>
         <html
           lang="en"
-          className={`${graphik.variable} ${signifier.variable} ${diatypeMono.variable}`}
+          className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable}`}
         >
           <head>
             {/* Registered in the HTML so install checks find it before React loads. */}

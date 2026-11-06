@@ -15,7 +15,6 @@ interface AuthDialogProps {
 }
 
 const SPRING = { type: 'spring', stiffness: 700, damping: 50 } as const;
-// Read.cv's bouncier spring for small pop-ins like the checkmark.
 const POP_SPRING = { type: 'spring', stiffness: 700, damping: 25 } as const;
 
 // Off unless set, so the email option only appears where it is configured.
@@ -27,7 +26,6 @@ const TITLE_CLASS =
   'mb-1 text-[18px] font-medium leading-[1.6] text-[#111] dark:text-[#eee]';
 const TEXT_BUTTON_CLASS =
   'text-[#111] outline-none hover:underline hover:underline-offset-4 focus-visible:underline dark:text-[#eee]';
-// Read.cv's .button: white with a hairline border, #333 and borderless in dark.
 const BUTTON_CLASS =
   'relative flex h-8 items-center justify-center rounded-lg border border-[#e5e5e5] bg-[#fff] px-3 font-medium text-[#111] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#111]/20 active:bg-[#f2f2f2] disabled:text-[#aaa] dark:border-none dark:bg-[#333] dark:text-[#eee] dark:focus-visible:ring-[#eee]/20 dark:active:bg-[#444] dark:disabled:text-[#777]';
 
@@ -93,7 +91,7 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
   };
 
   // Each panel slides in from the side; inactive ones are inert. They share one
-  // grid cell, so the card keeps the tallest step's height, like Read.cv.
+  // grid cell, so the card keeps the tallest step's height.
   const panelProps = (index: Step) => ({
     className: 'col-start-1 row-start-1 flex flex-col p-6',
     inert: step !== index,
@@ -283,7 +281,6 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
                         </a>
                       )}
 
-                      {/* Pinned to the bottom of the card, as on Read.cv. */}
                       <div className="mt-auto flex items-center justify-end gap-4 pt-3">
                         <button
                           type="button"
