@@ -53,7 +53,7 @@ chronological history.
 
 **Domains & SEO**
 
-- Per-user subdomains (`username.portfoliofy.me`) and custom domain support, with ownership verification
+- Per-user subdomains (`username.portfoliofy.site`) and custom domain support, with ownership verification
 - Dynamic, host-aware `sitemap.xml` and `robots.txt`
 - Open Graph image generation per profile and per page, plus JSON-LD structured metadata
 - `llms.txt` generation for AI crawlers

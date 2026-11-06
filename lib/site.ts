@@ -1,7 +1,7 @@
 // Set NEXT_PUBLIC_SITE_URL per deployment; moving to a new domain is then
 // a config change, not a code change.
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://portfoliofy.me';
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://portfoliofy.site';
 
 export const SITE_HOST = new URL(SITE_URL).hostname;
 
