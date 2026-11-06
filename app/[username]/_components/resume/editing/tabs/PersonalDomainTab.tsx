@@ -172,12 +172,12 @@ export function PersonalDomainTab({ username }: { username: string }) {
               <p className="text-[13px] text-content-muted">
                 Optionally set a domain other than{' '}
                 <a
-                  href={`https://${SITE_HOST}/${username}`}
+                  href={`https://${username}.${SITE_HOST}`}
                   className="font-sans text-content-primary underline-offset-4 hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {SITE_HOST}/{username}
+                  {username}.{SITE_HOST}
                 </a>
               </p>
             </div>

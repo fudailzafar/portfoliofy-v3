@@ -18,8 +18,8 @@ function pageEntries(
   }));
 }
 
-// portfoliofy.me itself: marketing pages, every live user's profile at
-// portfoliofy.me/{username}, and every one of their blog posts.
+// portfoliofy.site itself: marketing pages, every live user's profile at
+// portfoliofy.site/{username}, and every one of their blog posts.
 async function getMainDomainSitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = [
     {

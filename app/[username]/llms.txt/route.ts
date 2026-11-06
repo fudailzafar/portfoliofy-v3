@@ -1,7 +1,7 @@
 import { getUserLlmsTxt } from '@/lib/server/llmsTxt';
 import { SITE_URL } from '@/lib/site';
 
-// portfoliofy.me/{username}/llms.txt: one person, for agents that land on
+// portfoliofy.site/{username}/llms.txt: one person, for agents that land on
 // the main domain rather than a personal one.
 export async function GET(
   _req: Request,

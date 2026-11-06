@@ -21,7 +21,7 @@
 
 **Portfoliofy** allows users to effortlessly build beautiful, responsive, and highly customizable online portfolios in seconds using a dynamic drag-and-drop editor.
 
-Users get a custom profile link (`portfoliofy.me/username`), dynamic social media sharing images (Open Graph), and global discoverability via the Explore network.
+Users get a custom profile link (`portfoliofy.site/username`), dynamic social media sharing images (Open Graph), and global discoverability via the Explore network.
 
 ## Key Features
 

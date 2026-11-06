@@ -8,7 +8,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AuthDialog } from '@/components/auth/AuthDialog';
 import { ExploreSidebar } from './ExploreSidebar';
 import { useUserActions } from '@/hooks/useUserActions';
-import { SITE_HOST } from '@/lib/site';
+import { CheckIcon, CopyIcon } from '@phosphor-icons/react/ssr';
+import { SITE_HOST, SITE_URL } from '@/lib/site';
 
 export function GlobalSidebar() {
   const pathname = usePathname();
@@ -129,27 +130,37 @@ export function GlobalSidebar() {
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          `${SITE_HOST}/${currentUsername}`,
+                          `${SITE_URL}/${currentUsername}`,
                         );
                         setIsCopied(true);
                         setTimeout(() => setIsCopied(false), 2000);
                       }}
-                      className="relative h-5 w-40 overflow-hidden pl-4 text-left text-[14px] text-content-muted transition-colors hover:underline hover:underline-offset-[3px]"
+                      aria-label={
+                        isCopied ? 'Copied profile link' : 'Copy profile link'
+                      }
+                      className="group flex items-center gap-2 pl-4 text-left text-[14px] text-content-muted transition-colors hover:text-content-secondary"
                     >
-                      <AnimatePresence mode="wait" initial={false}>
-                        <motion.span
-                          key={isCopied ? 'copied' : 'copy'}
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          transition={{ duration: 0.15 }}
-                          className="absolute left-4 top-0"
-                        >
-                          {isCopied
-                            ? 'Copied my profile link'
-                            : 'Copy my profile link'}
-                        </motion.span>
-                      </AnimatePresence>
+                      <span className="truncate">
+                        {SITE_HOST}/{currentUsername}
+                      </span>
+                      <span className="relative size-4 shrink-0">
+                        <AnimatePresence mode="wait" initial={false}>
+                          <motion.span
+                            key={isCopied ? 'copied' : 'copy'}
+                            initial={{ opacity: 0, scale: 0.6 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.6 }}
+                            transition={{ duration: 0.15 }}
+                            className="absolute inset-0 flex items-center justify-center"
+                          >
+                            {isCopied ? (
+                              <CheckIcon className="size-4" />
+                            ) : (
+                              <CopyIcon className="size-4" />
+                            )}
+                          </motion.span>
+                        </AnimatePresence>
+                      </span>
                     </button>
                   </div>
                 )
