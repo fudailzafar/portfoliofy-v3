@@ -6,6 +6,7 @@ import {
 } from '@portfoliofy/shared/validation/url';
 import { isValidUsernameFormat } from '@portfoliofy/shared/validation/username';
 import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
+import { AvatarField } from '@/components/AvatarField';
 import { TextField } from '@/components/fields';
 import { RichTextField } from '@/components/RichTextField';
 import { Screen } from '@/components/Screen';
@@ -62,6 +63,7 @@ export default function General() {
 
   return (
     <Screen>
+      <AvatarField />
       <View style={styles.group}>
         <TextField
           label="Username*"

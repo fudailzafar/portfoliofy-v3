@@ -10,6 +10,7 @@ import {
   yearOptions,
 } from '@portfoliofy/shared/sections';
 import { useResumeList } from '@portfoliofy/shared/hooks/useResumeList';
+import { AttachmentsField } from '@/components/AttachmentsField';
 import { Button } from '@/components/Button';
 import { FieldError, TextField } from '@/components/fields';
 import { RichTextField } from '@/components/RichTextField';
@@ -185,6 +186,12 @@ function Form({ config, entryId }: { config: SectionConfig; entryId: string }) {
           />
         );
       })}
+      <AttachmentsField
+        value={draft.attachments}
+        onChange={(attachments) =>
+          setDraft((current) => ({ ...current, attachments }))
+        }
+      />
     </Screen>
   );
 }

@@ -4,6 +4,44 @@ import sql from '@/lib/server/db';
 import { deleteUserUploads } from '@/lib/server/userUploads';
 import { releaseUserDomainFromVercel } from '@/lib/server/vercelDomains';
 
+// The signed-in user's account details, for apps that don't render the
+// profile page (the page is where the website gets these).
+export async function GET() {
+  try {
+    const session = await getApiSession();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const [user] = await sql`
+      SELECT username, name, image, custom_image, created_at
+      FROM users
+      WHERE id = ${session.user.id}
+    `;
+    if (!user) {
+      // Signed in, but no profile has been created yet.
+      return NextResponse.json({ account: null });
+    }
+
+    return NextResponse.json({
+      account: {
+        username: user.username,
+        name: user.name,
+        // A picture they uploaded wins over the one from their Google account.
+        image: user.customImage ?? user.image ?? null,
+        hasCustomImage: !!user.customImage,
+        createdAt: user.createdAt,
+      },
+    });
+  } catch (error) {
+    console.error('Failed to load account:', error);
+    return NextResponse.json(
+      { error: 'Failed to load account' },
+      { status: 500 },
+    );
+  }
+}
+
 export async function DELETE() {
   try {
     const session = await getApiSession();

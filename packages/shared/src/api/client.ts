@@ -20,6 +20,16 @@ export interface ApiClientOptions {
   fetch?: FetchLike;
 }
 
+/** The signed-in user's account, separate from the profile's content. */
+export interface Account {
+  username: string;
+  name: string | null;
+  /** The profile picture: one they uploaded, else the one from Google. */
+  image: string | null;
+  hasCustomImage: boolean;
+  createdAt: string;
+}
+
 /** An app connected to the profile, as the server sends it (dates as strings). */
 export interface ConnectedApp {
   clientId: string;
@@ -27,6 +37,15 @@ export interface ConnectedApp {
   scopes: string[];
   connectedAt: string;
   lastUsedAt: string | null;
+}
+
+/** The one-off upload address the server hands out for a file. */
+interface UploadSlot {
+  url: string;
+  key: string;
+  bucket: string;
+  region: string;
+  endpoint?: string;
 }
 
 interface RequestOptions {
@@ -144,6 +163,59 @@ export function createApiClient(options: ApiClientOptions = {}) {
       displayName: string;
     }): Promise<void> {
       await request('/api/claim', { method: 'POST', body: input });
+    },
+
+    /** The account's details, or null before a profile has been created. */
+    async getAccount(): Promise<Account | null> {
+      const { account } = await request<{ account: Account | null }>(
+        '/api/user',
+      );
+      return account;
+    },
+
+    /** Makes an uploaded image (see uploadFile) the profile picture. */
+    async setAvatar(url: string): Promise<void> {
+      await request('/api/user/avatar', { method: 'POST', body: { url } });
+    },
+
+    /** Goes back to the picture from the Google account. */
+    async removeAvatar(): Promise<void> {
+      await request('/api/user/avatar', { method: 'DELETE' });
+    },
+
+    /**
+     * Uploads a file straight to storage and returns where it now lives. The
+     * server only hands out a one-off upload address; the file never passes
+     * through it, so large photos and videos are fine.
+     */
+    async uploadFile(
+      file: Blob,
+      { filename, filetype }: { filename: string; filetype: string },
+    ): Promise<{ url: string }> {
+      const slot = await request<UploadSlot>('/api/s3-upload', {
+        method: 'POST',
+        body: { filename, filetype, _nextS3: { strategy: 'presigned' } },
+      });
+      if (!slot.url || !slot.key) throw new ApiError('Upload failed', 500);
+
+      // Storage, not our API: no sign-in token goes with this request.
+      const response = await doFetch(slot.url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': filetype,
+          'Cache-Control': 'max-age=630720000',
+        },
+        body: file,
+      });
+      if (!response.ok) {
+        throw new ApiError('Upload failed. Try again.', response.status);
+      }
+
+      return {
+        url: slot.endpoint
+          ? `${slot.endpoint}/${slot.bucket}/${slot.key}`
+          : `https://${slot.bucket}.s3.${slot.region}.amazonaws.com/${slot.key}`,
+      };
     },
 
     async deleteAccount(): Promise<void> {

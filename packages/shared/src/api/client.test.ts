@@ -238,6 +238,130 @@ describe('connected apps and account', () => {
   });
 });
 
+describe('uploads and avatar', () => {
+  const slot = {
+    url: 'https://bucket.s3.eu-west-1.amazonaws.com/key?signature=abc',
+    key: 'next-s3-uploads/u1/photo.jpg',
+    bucket: 'bucket',
+    region: 'eu-west-1',
+  };
+
+  it('asks for an upload address, then PUTs the file without the token', async () => {
+    const fetchMock = vi.fn<Fetch>();
+    fetchMock
+      .mockResolvedValueOnce(json(slot))
+      .mockResolvedValueOnce(new Response(null, { status: 200 }));
+    const client = createApiClient({
+      getAccessToken: () => 'tok',
+      fetch: fetchMock,
+    });
+    const file = new Blob(['x'], { type: 'image/jpeg' });
+
+    const result = await client.uploadFile(file, {
+      filename: 'photo.jpg',
+      filetype: 'image/jpeg',
+    });
+
+    const request = lastCall(fetchMock, 0);
+    expect(request.url).toBe('/api/s3-upload');
+    expect(JSON.parse(request.init.body as string)).toEqual({
+      filename: 'photo.jpg',
+      filetype: 'image/jpeg',
+      _nextS3: { strategy: 'presigned' },
+    });
+    expect((request.init.headers as Record<string, string>).Authorization).toBe(
+      'Bearer tok',
+    );
+
+    const put = lastCall(fetchMock, 1);
+    expect(put.url).toBe(slot.url);
+    expect(put.init.method).toBe('PUT');
+    expect(put.init.body).toBe(file);
+    expect(put.init.headers).not.toHaveProperty('Authorization');
+    expect((put.init.headers as Record<string, string>)['Content-Type']).toBe(
+      'image/jpeg',
+    );
+    expect(result.url).toBe(
+      'https://bucket.s3.eu-west-1.amazonaws.com/next-s3-uploads/u1/photo.jpg',
+    );
+  });
+
+  it('uses a custom storage endpoint when the server names one', async () => {
+    const fetchMock = vi.fn<Fetch>();
+    fetchMock
+      .mockResolvedValueOnce(
+        json({ ...slot, endpoint: 'https://files.example.com' }),
+      )
+      .mockResolvedValueOnce(new Response(null, { status: 200 }));
+
+    const { url } = await createApiClient({ fetch: fetchMock }).uploadFile(
+      new Blob(['x']),
+      { filename: 'a.png', filetype: 'image/png' },
+    );
+
+    expect(url).toBe(
+      'https://files.example.com/bucket/next-s3-uploads/u1/photo.jpg',
+    );
+  });
+
+  it('stops with a readable error if storage refuses the file', async () => {
+    const fetchMock = vi.fn<Fetch>();
+    fetchMock
+      .mockResolvedValueOnce(json(slot))
+      .mockResolvedValueOnce(new Response('denied', { status: 403 }));
+
+    const error = await createApiClient({ fetch: fetchMock })
+      .uploadFile(new Blob(['x']), { filename: 'a.png', filetype: 'image/png' })
+      .catch((e) => e);
+
+    expect(error).toMatchObject({
+      status: 403,
+      message: 'Upload failed. Try again.',
+    });
+  });
+
+  it('passes the server error for an unsupported type through', async () => {
+    const fetchMock = vi.fn<Fetch>();
+    fetchMock.mockResolvedValueOnce(
+      json({ error: 'Unsupported file type' }, 400),
+    );
+
+    await expect(
+      createApiClient({ fetch: fetchMock }).uploadFile(new Blob(['x']), {
+        filename: 'a.exe',
+        filetype: 'application/x-msdownload',
+      }),
+    ).rejects.toMatchObject({ status: 400, message: 'Unsupported file type' });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('reads the account, sets and clears the avatar', async () => {
+    const fetchMock = vi.fn<Fetch>();
+    const account = {
+      username: 'jane',
+      name: 'Jane',
+      image: null,
+      hasCustomImage: false,
+      createdAt: '2026-11-01T00:00:00Z',
+    };
+    fetchMock.mockResolvedValueOnce(json({ account }));
+    const client = createApiClient({ fetch: fetchMock });
+
+    await expect(client.getAccount()).resolves.toEqual(account);
+
+    fetchMock.mockResolvedValueOnce(json({ account: null }));
+    await expect(client.getAccount()).resolves.toBeNull();
+
+    fetchMock.mockResolvedValue(json({ success: true }));
+    await client.setAvatar('https://bucket.s3.eu-west-1.amazonaws.com/a.png');
+    expect(JSON.parse(lastCall(fetchMock, 2).init.body as string)).toEqual({
+      url: 'https://bucket.s3.eu-west-1.amazonaws.com/a.png',
+    });
+    await client.removeAvatar();
+    expect(lastCall(fetchMock, 3).init.method).toBe('DELETE');
+  });
+});
+
 describe('saveResumeData', () => {
   beforeEach(() => {
     useResumeStore.setState({ resumeVersion: undefined });
