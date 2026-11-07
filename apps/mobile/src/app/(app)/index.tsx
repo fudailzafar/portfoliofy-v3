@@ -45,6 +45,7 @@ export default function Home() {
       </View>
       <View style={styles.actions}>
         <Button title="Edit profile" onPress={() => router.push('/edit')} />
+        <Button title="Settings" onPress={() => router.push('/settings')} />
         {profileUrl && (
           <>
             <Button

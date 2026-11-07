@@ -1,8 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { loadAppearance } from '@/lib/appearance';
 import { AuthProvider, useAuth } from '@/lib/auth';
 import { useTheme } from '@/lib/theme';
 
@@ -13,6 +14,11 @@ export default function RootLayout() {
         defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
       }),
   );
+
+  // Light or dark, if the person chose one in Settings.
+  useEffect(() => {
+    void loadAppearance();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

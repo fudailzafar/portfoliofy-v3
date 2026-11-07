@@ -6,6 +6,7 @@ export const SITE_URL = (
 
 // Our own app's built-in OAuth client; the server knows it by this id.
 export const OAUTH_CLIENT_ID = 'portfoliofy-android';
+export const MOBILE_CLIENT_ID = OAUTH_CLIENT_ID;
 export const OAUTH_SCOPE = 'app';
 // Where the server sends the browser back to the app. Must match the server.
 export const OAUTH_REDIRECT_URI = 'com.portfoliofy.app:/oauth/callback';

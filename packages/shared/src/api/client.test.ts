@@ -202,6 +202,42 @@ describe('createApiClient', () => {
   });
 });
 
+describe('connected apps and account', () => {
+  it('lists connected apps and disconnects one by id', async () => {
+    const fetchMock = vi.fn<Fetch>();
+    const app = {
+      clientId: 'pfy_1',
+      clientName: 'Claude',
+      scopes: ['profile:read'],
+      connectedAt: '2026-11-01T00:00:00Z',
+      lastUsedAt: null,
+    };
+    fetchMock.mockResolvedValueOnce(json({ apps: [app] }));
+    const client = createApiClient({ fetch: fetchMock });
+
+    await expect(client.listConnectedApps()).resolves.toEqual([app]);
+    expect(lastCall(fetchMock).url).toBe('/api/user/connected-apps');
+
+    fetchMock.mockResolvedValueOnce(json({ success: true }));
+    await client.disconnectApp('pfy_1');
+    const { init } = lastCall(fetchMock, 1);
+    expect(init.method).toBe('DELETE');
+    expect(JSON.parse(init.body as string)).toEqual({ clientId: 'pfy_1' });
+  });
+
+  it('deletes the account with a DELETE and no body', async () => {
+    const fetchMock = vi.fn<Fetch>();
+    fetchMock.mockResolvedValue(json({ success: true }));
+
+    await createApiClient({ fetch: fetchMock }).deleteAccount();
+
+    const { url, init } = lastCall(fetchMock);
+    expect(url).toBe('/api/user');
+    expect(init.method).toBe('DELETE');
+    expect(init.body).toBeUndefined();
+  });
+});
+
 describe('saveResumeData', () => {
   beforeEach(() => {
     useResumeStore.setState({ resumeVersion: undefined });

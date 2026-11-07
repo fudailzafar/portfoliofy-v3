@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { auth } from '@/auth';
+import { getApiSession } from '@/lib/server/requestAuth';
 import { disconnectApp, listConnectedApps } from '@/lib/server/oauth';
 
 const DisconnectSchema = z.object({ clientId: z.string().min(1).max(100) });
 
 export async function GET() {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -24,7 +24,7 @@ export async function GET() {
 
 export async function DELETE(request: Request) {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

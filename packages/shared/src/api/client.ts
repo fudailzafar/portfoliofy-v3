@@ -20,6 +20,15 @@ export interface ApiClientOptions {
   fetch?: FetchLike;
 }
 
+/** An app connected to the profile, as the server sends it (dates as strings). */
+export interface ConnectedApp {
+  clientId: string;
+  clientName: string;
+  scopes: string[];
+  connectedAt: string;
+  lastUsedAt: string | null;
+}
+
 interface RequestOptions {
   method?: 'GET' | 'POST' | 'DELETE';
   query?: Record<string, string>;
@@ -139,6 +148,22 @@ export function createApiClient(options: ApiClientOptions = {}) {
 
     async deleteAccount(): Promise<void> {
       await request('/api/user', { method: 'DELETE' });
+    },
+
+    /** Apps, such as AI assistants, that can act on this profile. */
+    async listConnectedApps(): Promise<ConnectedApp[]> {
+      const { apps } = await request<{ apps: ConnectedApp[] }>(
+        '/api/user/connected-apps',
+      );
+      return apps;
+    },
+
+    /** Cuts an app off at once. */
+    async disconnectApp(clientId: string): Promise<void> {
+      await request('/api/user/connected-apps', {
+        method: 'DELETE',
+        body: { clientId },
+      });
     },
   };
 }
