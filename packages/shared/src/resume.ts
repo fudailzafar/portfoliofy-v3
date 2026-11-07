@@ -702,3 +702,14 @@ export const ResumeDataSchema = z.object({
 });
 
 export type ResumeDataSchemaType = z.infer<typeof ResumeDataSchema>;
+
+/** What gets stored and sent when a profile is saved. */
+export const ResumeSchema = z.object({
+  status: z.enum(['live', 'draft']).default('draft'),
+  resumeData: ResumeDataSchema.nullish(),
+  // Increases on every save; a save sent with a stale version is refused.
+  version: z.number().int().optional(),
+});
+
+export type ResumeData = z.infer<typeof ResumeDataSchema>;
+export type Resume = z.infer<typeof ResumeSchema>;

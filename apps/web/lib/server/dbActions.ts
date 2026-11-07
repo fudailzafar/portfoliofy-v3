@@ -1,8 +1,9 @@
 import { revalidateTag } from 'next/cache';
 import sql from './db';
 import {
-  ResumeDataSchema,
   migrateEmbeddedPages,
+  Resume,
+  ResumeSchema,
 } from '@portfoliofy/shared/resume';
 import { z } from 'zod';
 import { RESERVED_USERNAMES } from '../routes';
@@ -14,14 +15,6 @@ import {
 } from '@portfoliofy/shared/validation/username';
 
 const FORBIDDEN_USERNAMES = RESERVED_USERNAMES;
-
-// Define the complete resume schema
-const ResumeSchema = z.object({
-  status: z.enum(['live', 'draft']).default('draft'),
-  resumeData: ResumeDataSchema.nullish(),
-  // Increases on every save; see storeResume.
-  version: z.number().int().optional(),
-});
 
 // Older snapshots beyond this many are dropped, per user.
 const RESUME_HISTORY_LIMIT = 50;
@@ -38,9 +31,8 @@ export class ResumeConflictError extends Error {
   }
 }
 
-// Type inference for the resume data
-export type ResumeData = z.infer<typeof ResumeDataSchema>;
-export type Resume = z.infer<typeof ResumeSchema>;
+// The saved-profile types live in the shared package; re-exported for callers.
+export type { Resume, ResumeData } from '@portfoliofy/shared/resume';
 
 export async function getResume(userId: string): Promise<Resume | undefined> {
   try {
