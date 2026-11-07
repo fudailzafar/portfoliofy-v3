@@ -2,6 +2,7 @@
 // session cookie; the mobile app passes a token getter instead. Nothing here
 // depends on the browser or on React Native.
 
+import type { Insights, PageViewRange } from '../insights';
 import { Resume, ResumeDataSchema } from '../resume';
 import { ApiError, ResumeValidationError, SaveConflictError } from './errors';
 
@@ -28,6 +29,18 @@ export interface Account {
   image: string | null;
   hasCustomImage: boolean;
   createdAt: string;
+}
+
+/** Where the custom domain stands, in one shape for the screens. */
+export interface DomainState {
+  /** The connected domain, or null if there isn't one. */
+  domain: string | null;
+  /** DNS is set up and the domain is serving the profile. */
+  verified: boolean;
+  /** We could not read the domain's status; the domain itself is still saved. */
+  statusUnavailable: boolean;
+  /** The DNS record to add while the domain is not verified. */
+  record: { type: string; host: string; value: string } | null;
 }
 
 /** An app connected to the profile, as the server sends it (dates as strings). */
@@ -216,6 +229,61 @@ export function createApiClient(options: ApiClientOptions = {}) {
           ? `${slot.endpoint}/${slot.bucket}/${slot.key}`
           : `https://${slot.bucket}.s3.${slot.region}.amazonaws.com/${slot.key}`,
       };
+    },
+
+    /** Page views over a range, for the profile or for its custom domain. */
+    async getInsights(
+      range: PageViewRange,
+      source: 'portfoliofy' | 'custom' = 'portfoliofy',
+    ): Promise<Insights> {
+      return request<Insights>('/api/insights', {
+        query: { range, domain: source },
+      });
+    },
+
+    async getDomain(): Promise<DomainState> {
+      const body = await request<{
+        domain: string | null;
+        status?: 'success' | 'error';
+        data?: {
+          verified?: boolean;
+          verification?: { type: string; domain: string; value: string }[];
+        };
+      }>('/api/domain');
+      if (!body.domain) {
+        return {
+          domain: null,
+          verified: false,
+          statusUnavailable: false,
+          record: null,
+        };
+      }
+      if (body.status !== 'success') {
+        return {
+          domain: body.domain,
+          verified: false,
+          statusUnavailable: true,
+          record: null,
+        };
+      }
+      const record = body.data?.verification?.[0];
+      return {
+        domain: body.domain,
+        verified: !!body.data?.verified,
+        statusUnavailable: false,
+        record: record
+          ? { type: record.type, host: record.domain, value: record.value }
+          : null,
+      };
+    },
+
+    /** Connects a domain, replacing any current one. The domain is normalised first. */
+    async connectDomain(domain: string): Promise<void> {
+      await request('/api/domain', { method: 'POST', body: { domain } });
+    },
+
+    async disconnectDomain(): Promise<void> {
+      await request('/api/domain', { method: 'DELETE' });
     },
 
     async deleteAccount(): Promise<void> {

@@ -6,7 +6,10 @@ import {
   getCustomDomainByUserId,
   getUserIdByCustomDomain,
 } from '@/lib/server/dbActions';
-import { isValidDomainFormat, normalizeDomain } from '@/lib/validation/domain';
+import {
+  isValidDomainFormat,
+  normalizeDomain,
+} from '@portfoliofy/shared/validation/domain';
 import {
   VERCEL_API_TOKEN,
   VERCEL_PROJECT_ID,

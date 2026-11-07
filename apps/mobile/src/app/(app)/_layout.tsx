@@ -38,6 +38,8 @@ export default function AppLayout() {
         <Stack.Screen name="index" />
         <Stack.Screen name="edit" />
         <Stack.Screen name="settings" />
+        <Stack.Screen name="insights" />
+        <Stack.Screen name="domain" />
       </Stack.Protected>
       <Stack.Protected guard={!hasProfile}>
         <Stack.Screen name="claim" />

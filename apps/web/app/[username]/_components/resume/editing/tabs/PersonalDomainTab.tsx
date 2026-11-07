@@ -8,7 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
 import { XIcon } from '@phosphor-icons/react/ssr';
 import { ValidCheck } from '@/components/ui/valid-check';
-import { isValidDomainFormat } from '@/lib/validation/domain';
+import { isValidDomainFormat } from '@portfoliofy/shared/validation/domain';
 import { useS3Upload } from 'next-s3-upload';
 import { getOptimizedImageUrl, readImageDimensions } from '@/lib/utils';
 import { SITE_HOST } from '@/lib/site';

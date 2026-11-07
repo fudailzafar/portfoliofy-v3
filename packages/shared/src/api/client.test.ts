@@ -362,6 +362,107 @@ describe('uploads and avatar', () => {
   });
 });
 
+describe('insights and domain', () => {
+  it('asks for insights with the range and source in the query', async () => {
+    const fetchMock = vi.fn<Fetch>();
+    const insights = {
+      total: 3,
+      series: [],
+      hasCustomDomain: false,
+      customDomain: null,
+    };
+    fetchMock.mockResolvedValue(json(insights));
+
+    await expect(
+      createApiClient({ fetch: fetchMock }).getInsights('month', 'custom'),
+    ).resolves.toEqual(insights);
+    expect(lastCall(fetchMock).url).toBe(
+      '/api/insights?range=month&domain=custom',
+    );
+  });
+
+  it('reads no domain, an unverified one with its DNS record, and a verified one', async () => {
+    const fetchMock = vi.fn<Fetch>();
+    const client = createApiClient({ fetch: fetchMock });
+
+    fetchMock.mockResolvedValueOnce(json({ domain: null }));
+    await expect(client.getDomain()).resolves.toEqual({
+      domain: null,
+      verified: false,
+      statusUnavailable: false,
+      record: null,
+    });
+
+    fetchMock.mockResolvedValueOnce(
+      json({
+        domain: 'me.example.com',
+        status: 'success',
+        data: {
+          verified: false,
+          verification: [
+            {
+              type: 'CNAME',
+              domain: 'me.example.com',
+              value: 'cname.vercel-dns.com',
+            },
+          ],
+        },
+      }),
+    );
+    await expect(client.getDomain()).resolves.toEqual({
+      domain: 'me.example.com',
+      verified: false,
+      statusUnavailable: false,
+      record: {
+        type: 'CNAME',
+        host: 'me.example.com',
+        value: 'cname.vercel-dns.com',
+      },
+    });
+
+    fetchMock.mockResolvedValueOnce(
+      json({
+        domain: 'example.com',
+        status: 'success',
+        data: { verified: true, verification: [] },
+      }),
+    );
+    await expect(client.getDomain()).resolves.toMatchObject({
+      verified: true,
+      record: null,
+    });
+  });
+
+  it('keeps the domain when its status could not be read', async () => {
+    const fetchMock = vi.fn<Fetch>();
+    fetchMock.mockResolvedValue(
+      json({ domain: 'example.com', status: 'error', data: {} }),
+    );
+
+    await expect(
+      createApiClient({ fetch: fetchMock }).getDomain(),
+    ).resolves.toEqual({
+      domain: 'example.com',
+      verified: false,
+      statusUnavailable: true,
+      record: null,
+    });
+  });
+
+  it('connects with a body and disconnects with a DELETE', async () => {
+    const fetchMock = vi.fn<Fetch>();
+    fetchMock.mockResolvedValue(json({ success: true }));
+    const client = createApiClient({ fetch: fetchMock });
+
+    await client.connectDomain('example.com');
+    expect(JSON.parse(lastCall(fetchMock).init.body as string)).toEqual({
+      domain: 'example.com',
+    });
+    await client.disconnectDomain();
+    expect(lastCall(fetchMock, 1).init.method).toBe('DELETE');
+  });
+});
+
 describe('saveResumeData', () => {
   beforeEach(() => {
     useResumeStore.setState({ resumeVersion: undefined });
