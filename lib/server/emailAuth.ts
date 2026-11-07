@@ -2,6 +2,7 @@
 
 import { createHash, randomBytes } from 'node:crypto';
 import sql from '@/lib/server/db';
+import { buildLoginEmail } from '@/lib/server/loginEmailTemplate';
 
 export { isValidEmail, normalizeEmail } from '@/lib/validation/email';
 
@@ -87,7 +88,7 @@ export async function sendLoginEmail(
     throw new Error('RESEND_API_KEY is not configured');
   }
 
-  const action = mode === 'signup' ? 'create your profile' : 'log in';
+  const { subject, text, html } = buildLoginEmail(link, mode);
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
@@ -97,8 +98,9 @@ export async function sendLoginEmail(
     body: JSON.stringify({
       from: process.env.EMAIL_FROM,
       to: email,
-      subject: 'Your Portfoliofy login link',
-      text: `Open this link to ${action} on Portfoliofy:\n\n${link}\n\nIt expires in 15 minutes and only works once. If you didn't ask for it, you can ignore this email.`,
+      subject,
+      text,
+      html,
     }),
   });
 
