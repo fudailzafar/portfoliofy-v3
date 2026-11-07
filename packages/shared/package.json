@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "zod": "^3.25.28",
-    "zustand": "^5.0.14"
+    "zustand": "^5.0.16"
   },
   "peerDependencies": {
     "react": "^19"
