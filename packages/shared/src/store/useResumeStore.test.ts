@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { ResumeDataSchemaType } from '@/lib/resume';
+import type { ResumeDataSchemaType } from '../resume';
 import { useResumeStore } from './useResumeStore';
 
 const project = {

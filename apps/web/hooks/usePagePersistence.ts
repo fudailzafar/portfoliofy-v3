@@ -1,10 +1,10 @@
 import { useUserActions } from '@/hooks/useUserActions';
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 import {
   AttachmentSchemaType,
   ResumeDataSchemaType,
   withPageRemoved,
-} from '@/lib/resume';
+} from '@portfoliofy/shared/resume';
 
 let queue: Promise<unknown> = Promise.resolve();
 

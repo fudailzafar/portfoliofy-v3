@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { isReversedRange } from '@/lib/validation/dates';
-import { useTabEditor } from '@/hooks/useTabEditor';
-import { useResumeList } from '@/hooks/useResumeList';
+import { isReversedRange } from '@portfoliofy/shared/validation/dates';
+import { useTabEditor } from '@portfoliofy/shared/hooks/useTabEditor';
+import { useResumeList } from '@portfoliofy/shared/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
 import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { HandHeartIcon } from '@phosphor-icons/react/ssr';
-import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
+import { sortByDateDesc, getListAdjacency } from '@portfoliofy/shared/resume';
 
 const isVolunteeringValid = (item: any) =>
   !!item?.organization &&

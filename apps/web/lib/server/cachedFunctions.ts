@@ -7,7 +7,7 @@ import {
 import sql from '@/lib/server/db';
 import { unstable_cache } from 'next/cache';
 import { cache } from 'react';
-import { normalizeUsername } from '@/lib/validation/username';
+import { normalizeUsername } from '@portfoliofy/shared/validation/username';
 
 export interface UserProfile {
   name: string | null;

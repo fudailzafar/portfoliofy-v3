@@ -6,7 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { ValidCheck } from '@/components/ui/valid-check';
-import { isValidEmail, normalizeEmail } from '@/lib/validation/email';
+import {
+  isValidEmail,
+  normalizeEmail,
+} from '@portfoliofy/shared/validation/email';
 
 // Off unless set, so the email option only appears where it is configured.
 const EMAIL_AUTH_ENABLED = process.env.NEXT_PUBLIC_EMAIL_AUTH === 'true';

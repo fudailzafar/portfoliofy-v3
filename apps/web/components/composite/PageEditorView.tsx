@@ -8,7 +8,11 @@ import React, {
   useMemo,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { AttachmentSchemaType, slugify, dedupeSlug } from '@/lib/resume';
+import {
+  AttachmentSchemaType,
+  slugify,
+  dedupeSlug,
+} from '@portfoliofy/shared/resume';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
@@ -40,7 +44,7 @@ import { DeleteConfirmDialog } from '@/app/[username]/_components/resume/editing
 import { PagePasswordDialog } from '@/components/composite/PagePasswordDialog';
 import { usePagePersistence } from '@/hooks/usePagePersistence';
 import { useAnchoredMenu } from '@/hooks/useAnchoredMenu';
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 import { withErrorToast } from '@/lib/errorToast';
 
 function toDateInputValue(isoString?: string): string {

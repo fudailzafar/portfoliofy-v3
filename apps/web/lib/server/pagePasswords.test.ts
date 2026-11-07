@@ -6,7 +6,10 @@ import {
   verifyPagePassword,
   withStoredPagePasswords,
 } from './pagePasswords';
-import { isRedactedPage, type ResumeDataSchemaType } from '@/lib/resume';
+import {
+  isRedactedPage,
+  type ResumeDataSchemaType,
+} from '@portfoliofy/shared/resume';
 
 const page = (overrides: Record<string, unknown> = {}) => ({
   id: 'p1',

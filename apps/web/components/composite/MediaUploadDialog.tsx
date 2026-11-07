@@ -10,7 +10,7 @@ import {
 import { usePresignedUpload } from 'next-s3-upload';
 import { XIcon, DotsSixVerticalIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
-import { AttachmentSchemaType } from '@/lib/resume';
+import { AttachmentSchemaType } from '@portfoliofy/shared/resume';
 import {
   DndContext,
   closestCenter,

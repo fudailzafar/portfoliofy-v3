@@ -2,8 +2,8 @@ import React, { useState, useRef } from 'react';
 import { FileArrowUpIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
-import { useResumeStore } from '@/store/useResumeStore';
-import { ResumeDataSchemaType } from '@/lib/resume';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
+import { ResumeDataSchemaType } from '@portfoliofy/shared/resume';
 
 type ExtraFields = { collaborators?: unknown[]; attachments?: unknown[] };
 

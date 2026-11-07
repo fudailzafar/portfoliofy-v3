@@ -1,7 +1,10 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 import { getUserData } from '../../utils';
-import { findPageBySlug, estimateReadMinutes } from '@/lib/resume';
+import {
+  findPageBySlug,
+  estimateReadMinutes,
+} from '@portfoliofy/shared/resume';
 import { getOptimizedImageUrl, isOwnS3ImageUrl } from '@/lib/utils';
 import { getOgFonts } from '@/lib/server/ogFonts';
 

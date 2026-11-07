@@ -5,7 +5,7 @@ import { XIcon } from '@phosphor-icons/react/ssr';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AvatarPlaceholderIcon } from '@/components/composite/AvatarPlaceholderIcon';
 import { Label } from '@/components/ui/label';
-import { CollaboratorSchemaType } from '@/lib/resume';
+import { CollaboratorSchemaType } from '@portfoliofy/shared/resume';
 import { useCollaboratorSearch } from '@/hooks/useCollaboratorSearch';
 import { Input } from '../ui/input';
 

@@ -1,0 +1,26 @@
+{
+  "name": "@portfoliofy/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Code shared by the web and mobile apps: resume schema, validation, editor store and hooks.",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^3.25.28",
+    "zustand": "^5.0.14"
+  },
+  "peerDependencies": {
+    "react": "^19"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "react": "^19",
+    "typescript": "^5",
+    "vitest": "^4.1.9"
+  }
+}

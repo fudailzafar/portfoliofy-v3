@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '../store/useResumeStore';
 
 interface UseTabEditorOptions<T> {
   // Whether `item` has enough filled in to be committed. Mirrors each tab's

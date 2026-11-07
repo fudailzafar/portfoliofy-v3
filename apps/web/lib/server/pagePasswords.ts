@@ -1,5 +1,8 @@
 import crypto from 'crypto';
-import type { AttachmentSchemaType, ResumeDataSchemaType } from '@/lib/resume';
+import type {
+  AttachmentSchemaType,
+  ResumeDataSchemaType,
+} from '@portfoliofy/shared/resume';
 
 // Password-protected pages. Only a salted scrypt hash is stored, inside the
 // page in resume_data. It never leaves the server: owners get a

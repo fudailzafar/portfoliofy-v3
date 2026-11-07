@@ -1,4 +1,4 @@
-import { ResumeDataSchemaType } from '@/lib/resume';
+import { ResumeDataSchemaType } from '@portfoliofy/shared/resume';
 import { ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
 import { extractUsername, buildContactUrl } from '@/utils/extractUsername';
 

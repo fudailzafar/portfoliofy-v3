@@ -1,4 +1,4 @@
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 
 export function EmptyProfileState() {
   const setActiveTab = useResumeStore((state) => state.setActiveTab);

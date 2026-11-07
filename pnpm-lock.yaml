@@ -47,6 +47,9 @@ importers:
       '@phosphor-icons/react':
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@portfoliofy/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@radix-ui/react-alert-dialog':
         specifier: ^1.1.4
         version: 1.1.15(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -201,6 +204,28 @@ importers:
       tailwindcss:
         specifier: ^3.4.17
         version: 3.4.19(yaml@2.9.0)
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+      vitest:
+        specifier: ^4.1.9
+        version: 4.1.9(@types/node@22.19.19)(vite@8.0.16(@types/node@22.19.19)(jiti@1.21.7)(yaml@2.9.0))
+
+  packages/shared:
+    dependencies:
+      zod:
+        specifier: ^3.25.28
+        version: 3.25.76
+      zustand:
+        specifier: ^5.0.14
+        version: 5.0.14(@types/react@19.2.15)(immer@11.1.16)(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))
+    devDependencies:
+      '@types/react':
+        specifier: ^19
+        version: 19.2.15
+      react:
+        specifier: ^19
+        version: 19.2.6
       typescript:
         specifier: ^5
         version: 5.9.3

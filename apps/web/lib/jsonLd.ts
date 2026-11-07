@@ -1,4 +1,4 @@
-import type { ResumeDataSchemaType } from './resume';
+import type { ResumeDataSchemaType } from '@portfoliofy/shared/resume';
 
 const stripHtml = (html?: string) =>
   html ? html.replace(/<[^>]*>?/gm, '').trim() : '';

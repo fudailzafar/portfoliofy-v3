@@ -10,7 +10,7 @@ import {
   ResumeDataSchema,
   ResumeDataSchemaType,
   slugify,
-} from '@/lib/resume';
+} from '@portfoliofy/shared/resume';
 
 type ResumeData = ResumeDataSchemaType;
 

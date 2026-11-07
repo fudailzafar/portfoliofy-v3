@@ -1,6 +1,6 @@
 'use client';
 
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 import { FullResume } from './FullResume';
 import { ResumeData } from '@/lib/server/dbActions';
 import { UserProfile } from '@/lib/server/cachedFunctions';

@@ -20,7 +20,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { PencilSimpleIcon } from '@phosphor-icons/react/ssr';
 import { SIDEBAR_SLIDE, useSidebarStore } from '@/store/useSidebarStore';
 import { createPortal } from 'react-dom';
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { arrayMove } from '@dnd-kit/sortable';
@@ -32,11 +32,11 @@ import {
   DEFAULT_SECTION_ORDER,
   SECTION_LABELS,
   getUsedPageSlugs,
-} from '@/lib/resume';
+} from '@portfoliofy/shared/resume';
 import { getOptimizedImageUrl } from '@/lib/utils';
 import { useS3Upload } from 'next-s3-upload';
 import { toast } from 'sonner';
-import { isValidWebsite } from '@/lib/validation/url';
+import { isValidWebsite } from '@portfoliofy/shared/validation/url';
 import { ProfileSidebar } from './ProfileSidebar';
 import { ProfileContent } from './ProfileContent';
 import { DeleteConfirmDialog, UnsavedChangesDialog } from './dialogs';

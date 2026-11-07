@@ -4,7 +4,7 @@ import {
   AttachmentSchemaType,
   estimateReadMinutes,
   isRedactedPage,
-} from '@/lib/resume';
+} from '@portfoliofy/shared/resume';
 import Link from 'next/link';
 import { LockIcon } from '@phosphor-icons/react/ssr';
 

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { GoogleGenAI } from '@google/genai';
 import { zodToJsonSchema } from 'zod-to-json-schema';
-import { ResumeDataSchema } from '@/lib/resume';
+import { ResumeDataSchema } from '@portfoliofy/shared/resume';
 import { checkRateLimit } from '@/lib/server/rateLimit';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });

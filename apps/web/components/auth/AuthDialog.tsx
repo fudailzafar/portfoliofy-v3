@@ -6,7 +6,10 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import { Spinner } from '@/components/ui/spinner';
 import { ValidCheck } from '@/components/ui/valid-check';
-import { isValidEmail, normalizeEmail } from '@/lib/validation/email';
+import {
+  isValidEmail,
+  normalizeEmail,
+} from '@portfoliofy/shared/validation/email';
 
 interface AuthDialogProps {
   open: boolean;

@@ -2,7 +2,7 @@ import { getUsernameById, updateUsername } from '@/lib/server/dbActions';
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
-import { normalizeUsername } from '@/lib/validation/username';
+import { normalizeUsername } from '@portfoliofy/shared/validation/username';
 import { checkRateLimit } from '@/lib/server/rateLimit';
 
 const USERNAME_CHANGE_MAX_REQUESTS = 5;

@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext } from 'react';
-import { AttachmentSchemaType } from '@/lib/resume';
+import { AttachmentSchemaType } from '@portfoliofy/shared/resume';
 
 // The resume's top-level pages, so page stubs can be resolved anywhere.
 const ResumePagesContext = createContext<AttachmentSchemaType[]>([]);

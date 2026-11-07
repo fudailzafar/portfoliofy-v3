@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildProfileJsonLd, serializeJsonLd } from './jsonLd';
-import type { ResumeDataSchemaType } from './resume';
+import type { ResumeDataSchemaType } from '@portfoliofy/shared/resume';
 
 const resume = (overrides: Partial<ResumeDataSchemaType> = {}) =>
   ({

@@ -3,7 +3,7 @@ import {
   AttachmentSchemaType,
   estimateReadMinutes,
   isRedactedPage,
-} from '@/lib/resume';
+} from '@portfoliofy/shared/resume';
 
 export function PageAttachmentCard({
   attachment,

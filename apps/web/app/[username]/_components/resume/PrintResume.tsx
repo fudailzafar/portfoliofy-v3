@@ -4,7 +4,7 @@ import {
   sortByDateDesc,
   normalizeSectionOrder,
   SECTION_LABELS,
-} from '@/lib/resume';
+} from '@portfoliofy/shared/resume';
 import { cn, ensureHttps } from '@/lib/utils';
 import { PrintListItem } from './print/PrintListItem';
 

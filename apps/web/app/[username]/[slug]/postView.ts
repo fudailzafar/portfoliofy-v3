@@ -6,7 +6,7 @@ import {
   ResumeDataSchemaType,
   estimateReadMinutes,
   findPageBySlug,
-} from '@/lib/resume';
+} from '@portfoliofy/shared/resume';
 import { getOptimizedImageUrl } from '@/lib/utils';
 import { classifyHost } from '@/lib/site';
 import type { PostBodyProps } from './PostBody';

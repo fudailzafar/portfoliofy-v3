@@ -2,7 +2,7 @@
 
 Welcome to the Portfoliofy codebase! This document is designed to help new developers understand the core architecture, data flow, and standard patterns used throughout the project.
 
-> The Next.js app lives in `apps/web`. Every path in this guide (`app/...`, `lib/...`, `store/...`, `hooks/...`, `components/...`) is relative to that folder.
+> The Next.js app lives in `apps/web`. Paths in this guide (`app/...`, `lib/...`, `hooks/...`, `components/...`) are relative to that folder. Code shared with other apps lives in `packages/shared/src` and is imported as `@portfoliofy/shared/...`: the resume schema (`resume.ts`), the validators (`validation/*`), the editor store (`packages/shared/src/store/useResumeStore.ts`) and the `useResumeList` / `useTabEditor` hooks.
 
 ---
 
@@ -28,11 +28,11 @@ Portfoliofy uses a "dual-state" approach to provide a snappy, optimistic user in
 We use a PostgreSQL database hosted on Supabase.
 
 - The `resumes` table contains a unique `resumeData` column.
-- **Crucial Concept**: `resumeData` is a **JSONB** column. Instead of creating a separate SQL table for `projects`, `education`, `workExperience`, etc., we store the _entire_ resume structure as a single JSON object. This allows us to rapidly add new sections to the app without writing complex database migrations. The shape of this JSON is strictly validated using Zod (`lib/resume.ts`).
+- **Crucial Concept**: `resumeData` is a **JSONB** column. Instead of creating a separate SQL table for `projects`, `education`, `workExperience`, etc., we store the _entire_ resume structure as a single JSON object. This allows us to rapidly add new sections to the app without writing complex database migrations. The shape of this JSON is strictly validated using Zod (`packages/shared/src/resume.ts`).
 
 ### Local State (Zustand)
 
-When a user opens the editor, we immediately hydrate a global Zustand store (`store/useResumeStore.ts`) with their current `resumeData`.
+When a user opens the editor, we immediately hydrate a global Zustand store (`packages/shared/src/store/useResumeStore.ts`) with their current `resumeData`.
 
 - As the user types or drags-and-drops items, they are modifying this _local_ Zustand state.
 - This makes the UI feel instantaneous.
@@ -72,7 +72,7 @@ If you need to add a brand new section to the portfolio (for example, "Languages
 
 ### Step 1: Update the Schema
 
-1. Open `lib/resume.ts`.
+1. Open `packages/shared/src/resume.ts`.
 2. Define the schema for a single item (e.g., `LanguageSchema`). There's no shared base schema to extend — follow the existing sections (e.g. `WorkExperienceSection`, `EducationSection`) and declare `id: z.string().optional()` and `hidden: z.boolean().optional().default(false)` directly on your item schema, alongside your section-specific fields.
 3. Add the array to the main `ResumeDataSchema` (e.g., `languages: z.array(LanguageSchema).optional()`).
 4. Add the section key to `DEFAULT_SECTION_ORDER`.
@@ -91,8 +91,8 @@ If you need to add a brand new section to the portfolio (for example, "Languages
 ```tsx
 'use client';
 import { useState } from 'react';
-import { useResumeList } from '@/hooks/useResumeList';
-import { useTabEditor } from '@/hooks/useTabEditor';
+import { useResumeList } from '@portfoliofy/shared/hooks/useResumeList';
+import { useTabEditor } from '@portfoliofy/shared/hooks/useTabEditor';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
 import { FormInput } from '@/components/ui/form-input';
 

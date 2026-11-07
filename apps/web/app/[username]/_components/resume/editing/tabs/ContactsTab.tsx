@@ -1,13 +1,13 @@
 'use client';
 
-import { useTabEditor } from '@/hooks/useTabEditor';
-import { useResumeList } from '@/hooks/useResumeList';
+import { useTabEditor } from '@portfoliofy/shared/hooks/useTabEditor';
+import { useResumeList } from '@portfoliofy/shared/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { ChatCircleIcon, ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
 import { ValidCheck } from '@/components/ui/valid-check';
-import { isValidEmail } from '@/lib/validation/email';
+import { isValidEmail } from '@portfoliofy/shared/validation/email';
 import { cn } from '@/lib/utils';
 import {
   Select,

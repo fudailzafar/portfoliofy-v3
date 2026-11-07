@@ -1,6 +1,9 @@
 import sql from '@/lib/server/db';
 import { getUserData } from '@/app/[username]/utils';
-import { estimateReadMinutes, getAllPageAttachments } from '@/lib/resume';
+import {
+  estimateReadMinutes,
+  getAllPageAttachments,
+} from '@portfoliofy/shared/resume';
 import { SITE_URL } from '@/lib/site';
 
 function stripHtml(html?: string): string {

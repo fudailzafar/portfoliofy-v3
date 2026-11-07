@@ -10,7 +10,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { ResumeData } from '@/lib/server/dbActions';
 import { UserProfile } from '@/lib/server/cachedFunctions';
-import { sortByDateDesc } from '@/lib/resume';
+import { sortByDateDesc } from '@portfoliofy/shared/resume';
 import { Education } from './preview/Education';
 import { Header } from './preview/Header';
 import { Awards } from './preview/Awards';
@@ -29,7 +29,7 @@ import { Volunteering } from './preview/Volunteering';
 import { EmptyProfileState } from './preview/EmptyProfileState';
 import { PublicEmptyProfileState } from './preview/PublicEmptyProfileState';
 import { PublicWritingList } from './preview/PublicWritingList';
-import { normalizeSectionOrder } from '@/lib/resume';
+import { normalizeSectionOrder } from '@portfoliofy/shared/resume';
 import { ResumePagesProvider } from '@/lib/ResumePagesContext';
 
 // Snappy spring for the sliding tab underline.

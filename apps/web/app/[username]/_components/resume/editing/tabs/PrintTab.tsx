@@ -1,6 +1,6 @@
 'use client';
 
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 import { Switch } from '@/components/ui/switch';
 
 export function PrintTab() {

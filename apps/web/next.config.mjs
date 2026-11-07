@@ -21,6 +21,8 @@ const securityHeaders = [
 
 const nextConfig = {
   poweredByHeader: false,
+  // The shared package ships TypeScript source, so Next compiles it.
+  transpilePackages: ['@portfoliofy/shared'],
   images: {
     remotePatterns: [{ protocol: 'https', hostname: '**' }],
   },

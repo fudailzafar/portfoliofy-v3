@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { AttachmentSchemaType, ResumeDataSchemaType } from '@/lib/resume';
+import { AttachmentSchemaType, ResumeDataSchemaType } from '../resume';
 
 type ResumeData = ResumeDataSchemaType;
 

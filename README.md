@@ -61,11 +61,12 @@ This is a pnpm workspace. The Next.js app lives in `apps/web`; `packages/` is fo
 │       │   ├── auth/           # Post-login handling
 │       │   └── layout.tsx      # Root application layout
 │       ├── components/         # Reusable UI components (Shadcn, layouts, etc.)
-│       ├── hooks/              # Custom React hooks (e.g., useTabEditor)
+│       ├── hooks/              # Web-only React hooks
 │       ├── lib/                # Utility functions, database logic, resume schema
 │       ├── store/              # Zustand global state stores
 │       └── public/             # Static assets, fonts, and Open Graph images
-├── packages/               # Shared workspace packages
+├── packages/
+│   └── shared/             # Code shared with other apps: resume schema, validators, editor store and hooks
 └── pnpm-workspace.yaml
 ```
 

@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
-import { AttachmentSchemaType } from '@/lib/resume';
+import { AttachmentSchemaType } from '@portfoliofy/shared/resume';
 import { cn, getOptimizedImageUrl } from '@/lib/utils';
 
 // A full-screen layer in the page colour fades in, and the media and controls

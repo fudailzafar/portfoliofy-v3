@@ -1,6 +1,6 @@
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 import {
   GeneralTab,
   SkillsTab,

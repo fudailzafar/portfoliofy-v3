@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 import { Input } from '@/components/ui/input';
 import { XIcon } from '@phosphor-icons/react/ssr';
 

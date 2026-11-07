@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { CollaboratorSchemaType } from '@/lib/resume';
+import { CollaboratorSchemaType } from '@portfoliofy/shared/resume';
 import { useProfileUrl } from '@/lib/ProfileUrlContext';
 import { useLiveCollaborators } from '@/hooks/useLiveCollaborators';
 

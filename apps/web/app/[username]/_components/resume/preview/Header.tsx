@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AvatarPlaceholderIcon } from '@/components/composite/AvatarPlaceholderIcon';
-import { ResumeDataSchemaType } from '@/lib/resume';
+import { ResumeDataSchemaType } from '@portfoliofy/shared/resume';
 import { UserProfile } from '@/lib/server/cachedFunctions';
 import {
   Tooltip,

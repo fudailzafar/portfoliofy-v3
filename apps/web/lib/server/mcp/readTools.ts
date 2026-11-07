@@ -1,6 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/server';
 import { z } from 'zod-v4';
-import type { AttachmentSchemaType } from '@/lib/resume';
+import type { AttachmentSchemaType } from '@portfoliofy/shared/resume';
 import {
   getPageViewSeries,
   getResume,

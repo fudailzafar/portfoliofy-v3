@@ -67,7 +67,7 @@ For colours, type, spacing, motion and component patterns, follow [DESIGN.md](./
 
 - TypeScript strict mode — avoid `any` where a real type is available.
 - Tailwind CSS for styling; match the utility-class conventions already used in the file you're editing rather than introducing a new one.
-- Reuse existing hooks/components (`useResumeList`, `useTabEditor`, `ListTabLayout`, etc.) instead of re-implementing the same CRUD/list/form logic per section.
+- Reuse existing hooks/components (`useResumeList` and `useTabEditor` from `@portfoliofy/shared`, `ListTabLayout`, etc.) instead of re-implementing the same CRUD/list/form logic per section.
 
 ## Comments
 

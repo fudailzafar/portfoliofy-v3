@@ -1,6 +1,9 @@
 import { revalidateTag } from 'next/cache';
 import sql from './db';
-import { ResumeDataSchema, migrateEmbeddedPages } from '@/lib/resume';
+import {
+  ResumeDataSchema,
+  migrateEmbeddedPages,
+} from '@portfoliofy/shared/resume';
 import { z } from 'zod';
 import { RESERVED_USERNAMES } from '../routes';
 import { sanitizeResumeData } from './sanitize';
@@ -8,7 +11,7 @@ import { hashPagePassword, withStoredPagePasswords } from './pagePasswords';
 import {
   normalizeUsername,
   isValidUsernameFormat,
-} from '../validation/username';
+} from '@portfoliofy/shared/validation/username';
 
 const FORBIDDEN_USERNAMES = RESERVED_USERNAMES;
 

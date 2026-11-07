@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
-import { CollaboratorSchemaType } from '@/lib/resume';
+import { CollaboratorSchemaType } from '@portfoliofy/shared/resume';
 
 export function useCollaboratorSearch(query: string) {
   const [debouncedQuery] = useDebounce(query.trim(), 300);

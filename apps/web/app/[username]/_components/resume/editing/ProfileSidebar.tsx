@@ -20,7 +20,7 @@ import { SortableSidebarItem } from './SortableSidebarItem';
 import { SidebarButton } from './SidebarButton';
 import React, { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 import { UserIcon, PencilSimpleIcon, NutIcon } from '@phosphor-icons/react/ssr';
 import {
   Tooltip,

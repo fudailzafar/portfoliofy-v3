@@ -1,8 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { headers } from 'next/headers';
 import sql from '@/lib/server/db';
-import { getAllPageAttachments } from '@/lib/resume';
-import type { ResumeDataSchemaType } from '@/lib/resume';
+import { getAllPageAttachments } from '@portfoliofy/shared/resume';
+import type { ResumeDataSchemaType } from '@portfoliofy/shared/resume';
 import { getUserData } from './[username]/utils';
 import { SITE_URL, classifyHost } from '@/lib/site';
 

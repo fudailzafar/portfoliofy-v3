@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_SECTION_ORDER, ResumeDataSchemaType } from '@/lib/resume';
+import {
+  DEFAULT_SECTION_ORDER,
+  ResumeDataSchemaType,
+} from '@portfoliofy/shared/resume';
 import {
   addItem,
   createDraft,

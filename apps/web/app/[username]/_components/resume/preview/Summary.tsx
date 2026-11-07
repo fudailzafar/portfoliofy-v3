@@ -1,4 +1,4 @@
-import { ResumeDataSchemaType } from '@/lib/resume';
+import { ResumeDataSchemaType } from '@portfoliofy/shared/resume';
 
 interface AboutProps {
   summary: ResumeDataSchemaType['summary'];

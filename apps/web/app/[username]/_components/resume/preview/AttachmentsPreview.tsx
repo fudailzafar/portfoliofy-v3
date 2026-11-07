@@ -2,7 +2,10 @@
 
 import { useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { AttachmentSchemaType, resolveAttachedPages } from '@/lib/resume';
+import {
+  AttachmentSchemaType,
+  resolveAttachedPages,
+} from '@portfoliofy/shared/resume';
 import { Lightbox } from '@/components/composite/Lightbox';
 import { PageAttachmentCard } from '@/components/composite/PageAttachmentCard';
 import { usePersonalDomainView } from '@/lib/ProfileUrlContext';

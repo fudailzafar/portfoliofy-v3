@@ -4,7 +4,10 @@ import { createHash, randomBytes } from 'node:crypto';
 import sql from '@/lib/server/db';
 import { buildLoginEmail } from '@/lib/server/loginEmailTemplate';
 
-export { isValidEmail, normalizeEmail } from '@/lib/validation/email';
+export {
+  isValidEmail,
+  normalizeEmail,
+} from '@portfoliofy/shared/validation/email';
 
 export const LOGIN_TOKEN_TTL_MS = 15 * 60 * 1000;
 

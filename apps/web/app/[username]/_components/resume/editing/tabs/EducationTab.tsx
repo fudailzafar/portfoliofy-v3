@@ -1,9 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
-import { isReversedRange } from '@/lib/validation/dates';
-import { useTabEditor } from '@/hooks/useTabEditor';
-import { useResumeList } from '@/hooks/useResumeList';
+import { isReversedRange } from '@portfoliofy/shared/validation/dates';
+import { useTabEditor } from '@portfoliofy/shared/hooks/useTabEditor';
+import { useResumeList } from '@portfoliofy/shared/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
 import { FormInput } from '@/components/ui/form-input';
 import { EditorListItem } from '../shared/EditorListItem';
@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { sortByDateDesc, getListAdjacency } from '@/lib/resume';
+import { sortByDateDesc, getListAdjacency } from '@portfoliofy/shared/resume';
 import dynamic from 'next/dynamic';
 
 const RichTextEditor = dynamic(

@@ -1,5 +1,5 @@
-import { useResumeStore } from '@/store/useResumeStore';
-import { ResumeDataSchemaType } from '@/lib/resume';
+import { useResumeStore } from '../store/useResumeStore';
+import { ResumeDataSchemaType } from '../resume';
 
 // Get all keys from the resume schema that are arrays
 type ArrayKeys = {

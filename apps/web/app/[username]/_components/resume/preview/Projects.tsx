@@ -1,4 +1,4 @@
-import { ResumeDataSchemaType } from '@/lib/resume';
+import { ResumeDataSchemaType } from '@portfoliofy/shared/resume';
 import { PreviewSection } from './shared/PreviewSection';
 import { PreviewListItem } from './shared/PreviewListItem';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
@@ -16,7 +16,10 @@ const RichTextEditor = dynamic(
 import { CameraIcon } from '@phosphor-icons/react/ssr';
 import { ValidCheck } from '@/components/ui/valid-check';
 import { cn } from '@/lib/utils';
-import { isValidWebsite, normalizeWebsite } from '@/lib/validation/url';
+import {
+  isValidWebsite,
+  normalizeWebsite,
+} from '@portfoliofy/shared/validation/url';
 
 export function GeneralTab({
   initialUsername,

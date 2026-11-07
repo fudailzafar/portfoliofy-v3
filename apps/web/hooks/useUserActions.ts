@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Resume, ResumeData } from '@/lib/server/dbActions';
-import { ResumeDataSchema } from '@/lib/resume';
-import { useResumeStore } from '@/store/useResumeStore';
+import { ResumeDataSchema } from '@portfoliofy/shared/resume';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 
 // Fetch resume data
 const fetchResume = async (): Promise<{

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { CollaboratorSchemaType } from '@/lib/resume';
+import { CollaboratorSchemaType } from '@portfoliofy/shared/resume';
 
 export function useLiveCollaborators(
   collaborators: CollaboratorSchemaType[] | undefined,

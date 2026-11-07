@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { PrintResume } from './PrintResume';
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 import { ResumeData } from '@/lib/server/dbActions';
 import { cn } from '@/lib/utils';
 

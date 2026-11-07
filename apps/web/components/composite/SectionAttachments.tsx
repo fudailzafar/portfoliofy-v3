@@ -1,12 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { AttachmentSchemaType, resolveAttachedPages } from '@/lib/resume';
+import {
+  AttachmentSchemaType,
+  resolveAttachedPages,
+} from '@portfoliofy/shared/resume';
 import { Button } from '@/components/ui/button';
 import { MediaUploadDialog } from './MediaUploadDialog';
 import { AttachPagesDialog } from './AttachPagesDialog';
 import { PageAttachmentCard } from './PageAttachmentCard';
-import { useResumeStore } from '@/store/useResumeStore';
+import { useResumeStore } from '@portfoliofy/shared/store/useResumeStore';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
