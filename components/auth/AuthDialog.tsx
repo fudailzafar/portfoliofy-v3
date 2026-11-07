@@ -20,7 +20,7 @@ const POP_SPRING = { type: 'spring', stiffness: 700, damping: 25 } as const;
 // Off unless set, so the email option only appears where it is configured.
 const EMAIL_AUTH_ENABLED = process.env.NEXT_PUBLIC_EMAIL_AUTH === 'true';
 
-type Step = 0 | 1 | 2; // choose → email → check inbox
+type Step = 0 | 1 | 2 | 3; // choose → email → check inbox, or the reviewer's code
 
 const TITLE_CLASS =
   'mb-1 text-[18px] font-medium leading-[1.6] text-[#111] dark:text-[#eee]';
@@ -32,12 +32,14 @@ const BUTTON_CLASS =
 export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const codeRef = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState<Step>(0);
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [devLink, setDevLink] = useState('');
+  const [code, setCode] = useState('');
 
   const title =
     mode === 'login' ? 'Login to your account' : 'Create a new profile';
@@ -51,6 +53,7 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
     setEmail('');
     setError('');
     setDevLink('');
+    setCode('');
     setSending(false);
   }, [open]);
 
@@ -58,6 +61,7 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
     // preventScroll: the panel is still sliding in, and focusing it would make
     // the clipped wrapper scroll sideways to reveal it.
     if (open && step === 1) inputRef.current?.focus({ preventScroll: true });
+    if (open && step === 3) codeRef.current?.focus({ preventScroll: true });
   }, [open, step]);
 
   const handleGoogleSignIn = () => {
@@ -81,10 +85,48 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
         setError(data.error ?? "We couldn't send the link. Try again.");
         return;
       }
+      if (data.reviewer) {
+        setStep(3);
+        return;
+      }
       setDevLink(data.devLink ?? '');
       setStep(2);
     } catch {
       setError("We couldn't send the link. Try again.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleCodeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!code || sending) return;
+
+    setSending(true);
+    setError('');
+    try {
+      const res = await fetch('/api/auth/reviewer-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: normalizedEmail, code }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.error ?? 'That code is incorrect.');
+        return;
+      }
+      const result = await signIn('email-link', {
+        token: data.token,
+        redirect: false,
+      });
+      if (result?.error || !result?.ok) {
+        setError("We couldn't sign you in. Try again.");
+        return;
+      }
+      // Full navigation so the new session is picked up everywhere.
+      window.location.replace('/auth/post-login');
+    } catch {
+      setError("We couldn't sign you in. Try again.");
     } finally {
       setSending(false);
     }
@@ -297,6 +339,77 @@ export function AuthDialog({ open, onOpenChange, mode }: AuthDialogProps) {
                           Done
                         </button>
                       </div>
+                    </motion.div>
+
+                    <motion.div {...panelProps(3)}>
+                      <DialogPrimitive.Title className={TITLE_CLASS}>
+                        Enter your access code{' '}
+                        <span aria-hidden="true">🔑</span>
+                      </DialogPrimitive.Title>
+                      <p className="text-[#666] dark:text-[#aaa]">
+                        Use the code you were given for{' '}
+                        <span className="break-all text-[#111] dark:text-[#eee]">
+                          {normalizedEmail}
+                        </span>
+                        .
+                      </p>
+
+                      <form onSubmit={handleCodeSubmit}>
+                        <input
+                          ref={codeRef}
+                          type="password"
+                          autoComplete="off"
+                          spellCheck={false}
+                          placeholder="Access code"
+                          aria-label="Access code"
+                          aria-invalid={!!error}
+                          value={code}
+                          onChange={(e) => {
+                            setCode(e.target.value);
+                            setError('');
+                          }}
+                          className={`mt-3 h-9 w-full rounded-lg bg-[#f2f2f2] px-3 text-[16px] text-[#111] outline-none placeholder:text-[#aaa] focus-visible:ring-2 focus-visible:ring-[#111]/20 dark:bg-[#333] dark:text-[#eee] dark:focus-visible:ring-[#eee]/20 sm:text-[14px] ${error ? 'shadow-[0_0_0_2px_#f04848]' : ''}`}
+                        />
+
+                        {error && (
+                          <p
+                            role="alert"
+                            className="mt-2 text-[13px] text-[#f04848]"
+                          >
+                            {error}
+                          </p>
+                        )}
+
+                        <div className="mt-3 flex items-center justify-end gap-4">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCode('');
+                              setError('');
+                              setStep(1);
+                            }}
+                            className={TEXT_BUTTON_CLASS}
+                          >
+                            Back
+                          </button>
+                          <button
+                            type="submit"
+                            disabled={!code || sending}
+                            aria-busy={sending}
+                            className={BUTTON_CLASS}
+                          >
+                            <span className={sending ? 'text-transparent' : ''}>
+                              Submit
+                            </span>
+                            {sending && (
+                              <Spinner
+                                size={14}
+                                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[#111] dark:text-[#eee]"
+                              />
+                            )}
+                          </button>
+                        </div>
+                      </form>
                     </motion.div>
                   </motion.div>
                 </div>

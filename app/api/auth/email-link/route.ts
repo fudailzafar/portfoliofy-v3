@@ -7,6 +7,7 @@ import {
   normalizeEmail,
   sendLoginEmail,
 } from '@/lib/server/emailAuth';
+import { isReviewerEmail } from '@/lib/server/reviewerLogin';
 import { safeNextPath } from '@/lib/validation/redirect';
 
 const IP_MAX_REQUESTS = 10;
@@ -39,6 +40,11 @@ export async function POST(request: Request) {
       { error: 'Too many attempts, try again in a few minutes.' },
       { status: 429 },
     );
+  }
+
+  // The Play reviewer can't read an inbox: ask for a code instead of mailing.
+  if (isReviewerEmail(email)) {
+    return NextResponse.json({ ok: true, reviewer: true });
   }
 
   const origin = new URL(request.url).origin;
