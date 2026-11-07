@@ -8,6 +8,20 @@ import sql from '@/lib/server/db';
 export const MCP_PATH = '/api/mcp';
 export const OAUTH_SCOPES = ['profile:read', 'profile:write'];
 
+// Our own mobile app signs in through the same flow, but with a built-in
+// client and a scope no third-party app can ask for: 'app' is everything the
+// signed-in website can do, so only tokens carrying it work on the app API.
+export const FIRST_PARTY_SCOPE = 'app';
+export const MOBILE_CLIENT_ID = 'portfoliofy-android';
+const FIRST_PARTY_CLIENTS: Record<string, OAuthClient> = {
+  [MOBILE_CLIENT_ID]: {
+    clientId: MOBILE_CLIENT_ID,
+    clientName: 'Portfoliofy for Android',
+    redirectUris: ['com.portfoliofy.app:/oauth/callback'],
+    firstParty: true,
+  },
+};
+
 export const OAUTH_CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -32,6 +46,11 @@ export interface OAuthClient {
   clientId: string;
   clientName: string;
   redirectUris: string[];
+  firstParty?: boolean;
+}
+
+export function isFirstPartyClient(clientId: string): boolean {
+  return Object.hasOwn(FIRST_PARTY_CLIENTS, clientId);
 }
 
 export interface TokenResponse {
@@ -103,8 +122,20 @@ export function verifyPkce(verifier: string, challenge: string): boolean {
   );
 }
 
-/** The scopes to grant: everything supported unless the client asked for less. */
-export function resolveScopes(requested?: string | null): string[] {
+/**
+ * The scopes to grant. Third-party apps get everything supported unless they
+ * asked for less, and can never get the first-party scope. Our own app gets
+ * only that scope.
+ */
+export function resolveScopes(
+  requested?: string | null,
+  client?: Pick<OAuthClient, 'firstParty'>,
+): string[] {
+  if (client?.firstParty) {
+    return !requested || requested.split(' ').includes(FIRST_PARTY_SCOPE)
+      ? [FIRST_PARTY_SCOPE]
+      : [];
+  }
   if (!requested) return OAUTH_SCOPES;
   return requested.split(' ').filter((s) => OAUTH_SCOPES.includes(s));
 }
@@ -138,7 +169,37 @@ export async function registerClient(
   return { clientId, clientName, redirectUris };
 }
 
+// Codes and tokens point at a row in oauth_clients, so a built-in client needs
+// one too. It is written the first time the client is used.
+let firstPartyRowsReady: Promise<void> | null = null;
+
+function ensureFirstPartyRows(): Promise<void> {
+  firstPartyRowsReady ??= (async () => {
+    for (const client of Object.values(FIRST_PARTY_CLIENTS)) {
+      await sql`
+        INSERT INTO oauth_clients (client_id, client_name, redirect_uris)
+        VALUES (
+          ${client.clientId},
+          ${client.clientName},
+          ARRAY(SELECT jsonb_array_elements_text(${JSON.stringify(client.redirectUris)}::text::jsonb))
+        )
+        ON CONFLICT (client_id) DO UPDATE
+        SET client_name = EXCLUDED.client_name,
+            redirect_uris = EXCLUDED.redirect_uris
+      `;
+    }
+  })().catch((error) => {
+    firstPartyRowsReady = null;
+    throw error;
+  });
+  return firstPartyRowsReady;
+}
+
 export async function getClient(clientId: string): Promise<OAuthClient | null> {
+  if (isFirstPartyClient(clientId)) {
+    await ensureFirstPartyRows();
+    return FIRST_PARTY_CLIENTS[clientId];
+  }
   const [row] = await sql`
     SELECT client_id, client_name, redirect_uris
     FROM oauth_clients
@@ -178,7 +239,7 @@ export async function validateAuthorization(
     return { error: 'This app asked for access to something else.' };
   }
 
-  const scopes = resolveScopes(params.scope);
+  const scopes = resolveScopes(params.scope, client);
   if (scopes.length === 0) {
     return {
       error: 'This app asked for permissions Portfoliofy does not offer.',
@@ -283,7 +344,10 @@ export async function exchangeAuthorizationCode(
     row.scope,
     row.resource,
   );
-  await revokeOlderConnections(row.userId, clientId, tokens.access_token);
+  // Our own app can be signed in on several devices at once.
+  if (!isFirstPartyClient(clientId)) {
+    await revokeOlderConnections(row.userId, clientId, tokens.access_token);
+  }
   return tokens;
 }
 
@@ -344,6 +408,22 @@ export async function refreshTokens(
     expires_in: ACCESS_TOKEN_TTL_SECONDS,
     scope: row.scope,
   };
+}
+
+/** Signs one connection out, given either of its tokens. Unknown tokens are ignored. */
+export async function revokeToken(
+  token: string,
+  clientId: string,
+): Promise<void> {
+  if (!token) return;
+  const hash = hashSecret(token);
+  await sql`
+    UPDATE oauth_tokens
+    SET revoked_at = now()
+    WHERE client_id = ${clientId}
+      AND revoked_at IS NULL
+      AND (access_hash = ${hash} OR refresh_hash = ${hash})
+  `;
 }
 
 export async function verifyAccessToken(

@@ -5,6 +5,7 @@ import { Footer } from '@/components/layout/Footer';
 import { getUsernameById } from '@/lib/server/dbActions';
 import { AuthorizationParams, validateAuthorization } from '@/lib/server/oauth';
 import { requestOrigin } from '@/lib/server/requestOrigin';
+import { AutoApprove } from './AutoApprove';
 import { ConsentForm } from './ConsentForm';
 import { SignInOptions } from './SignInOptions';
 
@@ -86,9 +87,26 @@ export default async function AuthorizePage({
 
   if (!session?.user?.id) {
     return (
-      <ConsentLayout title={`Sign in to connect ${client.clientName}`}>
-        <p>You&apos;ll choose what it can access on the next step.</p>
+      <ConsentLayout
+        title={
+          client.firstParty
+            ? 'Sign in to Portfoliofy'
+            : `Sign in to connect ${client.clientName}`
+        }
+      >
+        {!client.firstParty && (
+          <p>You&apos;ll choose what it can access on the next step.</p>
+        )}
         <SignInOptions returnTo={`/oauth/authorize?${search}`} />
+      </ConsentLayout>
+    );
+  }
+
+  // Our own app: signing in is the consent, so go straight back to it.
+  if (client.firstParty) {
+    return (
+      <ConsentLayout title="Signing you in">
+        <AutoApprove params={params} />
       </ConsentLayout>
     );
   }

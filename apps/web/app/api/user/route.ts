@@ -1,4 +1,4 @@
-import { auth } from '@/auth';
+import { getApiSession } from '@/lib/server/requestAuth';
 import { NextResponse } from 'next/server';
 import sql from '@/lib/server/db';
 import { deleteUserUploads } from '@/lib/server/userUploads';
@@ -6,7 +6,7 @@ import { releaseUserDomainFromVercel } from '@/lib/server/vercelDomains';
 
 export async function DELETE() {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

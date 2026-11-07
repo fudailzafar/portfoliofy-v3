@@ -8,7 +8,12 @@ import {
   buildRedirectUrl,
   disconnectApp,
   exchangeAuthorizationCode,
+  FIRST_PARTY_SCOPE,
+  getClient,
   isAllowedRedirectUri,
+  isFirstPartyClient,
+  MOBILE_CLIENT_ID,
+  revokeToken,
   listConnectedApps,
   refreshTokens,
   resolveScopes,
@@ -251,5 +256,94 @@ describe('connected apps', () => {
     expect(tokens.slice(1)).toEqual(['user-1', 'pfy_1']);
     expect(codes[0].join('?')).toContain('UPDATE oauth_codes');
     expect(codes.slice(1)).toEqual(['user-1', 'pfy_1']);
+  });
+});
+
+describe('first-party mobile client', () => {
+  const mobileRequest = {
+    client_id: MOBILE_CLIENT_ID,
+    redirect_uri: 'com.portfoliofy.app:/oauth/callback',
+    response_type: 'code',
+    code_challenge: CHALLENGE,
+    code_challenge_method: 'S256',
+    scope: FIRST_PARTY_SCOPE,
+  };
+
+  it('is recognised by id only', () => {
+    expect(isFirstPartyClient(MOBILE_CLIENT_ID)).toBe(true);
+    expect(isFirstPartyClient('pfy_1')).toBe(false);
+    expect(isFirstPartyClient('toString')).toBe(false);
+  });
+
+  it('gets only the app scope, and third parties can never get it', () => {
+    const firstParty = { firstParty: true };
+    expect(resolveScopes(undefined, firstParty)).toEqual([FIRST_PARTY_SCOPE]);
+    expect(resolveScopes('app', firstParty)).toEqual([FIRST_PARTY_SCOPE]);
+    expect(resolveScopes('profile:read', firstParty)).toEqual([]);
+    expect(resolveScopes('app profile:read')).toEqual(['profile:read']);
+    expect(resolveScopes('app')).toEqual([]);
+  });
+
+  it('is stored once, then served from the built-in definition', async () => {
+    sqlMock.mockReset();
+    sqlMock.mockResolvedValue([]);
+
+    const first = await getClient(MOBILE_CLIENT_ID);
+    const second = await getClient(MOBILE_CLIENT_ID);
+
+    expect(first?.firstParty).toBe(true);
+    expect(second).toEqual(first);
+    expect(sqlMock).toHaveBeenCalledTimes(1);
+    expect(sqlMock.mock.calls[0][0].join('?')).toContain(
+      'INSERT INTO oauth_clients',
+    );
+  });
+
+  it('accepts its own return address and rejects any other', async () => {
+    sqlMock.mockResolvedValue([]);
+    const ok = await validateAuthorization(mobileRequest, ORIGIN);
+    expect('valid' in ok && ok.valid.scopes).toEqual([FIRST_PARTY_SCOPE]);
+
+    const other = await validateAuthorization(
+      { ...mobileRequest, redirect_uri: 'https://evil.com/cb' },
+      ORIGIN,
+    );
+    expect('error' in other).toBe(true);
+  });
+
+  it('does not sign the user out of their other devices', async () => {
+    sqlMock.mockReset();
+    sqlMock
+      .mockResolvedValueOnce([
+        { ...codeRow, clientId: MOBILE_CLIENT_ID, scope: FIRST_PARTY_SCOPE },
+      ])
+      .mockResolvedValueOnce([]);
+
+    const tokens = await exchangeAuthorizationCode(
+      'code',
+      MOBILE_CLIENT_ID,
+      codeRow.redirectUri,
+      VERIFIER,
+    );
+
+    expect(tokens?.scope).toBe(FIRST_PARTY_SCOPE);
+    // The code lookup and the token insert, with no revoke after them.
+    expect(sqlMock).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('revokeToken', () => {
+  it('matches either token for that client, and ignores an empty one', async () => {
+    sqlMock.mockReset();
+    sqlMock.mockResolvedValue([]);
+
+    await revokeToken('', MOBILE_CLIENT_ID);
+    expect(sqlMock).not.toHaveBeenCalled();
+
+    await revokeToken('some-token', MOBILE_CLIENT_ID);
+    const [strings, ...values] = sqlMock.mock.calls[0];
+    expect(strings.join('?')).toContain('access_hash =');
+    expect(strings.join('?')).toContain('refresh_hash =');
+    expect(values).toContain(MOBILE_CLIENT_ID);
   });
 });

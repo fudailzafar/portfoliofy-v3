@@ -18,7 +18,7 @@ export async function approveAuthorization(
   params: AuthorizationParams,
 ): Promise<ConsentResult> {
   const session = await auth();
-  if (!session?.user?.id || !(await getUsernameById(session.user.id))) {
+  if (!session?.user?.id) {
     return { error: 'Sign in to Portfoliofy first.' };
   }
 
@@ -26,6 +26,11 @@ export async function approveAuthorization(
   if ('error' in result) return result;
 
   const { valid } = result;
+  // Third-party apps need a profile to act on. Our own app lets a new user
+  // pick a username once they are back in it.
+  if (!valid.client.firstParty && !(await getUsernameById(session.user.id))) {
+    return { error: 'Sign in to Portfoliofy first.' };
+  }
   const code = await createAuthorizationCode(session.user.id, valid);
   return {
     redirectUrl: buildRedirectUrl(valid.redirectUri, {

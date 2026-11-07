@@ -1,4 +1,4 @@
-import { auth } from '@/auth';
+import { getApiSession } from '@/lib/server/requestAuth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { revalidateTag } from 'next/cache';
@@ -29,7 +29,7 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ pageId: string }> },
 ): Promise<NextResponse<PagePasswordResponse>> {
-  const session = await auth();
+  const session = await getApiSession();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }

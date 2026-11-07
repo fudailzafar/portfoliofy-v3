@@ -40,6 +40,10 @@ export default async function middleware(req: NextRequest) {
         return;
       }
 
+      // The mobile app has no cookie. Its routes check the bearer token
+      // themselves and answer 401, so don't redirect those to the home page.
+      if (/^bearer\s/i.test(req.headers.get('authorization') ?? '')) return;
+
       const isPrivateRoute = PRIVATE_ROUTES.some((route) =>
         req.nextUrl.pathname.startsWith(`/${route}`),
       );

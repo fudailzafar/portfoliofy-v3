@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
+import { getApiSession } from '@/lib/server/requestAuth';
 import { GoogleGenAI } from '@google/genai';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { ResumeDataSchema } from '@portfoliofy/shared/resume';
@@ -15,7 +15,7 @@ const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session || !session.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

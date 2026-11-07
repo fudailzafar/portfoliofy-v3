@@ -1,5 +1,5 @@
 import { getUsernameById, updateUsername } from '@/lib/server/dbActions';
-import { auth } from '@/auth';
+import { getApiSession } from '@/lib/server/requestAuth';
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { normalizeUsername } from '@portfoliofy/shared/validation/username';
@@ -13,7 +13,7 @@ export type PostResponse = { success: true } | { error: string };
 
 export async function GET(): Promise<NextResponse<GetResponse>> {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -32,7 +32,7 @@ export async function POST(
   request: Request,
 ): Promise<NextResponse<PostResponse>> {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

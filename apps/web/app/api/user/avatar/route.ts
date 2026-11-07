@@ -1,4 +1,4 @@
-import { auth } from '@/auth';
+import { getApiSession } from '@/lib/server/requestAuth';
 import sql from '@/lib/server/db';
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
@@ -7,7 +7,7 @@ import { isOwnS3ImageUrl } from '@/lib/utils';
 // POST /api/user/avatar — save the S3 URL (uploaded client-side via next-s3-upload) to Postgres
 export async function POST(request: Request) {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
 // DELETE /api/user/avatar — remove custom profile picture, fall back to Google photo
 export async function DELETE() {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

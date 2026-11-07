@@ -1,17 +1,7 @@
 'use server';
 
 import { auth } from '@/auth';
-import { createUsernameLookup, storeResume } from '@/lib/server/dbActions';
-import {
-  ResumeDataSchemaType,
-  ResumeDataSchema,
-} from '@portfoliofy/shared/resume';
-import { revalidateTag } from 'next/cache';
-import { normalizeUsername } from '@portfoliofy/shared/validation/username';
-import { checkRateLimit } from '@/lib/server/rateLimit';
-
-const CLAIM_MAX_REQUESTS = 10;
-const CLAIM_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+import { claimUsernameAndInitProfile as claim } from '@/lib/server/claim';
 
 export async function claimUsernameAndInitProfile(
   username: string,
@@ -23,61 +13,11 @@ export async function claimUsernameAndInitProfile(
     throw new Error('Unauthorized');
   }
 
-  const { allowed } = await checkRateLimit(
-    `claim-username:${userId}`,
-    CLAIM_MAX_REQUESTS,
-    CLAIM_WINDOW_MS,
-  );
-  if (!allowed) {
-    return { error: 'Too many attempts — please try again later.' };
-  }
-
-  // 1. Claim username
-  const success = await createUsernameLookup({
+  return claim({
     userId,
-    username,
-    name: displayName,
     email: session?.user?.email,
     image: session?.user?.image,
+    username,
+    displayName,
   });
-  if (!success) {
-    return { error: 'Username is not available or invalid' };
-  }
-
-  // 2. Initialize empty resume profile
-  const emptyResumeData: ResumeDataSchemaType = ResumeDataSchema.parse({
-    header: {
-      name: displayName,
-      shortAbout: '',
-      location: '',
-      skills: [],
-    },
-    summary: '',
-    workExperience: [],
-    education: [],
-    projects: [],
-    sideProjects: [],
-    speaking: [],
-    writing: [],
-    exhibitions: [],
-    features: [],
-    volunteering: [],
-    awards: [],
-    certifications: [],
-    contacts: [],
-  });
-
-  await storeResume(userId, {
-    status: 'live',
-    resumeData: emptyResumeData,
-  });
-
-  // @ts-expect-error Next.js 16 Canary types
-  revalidateTag(`username-${normalizeUsername(username)}`);
-  // @ts-expect-error Next.js 16 Canary types
-  revalidateTag(`resume-v2-${userId}`);
-  // @ts-expect-error Next.js 16 Canary types
-  revalidateTag(`user-${userId}`);
-
-  return { success: true };
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
+import { getApiSession } from '@/lib/server/requestAuth';
 import {
   getPageViewSeries,
   getCustomDomainByUserId,
@@ -10,7 +10,7 @@ const VALID_RANGES: PageViewRange[] = ['week', 'month', 'year', 'all'];
 
 export async function GET(req: Request) {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

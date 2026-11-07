@@ -4,7 +4,7 @@ import {
   ResumeConflictError,
   storeResume,
 } from '@/lib/server/dbActions';
-import { auth } from '@/auth';
+import { getApiSession } from '@/lib/server/requestAuth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { revalidateTag } from 'next/cache';
@@ -21,7 +21,7 @@ export type PostResumeResponse =
 
 export async function GET(): Promise<NextResponse<GetResumeResponse>> {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -45,7 +45,7 @@ export async function POST(
   request: Request,
 ): Promise<NextResponse<PostResumeResponse>> {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

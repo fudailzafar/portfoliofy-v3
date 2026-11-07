@@ -1,7 +1,7 @@
 import { checkUsernameAvailability } from '@/lib/server/dbActions';
 import { NextResponse } from 'next/server';
 import { checkRateLimit, getClientIp } from '@/lib/server/rateLimit';
-import { auth } from '@/auth';
+import { getApiSession } from '@/lib/server/requestAuth';
 
 // API Response Types
 export type PostResponse = { available: boolean } | { error: string };
@@ -14,7 +14,7 @@ export async function POST(
   request: Request,
 ): Promise<NextResponse<PostResponse>> {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     const rateLimitKey = session?.user?.id
       ? `check-username:${session.user.id}`
       : `check-username:${getClientIp(request)}`;

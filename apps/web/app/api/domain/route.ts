@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
+import { getApiSession } from '@/lib/server/requestAuth';
 import {
   setCustomDomain,
   removeCustomDomain,
@@ -22,7 +22,7 @@ const DOMAIN_MUTATE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 export async function GET() {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -87,7 +87,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -193,7 +193,7 @@ export async function POST(req: Request) {
 
 export async function DELETE() {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

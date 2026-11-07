@@ -1,4 +1,4 @@
-import { auth } from '@/auth';
+import { getApiSession } from '@/lib/server/requestAuth';
 import { NextRequest, NextResponse } from 'next/server';
 import { POST as uploadHandler } from 'next-s3-upload/route';
 import { checkRateLimit } from '@/lib/server/rateLimit';
@@ -18,7 +18,7 @@ const ALLOWED_FILE_TYPES = new Set([
 ]);
 
 export async function POST(request: NextRequest) {
-  const session = await auth();
+  const session = await getApiSession();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }

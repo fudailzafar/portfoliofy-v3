@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
+import { getApiSession } from '@/lib/server/requestAuth';
 import { setUserStatus } from '@/lib/server/dbActions';
 
 export async function PUT(req: Request) {
   try {
-    const session = await auth();
+    const session = await getApiSession();
     const userId = session?.user?.id;
 
     if (!userId) {
