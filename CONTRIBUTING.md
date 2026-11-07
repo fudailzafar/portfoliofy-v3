@@ -11,7 +11,7 @@ Thanks for your interest in contributing. This covers the practical steps for wo
 ## Development
 
 - Package manager: `pnpm`, pinned to `pnpm@9.1.2` (see `packageManager` in the root `package.json`). Install it with `npm install -g pnpm` if you don't already have it.
-- Node: version 20 (matches CI).
+- Node: version 24 (matches CI and Vercel; the Expo app needs 22.13 or newer). `nvm use` picks it up from `.nvmrc`.
 - Run the dev server: `pnpm dev` (from the repo root; the web app is in `apps/web`).
 
 ## Before you commit

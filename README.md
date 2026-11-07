@@ -65,6 +65,7 @@ This is a pnpm workspace. The Next.js app lives in `apps/web`; `packages/` is fo
 │       ├── lib/                # Utility functions, database logic, resume schema
 │       ├── store/              # Zustand global state stores
 │       └── public/             # Static assets, fonts, and Open Graph images
+├── apps/mobile/            # The Expo (React Native) Android app
 ├── packages/
 │   └── shared/             # Code shared with other apps: resume schema, validators, editor store and hooks
 └── pnpm-workspace.yaml
