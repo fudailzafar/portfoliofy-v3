@@ -12,6 +12,30 @@ import {
 import { cn, ensureHttps } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
 
+// The same extensions drive the website's editor and the one inside the mobile
+// app (see app/embed/rich-text), so both read and write identical HTML.
+export function createRichTextExtensions() {
+  return [
+    StarterKit.configure({
+      heading: false,
+      bold: false,
+      italic: false,
+      strike: false,
+      code: false,
+      codeBlock: false,
+      blockquote: false,
+      // Disabled because we register @tiptap/extension-link separately below
+      link: false,
+    }),
+    Link.configure({
+      openOnClick: false,
+      HTMLAttributes: {
+        class: 'text-blue-500 underline underline-offset-4',
+      },
+    }),
+  ];
+}
+
 export function RichTextEditor({
   content,
   onChange,
@@ -22,25 +46,7 @@ export function RichTextEditor({
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        heading: false,
-        bold: false,
-        italic: false,
-        strike: false,
-        code: false,
-        codeBlock: false,
-        blockquote: false,
-        // Disabled because we register @tiptap/extension-link separately below
-        link: false,
-      }),
-      Link.configure({
-        openOnClick: false,
-        HTMLAttributes: {
-          class: 'text-blue-500 underline underline-offset-4',
-        },
-      }),
-    ],
+    extensions: createRichTextExtensions(),
     content,
     editorProps: {
       attributes: {

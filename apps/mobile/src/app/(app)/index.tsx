@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { Linking, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/Button';
@@ -9,6 +10,7 @@ import { useTheme } from '@/lib/theme';
 
 export default function Home() {
   const theme = useTheme();
+  const router = useRouter();
   const { signOut } = useAuth();
   const username = useQuery({
     queryKey: ['username'],
@@ -42,6 +44,7 @@ export default function Home() {
         )}
       </View>
       <View style={styles.actions}>
+        <Button title="Edit profile" onPress={() => router.push('/edit')} />
         {profileUrl && (
           <>
             <Button

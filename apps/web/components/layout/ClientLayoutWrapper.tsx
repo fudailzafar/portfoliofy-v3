@@ -69,6 +69,9 @@ export function ClientLayoutWrapper({
     );
   }, [isOpen, sidebarWidth]);
 
+  // Pages the mobile app loads inside a WebView are just their own content.
+  if (pathname?.startsWith('/embed/')) return <>{children}</>;
+
   return (
     <TooltipProvider delayDuration={0}>
       <div className="relative flex min-h-screen w-full overflow-x-hidden bg-surface-1 font-sans">

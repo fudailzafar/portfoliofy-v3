@@ -1,6 +1,9 @@
 import { ResumeDataSchemaType } from '@portfoliofy/shared/resume';
 import { ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
-import { extractUsername, buildContactUrl } from '@/utils/extractUsername';
+import {
+  extractUsername,
+  buildContactUrl,
+} from '@portfoliofy/shared/extractUsername';
 
 export function Contact({
   contacts,

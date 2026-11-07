@@ -15,6 +15,7 @@ export function Button({
   variant?: 'default' | 'danger';
 }) {
   const theme = useTheme();
+  // A busy button keeps its label, so it never changes size or meaning.
   const inactive = disabled || loading;
   return (
     <Pressable
@@ -31,18 +32,15 @@ export function Button({
         },
       ]}
     >
-      {loading ? (
-        <ActivityIndicator color={theme.text} />
-      ) : (
-        <Text
-          style={[
-            styles.label,
-            { color: variant === 'danger' ? theme.danger : theme.text },
-          ]}
-        >
-          {title}
-        </Text>
-      )}
+      {loading && <ActivityIndicator color={theme.text} size="small" />}
+      <Text
+        style={[
+          styles.label,
+          { color: variant === 'danger' ? theme.danger : theme.text },
+        ]}
+      >
+        {title}
+      </Text>
     </Pressable>
   );
 }
@@ -53,6 +51,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 6,
     paddingHorizontal: 24,
+    flexDirection: 'row',
+    gap: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },

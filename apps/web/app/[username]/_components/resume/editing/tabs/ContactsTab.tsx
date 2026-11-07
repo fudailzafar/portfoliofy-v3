@@ -20,7 +20,7 @@ import {
   buildContactUrl,
   CONTACT_PLATFORMS,
   extractUsername,
-} from '@/utils/extractUsername';
+} from '@portfoliofy/shared/extractUsername';
 import { EditDeleteButtons } from '../EditDeleteButtons';
 import { SortButtons } from '../SortButtons';
 

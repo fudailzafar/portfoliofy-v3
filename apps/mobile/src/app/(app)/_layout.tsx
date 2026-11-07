@@ -36,6 +36,7 @@ export default function AppLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Protected guard={hasProfile}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="edit" />
       </Stack.Protected>
       <Stack.Protected guard={!hasProfile}>
         <Stack.Screen name="claim" />
