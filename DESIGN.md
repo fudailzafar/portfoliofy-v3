@@ -2,6 +2,8 @@
 
 How Portfoliofy looks and moves. Every value here is taken from the code; when you change one, change it here too. The general UI rules (accessibility, forms, motion etiquette) live in [agents.md](./agents.md); this file is the product's own system.
 
+> Paths in this file (`app/...`, `components/...`, `store/...`) are relative to `apps/web`.
+
 ## Principles
 
 - **Calm and typographic.** A profile reads like a well-set CV: one column, one type size, hierarchy from colour and spacing rather than size or weight.

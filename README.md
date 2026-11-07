@@ -47,23 +47,29 @@ This project uses a modern, scalable full-stack architecture:
 
 ## Project Structure
 
+This is a pnpm workspace. The Next.js app lives in `apps/web`; `packages/` is for code shared with other apps (such as a future mobile app).
+
 ```text
 .
-├── app/
-│   ├── (marketing)/    # Landing page and marketing routes
-│   ├── [username]/     # Dynamic user profile and editor routes
-│   ├── actions/        # Server actions
-│   ├── api/            # Next.js API Routes (Auth, S3, Resume sync, Explore, Domains)
-│   ├── auth/           # Post-login handling
-│   └── layout.tsx      # Root application layout
-├── components/         # Reusable UI components (Shadcn, layouts, etc.)
-├── hooks/              # Custom React hooks (e.g., useTabEditor)
-├── lib/                # Utility functions, database logic, resume schema
-├── store/              # Zustand global state stores
-└── public/             # Static assets, fonts, and Open Graph images
+├── apps/
+│   └── web/                # The Next.js app (all paths below are inside it)
+│       ├── app/
+│       │   ├── (marketing)/    # Landing page and marketing routes
+│       │   ├── [username]/     # Dynamic user profile and editor routes
+│       │   ├── actions/        # Server actions
+│       │   ├── api/            # Next.js API Routes (Auth, S3, Resume sync, Explore, Domains)
+│       │   ├── auth/           # Post-login handling
+│       │   └── layout.tsx      # Root application layout
+│       ├── components/         # Reusable UI components (Shadcn, layouts, etc.)
+│       ├── hooks/              # Custom React hooks (e.g., useTabEditor)
+│       ├── lib/                # Utility functions, database logic, resume schema
+│       ├── store/              # Zustand global state stores
+│       └── public/             # Static assets, fonts, and Open Graph images
+├── packages/               # Shared workspace packages
+└── pnpm-workspace.yaml
 ```
 
-> Note: the "Explore" discovery network isn't a separate route — it's an in-app sidebar panel (`components/layout/ExploreSidebar.tsx`) backed by `app/api/explore/`.
+> Note: the "Explore" discovery network isn't a separate route — it's an in-app sidebar panel (`apps/web/components/layout/ExploreSidebar.tsx`) backed by `apps/web/app/api/explore/`.
 
 > **Note for Developers**: For a deep dive into the architecture, component patterns, and a step-by-step guide on adding new features, please read our [Architecture & Developer Guide](./ARCHITECTURE.md).
 
@@ -95,7 +101,7 @@ pnpm install
 
 ### 3. Setup Environment Variables
 
-Rename `.example.env` to `.env.local` in the root of the project and populate it with your keys:
+Copy `apps/web/.example.env` to `apps/web/.env.local` and populate it with your keys:
 
 ```env
 # AWS S3 (File Storage)
@@ -128,7 +134,7 @@ VERCEL_PROJECT_ID="your_vercel_project_id"
 NEXT_PUBLIC_GA_ID="G-XXXXXXXXXX"
 ```
 
-See `.example.env` for the full, authoritative list of environment variables.
+See `apps/web/.example.env` for the full, authoritative list of environment variables.
 
 ### 4. Initialize the Database
 

@@ -88,7 +88,10 @@ describe('POST /api/domain', () => {
     getCustomDomainByUserIdMock.mockResolvedValueOnce(null);
     fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({}) });
     // ...but another request won the race and claimed it a moment later.
-    setCustomDomainMock.mockResolvedValueOnce({ success: false, reason: 'taken' });
+    setCustomDomainMock.mockResolvedValueOnce({
+      success: false,
+      reason: 'taken',
+    });
 
     const res = await POST(makeRequest({ domain: 'race-condition.com' }));
     const json = await res.json();
@@ -102,7 +105,10 @@ describe('POST /api/domain', () => {
     getUserIdByCustomDomainMock.mockResolvedValueOnce(null);
     getCustomDomainByUserIdMock.mockResolvedValueOnce(null);
     fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({}) });
-    setCustomDomainMock.mockResolvedValueOnce({ success: false, reason: 'error' });
+    setCustomDomainMock.mockResolvedValueOnce({
+      success: false,
+      reason: 'error',
+    });
 
     const res = await POST(makeRequest({ domain: 'example.com' }));
     const json = await res.json();

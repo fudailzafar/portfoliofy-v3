@@ -2,6 +2,8 @@
 
 Welcome to the Portfoliofy codebase! This document is designed to help new developers understand the core architecture, data flow, and standard patterns used throughout the project.
 
+> The Next.js app lives in `apps/web`. Every path in this guide (`app/...`, `lib/...`, `store/...`, `hooks/...`, `components/...`) is relative to that folder.
+
 ---
 
 ## 1. High-Level Architecture

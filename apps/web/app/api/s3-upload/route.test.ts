@@ -8,8 +8,9 @@ const { authMock, configureMock, configuredHandlerMock } = vi.hoisted(() => {
   return {
     authMock: vi.fn(),
     configureMock: vi.fn(
-      (_opts: { key: (req: unknown, filename: string) => string | Promise<string> }) =>
-        configuredHandlerMock,
+      (_opts: {
+        key: (req: unknown, filename: string) => string | Promise<string>;
+      }) => configuredHandlerMock,
     ),
     configuredHandlerMock,
   };
@@ -40,7 +41,9 @@ describe('POST /api/s3-upload', () => {
   it('rejects unauthenticated requests without ever touching the upload handler', async () => {
     authMock.mockResolvedValueOnce(null);
 
-    const res = await POST(makeRequest({ filename: 'a.png', filetype: 'image/png' }));
+    const res = await POST(
+      makeRequest({ filename: 'a.png', filetype: 'image/png' }),
+    );
 
     expect(res.status).toBe(401);
     expect(configureMock).not.toHaveBeenCalled();

@@ -17,20 +17,16 @@ export function PrintListItem({
 }: PrintListItemProps) {
   return (
     <div className="flex items-baseline gap-4">
-      <div className="w-24 shrink-0 text-sm text-black">
-        {leftContent}
-      </div>
+      <div className="w-24 shrink-0 text-sm text-black">{leftContent}</div>
       <div>
         <p className="text-sm">
           {title}
           {subtitle && <span> {subtitle}</span>}
         </p>
-        {location && (
-          <p className="mt-0.5 text-sm text-black">{location}</p>
-        )}
+        {location && <p className="mt-0.5 text-sm text-black">{location}</p>}
         {description && description !== '<p></p>' && (
           <div
-            className="prose prose-sm prose-ul:pl-0 prose-ol:pl-0 prose-li:pl-0 mt-2 max-w-none text-sm text-black prose-p:my-1"
+            className="prose prose-sm mt-2 max-w-none text-sm text-black prose-p:my-1 prose-ol:pl-0 prose-ul:pl-0 prose-li:pl-0"
             dangerouslySetInnerHTML={{ __html: description }}
           />
         )}
