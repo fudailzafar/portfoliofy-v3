@@ -1,12 +1,17 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import EmojiPicker, { EmojiStyle, Theme } from 'emoji-picker-react';
+import dynamic from 'next/dynamic';
+import type { EmojiStyle, Theme } from 'emoji-picker-react';
 import { useTheme } from 'next-themes';
 import { PaperPlaneTiltIcon, SmileyIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
 import { REPLY_MAX_LENGTH } from '@/lib/replies';
 import { cn } from '@/lib/utils';
+
+// Loaded when the picker is first opened, so a panel that sits on the page
+// all the time doesn't pull the picker in with it.
+const EmojiPicker = dynamic(() => import('emoji-picker-react'), { ssr: false });
 
 // The same four read.cv offers.
 const QUICK_EMOJI = ['🔥', '👍', '😯', '📈'] as const;
@@ -21,14 +26,19 @@ export default function ReplyPanel({
   onSend,
   onClose,
   className,
+  variant = 'floating',
 }: {
   /** Names what is being replied to, for screen readers. */
   label: string;
   isSending: boolean;
-  onSend: (body: string) => void;
-  onClose: () => void;
+  /** May return a promise; the field clears once it succeeds. */
+  onSend: (body: string) => Promise<unknown> | void;
+  onClose?: () => void;
   className?: string;
+  /** Floating opens over an item; inline sits in the page, as in the status. */
+  variant?: 'floating' | 'inline';
 }) {
+  const inline = variant === 'inline';
   const { resolvedTheme } = useTheme();
   const [value, setValue] = useState('');
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -39,32 +49,50 @@ export default function ReplyPanel({
   const canSend = trimmed.length > 0 && !isSending;
 
   useEffect(() => {
-    inputRef.current?.focus({ preventScroll: true });
-  }, []);
+    if (!inline) inputRef.current?.focus({ preventScroll: true });
+  }, [inline]);
 
-  // Close on a click elsewhere or Escape (the picker closes first).
+  const submit = (body: string) => {
+    const result = onSend(body);
+    if (result && typeof (result as Promise<unknown>).then === 'function') {
+      (result as Promise<unknown>).then(
+        () => {
+          setValue('');
+          setPickerOpen(false);
+        },
+        () => {
+          // The caller shows the error; keep what was typed.
+        },
+      );
+    }
+  };
+
+  // Close on a click elsewhere or Escape (the picker closes first). An inline
+  // panel never closes, so it only reacts to Escape for its picker.
   useEffect(() => {
     const onPointer = (event: MouseEvent | TouchEvent) => {
       const target = event.target as Node;
       if (rootRef.current?.contains(target)) return;
       // The arrow toggles the panel itself.
       if ((target as Element).closest?.('[data-reply-arrow]')) return;
-      onClose();
+      onClose?.();
     };
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
       if (pickerOpen) setPickerOpen(false);
-      else onClose();
+      else if (!inline) onClose?.();
     };
-    document.addEventListener('mousedown', onPointer);
-    document.addEventListener('touchstart', onPointer);
+    if (!inline) {
+      document.addEventListener('mousedown', onPointer);
+      document.addEventListener('touchstart', onPointer);
+    }
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('mousedown', onPointer);
       document.removeEventListener('touchstart', onPointer);
       document.removeEventListener('keydown', onKey);
     };
-  }, [onClose, pickerOpen]);
+  }, [onClose, pickerOpen, inline]);
 
   const insertEmoji = (emoji: string) => {
     const el = inputRef.current;
@@ -83,7 +111,9 @@ export default function ReplyPanel({
       role="group"
       aria-label={label}
       className={cn(
-        'relative z-30 flex items-center gap-1 rounded-2xl bg-theme-bg p-2 shadow-[0_0_0_1px_#0000000d,0_8px_30px_#0000001f] dark:bg-theme-border dark:shadow-[0_8px_30px_#00000066]',
+        'relative flex items-center gap-1',
+        !inline &&
+          'z-30 rounded-2xl bg-theme-bg p-2 shadow-[0_0_0_1px_#0000000d,0_8px_30px_#0000001f] dark:bg-theme-border dark:shadow-[0_8px_30px_#00000066]',
         className,
       )}
     >
@@ -92,8 +122,8 @@ export default function ReplyPanel({
           <EmojiPicker
             onEmojiClick={(emoji) => insertEmoji(emoji.emoji)}
             // The app's own light/dark choice, not the operating system's.
-            theme={resolvedTheme === 'dark' ? Theme.DARK : Theme.LIGHT}
-            emojiStyle={EmojiStyle.NATIVE}
+            theme={(resolvedTheme === 'dark' ? 'dark' : 'light') as Theme}
+            emojiStyle={'native' as EmojiStyle}
             width={300}
             height={340}
             lazyLoadEmojis
@@ -103,7 +133,15 @@ export default function ReplyPanel({
         </div>
       )}
 
-      <div className="flex min-w-0 flex-1 items-center rounded-xl bg-black/[0.04] pr-1 dark:bg-white/[0.06]">
+      <div
+        className={cn(
+          'flex min-w-0 flex-1 items-center rounded-xl pr-1',
+          // In the status the field is darker than the bubble it sits in.
+          inline
+            ? 'bg-black/[0.04] dark:bg-theme-bg'
+            : 'bg-black/[0.04] dark:bg-white/[0.06]',
+        )}
+      >
         <input
           ref={inputRef}
           value={value}
@@ -116,7 +154,7 @@ export default function ReplyPanel({
               canSend
             ) {
               event.preventDefault();
-              onSend(trimmed);
+              submit(trimmed);
             }
           }}
           placeholder="Reply directly…"
@@ -139,7 +177,7 @@ export default function ReplyPanel({
       {trimmed ? (
         <button
           type="button"
-          onClick={() => canSend && onSend(trimmed)}
+          onClick={() => canSend && submit(trimmed)}
           disabled={!canSend}
           aria-label="Send reply"
           className="flex size-10 shrink-0 items-center justify-center rounded-full text-theme-primary transition-opacity disabled:opacity-50"
@@ -155,7 +193,7 @@ export default function ReplyPanel({
           <button
             key={emoji}
             type="button"
-            onClick={() => onSend(emoji)}
+            onClick={() => submit(emoji)}
             disabled={isSending}
             aria-label={`Send ${emoji}`}
             className="flex size-9 shrink-0 items-center justify-center rounded-full text-xl leading-none transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 sm:size-10 sm:text-[22px]"
