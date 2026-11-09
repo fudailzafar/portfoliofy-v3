@@ -1,7 +1,7 @@
 // Client side of /api/replies: request helpers and the shapes they return.
 
 import type { InboxItem, Thread, ThreadMessage } from '@/lib/server/replies';
-import type { ReportReason } from '@/lib/replies';
+import type { ReplyTarget, ReportReason } from '@/lib/replies';
 
 // As sent over JSON, where dates arrive as strings.
 export type InboxEntry = Omit<InboxItem, 'lastMessage' | 'lastMessageAt'> & {
@@ -69,6 +69,13 @@ export const repliesApi = {
   unread: () =>
     request<{ unread: number }>('/api/replies/unread').then(
       (data) => data.unread,
+    ),
+
+  /** First contact, or a reply to someone's profile, item or status. */
+  start: (args: { username: string; body: string; target?: ReplyTarget }) =>
+    request<{ conversationId: string; messageId: number }>(
+      '/api/replies',
+      json('POST', args),
     ),
 
   send: (id: string, body: string) =>

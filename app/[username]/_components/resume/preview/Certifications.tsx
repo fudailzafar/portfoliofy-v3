@@ -18,6 +18,11 @@ export function Certifications({
       {validItems.map((item, idx) => (
         <PreviewListItem
           key={item.id || idx}
+          replyTarget={
+            item.id
+              ? { kind: 'item', section: 'certifications', itemId: item.id }
+              : undefined
+          }
           leftContent={item.year}
           title={item.title}
           subtitle={item.issuer ? `from ${item.issuer}` : undefined}

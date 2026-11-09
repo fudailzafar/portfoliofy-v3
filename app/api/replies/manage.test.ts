@@ -24,6 +24,7 @@ vi.mock('@/lib/server/replies', () => ({
   hideConversation: mocks.hideConversation,
   countUnreadConversations: mocks.countUnreadConversations,
 }));
+vi.mock('next/cache', () => ({ revalidateTag: vi.fn() }));
 vi.mock('@/lib/server/rateLimit', () => ({
   checkRateLimit: mocks.checkRateLimit,
 }));

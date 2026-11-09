@@ -30,6 +30,7 @@ import { EmptyProfileState } from './preview/EmptyProfileState';
 import { PublicEmptyProfileState } from './preview/PublicEmptyProfileState';
 import { PublicWritingList } from './preview/PublicWritingList';
 import { normalizeSectionOrder } from '@/lib/resume';
+import { ReplyProvider } from './preview/replies/ReplyProvider';
 import { ResumePagesProvider } from '@/lib/ResumePagesContext';
 
 // Snappy spring for the sliding tab underline.
@@ -59,6 +60,7 @@ export const FullResume = ({
   username,
   hideSocialFeatures = false,
   isPersonalDomainView = false,
+  repliesEnabled = true,
 }: {
   resume: ResumeData;
   profilePicture?: string;
@@ -67,6 +69,8 @@ export const FullResume = ({
   username: string;
   hideSocialFeatures?: boolean;
   isPersonalDomainView?: boolean;
+  /** The owner's setting; replies are also off for the owner and on personal domains. */
+  repliesEnabled?: boolean;
 }) => {
   const [activeTab, setActiveTab] = useState<'about' | 'writing'>('about');
   const order = normalizeSectionOrder(resume.sectionOrder);
@@ -175,117 +179,134 @@ export const FullResume = ({
   }, [isWritingEnabled, activeTab]);
 
   return (
-    <ResumePagesProvider pages={resume.pages || []}>
-      {/* Page insets: 24px sides on phones, 48px up to 636px, and
+    <ReplyProvider
+      value={{
+        // Replies need a Portfoliofy sign-in, which a personal domain can't
+        // share, and they're a social feature the owner can hide there.
+        enabled:
+          !isOwner &&
+          !isPersonalDomainView &&
+          !hideSocialFeatures &&
+          repliesEnabled,
+        username,
+        name: resume.header.name || username,
+      }}
+    >
+      <ResumePagesProvider pages={resume.pages || []}>
+        {/* Page insets: 24px sides on phones, 48px up to 636px, and
           top spacing that grows with the viewport until it caps at 72px. */}
-      <section
-        className="mx-auto mb-24 mt-6 w-full max-w-[540px] space-y-8 bg-theme-bg px-6 min-[481px]:mt-12 min-[481px]:px-12 min-[637px]:mt-[calc(50vw-270px)] min-[637px]:px-0 min-[685px]:mb-[72px] min-[685px]:mt-[72px] print:my-8 print:space-y-4"
-        aria-label="Resume Content"
-      >
-        <Header
-          header={resume.header}
-          picture={profilePicture}
-          isOwner={isOwner}
-          userProfile={userProfile}
-          hideSocialFeatures={hideSocialFeatures}
-        />
-
-        {isWritingEnabled ? (
-          <div
-            ref={tabBarRef}
-            className="flex w-full items-center gap-6 pt-1 print:hidden"
-          >
-            <button
-              onClick={() => handleTabChange('about')}
-              className={`relative h-8 text-sm leading-8 ${
-                activeTab === 'about'
-                  ? 'text-theme-primary'
-                  : 'text-theme-muted'
-              }`}
-            >
-              About
-              {activeTab === 'about' && (
-                <motion.div
-                  layoutId="publicProfileTabIndicator"
-                  transition={TAB_SPRING}
-                  className="absolute -bottom-px left-0 right-0 h-px bg-theme-primary"
-                />
-              )}
-            </button>
-            <button
-              onClick={() => handleTabChange('writing')}
-              className={`relative h-8 text-sm leading-8 ${
-                activeTab === 'writing'
-                  ? 'text-theme-primary'
-                  : 'text-theme-muted'
-              }`}
-            >
-              Writing
-              {activeTab === 'writing' && (
-                <motion.div
-                  layoutId="publicProfileTabIndicator"
-                  transition={TAB_SPRING}
-                  className="absolute -bottom-px left-0 right-0 h-px bg-theme-primary"
-                />
-              )}
-            </button>
-          </div>
-        ) : hasSummary ? (
-          <div className="flex w-full items-center gap-6 pt-1 print:hidden">
-            <span className="h-8 text-sm leading-8 text-theme-primary">
-              About
-            </span>
-          </div>
-        ) : null}
-
-        <AnimatePresence
-          mode="wait"
-          onExitComplete={() => {
-            correctScrollAnchor();
-            pendingScrollAnchorRef.current = null;
-          }}
+        <section
+          className="mx-auto mb-24 mt-6 w-full max-w-[540px] space-y-8 bg-theme-bg px-6 min-[481px]:mt-12 min-[481px]:px-12 min-[637px]:mt-[calc(50vw-270px)] min-[637px]:px-0 min-[685px]:mb-[72px] min-[685px]:mt-[72px] print:my-8 print:space-y-4"
+          aria-label="Resume Content"
         >
-          {activeTab === 'about' ? (
-            <motion.div
-              key="about"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-col gap-6"
-            >
-              <Summary summary={resume.summary} />
+          <Header
+            header={resume.header}
+            picture={profilePicture}
+            isOwner={isOwner}
+            userProfile={userProfile}
+            hideSocialFeatures={hideSocialFeatures}
+          />
 
-              {isOwner && isEmptyProfile && <EmptyProfileState />}
-              {!isOwner && isEmptyProfile && (
-                <PublicEmptyProfileState name={resume.header.name} />
-              )}
-
-              {order.map((sectionId) => {
-                const Component = SECTION_COMPONENTS[sectionId];
-                if (!Component) return null;
-                return (
-                  <Component key={sectionId} {...getSectionProps(sectionId)} />
-                );
-              })}
-            </motion.div>
-          ) : (
-            <motion.div
-              key="writing"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
+          {isWritingEnabled ? (
+            <div
+              ref={tabBarRef}
+              className="flex w-full items-center gap-6 pt-1 print:hidden"
             >
-              <PublicWritingList
-                resume={resume}
-                username={username}
-                isPersonalDomainView={isPersonalDomainView}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
-    </ResumePagesProvider>
+              <button
+                onClick={() => handleTabChange('about')}
+                className={`relative h-8 text-sm leading-8 ${
+                  activeTab === 'about'
+                    ? 'text-theme-primary'
+                    : 'text-theme-muted'
+                }`}
+              >
+                About
+                {activeTab === 'about' && (
+                  <motion.div
+                    layoutId="publicProfileTabIndicator"
+                    transition={TAB_SPRING}
+                    className="absolute -bottom-px left-0 right-0 h-px bg-theme-primary"
+                  />
+                )}
+              </button>
+              <button
+                onClick={() => handleTabChange('writing')}
+                className={`relative h-8 text-sm leading-8 ${
+                  activeTab === 'writing'
+                    ? 'text-theme-primary'
+                    : 'text-theme-muted'
+                }`}
+              >
+                Writing
+                {activeTab === 'writing' && (
+                  <motion.div
+                    layoutId="publicProfileTabIndicator"
+                    transition={TAB_SPRING}
+                    className="absolute -bottom-px left-0 right-0 h-px bg-theme-primary"
+                  />
+                )}
+              </button>
+            </div>
+          ) : hasSummary ? (
+            <div className="flex w-full items-center gap-6 pt-1 print:hidden">
+              <span className="h-8 text-sm leading-8 text-theme-primary">
+                About
+              </span>
+            </div>
+          ) : null}
+
+          <AnimatePresence
+            mode="wait"
+            onExitComplete={() => {
+              correctScrollAnchor();
+              pendingScrollAnchorRef.current = null;
+            }}
+          >
+            {activeTab === 'about' ? (
+              <motion.div
+                key="about"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col gap-6"
+              >
+                <Summary summary={resume.summary} />
+
+                {isOwner && isEmptyProfile && <EmptyProfileState />}
+                {!isOwner && isEmptyProfile && (
+                  <PublicEmptyProfileState name={resume.header.name} />
+                )}
+
+                {order.map((sectionId) => {
+                  const Component = SECTION_COMPONENTS[sectionId];
+                  if (!Component) return null;
+                  return (
+                    <Component
+                      key={sectionId}
+                      {...getSectionProps(sectionId)}
+                    />
+                  );
+                })}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="writing"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                <PublicWritingList
+                  resume={resume}
+                  username={username}
+                  isPersonalDomainView={isPersonalDomainView}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </section>
+      </ResumePagesProvider>
+    </ReplyProvider>
   );
 };

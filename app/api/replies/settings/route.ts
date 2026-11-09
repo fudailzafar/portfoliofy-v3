@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { getRepliesEnabled, setRepliesEnabled } from '@/lib/server/replies';
 import {
@@ -42,6 +43,8 @@ export async function PUT(request: Request) {
     if (!parsed.success) return jsonError('That request was not valid.', 400);
 
     await setRepliesEnabled(user.userId, parsed.data.repliesEnabled);
+    // The public profile reads this from a cached copy of the user.
+    revalidateTag(`user-${user.userId}`, 'max' as any);
     return NextResponse.json({ repliesEnabled: parsed.data.repliesEnabled });
   } catch (error) {
     console.error('Failed to update replies setting:', error);
