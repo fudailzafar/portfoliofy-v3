@@ -23,6 +23,7 @@ import {
   ExhibitionsTab,
 } from './tabs';
 import { ImportDataTab } from './ImportDataTab';
+import { RepliesTab } from './replies/RepliesTab';
 import { CaretLeftIcon } from '@phosphor-icons/react/ssr';
 
 interface ProfileContentProps {
@@ -90,8 +91,21 @@ export function ProfileContent({
         !showMobileMenu ? 'flex' : 'hidden sm:flex',
       )}
     >
-      <div className="scrollbar-hide w-full min-w-0 flex-1 overflow-y-auto p-4 sm:p-8 md:p-12">
-        <div className="mb-6 flex items-center sm:hidden">
+      <div
+        className={cn(
+          'scrollbar-hide w-full min-w-0 flex-1',
+          // The conversation scrolls inside itself, with its composer pinned.
+          activeTab === 'replies'
+            ? 'flex flex-col overflow-hidden'
+            : 'overflow-y-auto p-4 sm:p-8 md:p-12',
+        )}
+      >
+        <div
+          className={cn(
+            'flex items-center sm:hidden',
+            activeTab === 'replies' ? 'shrink-0 px-4 pt-4' : 'mb-6',
+          )}
+        >
           <button
             onClick={() => setShowMobileMenu(true)}
             className="flex items-center text-sm font-medium text-content-primary hover:text-content-secondary"
@@ -212,6 +226,11 @@ export function ProfileContent({
           />
         )}
         {activeTab === 'import_data' && <ImportDataTab />}
+        {activeTab === 'replies' && (
+          <div className="min-h-0 flex-1">
+            <RepliesTab />
+          </div>
+        )}
       </div>
 
       {/* One global Cancel/Save for every tab; the print tab only shows Print. */}
