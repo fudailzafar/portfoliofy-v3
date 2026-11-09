@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Spinner } from '@/components/ui/spinner';
-import { useRepliesStore } from '@/store/useRepliesStore';
 import { Composer } from './Composer';
 import { MessageThread } from './MessageThread';
 import { PersonAvatar } from './PersonAvatar';
@@ -20,11 +19,15 @@ import {
 const NEAR_BOTTOM_PX = 160;
 
 /** The open conversation, beside the inbox. */
-export function RepliesTab() {
-  const selectedId = useRepliesStore((state) => state.selectedId);
-  const select = useRepliesStore((state) => state.select);
-
-  if (!selectedId) {
+export function RepliesTab({
+  conversationId,
+  onClose,
+}: {
+  conversationId: string | null;
+  /** Called when the conversation is removed or can't be opened. */
+  onClose: () => void;
+}) {
+  if (!conversationId) {
     return (
       <div className="flex h-full items-center justify-center px-6 text-center text-sm text-content-muted">
         Pick a conversation to read and answer replies.
@@ -35,9 +38,9 @@ export function RepliesTab() {
   // Keyed so switching conversations resets scroll, drafts and older pages.
   return (
     <Conversation
-      key={selectedId}
-      conversationId={selectedId}
-      onClose={() => select(null)}
+      key={conversationId}
+      conversationId={conversationId}
+      onClose={onClose}
     />
   );
 }

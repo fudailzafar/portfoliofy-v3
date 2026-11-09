@@ -1,8 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/ui/spinner';
-import { useRepliesStore } from '@/store/useRepliesStore';
 import { useInbox } from './useReplies';
 import { PersonAvatar } from './PersonAvatar';
 import { displayName, fullTime, shortTime } from './format';
@@ -21,14 +21,15 @@ function Preview({ entry }: { entry: InboxEntry }) {
 
 /** The inbox, shown in the sidebar panel while the Replies group is open. */
 export function ConversationList({
-  onOpen,
+  selectedId,
+  hrefFor,
 }: {
-  /** Called after a conversation is picked, e.g. to show it on mobile. */
-  onOpen: () => void;
+  /** The conversation open beside the list, if any. */
+  selectedId: string | null;
+  /** Each conversation is a link, so it has its own URL. */
+  hrefFor: (conversationId: string) => string;
 }) {
   const { data, isLoading, isError, refetch } = useInbox();
-  const selectedId = useRepliesStore((state) => state.selectedId);
-  const select = useRepliesStore((state) => state.select);
 
   if (isLoading) {
     return (
@@ -67,11 +68,8 @@ export function ConversationList({
         const unread = entry.unread > 0;
         return (
           <li key={entry.conversationId}>
-            <button
-              onClick={() => {
-                select(entry.conversationId);
-                onOpen();
-              }}
+            <Link
+              href={hrefFor(entry.conversationId)}
               aria-current={isActive ? 'true' : undefined}
               className={cn(
                 'flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors',
@@ -120,7 +118,7 @@ export function ConversationList({
                   )}
                 </span>
               </span>
-            </button>
+            </Link>
           </li>
         );
       })}

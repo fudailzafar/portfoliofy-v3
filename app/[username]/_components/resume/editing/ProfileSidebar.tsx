@@ -21,14 +21,7 @@ import { SidebarButton } from './SidebarButton';
 import React, { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { useResumeStore } from '@/store/useResumeStore';
-import {
-  UserIcon,
-  PencilSimpleIcon,
-  NutIcon,
-  PaperPlaneTiltIcon,
-} from '@phosphor-icons/react/ssr';
-import { ConversationList } from './replies/ConversationList';
-import { useUnreadCount } from './replies/useReplies';
+import { UserIcon, PencilSimpleIcon, NutIcon } from '@phosphor-icons/react/ssr';
 import {
   Tooltip,
   TooltipContent,
@@ -48,8 +41,6 @@ interface ProfileSidebarProps {
 }
 
 const WRITING_TABS = ['writing_all', 'writing_published', 'writing_drafts'];
-
-type Group = 'profile' | 'writing' | 'replies' | 'account';
 
 export function ProfileSidebar({
   activeTab,
@@ -73,14 +64,12 @@ export function ProfileSidebar({
     'settings',
   ];
 
-  const groupOf = (tab: string): Group =>
-    tab === 'replies'
-      ? 'replies'
-      : accountTabs.includes(tab)
-        ? 'account'
-        : WRITING_TABS.includes(tab)
-          ? 'writing'
-          : 'profile';
+  const groupOf = (tab: string): 'profile' | 'writing' | 'account' =>
+    accountTabs.includes(tab)
+      ? 'account'
+      : WRITING_TABS.includes(tab)
+        ? 'writing'
+        : 'profile';
 
   const [activeGroup, setActiveGroup] = useState(groupOf(activeTab));
 
@@ -89,14 +78,12 @@ export function ProfileSidebar({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
-  const handleGroupChange = (group: Group) => {
+  const handleGroupChange = (group: 'profile' | 'writing' | 'account') => {
     setActiveGroup(group);
     if (group === 'profile' && groupOf(activeTab) !== 'profile') {
       setActiveTab('general');
     } else if (group === 'writing' && groupOf(activeTab) !== 'writing') {
       setActiveTab('writing_all');
-    } else if (group === 'replies' && groupOf(activeTab) !== 'replies') {
-      setActiveTab('replies');
     } else if (group === 'account' && groupOf(activeTab) !== 'account') {
       setActiveTab('personal_domain');
     }
@@ -105,12 +92,10 @@ export function ProfileSidebar({
   const resume = useResumeStore((state) => state.resume);
   const updateResume = useResumeStore((state) => state.updateResume);
   const isWritingEnabled = resume?.preferences?.writingEnabled !== false;
-  const { data: unreadReplies = 0 } = useUnreadCount();
 
   const groups = [
     { id: 'profile', label: 'Profile', icon: UserIcon },
     { id: 'writing', label: 'Writing', icon: PencilSimpleIcon },
-    { id: 'replies', label: 'Replies', icon: PaperPlaneTiltIcon },
     { id: 'account', label: 'Account', icon: NutIcon },
   ] as const;
 
@@ -135,7 +120,7 @@ export function ProfileSidebar({
                     aria-label={group.label}
                     aria-pressed={isActive}
                     className={cn(
-                      'relative flex size-10 items-center justify-center rounded-full transition-colors',
+                      'flex size-10 items-center justify-center rounded-full transition-colors',
                       isActive ? 'text-content-primary' : 'text-content-muted',
                     )}
                   >
@@ -143,20 +128,6 @@ export function ProfileSidebar({
                       className="size-6"
                       weight={isActive ? 'fill' : 'regular'}
                     />
-                    {group.id === 'replies' && unreadReplies > 0 && (
-                      <>
-                        <span
-                          className="absolute right-1.5 top-1.5 size-2 rounded-full bg-red-500"
-                          aria-hidden
-                        />
-                        <span className="sr-only">
-                          {unreadReplies} unread{' '}
-                          {unreadReplies === 1
-                            ? 'conversation'
-                            : 'conversations'}
-                        </span>
-                      </>
-                    )}
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="right">
@@ -220,13 +191,6 @@ export function ProfileSidebar({
                 </div>
               </DndContext>
             </>
-          ) : activeGroup === 'replies' ? (
-            <ConversationList
-              onOpen={() => {
-                setActiveTab('replies');
-                setShowMobileMenu(false);
-              }}
-            />
           ) : activeGroup === 'writing' ? (
             <>
               <div className="mb-2 ml-4 flex items-center justify-between px-6 py-4">
