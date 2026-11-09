@@ -187,7 +187,7 @@ export function Header({
 
       {/* Status Display Bubble */}
       {!isEditingStatus && !hideSocialFeatures && currentStatus.text && (
-        <div className="relative -mx-2 mt-4 flex w-[calc(100%+16px)] flex-col gap-1 rounded-3xl bg-theme-bg px-6 py-[18px] shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000001a] dark:bg-theme-border dark:shadow-none min-[481px]:mx-0 min-[481px]:w-full">
+        <div className="relative -mx-2 mt-4 flex w-[calc(100%+16px)] flex-col rounded-3xl bg-theme-bg px-6 py-[18px] shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000001a] dark:bg-theme-border dark:shadow-none min-[481px]:mx-0 min-[481px]:w-full">
           {/* Speech Bubble Tail — centered under the status toggle button */}
           <svg
             width="26"
@@ -265,7 +265,8 @@ export function Header({
           <span className="whitespace-pre-wrap text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary">
             {currentStatus.text}
           </span>
-          <span className="text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-muted">
+          {/* read.cv: 6px between the status and its time. */}
+          <span className="mt-1.5 text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-muted">
             {getRelativeTime(currentStatus.updatedAt)}
           </span>
           <StatusReply />
