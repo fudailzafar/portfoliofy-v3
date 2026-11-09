@@ -25,6 +25,21 @@ export const REPLYABLE_SECTIONS = [
 
 export type ReplySection = (typeof REPLYABLE_SECTIONS)[number];
 
+// How each section is named in "replied to your ...".
+export const REPLY_SECTION_NOUN: Record<ReplySection, string> = {
+  workExperience: 'work experience',
+  education: 'education',
+  projects: 'project',
+  sideProjects: 'side project',
+  speaking: 'talk',
+  writing: 'writing',
+  exhibitions: 'exhibition',
+  features: 'feature',
+  volunteering: 'volunteering',
+  awards: 'award',
+  certifications: 'certification',
+};
+
 export const REPORT_REASONS = [
   'spam',
   'harassment',
