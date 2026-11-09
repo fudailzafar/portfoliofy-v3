@@ -18,6 +18,11 @@ export function Writing({
       {validItems.map((item, idx) => (
         <PreviewListItem
           key={item.id || idx}
+          replyTarget={
+            item.id
+              ? { kind: 'item', section: 'writing', itemId: item.id }
+              : undefined
+          }
           leftContent={item.year}
           title={item.title}
           subtitle={item.publication ? `in ${item.publication}` : undefined}
