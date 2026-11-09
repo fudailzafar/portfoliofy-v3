@@ -2,13 +2,14 @@
 
 import { cn } from '@/lib/utils';
 import { REPLY_SECTION_NOUN, type ReplyContext } from '@/lib/replies';
+import { PersonAvatar } from './PersonAvatar';
 import { displayName, fullTime, shortTime } from './format';
 import type { ThreadData, ThreadEntry } from './api';
 
 function ContextCard({ context }: { context: ReplyContext }) {
   if (context.kind === 'status') {
     return (
-      <blockquote className="border-l-2 border-border-strong pl-3 text-sm text-content-secondary">
+      <blockquote className="border-l-2 border-border-strong pl-4 text-[15px] leading-relaxed text-content-secondary">
         <span className="mr-1.5" aria-hidden>
           {context.emoji}
         </span>
@@ -17,7 +18,7 @@ function ContextCard({ context }: { context: ReplyContext }) {
     );
   }
   return (
-    <blockquote className="space-y-0.5 border-l-2 border-border-strong pl-3 text-sm">
+    <blockquote className="space-y-0.5 border-l-2 border-border-strong pl-4 text-[15px] leading-relaxed">
       {context.year && (
         <p className="tabular-nums text-content-muted">{context.year}</p>
       )}
@@ -60,11 +61,18 @@ function startsGroup(previous: ThreadEntry | undefined, message: ThreadEntry) {
   );
 }
 
+/**
+ * Messages without bubbles. A small avatar in the left gutter marks who is
+ * speaking at the start of each block; the text lines up in one column.
+ * Times are out of the way: on hover, and for screen readers.
+ */
 export function MessageThread({
   messages,
+  you,
   other,
 }: {
   messages: ThreadEntry[];
+  you: ThreadData['you'];
   other: ThreadData['other'];
 }) {
   const otherName = displayName(other);
@@ -73,40 +81,47 @@ export function MessageThread({
     <ol className="flex flex-col" aria-label={`Conversation with ${otherName}`}>
       {messages.map((message, index) => {
         const newGroup = startsGroup(messages[index - 1], message);
+        const author = message.mine ? you : other;
         return (
           <li
             key={message.id}
-            className={cn('flex flex-col gap-2', newGroup ? 'mt-6' : 'mt-1.5')}
+            className={cn('flex gap-4', newGroup ? 'mt-8' : 'mt-2')}
           >
-            {newGroup && (
-              <div className="flex items-baseline gap-2 text-xs text-content-muted">
-                <span>
-                  {message.context
-                    ? contextLabel(message.context, message.mine, otherName)
-                    : message.mine
-                      ? 'You'
-                      : otherName}
-                </span>
-                <time
-                  dateTime={message.createdAt}
-                  title={fullTime(message.createdAt)}
-                  className="tabular-nums"
-                >
+            <div className="w-8 shrink-0">
+              {newGroup && (
+                <PersonAvatar person={author} className="size-8 text-xs" />
+              )}
+            </div>
+
+            <div className="min-w-0 flex-1 space-y-3">
+              {newGroup && message.context && (
+                <p className="flex min-h-8 items-center text-[15px] text-content-muted">
+                  {contextLabel(message.context, message.mine, otherName)}
+                </p>
+              )}
+              {message.context && <ContextCard context={message.context} />}
+              <p
+                title={fullTime(message.createdAt)}
+                className={cn(
+                  'whitespace-pre-wrap break-words text-content-primary',
+                  message.emojiOnly
+                    ? 'text-5xl leading-tight'
+                    : 'text-[17px] leading-relaxed',
+                  // Lines up the first line with the avatar beside it.
+                  newGroup &&
+                    !message.context &&
+                    !message.emojiOnly &&
+                    'pt-0.5',
+                )}
+              >
+                {message.body}
+                <time dateTime={message.createdAt} className="sr-only">
+                  {' '}
+                  {message.mine ? 'You' : otherName},{' '}
                   {shortTime(message.createdAt)}
                 </time>
-              </div>
-            )}
-            {message.context && <ContextCard context={message.context} />}
-            <p
-              className={cn(
-                'whitespace-pre-wrap break-words text-content-primary',
-                message.emojiOnly
-                  ? 'text-5xl leading-tight'
-                  : 'text-[15px] leading-relaxed',
-              )}
-            >
-              {message.body}
-            </p>
+              </p>
+            </div>
           </li>
         );
       })}

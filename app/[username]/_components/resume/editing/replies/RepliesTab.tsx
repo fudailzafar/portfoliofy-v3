@@ -133,12 +133,12 @@ function Conversation({
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="flex shrink-0 items-center gap-3 border-b border-border-subtle px-4 py-3 sm:px-8">
-        <PersonAvatar person={thread.other} className="size-10" />
+      <header className="flex shrink-0 items-center gap-4 border-b border-border-subtle px-4 py-4 sm:px-8">
+        <PersonAvatar person={thread.other} className="size-12" />
         <Link
           href={`/${thread.other.username}`}
           target="_blank"
-          className="min-w-0 flex-1 truncate text-lg text-content-primary hover:underline hover:underline-offset-4"
+          className="min-w-0 flex-1 truncate text-2xl text-content-primary hover:underline hover:underline-offset-4"
         >
           {name}
         </Link>
@@ -160,7 +160,7 @@ function Conversation({
         role="log"
         aria-live="polite"
       >
-        <div className="mx-auto max-w-xl">
+        <div className="mx-auto max-w-[37rem]">
           {hasMore && (
             <div className="flex justify-center pb-2">
               <button
@@ -172,12 +172,16 @@ function Conversation({
               </button>
             </div>
           )}
-          <MessageThread messages={messages} other={thread.other} />
+          <MessageThread
+            messages={messages}
+            you={thread.you}
+            other={thread.other}
+          />
         </div>
       </div>
 
       <footer className="shrink-0 px-4 pb-4 pt-3 sm:px-8">
-        <div className="mx-auto max-w-xl">
+        <div className="mx-auto max-w-[37rem]">
           {thread.canReply ? (
             <Composer
               onSend={(body) => {

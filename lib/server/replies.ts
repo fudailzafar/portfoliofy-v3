@@ -359,6 +359,13 @@ export interface ThreadMessage {
 }
 
 export interface Thread {
+  /** The signed-in user, for their avatar beside their own messages. */
+  you: {
+    id: string;
+    username: string;
+    name: string | null;
+    image: string | null;
+  };
   other: {
     id: string;
     username: string;
@@ -380,7 +387,14 @@ export async function getThread(
   const member = await loadMembership(userId, conversationId);
   if (!member) return null;
 
-  const { blockedByMe, blockedMe } = await blockState(userId, member.otherId);
+  const [{ blockedByMe, blockedMe }, [you]] = await Promise.all([
+    blockState(userId, member.otherId),
+    sql`
+      SELECT id, username, name, COALESCE(custom_image, image) AS image
+      FROM users
+      WHERE id = ${userId}
+    `,
+  ]);
 
   const rows = await sql`
     SELECT id, sender_id, body, is_emoji_only, context, created_at
@@ -409,6 +423,7 @@ export async function getThread(
     }));
 
   return {
+    you: you as Thread['you'],
     other: {
       id: member.otherId,
       username: member.username,

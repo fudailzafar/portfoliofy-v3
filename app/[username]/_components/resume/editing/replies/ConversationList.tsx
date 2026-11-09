@@ -74,18 +74,18 @@ export function ConversationList({
               }}
               aria-current={isActive ? 'true' : undefined}
               className={cn(
-                'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors',
+                'flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors',
                 isActive
                   ? 'bg-surface-2 dark:bg-surface-card'
                   : 'hover:bg-surface-2 dark:hover:bg-surface-card',
               )}
             >
-              <PersonAvatar person={entry.other} className="size-11" />
+              <PersonAvatar person={entry.other} className="size-12" />
               <span className="min-w-0 flex-1">
                 <span className="flex items-baseline justify-between gap-2">
                   <span
                     className={cn(
-                      'truncate text-sm text-content-primary',
+                      'truncate text-base text-content-primary',
                       unread && 'font-semibold',
                     )}
                   >
@@ -113,16 +113,10 @@ export function ConversationList({
                     <Preview entry={entry} />
                   </span>
                   {unread && (
-                    <>
-                      <span
-                        className="size-2 shrink-0 rounded-full bg-red-500"
-                        aria-hidden
-                      />
-                      <span className="sr-only">
-                        {entry.unread} unread{' '}
-                        {entry.unread === 1 ? 'message' : 'messages'}
-                      </span>
-                    </>
+                    <span className="sr-only">
+                      {entry.unread} unread{' '}
+                      {entry.unread === 1 ? 'message' : 'messages'}
+                    </span>
                   )}
                 </span>
               </span>
