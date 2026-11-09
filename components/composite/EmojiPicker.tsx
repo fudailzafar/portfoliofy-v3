@@ -221,6 +221,7 @@ export function EmojiPickerPopover({
   onSelect,
   anchorRef,
   measureRef,
+  align = 'center',
   className,
 }: {
   open: boolean;
@@ -230,6 +231,8 @@ export function EmojiPickerPopover({
   anchorRef: RefObject<HTMLElement | null>;
   /** The field it belongs to, used to decide above or below. */
   measureRef?: RefObject<HTMLElement | null>;
+  /** Centred on the button (read.cv's replies), or lined up with its left edge. */
+  align?: 'center' | 'start';
   className?: string;
 }) {
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -278,7 +281,10 @@ export function EmojiPickerPopover({
       role="dialog"
       aria-label="Emoji"
       className={cn(
-        'absolute left-1/2 z-50 -translate-x-1/2 overflow-hidden rounded-lg bg-theme-bg shadow-[0_0_0_1px_rgba(0,0,0,.1),0_4px_40px_rgba(0,0,0,.075)] dark:bg-theme-border dark:shadow-[0_0_0_1px_rgba(0,0,0,.15),0_4px_40px_rgba(0,0,0,.5)]',
+        'absolute z-50 overflow-hidden rounded-lg',
+        align === 'center' ? 'left-1/2 -translate-x-1/2' : 'left-0',
+        'bg-theme-bg shadow-[0_0_0_1px_rgba(0,0,0,.1),0_4px_40px_rgba(0,0,0,.075)] dark:bg-theme-border dark:shadow-[0_0_0_1px_rgba(0,0,0,.15),0_4px_40px_rgba(0,0,0,.5)]',
+        'bg-theme-bg shadow-[0_0_0_1px_rgba(0,0,0,.1),0_4px_40px_rgba(0,0,0,.075)] dark:bg-theme-border dark:shadow-[0_0_0_1px_rgba(0,0,0,.15),0_4px_40px_rgba(0,0,0,.5)]',
         className,
       )}
       style={{
