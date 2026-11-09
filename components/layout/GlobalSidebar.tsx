@@ -10,6 +10,7 @@ import { ExploreSidebar } from './ExploreSidebar';
 import { useUserActions } from '@/hooks/useUserActions';
 import { CheckIcon, CopyIcon } from '@phosphor-icons/react/ssr';
 import { SITE_HOST, SITE_URL } from '@/lib/site';
+import { useUnreadCount } from '@/app/[username]/_components/resume/editing/replies/useReplies';
 
 export function GlobalSidebar() {
   const pathname = usePathname();
@@ -19,6 +20,8 @@ export function GlobalSidebar() {
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [isExploreMode, setIsExploreMode] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  // Only asks the server while signed in.
+  const { data: unreadReplies = 0 } = useUnreadCount(!!session);
 
   useEffect(() => {
     const handleToggle = () => setIsExploreMode((prev) => !prev);
@@ -108,6 +111,31 @@ export function GlobalSidebar() {
                   </Link>
                 )
               )}
+
+              {/* Replies */}
+              <Link
+                href="/replies"
+                className="group flex w-fit items-center gap-3"
+              >
+                <div
+                  className={`h-1 w-1 rounded-full ${pathname.startsWith('/replies') ? 'bg-content-primary' : 'bg-transparent'}`}
+                />
+                <span className="text-[14px] text-content-secondary underline-offset-4 group-hover:underline">
+                  Replies
+                </span>
+                {unreadReplies > 0 && (
+                  <>
+                    <span
+                      className="size-1.5 rounded-full bg-red-500"
+                      aria-hidden
+                    />
+                    <span className="sr-only">
+                      {unreadReplies} unread{' '}
+                      {unreadReplies === 1 ? 'conversation' : 'conversations'}
+                    </span>
+                  </>
+                )}
+              </Link>
 
               {/* About */}
               <Link href="/" className="group flex w-fit items-center gap-3">

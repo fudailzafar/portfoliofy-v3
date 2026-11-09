@@ -50,11 +50,12 @@ export function useThread(conversationId: string | null) {
   });
 }
 
-export function useUnreadCount() {
+export function useUnreadCount(enabled = true) {
   return useQuery({
     queryKey: REPLIES_KEYS.unread,
     queryFn: repliesApi.unread,
     refetchInterval: UNREAD_POLL_MS,
+    enabled,
   });
 }
 
