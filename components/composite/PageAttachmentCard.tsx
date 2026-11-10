@@ -1,4 +1,4 @@
-import { LockIcon } from '@phosphor-icons/react/ssr';
+import { LockIcon } from '@/components/icons/icon-set';
 import {
   AttachmentSchemaType,
   estimateReadMinutes,

@@ -11,7 +11,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   XIcon,
-} from '@phosphor-icons/react/ssr';
+} from '@/components/icons/icon-set';
 import { cn } from '@/lib/utils';
 
 interface SectionAttachmentsProps {

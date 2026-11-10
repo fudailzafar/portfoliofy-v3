@@ -6,7 +6,7 @@ import {
   CheckIcon,
   CaretDownIcon,
   CaretUpIcon,
-} from '@phosphor-icons/react/ssr';
+} from '@/components/icons/icon-set';
 
 import { cn } from '@/lib/utils';
 
