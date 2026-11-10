@@ -12,7 +12,7 @@ export function Summary({ summary }: AboutProps) {
   return (
     <section className="mb-9 print:mb-8">
       <div
-        className="prose prose-sm ml-4 max-w-none text-pretty text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-1 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:pl-0 prose-li:text-theme-secondary min-[481px]:ml-0 print:!text-[12px]"
+        className="prose prose-sm ml-4 max-w-none text-pretty text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-0 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:my-4 prose-ol:pl-0 prose-ul:my-4 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:py-1 prose-li:pl-0 prose-li:text-theme-secondary min-[481px]:ml-0 print:!text-[12px] [&>:first-child]:mt-0 [&>:last-child]:mb-0 [&_p+p:not(:empty)]:mt-4"
         style={{
           fontSize: 'var(--type-size)',
           lineHeight: 'var(--line-height)',
