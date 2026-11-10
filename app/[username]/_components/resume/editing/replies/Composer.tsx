@@ -68,7 +68,7 @@ export function Composer({
     <div className="flex items-end gap-[10px]">
       <div
         ref={fieldRef}
-        className="relative min-w-0 flex-1 rounded-lg bg-[color-mix(in_srgb,var(--theme-primary)_5.5%,var(--theme-bg))] dark:bg-theme-border"
+        className="relative min-w-0 flex-1 rounded-lg bg-[var(--theme-wash)]"
       >
         <textarea
           ref={textareaRef}

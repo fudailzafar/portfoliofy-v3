@@ -138,7 +138,7 @@ export function ReplyComposer({
         >
           <div
             ref={fieldRef}
-            className="relative flex h-9 items-center rounded-lg bg-[color-mix(in_srgb,var(--theme-primary)_5.5%,var(--theme-bg))] px-3 dark:bg-theme-bg"
+            className="relative flex h-9 items-center rounded-lg bg-[var(--theme-wash)] px-3 dark:bg-theme-bg"
           >
             <input
               ref={inputRef}

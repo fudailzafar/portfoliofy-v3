@@ -13,8 +13,7 @@ import { displayName, fullTime, shortTime } from './format';
 import type { InboxEntry } from './api';
 
 // read.cv's input grey: #f2f2f2 on white, #333 on #222.
-const ROW_FILL =
-  'bg-[color-mix(in_srgb,var(--theme-primary)_5.5%,var(--theme-bg))] dark:bg-theme-border';
+const ROW_FILL = 'bg-[var(--theme-wash)]';
 
 function Preview({ entry }: { entry: InboxEntry }) {
   const last = entry.lastMessage;
