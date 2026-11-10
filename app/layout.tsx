@@ -10,6 +10,7 @@ import Script from 'next/script';
 import { ClientLayoutWrapper } from '@/components/layout/ClientLayoutWrapper';
 import { SessionProviderWrapper } from '@/components/providers/SessionProviderWrapper';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
+import { ThemeColorSync } from '@/components/providers/ThemeColorSync';
 import { SITE_URL, classifyHost } from '@/lib/site';
 
 // 600 is only for emphasis inside the landing-page search tile
@@ -79,7 +80,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#ffffff',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#222222' },
+  ],
   colorScheme: 'light dark',
 };
 
@@ -119,6 +123,7 @@ export default async function RootLayout({
           </head>
           <body className="flex min-h-screen flex-col font-sans antialiased">
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <ThemeColorSync />
               <main className="flex flex-1 flex-col">
                 {isCustomDomain ? (
                   children
