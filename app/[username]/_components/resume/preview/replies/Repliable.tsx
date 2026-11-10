@@ -2,7 +2,10 @@
 
 // read.cv's reply container for profile items, rebuilt from its stylesheet
 // and script. A 48px column to the right of the item holds the reply arrow,
-// which fades in (0.4s) on hover. The arrow opens a 420px popover (16px
+// which fades in (0.4s) on hover. On a phone the item itself is dragged: it
+// follows your finger left (elastically, half as far), the arrow slides in
+// from the right and darkens past 100px, and letting go there opens the bar.
+// The arrow opens a 420px popover (16px
 // corners) centred under it, holding the composer with 12px padding. Sending
 // sends the popover up and away, and a "Sent" pill shows for a second.
 
@@ -24,14 +27,15 @@ import { repliesApi } from '../../editing/replies/api';
 import { ReplyArrowIcon } from './icons';
 import { MessageConfirmation } from './MessageConfirmation';
 import { ReplyComposer } from './ReplyComposer';
+import { useIsTouchDevice } from './useIsTouchDevice';
 import { useReplyProfile } from './ReplyProvider';
 import { CONFIRMATION_MS, READCV_SPRING } from './spring';
 
 const POPOVER_WIDTH = 420;
 const VIEWPORT_MARGIN = 8;
 const POPOVER_GAP = 6;
-const SWIPE_DISTANCE = 60;
-const SWIPE_MAX_DRIFT = 40;
+// read.cv opens the bar when the item is let go past this far left.
+const DRAG_OPEN_DISTANCE = 100;
 
 export function Repliable({
   target,
@@ -52,7 +56,9 @@ export function Repliable({
   const wrapRef = useRef<HTMLDivElement>(null);
   const arrowRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
-  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const isTouch = useIsTouchDevice();
+  const [dragging, setDragging] = useState(false);
+  const [dragPassed, setDragPassed] = useState(false);
 
   useEffect(() => {
     if (!sent) return;
@@ -62,9 +68,15 @@ export function Repliable({
 
   // Centre the popover under the arrow, kept inside the window.
   const place = useCallback(() => {
-    const wrap = wrapRef.current?.getBoundingClientRect();
+    const wrapEl = wrapRef.current;
+    const wrap = wrapEl?.getBoundingClientRect();
     const arrow = arrowRef.current?.getBoundingClientRect();
-    if (!wrap || !arrow) return;
+    if (!wrapEl || !wrap || !arrow) return;
+    // While an item springs back after a drag it is still shifted sideways;
+    // measure where it will rest, so the bar doesn't end up offset.
+    const shift = new DOMMatrixReadOnly(getComputedStyle(wrapEl).transform).m41;
+    wrap.x -= shift;
+    arrow.x -= shift;
     const width = Math.min(
       POPOVER_WIDTH,
       window.innerWidth - VIEWPORT_MARGIN * 2,
@@ -134,27 +146,36 @@ export function Repliable({
   };
 
   return (
-    <div
+    <motion.div
       ref={wrapRef}
       className="group/reply relative"
-      onTouchStart={(event) => {
-        const touch = event.touches[0];
-        touchStart.current = { x: touch.clientX, y: touch.clientY };
-      }}
-      onTouchEnd={(event) => {
-        const start = touchStart.current;
-        touchStart.current = null;
-        if (!start || open) return;
-        const touch = event.changedTouches[0];
-        const dx = touch.clientX - start.x;
-        const dy = Math.abs(touch.clientY - start.y);
-        if (dx < -SWIPE_DISTANCE && dy < SWIPE_MAX_DRIFT) begin();
+      // read.cv's drag: left only, snapping back, with a rubber band of 0.5.
+      drag={isTouch && !open ? 'x' : false}
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={{ left: 0.5, right: 0, top: 0, bottom: 0 }}
+      dragMomentum={false}
+      onDragStart={() => setDragging(true)}
+      onDrag={(_, info) => setDragPassed(info.offset.x < -DRAG_OPEN_DISTANCE)}
+      onDragEnd={(_, info) => {
+        const opens = info.offset.x < -DRAG_OPEN_DISTANCE;
+        setDragging(false);
+        setDragPassed(false);
+        if (opens) setTimeout(begin, 1);
       }}
     >
       {children}
 
       {/* The 48px reply column, outside the item on wide screens. */}
-      <div className="absolute right-0 top-0 flex w-12 justify-end min-[700px]:-right-12 min-[700px]:top-1/2 min-[700px]:-translate-y-1/2 print:hidden">
+      <div
+        className={cn(
+          'absolute flex w-12 justify-end print:hidden',
+          // On a phone the column sits off the right edge and slides in as
+          // the item is dragged.
+          isTouch
+            ? '-right-12 top-1/2 -translate-y-1/2'
+            : 'right-0 top-0 min-[700px]:-right-12 min-[700px]:top-1/2 min-[700px]:-translate-y-1/2',
+        )}
+      >
         <button
           ref={arrowRef}
           type="button"
@@ -162,12 +183,16 @@ export function Repliable({
           aria-label={label}
           aria-expanded={open}
           className={cn(
-            'flex h-8 items-center text-theme-muted outline-none [transition:opacity_.4s_ease] focus-visible:opacity-100 active:opacity-70',
-            open || sent
+            'flex h-8 items-center outline-none [transition:opacity_.4s_ease] focus-visible:opacity-100 active:opacity-70',
+            // The arrow darkens once the drag is far enough to open the bar.
+            dragPassed ? 'text-theme-primary' : 'text-theme-muted',
+            open || sent || dragging
               ? 'opacity-100'
-              : 'opacity-0 group-focus-within/reply:opacity-100 group-hover/reply:opacity-100',
-            // Touch screens use the swipe; the button stays for screen readers.
-            '[@media(hover:none)]:sr-only',
+              : isTouch
+                ? 'opacity-0'
+                : 'opacity-0 group-focus-within/reply:opacity-100 group-hover/reply:opacity-100',
+            // Touch screens use the drag; the button stays for screen readers.
+            isTouch && !dragging && !open && !sent && 'sr-only',
           )}
         >
           <ReplyArrowIcon />
@@ -200,7 +225,8 @@ export function Repliable({
               label={label}
               padded
               clearOnSend={false}
-              focusOnMount
+              // read.cv doesn't pop the keyboard up on phones.
+              focusOnMount={!isTouch}
               signedIn={signedIn}
               onRequireSignIn={() => {
                 close(false);
@@ -229,6 +255,6 @@ export function Repliable({
       {signInOpen && (
         <AuthDialog open onOpenChange={setSignInOpen} mode="login" />
       )}
-    </div>
+    </motion.div>
   );
 }

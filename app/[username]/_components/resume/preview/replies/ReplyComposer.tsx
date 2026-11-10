@@ -13,6 +13,7 @@ import { REPLY_MAX_LENGTH } from '@/lib/replies';
 import { cn } from '@/lib/utils';
 import { SendIcon, SmileyIcon } from './icons';
 import { READCV_SPRING } from './spring';
+import { useIsTouchDevice } from './useIsTouchDevice';
 
 // read.cv's four, in its order.
 export const QUICK_REACTIONS = ['🔥', '🤙', '😯', '📈'] as const;
@@ -29,19 +30,6 @@ function useWindowWidth() {
     return () => window.removeEventListener('resize', update);
   }, []);
   return width;
-}
-
-// read.cv leaves the emoji button out on phones, where the keyboard has emoji.
-function useIsTouchDevice() {
-  const [touch, setTouch] = useState(false);
-  useEffect(() => {
-    const query = window.matchMedia('(hover: none) and (pointer: coarse)');
-    const update = () => setTouch(query.matches);
-    update();
-    query.addEventListener('change', update);
-    return () => query.removeEventListener('change', update);
-  }, []);
-  return touch;
 }
 
 export function ReplyComposer({
