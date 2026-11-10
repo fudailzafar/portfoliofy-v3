@@ -7,6 +7,7 @@ import {
   useRef,
   useCallback,
 } from 'react';
+import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ResumeData } from '@/lib/server/dbActions';
 import { UserProfile } from '@/lib/server/cachedFunctions';
@@ -178,6 +179,14 @@ export const FullResume = ({
     }
   }, [isWritingEnabled, activeTab]);
 
+  // read.cv: content is 60px under the tabs, 4px under a bare "About"
+  // heading, and 36px under the header when there is neither.
+  const contentOffset = isWritingEnabled
+    ? 'mt-[60px]'
+    : hasSummary
+      ? 'mt-1'
+      : 'mt-9';
+
   return (
     <ReplyProvider
       value={{
@@ -196,7 +205,7 @@ export const FullResume = ({
         {/* Page insets: 24px sides on phones, 48px up to 636px, and
           top spacing that grows with the viewport until it caps at 72px. */}
         <section
-          className="mx-auto mb-24 mt-6 w-full max-w-[540px] space-y-8 bg-theme-bg px-6 min-[481px]:mt-12 min-[481px]:px-12 min-[637px]:mt-[calc(50vw-270px)] min-[637px]:px-0 min-[685px]:mb-[72px] min-[685px]:mt-[72px] print:my-8 print:space-y-4"
+          className="mx-auto mb-24 mt-6 w-full max-w-[540px] bg-theme-bg px-6 min-[481px]:mt-12 min-[481px]:px-12 min-[637px]:mt-[calc(50vw-270px)] min-[637px]:px-0 min-[685px]:mb-[72px] min-[685px]:mt-[72px] print:my-8"
           aria-label="Resume Content"
         >
           <Header
@@ -210,11 +219,11 @@ export const FullResume = ({
           {isWritingEnabled ? (
             <div
               ref={tabBarRef}
-              className="flex w-full items-center gap-6 pt-1 print:hidden"
+              className="mt-9 flex w-full items-center gap-6 print:hidden"
             >
               <button
                 onClick={() => handleTabChange('about')}
-                className={`relative h-8 text-sm leading-8 ${
+                className={`relative h-8 text-[length:var(--type-size)] leading-8 ${
                   activeTab === 'about'
                     ? 'text-theme-primary'
                     : 'text-theme-muted'
@@ -231,7 +240,7 @@ export const FullResume = ({
               </button>
               <button
                 onClick={() => handleTabChange('writing')}
-                className={`relative h-8 text-sm leading-8 ${
+                className={`relative h-8 text-[length:var(--type-size)] leading-8 ${
                   activeTab === 'writing'
                     ? 'text-theme-primary'
                     : 'text-theme-muted'
@@ -248,8 +257,8 @@ export const FullResume = ({
               </button>
             </div>
           ) : hasSummary ? (
-            <div className="flex w-full items-center gap-6 pt-1 print:hidden">
-              <span className="h-8 text-sm leading-8 text-theme-primary">
+            <div className="mt-9 print:hidden">
+              <span className="text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-primary">
                 About
               </span>
             </div>
@@ -269,7 +278,7 @@ export const FullResume = ({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
-                className="flex flex-col gap-6"
+                className={cn(contentOffset, 'flex flex-col gap-6')}
               >
                 <Summary summary={resume.summary} />
 
@@ -296,6 +305,7 @@ export const FullResume = ({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
+                className={contentOffset}
               >
                 <PublicWritingList
                   resume={resume}

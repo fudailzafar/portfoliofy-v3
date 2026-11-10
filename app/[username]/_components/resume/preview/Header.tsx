@@ -69,10 +69,10 @@ export function Header({
   });
 
   return (
-    <div className="mb-8">
+    <div>
       <header className="flex items-center gap-4">
         {!hideSocialFeatures && (
-          <div className="relative">
+          <div className="relative self-end">
             <Avatar className="size-[92px] shrink-0" aria-hidden="true">
               <AvatarImage
                 src={picture}
@@ -163,7 +163,7 @@ export function Header({
               href={ensureHttps(header.website)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1.5 flex h-6 w-fit items-center rounded-full bg-[#F6F6F6] px-[10px] text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary transition-colors active:bg-[#F2F2F2] dark:bg-[#383838] dark:active:bg-[#4E4E4E]"
+              className="mt-[5px] flex h-6 w-fit items-center rounded-full bg-[#F6F6F6] px-[10px] text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-secondary transition-colors active:bg-[#F2F2F2] dark:bg-[#383838] dark:active:bg-[#4E4E4E]"
             >
               {header.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
             </a>
