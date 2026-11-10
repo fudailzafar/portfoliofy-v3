@@ -1,7 +1,7 @@
 import React from 'react';
 import { TabHeader } from '@/app/[username]/_components/resume/editing/TabHeader';
 import { EmptyState } from '@/app/[username]/_components/resume/editing/EmptyState';
-import type { Icon as PhosphorIcon } from '@phosphor-icons/react';
+import type { IconComponent } from '@/components/icons/readcv';
 
 interface ListTabLayoutProps {
   title: string;
@@ -10,7 +10,7 @@ interface ListTabLayoutProps {
   onAdd: () => void;
   addButtonText: string;
   emptyState: {
-    icon: PhosphorIcon;
+    icon: IconComponent;
     buttonText: string;
     onAdd?: () => void;
   };

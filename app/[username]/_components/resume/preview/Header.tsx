@@ -19,7 +19,7 @@ const StatusEditor = dynamic(
   { ssr: false },
 );
 import { AnimatePresence } from 'framer-motion';
-import { SmileyIcon } from '@phosphor-icons/react/ssr';
+import { SmileyIcon } from '@/components/icons/readcv';
 import { ensureHttps } from '@/lib/utils';
 import { StatusReply } from './replies/StatusReply';
 

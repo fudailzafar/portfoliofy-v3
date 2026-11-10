@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
+import { ArrowUpRightIcon } from '@/components/icons/readcv';
 import { AttachmentsPreview } from '../AttachmentsPreview';
 import { AvatarStack } from '@/components/composite/AvatarStack';
 import { CollaboratorSchemaType } from '@/lib/resume';

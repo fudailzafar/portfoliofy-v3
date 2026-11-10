@@ -21,7 +21,8 @@ import { SidebarButton } from './SidebarButton';
 import React, { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { useResumeStore } from '@/store/useResumeStore';
-import { UserIcon, PencilSimpleIcon, NutIcon } from '@phosphor-icons/react/ssr';
+import { UserIcon, NutIcon } from '@phosphor-icons/react/ssr';
+import { PencilSimpleIcon } from '@/components/icons/readcv';
 import {
   Tooltip,
   TooltipContent,

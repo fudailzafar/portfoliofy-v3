@@ -8,7 +8,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AuthDialog } from '@/components/auth/AuthDialog';
 import { ExploreSidebar } from './ExploreSidebar';
 import { useUserActions } from '@/hooks/useUserActions';
-import { CheckIcon, CopyIcon } from '@phosphor-icons/react/ssr';
+import { CopyIcon } from '@phosphor-icons/react/ssr';
+import { CheckIcon } from '@/components/icons/readcv';
 import { SITE_HOST, SITE_URL } from '@/lib/site';
 import { useUnreadCount } from '@/app/[username]/_components/resume/editing/replies/useReplies';
 

@@ -6,7 +6,7 @@ import {
   isRedactedPage,
 } from '@/lib/resume';
 import Link from 'next/link';
-import { LockIcon } from '@phosphor-icons/react/ssr';
+import { LockIcon } from '@/components/icons/readcv';
 
 export function PublicWritingList({
   resume,

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { DotsThreeIcon } from '@phosphor-icons/react/ssr';
+import { DotsThreeIcon } from '@/components/icons/readcv';
 import {
   DropdownMenu,
   DropdownMenuContent,

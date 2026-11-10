@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { useResumeStore } from '@/store/useResumeStore';
 import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
-import { XIcon } from '@phosphor-icons/react/ssr';
+import { XIcon } from '@/components/icons/readcv';
 import { ValidCheck } from '@/components/ui/valid-check';
 import { isValidDomainFormat } from '@/lib/validation/domain';
 import { useS3Upload } from 'next-s3-upload';

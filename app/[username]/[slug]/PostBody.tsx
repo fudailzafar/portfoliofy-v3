@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { LockIcon } from '@phosphor-icons/react/ssr';
+import { LockIcon } from '@/components/icons/readcv';
 import { PageContent } from '@/components/composite/PageContent';
 import { ShareButton } from './ShareButton';
 import { PostStatusBadge } from './PostStatusBadge';

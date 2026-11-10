@@ -7,7 +7,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { CaretLeftIcon } from '@phosphor-icons/react/ssr';
+import { CaretLeftIcon } from '@/components/icons/readcv';
 import { ConversationList } from '@/app/[username]/_components/resume/editing/replies/ConversationList';
 import { RepliesTab } from '@/app/[username]/_components/resume/editing/replies/RepliesTab';
 import { cn } from '@/lib/utils';

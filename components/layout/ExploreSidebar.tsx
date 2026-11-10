@@ -2,7 +2,7 @@ import { useState, UIEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { ExploreSort, useExplore } from '@/hooks/useExplore';
 import { getOptimizedImageUrl } from '@/lib/utils';
-import { XIcon } from '@phosphor-icons/react/ssr';
+import { XIcon } from '@/components/icons/readcv';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Twemoji from 'react-twemoji';

@@ -5,7 +5,7 @@ import { useResumeList } from '@/hooks/useResumeList';
 import { ListTabLayout } from '@/components/composite/ListTabLayout';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ChatCircleIcon, ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
+import { ChatCircleIcon, ArrowUpRightIcon } from '@/components/icons/readcv';
 import { ValidCheck } from '@/components/ui/valid-check';
 import { isValidEmail } from '@/lib/validation/email';
 import { cn } from '@/lib/utils';

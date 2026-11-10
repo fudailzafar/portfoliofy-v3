@@ -96,11 +96,13 @@ export const PrintResume = ({
     if (printHiddenSections.includes(id)) return null;
     if (!content) return null;
 
+    // read.cv: the heading sits inside the 100mm column, with 16px before
+    // the first item and 36px after the section.
     return (
-      <div className="page-break-inside-avoid mb-12 grid grid-cols-12 items-baseline gap-8">
-        <div className="col-span-4 text-sm text-black">{title}</div>
-        <div className="col-span-8 flex flex-col gap-6">{content}</div>
-      </div>
+      <section className="mb-9 break-inside-auto">
+        <h3 className="break-after-avoid font-normal text-black">{title}</h3>
+        <div className="mt-4 flex flex-col gap-4">{content}</div>
+      </section>
     );
   };
 
@@ -265,7 +267,7 @@ export const PrintResume = ({
         content: skillsList?.length ? (
           <div className="flex flex-wrap gap-2">
             {skillsList.map((skill: string) => (
-              <span key={skill} className="text-sm text-black">
+              <span key={skill} className="text-black">
                 {skill}
               </span>
             ))}
@@ -278,7 +280,7 @@ export const PrintResume = ({
           <div className="flex flex-col gap-3">
             {visibleContacts.map((c: any) => (
               <div key={c.id || c.link} className="flex items-baseline gap-4">
-                <div className="w-24 shrink-0 text-sm capitalize text-black">
+                <div className="w-24 shrink-0 capitalize text-black">
                   {c.platform}:
                 </div>
                 <div>
@@ -288,7 +290,7 @@ export const PrintResume = ({
                         ? c.link
                         : ensureHttps(c.link)
                     }
-                    className="text-sm text-black hover:underline hover:underline-offset-4"
+                    className="text-black"
                   >
                     {c.link.replace(/^mailto:/, '').replace(/^tel:/, '')}
                   </a>
@@ -300,42 +302,66 @@ export const PrintResume = ({
       },
     };
 
+  // The name, role and website, as on the screen header.
+  const location = header?.location;
+  const subtitle = [
+    [
+      header?.shortAbout,
+      location ? (header?.shortAbout ? `in ${location}` : location) : '',
+    ]
+      .filter(Boolean)
+      .join(' '),
+    header?.pronouns,
+  ]
+    .filter(Boolean)
+    .join(', ');
+
+  const showSummary =
+    !printHiddenSections.includes('summary') &&
+    summary &&
+    summary !== '<p></p>';
+
   return (
+    // read.cv's print page: greys all print black on white at 10px, the name
+    // block is a 60mm column at the left, and the sections are a 100mm column
+    // starting 70mm in. Photos, collaborators and links are left out.
     <div
       className={cn(
-        'mx-auto w-full max-w-4xl bg-surface-1 px-8 py-12 text-black',
+        'relative w-full bg-white text-[10px] leading-[1.6] text-black',
         className,
       )}
     >
-      {/* Header */}
-      <div className="mb-16 grid grid-cols-12 gap-8">
-        <div className="col-span-4 flex flex-col justify-start">
-          <h1 className="text-sm text-black">{header?.name}</h1>
-          <p className="mt-1 text-sm text-black">{header?.shortAbout}</p>
-        </div>
-        <div className="col-span-8">
-          {/* About section is rendered here if not hidden */}
-          {!printHiddenSections.includes('summary') &&
-            summary &&
-            summary !== '<p></p>' && (
-              <div
-                className="prose prose-sm max-w-none text-sm leading-relaxed text-black prose-p:mb-2 prose-p:mt-0 prose-a:text-black prose-ol:pl-0 prose-ul:pl-0 prose-li:pl-0"
-                dangerouslySetInnerHTML={{ __html: summary }}
-              />
-            )}
-        </div>
-      </div>
+      <header className="absolute left-0 top-0 w-[60mm]">
+        <h1 className="font-normal text-black">{header?.name}</h1>
+        {subtitle && <p className="text-black">{subtitle}</p>}
+        {header?.website && (
+          <p className="text-black">
+            {header.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+          </p>
+        )}
+      </header>
 
-      {/* Sections */}
-      {order.map((sectionId) => {
-        const section = sections[sectionId];
-        if (!section) return null;
-        return (
-          <React.Fragment key={sectionId}>
-            {renderSection(sectionId, section.title, section.content)}
-          </React.Fragment>
-        );
-      })}
+      <div className="ml-[70mm] w-[100mm]">
+        {showSummary && (
+          <section className="mb-9">
+            <h3 className="break-after-avoid font-normal text-black">About</h3>
+            <div
+              className="prose prose-sm mt-4 max-w-none text-[10px] leading-[1.6] text-black prose-p:my-0 prose-a:text-black prose-ol:pl-0 prose-ul:pl-0 prose-li:pl-0 [&_p+p:not(:empty)]:mt-4"
+              dangerouslySetInnerHTML={{ __html: summary }}
+            />
+          </section>
+        )}
+
+        {order.map((sectionId) => {
+          const section = sections[sectionId];
+          if (!section) return null;
+          return (
+            <React.Fragment key={sectionId}>
+              {renderSection(sectionId, section.title, section.content)}
+            </React.Fragment>
+          );
+        })}
+      </div>
     </div>
   );
 };

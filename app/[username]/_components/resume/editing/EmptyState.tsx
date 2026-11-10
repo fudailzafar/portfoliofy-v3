@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button';
-import type { Icon as PhosphorIcon } from '@phosphor-icons/react';
+import type { IconComponent } from '@/components/icons/readcv';
 
 interface EmptyStateProps {
-  icon: PhosphorIcon;
+  icon: IconComponent;
   buttonText: string;
   onClick: () => void;
 }
