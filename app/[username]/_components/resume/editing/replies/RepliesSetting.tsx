@@ -24,7 +24,6 @@ export function RepliesSetting() {
         disabled={isLoading || isError}
         onCheckedChange={update}
         aria-label="Let people reply to you"
-        className="data-[state=checked]:bg-blue-600"
       />
     </div>
   );

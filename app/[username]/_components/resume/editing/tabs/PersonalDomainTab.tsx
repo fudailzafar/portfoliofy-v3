@@ -609,7 +609,6 @@ export function PersonalDomainTab({ username }: { username: string }) {
               updateDesign({ hideSocialFeatures: checked });
               setHasUnsavedChanges(true);
             }}
-            className="data-[state=checked]:bg-blue-600"
           />
         </div>
       </div>

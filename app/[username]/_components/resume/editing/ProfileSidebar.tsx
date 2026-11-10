@@ -207,7 +207,6 @@ export function ProfileSidebar({
                       },
                     })
                   }
-                  className="data-[state=checked]:bg-blue-600"
                 />
               </div>
 
