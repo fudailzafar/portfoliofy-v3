@@ -160,7 +160,7 @@ export function MediaUploadDialog({
     file: File,
     type: 'image' | 'video',
   ): Promise<{ width: number; height: number }> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const url = URL.createObjectURL(file);
       if (type === 'image') {
         const img = new Image();
@@ -168,12 +168,21 @@ export function MediaUploadDialog({
           resolve({ width: img.width, height: img.height });
           URL.revokeObjectURL(url);
         };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          reject(new Error('The image could not be read'));
+        };
         img.src = url;
       } else {
         const video = document.createElement('video');
         video.onloadedmetadata = () => {
           resolve({ width: video.videoWidth, height: video.videoHeight });
           URL.revokeObjectURL(url);
+        };
+        // Without this a video the browser can't read left the upload stuck.
+        video.onerror = () => {
+          URL.revokeObjectURL(url);
+          reject(new Error('The video could not be read'));
         };
         video.src = url;
       }
@@ -228,6 +237,7 @@ export function MediaUploadDialog({
       } catch (error) {
         console.error('Upload failed:', error);
         setUploadingFiles((prev) => prev.filter((f) => f.id !== item.id));
+        alert(`${item.file.name} could not be uploaded. Try another file.`);
       }
     }
   };
