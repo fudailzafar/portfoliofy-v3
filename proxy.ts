@@ -79,7 +79,7 @@ export default async function middleware(req: NextRequest) {
     `script-src ${scriptSrc}`,
     `style-src 'self' 'unsafe-inline'`,
     `img-src 'self' data: blob: https://api.dicebear.com https://lh3.googleusercontent.com https://*.amazonaws.com https://*.s3.amazonaws.com https://cdn.jsdelivr.net https://*.cloudfront.net`,
-    `media-src 'self' https://*.amazonaws.com https://*.s3.amazonaws.com https://*.cloudfront.net`,
+    `media-src 'self' blob: https://*.amazonaws.com https://*.s3.amazonaws.com https://*.cloudfront.net`,
     `font-src 'self' data:`,
     `connect-src 'self' https://accounts.google.com https://*.vercel-insights.com https://*.amazonaws.com https://*.s3.amazonaws.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com`,
     `frame-src https://accounts.google.com https://www.youtube.com https://player.vimeo.com https://www.figma.com`,
