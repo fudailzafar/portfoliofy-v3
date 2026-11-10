@@ -189,7 +189,7 @@ function Conversation({
               isSending={send.isPending}
             />
           ) : thread.blockedByYou ? (
-            <div className="flex items-center justify-between gap-3 rounded-lg bg-[color-mix(in_srgb,var(--theme-primary)_5.5%,var(--theme-bg))] px-4 py-3 text-theme-secondary dark:bg-theme-border">
+            <div className="flex items-center justify-between gap-3 rounded-lg bg-[var(--theme-wash)] px-4 py-3 text-theme-secondary dark:bg-theme-border">
               <p>You blocked {name}.</p>
               <button
                 onClick={() =>
@@ -205,7 +205,7 @@ function Conversation({
               </button>
             </div>
           ) : (
-            <p className="rounded-lg bg-[color-mix(in_srgb,var(--theme-primary)_5.5%,var(--theme-bg))] px-4 py-3 text-theme-muted dark:bg-theme-border">
+            <p className="rounded-lg bg-[var(--theme-wash)] px-4 py-3 text-theme-muted dark:bg-theme-border">
               You can’t reply to this conversation right now.
             </p>
           )}
