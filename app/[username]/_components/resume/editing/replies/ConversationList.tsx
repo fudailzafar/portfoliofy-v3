@@ -1,5 +1,9 @@
 'use client';
 
+// read.cv's inbox rows, at its measured sizes: 64px rows 12px in from the
+// column edges with 8px corners, a 40px avatar, the name and a one-line
+// preview at 14px, and the time at 12px. Unread rows are brighter, not dotted.
+
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/ui/spinner';
@@ -8,18 +12,21 @@ import { PersonAvatar } from './PersonAvatar';
 import { displayName, fullTime, shortTime } from './format';
 import type { InboxEntry } from './api';
 
+// read.cv's input grey: #f2f2f2 on white, #333 on #222.
+const ROW_FILL =
+  'bg-[color-mix(in_srgb,var(--theme-primary)_5.5%,var(--theme-bg))] dark:bg-theme-border';
+
 function Preview({ entry }: { entry: InboxEntry }) {
   const last = entry.lastMessage;
-  if (!last) return <span>No messages yet</span>;
+  if (!last) return <>No messages yet</>;
   return (
     <>
-      {last.mine && <span>You: </span>}
+      {last.mine && 'You: '}
       {last.body}
     </>
   );
 }
 
-/** The inbox, shown in the sidebar panel while the Replies group is open. */
 export function ConversationList({
   selectedId,
   hrefFor,
@@ -34,18 +41,18 @@ export function ConversationList({
   if (isLoading) {
     return (
       <div className="flex justify-center px-6 py-6">
-        <Spinner size={14} className="text-content-muted" />
+        <Spinner size={14} className="text-theme-muted" />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="px-6 text-sm text-content-muted">
+      <div className="mx-6 text-theme-muted">
         <p>We couldn’t load your replies.</p>
         <button
           onClick={() => refetch()}
-          className="mt-2 text-content-primary underline-offset-4 hover:underline"
+          className="mt-1 font-medium text-theme-primary"
         >
           Try again
         </button>
@@ -55,14 +62,18 @@ export function ConversationList({
 
   if (!data?.length) {
     return (
-      <p className="mx-4 rounded-xl border border-border-subtle px-4 py-3 text-sm leading-relaxed text-content-muted">
-        Replies you send or receive will appear here.
+      <p className="mx-6 rounded-xl border border-theme-border px-4 py-[14px] text-theme-muted">
+        Replies you send or receive will appear here.{' '}
+        <Link href="/faq" className="font-medium text-theme-primary">
+          Learn more
+        </Link>
+        .
       </p>
     );
   }
 
   return (
-    <ul className="flex flex-col gap-1 px-3" aria-label="Conversations">
+    <ul aria-label="Conversations">
       {data.map((entry) => {
         const isActive = entry.conversationId === selectedId;
         const unread = entry.unread > 0;
@@ -72,19 +83,19 @@ export function ConversationList({
               href={hrefFor(entry.conversationId)}
               aria-current={isActive ? 'true' : undefined}
               className={cn(
-                'flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors',
+                'mx-3 flex h-16 items-center gap-3 rounded-lg px-4',
                 isActive
-                  ? 'bg-surface-2 dark:bg-surface-card'
-                  : 'hover:bg-surface-2 dark:hover:bg-surface-card',
+                  ? ROW_FILL
+                  : 'hover:bg-black/[.03] dark:hover:bg-white/[.03]',
               )}
             >
-              <PersonAvatar person={entry.other} className="size-12" />
-              <span className="min-w-0 flex-1">
-                <span className="flex items-baseline justify-between gap-2">
+              <PersonAvatar person={entry.other} className="size-10" />
+              <span className="min-w-0 flex-1 leading-[18px]">
+                <span className="flex items-baseline justify-between gap-3">
                   <span
                     className={cn(
-                      'truncate text-base text-content-primary',
-                      unread && 'font-semibold',
+                      'truncate text-theme-primary',
+                      unread && 'font-medium',
                     )}
                   >
                     {displayName(entry.other)}
@@ -93,28 +104,23 @@ export function ConversationList({
                     <time
                       dateTime={entry.lastMessageAt}
                       title={fullTime(entry.lastMessageAt)}
-                      className="shrink-0 text-xs tabular-nums text-content-muted"
+                      className="shrink-0 text-[length:var(--secondary-type-size)] tabular-nums text-theme-muted"
                     >
                       {shortTime(entry.lastMessageAt)}
                     </time>
                   )}
                 </span>
-                <span className="flex items-center gap-2">
-                  <span
-                    className={cn(
-                      'block min-w-0 flex-1 truncate text-sm',
-                      unread
-                        ? 'font-medium text-content-primary'
-                        : 'text-content-muted',
-                    )}
-                  >
-                    <Preview entry={entry} />
-                  </span>
+                <span
+                  className={cn(
+                    'mt-1.5 block truncate',
+                    unread
+                      ? 'font-medium text-theme-primary'
+                      : 'text-theme-muted',
+                  )}
+                >
+                  <Preview entry={entry} />
                   {unread && (
-                    <span className="sr-only">
-                      {entry.unread} unread{' '}
-                      {entry.unread === 1 ? 'message' : 'messages'}
-                    </span>
+                    <span className="sr-only"> ({entry.unread} unread)</span>
                   )}
                 </span>
               </span>

@@ -1,19 +1,21 @@
 'use client';
 
+// read.cv's message box: a 36px field (8px corners, #f2f2f2 / #333) that grows
+// with the text, the smiley inside on the right, and beside it a 🔥 that
+// sends at once, which turns into the send arrow while you type. Enter sends,
+// Shift+Enter adds a line.
+
 import { useEffect, useRef, useState } from 'react';
 import { EmojiPickerPopover } from '@/components/composite/EmojiPicker';
-import { PaperPlaneTiltIcon, SmileyIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
 import { REPLY_MAX_LENGTH } from '@/lib/replies';
-import { cn } from '@/lib/utils';
+import {
+  SendIcon,
+  SmileyIcon,
+} from '@/app/[username]/_components/resume/preview/replies/icons';
 
 const QUICK_EMOJI = '🔥';
-const SHOW_COUNT_FROM = REPLY_MAX_LENGTH - 200;
 
-/**
- * Message box. Enter sends, Shift+Enter adds a line. With nothing typed the
- * button sends a quick 🔥, as on read.cv.
- */
 export function Composer({
   onSend,
   isSending,
@@ -28,8 +30,7 @@ export function Composer({
   const fieldRef = useRef<HTMLDivElement>(null);
 
   const trimmed = value.trim();
-  const tooLong = value.length > REPLY_MAX_LENGTH;
-  const canSend = trimmed.length > 0 && !tooLong && !isSending;
+  const typing = value.length > 0;
 
   // Grow with the text, up to a few lines.
   useEffect(() => {
@@ -40,6 +41,7 @@ export function Composer({
   }, [value]);
 
   const send = async (body: string) => {
+    if (!body || isSending) return;
     try {
       await onSend(body);
       setValue('');
@@ -55,8 +57,7 @@ export function Composer({
     const el = textareaRef.current;
     const start = el?.selectionStart ?? value.length;
     const end = el?.selectionEnd ?? value.length;
-    const next = value.slice(0, start) + emoji + value.slice(end);
-    setValue(next);
+    setValue(value.slice(0, start) + emoji + value.slice(end));
     requestAnimationFrame(() => {
       el?.focus();
       el?.setSelectionRange(start + emoji.length, start + emoji.length);
@@ -64,15 +65,16 @@ export function Composer({
   };
 
   return (
-    <div className="relative flex items-end gap-3">
+    <div className="flex items-end gap-[10px]">
       <div
         ref={fieldRef}
-        className="flex min-w-0 flex-1 items-end rounded-xl bg-surface-2 pr-2 dark:bg-surface-card"
+        className="relative min-w-0 flex-1 rounded-lg bg-[color-mix(in_srgb,var(--theme-primary)_5.5%,var(--theme-bg))] dark:bg-theme-border"
       >
         <textarea
           ref={textareaRef}
           value={value}
           rows={1}
+          maxLength={REPLY_MAX_LENGTH}
           onChange={(event) => setValue(event.target.value)}
           onKeyDown={(event) => {
             if (
@@ -81,67 +83,57 @@ export function Composer({
               !event.nativeEvent.isComposing
             ) {
               event.preventDefault();
-              if (canSend) void send(trimmed);
+              void send(trimmed);
             }
           }}
-          placeholder="Send a message…"
+          placeholder="Send a message"
           aria-label="Message"
-          className="max-h-40 min-h-11 w-full resize-none bg-transparent px-4 py-3 text-base text-content-primary placeholder:text-content-muted focus:outline-none sm:text-[15px]"
+          // 16px on phones so iOS doesn't zoom; read.cv's 14px from sm up.
+          className="block max-h-40 min-h-9 w-full resize-none bg-transparent py-[7px] pl-3 pr-10 text-base leading-[22px] text-theme-primary outline-none placeholder:text-theme-muted sm:text-[length:var(--type-size)]"
         />
-        {/* theme-default gives the picker read.cv's colours inside the editor. */}
-        <div className="theme-default relative mb-1.5 shrink-0">
-          <button
-            ref={smileyRef}
-            type="button"
-            onClick={() => setPickerOpen((open) => !open)}
-            aria-label="Add an emoji"
-            aria-expanded={pickerOpen}
-            className="flex size-8 items-center justify-center rounded-full text-content-muted transition-colors hover:text-content-primary"
-          >
-            <SmileyIcon className="size-5" />
-          </button>
-          <EmojiPickerPopover
-            open={pickerOpen}
-            onClose={() => setPickerOpen(false)}
-            onSelect={insertEmoji}
-            anchorRef={smileyRef}
-            measureRef={fieldRef}
-          />
+        <div className="absolute bottom-0.5 right-0">
+          <div className="relative">
+            <button
+              ref={smileyRef}
+              type="button"
+              onClick={() => setPickerOpen((open) => !open)}
+              aria-label="Add an emoji"
+              aria-expanded={pickerOpen}
+              className="flex h-8 items-center px-2 text-theme-muted outline-none focus-visible:text-theme-primary active:opacity-70"
+            >
+              <SmileyIcon />
+            </button>
+            <EmojiPickerPopover
+              open={pickerOpen}
+              onClose={() => setPickerOpen(false)}
+              onSelect={insertEmoji}
+              anchorRef={smileyRef}
+              measureRef={fieldRef}
+            />
+          </div>
         </div>
       </div>
 
       <button
         type="button"
-        onClick={() => void send(trimmed || QUICK_EMOJI)}
-        disabled={isSending || tooLong}
-        aria-label={trimmed ? 'Send message' : `Send ${QUICK_EMOJI}`}
-        className={cn(
-          'mb-0.5 flex size-10 shrink-0 items-center justify-center rounded-full text-content-muted transition-colors hover:text-content-primary disabled:opacity-50',
-          trimmed && 'text-content-primary',
-        )}
+        onClick={() => void send(typing ? trimmed : QUICK_EMOJI)}
+        disabled={isSending}
+        aria-label={typing ? 'Send message' : `Send ${QUICK_EMOJI}`}
+        className="flex size-9 shrink-0 items-center justify-center text-theme-muted outline-none focus-visible:text-theme-primary active:opacity-70 disabled:opacity-50"
       >
         {isSending ? (
           <Spinner size={16} />
-        ) : trimmed ? (
-          <PaperPlaneTiltIcon className="size-6" weight="fill" />
+        ) : typing ? (
+          <SendIcon />
         ) : (
-          <span className="text-2xl leading-none" aria-hidden>
+          <span
+            aria-hidden
+            className="block text-[36px] leading-none [transform:scale(.5)]"
+          >
             {QUICK_EMOJI}
           </span>
         )}
       </button>
-
-      {value.length >= SHOW_COUNT_FROM && (
-        <p
-          className={cn(
-            'absolute -top-6 right-0 text-xs tabular-nums',
-            tooLong ? 'text-red-500' : 'text-content-muted',
-          )}
-          role="status"
-        >
-          {value.length} / {REPLY_MAX_LENGTH}
-        </p>
-      )}
     </div>
   );
 }

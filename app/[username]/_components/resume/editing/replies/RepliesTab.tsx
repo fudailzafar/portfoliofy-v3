@@ -27,13 +27,8 @@ export function RepliesTab({
   /** Called when the conversation is removed or can't be opened. */
   onClose: () => void;
 }) {
-  if (!conversationId) {
-    return (
-      <div className="flex h-full items-center justify-center px-6 text-center text-sm text-content-muted">
-        Pick a conversation to read and answer replies.
-      </div>
-    );
-  }
+  // read.cv leaves the column empty until a conversation is picked.
+  if (!conversationId) return null;
 
   // Keyed so switching conversations resets scroll, drafts and older pages.
   return (
@@ -113,18 +108,18 @@ function Conversation({
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Spinner size={16} className="text-content-muted" />
+        <Spinner size={16} className="text-theme-muted" />
       </div>
     );
   }
 
   if (isError || !thread) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center text-sm text-content-muted">
+      <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center text-theme-muted">
         <p>This conversation isn’t available.</p>
         <button
           onClick={onClose}
-          className="text-content-primary underline-offset-4 hover:underline"
+          className="text-theme-primary underline-offset-4 hover:underline"
         >
           Back to replies
         </button>
@@ -136,12 +131,12 @@ function Conversation({
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="flex shrink-0 items-center gap-4 border-b border-border-subtle px-4 py-4 sm:px-8">
-        <PersonAvatar person={thread.other} className="size-12" />
+      <header className="mx-4 flex h-[72px] shrink-0 items-center gap-4 border-b border-theme-border sm:mx-12">
+        <PersonAvatar person={thread.other} className="size-10" />
         <Link
           href={`/${thread.other.username}`}
           target="_blank"
-          className="min-w-0 flex-1 truncate text-2xl text-content-primary hover:underline hover:underline-offset-4"
+          className="min-w-0 flex-1 truncate text-[20px] leading-7 text-theme-primary hover:underline hover:underline-offset-4"
         >
           {name}
         </Link>
@@ -159,17 +154,17 @@ function Conversation({
           stickToBottom.current =
             el.scrollHeight - el.scrollTop - el.clientHeight < NEAR_BOTTOM_PX;
         }}
-        className="scrollbar-hide min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-8"
+        className="scrollbar-hide min-h-0 flex-1 overflow-y-auto px-4 pb-6 sm:px-12"
         role="log"
         aria-live="polite"
       >
-        <div className="mx-auto max-w-[37rem]">
+        <div>
           {hasMore && (
-            <div className="flex justify-center pb-2">
+            <div className="flex justify-center pt-4">
               <button
                 onClick={() => void loadOlder()}
                 disabled={loadingOlder}
-                className="text-sm text-content-muted transition-colors hover:text-content-primary disabled:opacity-50"
+                className="text-theme-muted transition-colors hover:text-theme-primary disabled:opacity-50"
               >
                 {loadingOlder ? 'Loading…' : 'Show earlier messages'}
               </button>
@@ -183,8 +178,8 @@ function Conversation({
         </div>
       </div>
 
-      <footer className="shrink-0 px-4 pb-4 pt-3 sm:px-8">
-        <div className="mx-auto max-w-[37rem]">
+      <footer className="shrink-0 px-4 pb-8 pt-2 sm:px-12">
+        <div>
           {thread.canReply ? (
             <Composer
               onSend={(body) => {
@@ -194,7 +189,7 @@ function Conversation({
               isSending={send.isPending}
             />
           ) : thread.blockedByYou ? (
-            <div className="flex items-center justify-between gap-3 rounded-xl bg-surface-2 px-4 py-3 text-sm text-content-secondary dark:bg-surface-card">
+            <div className="flex items-center justify-between gap-3 rounded-lg bg-[color-mix(in_srgb,var(--theme-primary)_5.5%,var(--theme-bg))] px-4 py-3 text-theme-secondary dark:bg-theme-border">
               <p>You blocked {name}.</p>
               <button
                 onClick={() =>
@@ -204,13 +199,13 @@ function Conversation({
                   })
                 }
                 disabled={unblock.isPending}
-                className="font-medium text-content-primary underline-offset-4 hover:underline disabled:opacity-50"
+                className="font-medium text-theme-primary underline-offset-4 hover:underline disabled:opacity-50"
               >
                 Unblock
               </button>
             </div>
           ) : (
-            <p className="rounded-xl bg-surface-2 px-4 py-3 text-sm text-content-muted dark:bg-surface-card">
+            <p className="rounded-lg bg-[color-mix(in_srgb,var(--theme-primary)_5.5%,var(--theme-bg))] px-4 py-3 text-theme-muted dark:bg-theme-border">
               You can’t reply to this conversation right now.
             </p>
           )}

@@ -1,5 +1,11 @@
 'use client';
 
+// read.cv's conversation, at its measured sizes: no bubbles, a 24px avatar in
+// the gutter at the start of each block, text in one column 36px in. Replies
+// to a profile item open with a 12px grey line ("John S replied to your
+// project") and the quoted item at 12px behind a rule; messages are 14px.
+// Times stay out of sight: on hover, and for screen readers.
+
 import { cn } from '@/lib/utils';
 import { REPLY_SECTION_NOUN, type ReplyContext } from '@/lib/replies';
 import { PersonAvatar } from './PersonAvatar';
@@ -7,29 +13,26 @@ import { displayName, fullTime, shortTime } from './format';
 import type { ThreadData, ThreadEntry } from './api';
 
 function ContextCard({ context }: { context: ReplyContext }) {
-  if (context.kind === 'status') {
-    return (
-      <blockquote className="border-l-2 border-border-strong pl-4 text-[15px] leading-relaxed text-content-secondary">
-        <span className="mr-1.5" aria-hidden>
-          {context.emoji}
-        </span>
-        {context.text}
-      </blockquote>
-    );
-  }
   return (
-    <blockquote className="space-y-0.5 border-l-2 border-border-strong pl-4 text-[15px] leading-relaxed">
-      {context.year && (
-        <p className="tabular-nums text-content-muted">{context.year}</p>
-      )}
-      <p className="text-content-primary">
-        {context.title}
-        {context.subtitle && (
-          <span className="text-content-muted"> at {context.subtitle}</span>
-        )}
-      </p>
-      {context.excerpt && (
-        <p className="line-clamp-4 text-content-secondary">{context.excerpt}</p>
+    <blockquote className="border-l-2 border-[color-mix(in_srgb,var(--theme-primary)_20%,var(--theme-bg))] pl-4 text-[length:var(--secondary-type-size)] leading-[var(--line-height)]">
+      {context.kind === 'status' ? (
+        <p className="text-theme-secondary">
+          {context.emoji && <span className="mr-1.5">{context.emoji}</span>}
+          {context.text}
+        </p>
+      ) : (
+        <>
+          {context.year && (
+            <p className="tabular-nums text-theme-muted">{context.year}</p>
+          )}
+          <p className="text-theme-primary">
+            {context.title}
+            {context.subtitle && <> at {context.subtitle}</>}
+          </p>
+          {context.excerpt && (
+            <p className="text-theme-secondary">{context.excerpt}</p>
+          )}
+        </>
       )}
     </blockquote>
   );
@@ -61,11 +64,6 @@ function startsGroup(previous: ThreadEntry | undefined, message: ThreadEntry) {
   );
 }
 
-/**
- * Messages without bubbles. A small avatar in the left gutter marks who is
- * speaking at the start of each block; the text lines up in one column.
- * Times are out of the way: on hover, and for screen readers.
- */
 export function MessageThread({
   messages,
   you,
@@ -85,17 +83,17 @@ export function MessageThread({
         return (
           <li
             key={message.id}
-            className={cn('flex gap-4', newGroup ? 'mt-8' : 'mt-2')}
+            className={cn('flex gap-3', newGroup ? 'mt-9 first:mt-6' : 'mt-3')}
           >
-            <div className="w-8 shrink-0">
+            <div className="w-6 shrink-0">
               {newGroup && (
-                <PersonAvatar person={author} className="size-8 text-xs" />
+                <PersonAvatar person={author} className="size-6 text-[10px]" />
               )}
             </div>
 
             <div className="min-w-0 flex-1 space-y-3">
               {newGroup && message.context && (
-                <p className="flex min-h-8 items-center text-[15px] text-content-muted">
+                <p className="flex min-h-6 items-center text-[length:var(--secondary-type-size)] text-theme-muted">
                   {contextLabel(message.context, message.mine, otherName)}
                 </p>
               )}
@@ -103,15 +101,12 @@ export function MessageThread({
               <p
                 title={fullTime(message.createdAt)}
                 className={cn(
-                  'whitespace-pre-wrap break-words text-content-primary',
+                  'whitespace-pre-wrap break-words text-theme-primary',
                   message.emojiOnly
-                    ? 'text-5xl leading-tight'
-                    : 'text-[17px] leading-relaxed',
-                  // Lines up the first line with the avatar beside it.
-                  newGroup &&
-                    !message.context &&
-                    !message.emojiOnly &&
-                    'pt-0.5',
+                    ? 'text-[40px] leading-[48px]'
+                    : 'leading-[var(--line-height)]',
+                  // Centre a first line on the 24px avatar beside it.
+                  newGroup && !message.context && !message.emojiOnly && 'pt-px',
                 )}
               >
                 {message.body}
