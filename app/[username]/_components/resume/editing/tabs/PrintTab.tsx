@@ -61,7 +61,6 @@ export function PrintTab() {
               <Switch
                 checked={isOn}
                 onCheckedChange={() => togglePrintSection(section.id)}
-                className="data-[state=checked]:bg-blue-600"
               />
             </div>
           );
