@@ -18,11 +18,6 @@ export function Projects({
       {validItems.map((item, idx) => (
         <PreviewListItem
           key={item.id || idx}
-          replyTarget={
-            item.id
-              ? { kind: 'item', section: 'projects', itemId: item.id }
-              : undefined
-          }
           leftContent={item.year}
           title={item.title}
           subtitle={item.company ? `at ${item.company}` : undefined}

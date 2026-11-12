@@ -186,7 +186,6 @@ export default async function ProfilePage({
                   !!resume?.resumeData?.design?.hideSocialFeatures
                 }
                 isPersonalDomainView={isPersonalDomainView}
-                repliesEnabled={userProfile?.repliesEnabled !== false}
               />
             </div>
           )}

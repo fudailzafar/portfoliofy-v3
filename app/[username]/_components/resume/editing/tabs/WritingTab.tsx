@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { AttachmentSchemaType, estimateReadMinutes } from '@/lib/resume';
-import { PenNibIcon } from '@phosphor-icons/react/ssr';
-import { LockIcon } from '@/components/icons/readcv';
+import { PenNibIcon, LockIcon } from '@phosphor-icons/react/ssr';
 import { usePagePersistence } from '@/hooks/usePagePersistence';
 import { DeleteConfirmDialog } from '../dialogs';
 import { withErrorToast } from '@/lib/errorToast';

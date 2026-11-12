@@ -1,6 +1,6 @@
 'use client';
 
-import { DotsThreeIcon } from '@/components/icons/readcv';
+import { DotsThreeIcon } from '@phosphor-icons/react/ssr';
 import {
   DropdownMenu,
   DropdownMenuContent,

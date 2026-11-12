@@ -18,11 +18,6 @@ export function Volunteering({
       {validItems.map((item, idx) => (
         <PreviewListItem
           key={item.id || idx}
-          replyTarget={
-            item.id
-              ? { kind: 'item', section: 'volunteering', itemId: item.id }
-              : undefined
-          }
           leftContent={
             item.startYear
               ? `${item.startYear} — ${item.endYear || 'Now'}`

@@ -8,7 +8,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { AttachmentSchemaType, estimateReadMinutes } from '@/lib/resume';
-import { CheckIcon, PencilSimpleIcon } from '@/components/icons/readcv';
+import { CheckIcon, PencilSimpleIcon } from '@phosphor-icons/react/ssr';
 import { cn } from '@/lib/utils';
 
 interface AttachPagesDialogProps {

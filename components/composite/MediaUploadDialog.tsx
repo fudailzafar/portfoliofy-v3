@@ -8,8 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { usePresignedUpload } from 'next-s3-upload';
-import { DotsSixVerticalIcon } from '@phosphor-icons/react/ssr';
-import { XIcon } from '@/components/icons/readcv';
+import { XIcon, DotsSixVerticalIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
 import { AttachmentSchemaType } from '@/lib/resume';
 import {

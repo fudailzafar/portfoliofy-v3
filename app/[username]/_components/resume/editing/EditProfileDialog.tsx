@@ -17,7 +17,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Spinner } from '@/components/ui/spinner';
-import { PencilSimpleIcon } from '@/components/icons/readcv';
+import { PencilSimpleIcon } from '@phosphor-icons/react/ssr';
 import { SIDEBAR_SLIDE, useSidebarStore } from '@/store/useSidebarStore';
 import { createPortal } from 'react-dom';
 import { useResumeStore } from '@/store/useResumeStore';

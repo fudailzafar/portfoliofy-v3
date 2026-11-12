@@ -19,8 +19,6 @@ export interface UserProfile {
   statusText?: string | null;
   statusUpdatedAt?: Date | null;
   createdAt?: Date | null;
-  // Whether other people can reply to this profile. On unless turned off.
-  repliesEnabled?: boolean;
 }
 
 export const getCachedUserProfile = cache(
@@ -29,7 +27,7 @@ export const getCachedUserProfile = cache(
       async () => {
         try {
           const [row] =
-            await sql`SELECT name, email, image, custom_image, status_emoji, status_text, status_updated_at, created_at, replies_enabled FROM users WHERE id = ${userId}`;
+            await sql`SELECT name, email, image, custom_image, status_emoji, status_text, status_updated_at, created_at FROM users WHERE id = ${userId}`;
           if (!row) return null;
 
           const profile: UserProfile = {
@@ -41,7 +39,6 @@ export const getCachedUserProfile = cache(
             statusText: row.statusText,
             statusUpdatedAt: row.statusUpdatedAt,
             createdAt: row.createdAt,
-            repliesEnabled: row.repliesEnabled !== false,
           };
 
           profile.avatarUrl = profile.customImage ?? profile.image ?? undefined;

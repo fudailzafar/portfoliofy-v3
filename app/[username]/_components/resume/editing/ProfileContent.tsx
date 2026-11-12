@@ -23,7 +23,7 @@ import {
   ExhibitionsTab,
 } from './tabs';
 import { ImportDataTab } from './ImportDataTab';
-import { CaretLeftIcon } from '@/components/icons/readcv';
+import { CaretLeftIcon } from '@phosphor-icons/react/ssr';
 
 interface ProfileContentProps {
   activeTab: string;

@@ -13,13 +13,15 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import {
+  ArrowLeftIcon,
+  XIcon,
   TextBIcon,
   TextItalicIcon,
   TextStrikethroughIcon,
   LinkSimpleIcon,
   CodeIcon,
+  LockIcon,
 } from '@phosphor-icons/react/ssr';
-import { ArrowLeftIcon, XIcon, LockIcon } from '@/components/icons/readcv';
 import { cn, getOptimizedImageUrl } from '@/lib/utils';
 import { useS3Upload } from 'next-s3-upload';
 import { Embed, EmbedProvider } from '@/components/composite/tiptap-embed';

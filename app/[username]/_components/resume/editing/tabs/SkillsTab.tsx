@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useResumeStore } from '@/store/useResumeStore';
 import { Input } from '@/components/ui/input';
-import { XIcon } from '@/components/icons/readcv';
+import { XIcon } from '@phosphor-icons/react/ssr';
 
 export function SkillsTab() {
   const resume = useResumeStore((state) => state.resume);

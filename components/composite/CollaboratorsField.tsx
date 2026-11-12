@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { XIcon } from '@/components/icons/readcv';
+import { XIcon } from '@phosphor-icons/react/ssr';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AvatarPlaceholderIcon } from '@/components/composite/AvatarPlaceholderIcon';
 import { Label } from '@/components/ui/label';

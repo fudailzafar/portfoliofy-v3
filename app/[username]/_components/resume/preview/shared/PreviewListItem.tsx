@@ -1,11 +1,9 @@
 import React from 'react';
-import { ArrowUpRightIcon } from '@/components/icons/readcv';
+import { ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
 import { AttachmentsPreview } from '../AttachmentsPreview';
 import { AvatarStack } from '@/components/composite/AvatarStack';
 import { CollaboratorSchemaType } from '@/lib/resume';
 import { cn, ensureHttps } from '@/lib/utils';
-import type { ReplyTarget } from '@/lib/replies';
-import { Repliable } from '../replies/Repliable';
 
 export interface PreviewListItemProps {
   leftContent: React.ReactNode;
@@ -17,7 +15,6 @@ export interface PreviewListItemProps {
   attachments?: any[];
   collaborators?: CollaboratorSchemaType[];
   /** What a visitor's reply is about. Left out for items that can't be quoted. */
-  replyTarget?: ReplyTarget;
 }
 
 export function PreviewListItem({
@@ -29,7 +26,6 @@ export function PreviewListItem({
   description,
   attachments,
   collaborators,
-  replyTarget,
 }: PreviewListItemProps) {
   const item = (
     <div className="flex flex-col min-[481px]:flex-row min-[481px]:gap-[36px] print:mb-6">
@@ -107,9 +103,5 @@ export function PreviewListItem({
     </div>
   );
 
-  return replyTarget ? (
-    <Repliable target={replyTarget}>{item}</Repliable>
-  ) : (
-    item
-  );
+  return item;
 }
