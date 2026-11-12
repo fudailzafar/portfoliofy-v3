@@ -19,5 +19,4 @@ export const RESERVED_USERNAMES = [
   'connect',
   'verify-login',
   'staging',
-  'replies',
 ];

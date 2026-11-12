@@ -5,7 +5,6 @@ import { useTheme } from 'next-themes';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { ConnectedApps } from '../ConnectedApps';
-import { RepliesSetting } from '../replies/RepliesSetting';
 import {
   Select,
   SelectContent,
@@ -83,8 +82,6 @@ export function SettingsTab({
             </div>
           </div>
         </div>
-
-        <RepliesSetting />
 
         <ConnectedApps />
 

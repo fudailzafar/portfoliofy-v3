@@ -1,4 +1,4 @@
-import { CaretLeftIcon } from '@/components/icons/icon-set';
+import { CaretLeftIcon } from '@phosphor-icons/react/ssr';
 
 interface TabHeaderProps {
   title: string;

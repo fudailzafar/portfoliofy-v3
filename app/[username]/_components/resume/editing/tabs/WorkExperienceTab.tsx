@@ -16,7 +16,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { BriefcaseIcon } from '@/components/icons/icon-set';
+import { BriefcaseIcon } from '@phosphor-icons/react/ssr';
 import {
   Select,
   SelectContent,

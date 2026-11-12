@@ -1,5 +1,5 @@
 import { ResumeDataSchemaType } from '@/lib/resume';
-import { ArrowUpRightIcon } from '@/components/icons/icon-set';
+import { ArrowUpRightIcon } from '@phosphor-icons/react/ssr';
 import { extractUsername, buildContactUrl } from '@/utils/extractUsername';
 
 export function Contact({
