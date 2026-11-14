@@ -79,11 +79,11 @@ export async function POST(
     }
 
     if (oldUsername) {
-      // @ts-expect-error Next.js 16 Canary types
-      revalidateTag(`username-${normalizeUsername(oldUsername)}`);
+      revalidateTag(`username-${normalizeUsername(oldUsername)}`, {
+        expire: 0,
+      });
     }
-    // @ts-expect-error Next.js 16 Canary types
-    revalidateTag(`username-${normalizeUsername(username)}`);
+    revalidateTag(`username-${normalizeUsername(username)}`, { expire: 0 });
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -69,12 +69,9 @@ export async function claimUsernameAndInitProfile(
     resumeData: emptyResumeData,
   });
 
-  // @ts-expect-error Next.js 16 Canary types
-  revalidateTag(`username-${normalizeUsername(username)}`);
-  // @ts-expect-error Next.js 16 Canary types
-  revalidateTag(`resume-v2-${userId}`);
-  // @ts-expect-error Next.js 16 Canary types
-  revalidateTag(`user-${userId}`);
+  revalidateTag(`username-${normalizeUsername(username)}`, { expire: 0 });
+  revalidateTag(`resume-v2-${userId}`, { expire: 0 });
+  revalidateTag(`user-${userId}`, { expire: 0 });
 
   return { success: true };
 }

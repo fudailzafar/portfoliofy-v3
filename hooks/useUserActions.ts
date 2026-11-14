@@ -149,9 +149,21 @@ export function useUserActions() {
       version: useResumeStore.getState().resumeVersion,
     };
 
-    const version = await internalResumeUpdate(updatedResume);
+    // Show the new data straight away, so the screen never falls back to the
+    // old copy while the save is in flight. Stop any running refetch first,
+    // otherwise it could land afterwards and put the old data back.
+    await queryClient.cancelQueries({ queryKey: ['resume'] });
+    const previous = queryClient.getQueryData(['resume']);
+    queryClient.setQueryData(['resume'], { resume: updatedResume });
+
+    let version: number;
+    try {
+      version = await internalResumeUpdate(updatedResume);
+    } catch (error) {
+      queryClient.setQueryData(['resume'], previous);
+      throw error;
+    }
     useResumeStore.getState().setResumeVersion(version);
-    // Update the cache now, so the next save can't race the refetch below.
     queryClient.setQueryData(['resume'], {
       resume: { ...updatedResume, version },
     });
@@ -162,10 +174,8 @@ export function useUserActions() {
   // Mutation for saving resume data changes
   const saveResumeDataMutation = useMutation({
     mutationFn: saveResumeDataChanges,
-    onSuccess: () => {
-      // Invalidate and refetch resume data
-      queryClient.invalidateQueries({ queryKey: ['resume'] });
-    },
+    // No refetch here: the cache already holds exactly what was saved, and a
+    // refetch only risks briefly showing an older copy.
   });
 
   return {

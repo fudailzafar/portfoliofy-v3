@@ -1,4 +1,4 @@
-import { useState, UIEvent } from 'react';
+import { useLayoutEffect, useRef, useState, UIEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { ExploreSort, useExplore } from '@/hooks/useExplore';
 import { getOptimizedImageUrl } from '@/lib/utils';
@@ -19,6 +19,16 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<ExploreSort>('activity');
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [indicator, setIndicator] = useState<{
+    left: number;
+    width: number;
+  } | null>(null);
+
+  useLayoutEffect(() => {
+    const el = tabRefs.current[sort];
+    if (el) setIndicator({ left: el.offsetLeft, width: el.offsetWidth });
+  }, [sort]);
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useExplore(query, sort);
@@ -102,10 +112,13 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
           </button>
         </div>
 
-        <div className="mt-3 flex items-center gap-6 border-b border-black/5 px-1 dark:border-white/10">
+        <div className="relative mt-3 flex items-center gap-6 border-b border-black/5 px-1 dark:border-white/10">
           {tabs.map((tab) => (
             <button
               key={tab.id}
+              ref={(el) => {
+                tabRefs.current[tab.id] = el;
+              }}
               onClick={() => setSort(tab.id)}
               className={`relative h-10 cursor-default text-[14px] leading-10 ${
                 sort === tab.id
@@ -114,15 +127,19 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
               }`}
             >
               {tab.label}
-              {sort === tab.id && (
-                <motion.div
-                  layoutId="exploreTabIndicator"
-                  transition={TAB_SPRING}
-                  className="absolute -bottom-[1px] left-0 right-0 h-[1px] bg-[#111] dark:bg-[#eee]"
-                />
-              )}
             </button>
           ))}
+          {/* One underline that slides between tabs. It is placed from the
+              tab's own size, not shared-layout tracking, which jumped when
+              the list below it reloaded. */}
+          {indicator && (
+            <motion.div
+              initial={false}
+              animate={{ x: indicator.left, width: indicator.width }}
+              transition={TAB_SPRING}
+              className="absolute -bottom-[1px] left-0 h-[1px] bg-[#111] dark:bg-[#eee]"
+            />
+          )}
         </div>
       </div>
 

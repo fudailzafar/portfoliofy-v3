@@ -327,8 +327,7 @@ export async function setUserStatus(
       status_updated_at = ${text ? new Date().toISOString() : null}
     WHERE id = ${userId}
   `;
-  // @ts-expect-error Next.js 16 Canary types require second profile argument
-  revalidateTag(`user-${userId}`);
+  revalidateTag(`user-${userId}`, { expire: 0 });
 }
 
 export const createUsernameLookup = async ({
