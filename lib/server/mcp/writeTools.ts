@@ -66,8 +66,7 @@ const sectionFieldHelp = ITEM_SECTIONS.map(
 ).join('\n');
 
 function revalidateResume(userId: string) {
-  // @ts-expect-error Next.js 16 Canary types require second profile argument
-  revalidateTag(`resume-v2-${userId}`);
+  revalidateTag(`resume-v2-${userId}`, { expire: 0 });
 }
 
 /** Applies an edit to the latest profile, retrying once if it changes mid-save. */

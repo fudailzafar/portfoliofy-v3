@@ -78,8 +78,7 @@ export async function POST(
     }
 
     const version = await storeResume(session.user.id, body as Resume);
-    // @ts-expect-error Next.js 16 Canary types require second profile argument
-    revalidateTag(`resume-v2-${session.user.id}`);
+    revalidateTag(`resume-v2-${session.user.id}`, { expire: 0 });
     return NextResponse.json({ success: true, version });
   } catch (error) {
     if (error instanceof z.ZodError) {

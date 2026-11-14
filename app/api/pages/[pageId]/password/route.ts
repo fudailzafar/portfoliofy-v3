@@ -67,8 +67,7 @@ export async function POST(
     if (!found) {
       return NextResponse.json({ error: 'Page not found' }, { status: 404 });
     }
-    // @ts-expect-error Next.js 16 Canary types require second profile argument
-    revalidateTag(`resume-v2-${session.user.id}`);
+    revalidateTag(`resume-v2-${session.user.id}`, { expire: 0 });
     return NextResponse.json({ passwordProtected: body.password !== null });
   } catch (error) {
     console.error('Error in POST /api/pages/[pageId]/password:', error);
