@@ -39,6 +39,9 @@ export const { handlers, auth } = NextAuth({
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      // Always show Google's account chooser, so a browser with one Google
+      // account signed in doesn't log straight into it.
+      authorization: { params: { prompt: 'select_account' } },
     }),
     // Magic link: /verify-login passes the emailed token, checked here.
     Credentials({
