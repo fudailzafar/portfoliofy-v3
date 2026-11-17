@@ -21,6 +21,11 @@ export function WorkExperience({
       {validItems.map((item, idx) => (
         <PreviewListItem
           key={item.id || idx}
+          replyTarget={
+            item.id
+              ? { kind: 'item', section: 'workExperience', itemId: item.id }
+              : undefined
+          }
           leftContent={`${item.start} — ${item.end || 'Now'}`}
           title={item.title}
           subtitle={`at ${item.company}`}

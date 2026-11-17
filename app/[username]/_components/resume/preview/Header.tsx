@@ -21,6 +21,7 @@ const StatusEditor = dynamic(
 import { AnimatePresence } from 'framer-motion';
 import { SmileyIcon } from '@phosphor-icons/react/ssr';
 import { ensureHttps } from '@/lib/utils';
+import { StatusReply } from './replies/StatusReply';
 
 function getRelativeTime(dateInput: Date | string | null | undefined): string {
   if (!dateInput) return '';
@@ -268,6 +269,7 @@ export function Header({
           <span className="mt-1.5 text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-muted">
             {getRelativeTime(currentStatus.updatedAt)}
           </span>
+          <StatusReply />
         </div>
       )}
     </div>
