@@ -170,6 +170,23 @@ export function EditProfileDialog({
 
     const handleOpenEditor = () => setOpen(true);
     window.addEventListener('open-editor', handleOpenEditor);
+
+    // The account menu sends people here with ?edit=general or ?edit=settings.
+    const params = new URLSearchParams(window.location.search);
+    const edit = params.get('edit');
+    if (edit) {
+      useResumeStore
+        .getState()
+        .setActiveTab(edit === 'settings' ? 'settings' : 'general');
+      setOpen(true);
+      params.delete('edit');
+      const query = params.toString();
+      window.history.replaceState(
+        null,
+        '',
+        window.location.pathname + (query ? `?${query}` : ''),
+      );
+    }
     return () => window.removeEventListener('open-editor', handleOpenEditor);
   }, []);
 
@@ -453,13 +470,8 @@ export function EditProfileDialog({
                   transition={SIDEBAR_SLIDE}
                   whileTap={{ scale: 0.9 }}
                   aria-label="Edit Profile"
-                  style={{
-                    position: 'fixed',
-                    bottom: '30px',
-                    left: '80px',
-                    zIndex: 50,
-                  }}
-                  className="flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 dark:border-none dark:bg-[#333] print:hidden"
+                  style={{ position: 'fixed', zIndex: 50 }}
+                  className="bottom-[86px] left-6 flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 dark:border-none dark:bg-[#333] md:bottom-[30px] md:left-[80px] print:hidden"
                 >
                   <PencilSimpleIcon className="h-[18px] w-[18px] text-content-primary" />
                 </motion.button>

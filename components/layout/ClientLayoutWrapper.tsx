@@ -1,15 +1,11 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { GlobalSidebar } from './GlobalSidebar';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { ExploreSidebar } from './ExploreSidebar';
+import { NavRail, RAIL_WIDTH } from './NavRail';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   SIDEBAR_MAX_WIDTH,
   SIDEBAR_PEEK,
@@ -17,6 +13,9 @@ import {
   useSidebarStore,
 } from '@/store/useSidebarStore';
 
+// The navigation is a slim rail down the left edge. "isOpen" in the sidebar
+// store now means the Explore panel beside it is open; it slides out from
+// behind the rail and pushes the page across.
 export function ClientLayoutWrapper({
   children,
 }: {
@@ -25,6 +24,12 @@ export function ClientLayoutWrapper({
   const { isOpen, setIsOpen, sidebarWidth, setSidebarWidth } =
     useSidebarStore();
   const pathname = usePathname();
+  // The panel's contents are only mounted while it is open or sliding shut, so
+  // a closed panel doesn't load people or grab focus.
+  const [panelMounted, setPanelMounted] = useState(false);
+  useEffect(() => {
+    if (isOpen) setPanelMounted(true);
+  }, [isOpen]);
 
   useEffect(() => {
     const updateWidth = () =>
@@ -38,49 +43,55 @@ export function ClientLayoutWrapper({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Listen for Cmd+E or Ctrl+E
+      // Cmd/Ctrl+E or Cmd/Ctrl+Shift+E toggles Explore.
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'e') {
         e.preventDefault();
-        if (e.shiftKey) {
-          setIsOpen(true);
-          window.dispatchEvent(new CustomEvent('toggleExploreMode'));
-        } else {
-          setIsOpen((prev) => !prev);
-        }
+        setIsOpen((prev) => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [setIsOpen]);
 
-  // Auto-close sidebar on mobile when navigating
+  // Close Explore when navigating on a phone, where it covers the page.
   useEffect(() => {
     if (window.innerWidth < 768) {
       setIsOpen(false);
     }
   }, [pathname, setIsOpen]);
 
-  // Expose sidebar state via CSS variable so other fixed elements (like edit button) can follow
+  // Other fixed elements can follow the panel through this CSS variable.
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty(
       '--sidebar-offset',
       isOpen ? `${sidebarWidth}px` : '0px',
     );
+    root.style.setProperty('--rail-width', `${RAIL_WIDTH}px`);
   }, [isOpen, sidebarWidth]);
 
   return (
     <TooltipProvider delayDuration={0}>
       <div className="relative flex min-h-screen w-full overflow-x-hidden bg-surface-1 font-sans">
-        {/* Sliding Sidebar */}
+        <NavRail
+          exploreOpen={isOpen}
+          onToggleExplore={() => setIsOpen((prev) => !prev)}
+        />
+
+        {/* Explore panel, sliding out from behind the rail */}
         <motion.div
-          className="fixed left-0 top-0 z-40 h-full print:hidden"
+          className="fixed bottom-14 left-0 top-0 z-40 md:bottom-0 md:left-[60px] print:hidden"
           style={{ width: sidebarWidth }}
-          initial={{ x: -sidebarWidth }}
-          animate={{ x: isOpen ? 0 : -sidebarWidth }}
+          initial={{ x: -sidebarWidth - RAIL_WIDTH }}
+          animate={{ x: isOpen ? 0 : -sidebarWidth - RAIL_WIDTH }}
           transition={SIDEBAR_SLIDE}
+          onAnimationComplete={() => {
+            if (!isOpen) setPanelMounted(false);
+          }}
+          aria-hidden={!isOpen}
+          inert={!isOpen}
         >
-          <GlobalSidebar />
+          {panelMounted && <ExploreSidebar onClose={() => setIsOpen(false)} />}
         </motion.div>
 
         {/* Click-away overlay */}
@@ -91,13 +102,11 @@ export function ClientLayoutWrapper({
           />
         )}
 
-        {/* Main Content Layer */}
+        {/* Main content layer: clear of the rail, pushed over by the panel */}
         <motion.div
-          animate={{
-            x: isOpen ? sidebarWidth : 0,
-          }}
+          animate={{ x: isOpen ? sidebarWidth : 0 }}
           transition={SIDEBAR_SLIDE}
-          className="relative z-10 flex min-h-screen min-w-0 flex-1 flex-col bg-surface-1 print:!transform-none print:shadow-none"
+          className="relative z-10 flex min-h-screen min-w-0 flex-1 flex-col bg-surface-1 max-md:pb-14 md:pl-[60px] print:!transform-none print:pb-0 print:pl-0 print:shadow-none"
         >
           <motion.div
             key={pathname}
@@ -108,68 +117,6 @@ export function ClientLayoutWrapper({
           >
             {children}
           </motion.div>
-        </motion.div>
-
-        {/* Floating Menu Toggle Button */}
-        <motion.div
-          className="fixed bottom-[30px] left-6 z-50 flex items-center gap-3 print:hidden"
-          animate={{ x: isOpen ? sidebarWidth : 0 }}
-          transition={SIDEBAR_SLIDE}
-        >
-          <Tooltip>
-            <TooltipTrigger asChild className="print:hidden">
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setIsOpen(!isOpen)}
-                aria-label="Menu"
-                className="flex size-[48px] flex-col items-center justify-center gap-1 rounded-full bg-[#fff] shadow-[0_0_0_1px_rgba(0,0,0,0.1),0_3px_8px_rgba(0,0,0,0.05)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 dark:bg-[#333] dark:shadow-none"
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="text-content-primary"
-                >
-                  <rect
-                    x="5"
-                    y="6.75"
-                    width="14"
-                    height="1.5"
-                    rx="0.5"
-                    fill="currentColor"
-                  />
-                  <rect
-                    x="5"
-                    y="11.25"
-                    width="14"
-                    height="1.5"
-                    rx="0.5"
-                    fill="currentColor"
-                  />
-                  <rect
-                    x="5"
-                    y="15.75"
-                    width="9"
-                    height="1.5"
-                    rx="0.5"
-                    fill="currentColor"
-                  />
-                </svg>
-              </motion.button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="top"
-              sideOffset={12}
-              className="flex items-center gap-1.5 rounded-lg border-none bg-action-primary px-3 py-1.5 text-[13px] font-medium text-surface-1 shadow-md"
-            >
-              <span>Menu</span>
-              <span className="text-[11px] tracking-tighter opacity-60">
-                ⌘ E
-              </span>
-            </TooltipContent>
-          </Tooltip>
         </motion.div>
       </div>
     </TooltipProvider>
