@@ -62,8 +62,8 @@ export function FollowButton({
       disabled={pending}
       aria-pressed={following}
       aria-label={following ? `Unfollow ${username}` : `Follow ${username}`}
-      style={{ position: 'fixed', bottom: '30px', left: '80px', zIndex: 50 }}
-      className="flex h-12 min-w-[104px] items-center justify-center rounded-full border border-border-strong bg-surface-1 px-6 text-[14px] text-content-primary shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 dark:border-none dark:bg-[#333] print:hidden"
+      style={{ position: 'fixed', zIndex: 50 }}
+      className="bottom-[86px] left-6 flex h-12 min-w-[104px] items-center justify-center rounded-full border border-border-strong bg-surface-1 px-6 text-[14px] text-content-primary shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 dark:border-none dark:bg-[#333] md:bottom-[30px] md:left-[80px] print:hidden"
     >
       {label}
     </motion.button>,
