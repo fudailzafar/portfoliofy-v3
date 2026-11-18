@@ -117,13 +117,7 @@ function RailButton({ item }: { item: RailItem }) {
   );
 }
 
-export function NavRail({
-  exploreOpen,
-  onToggleExplore,
-}: {
-  exploreOpen: boolean;
-  onToggleExplore: () => void;
-}) {
+export function NavRail() {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
@@ -195,8 +189,8 @@ export function NavRail({
       label: 'Explore',
       hint: '⌘ E',
       icon: MagnifyingGlassIcon,
-      onClick: onToggleExplore,
-      active: exploreOpen,
+      href: '/explore',
+      active: pathname.startsWith('/explore'),
     },
     ...(signedIn
       ? [
@@ -232,7 +226,7 @@ export function NavRail({
     <>
       <nav
         aria-label="Main"
-        className="fixed bottom-0 left-0 z-50 flex h-14 w-full items-center justify-around border-t border-border-subtle bg-surface-1 md:inset-y-0 md:h-auto md:w-[60px] md:flex-col md:justify-between md:border-0 md:py-4 print:hidden"
+        className="fixed bottom-0 left-0 z-50 flex h-14 w-full items-center justify-around border-t border-border-subtle bg-surface-1 md:inset-y-0 md:h-auto md:w-[60px] md:flex-col md:justify-between md:border-0 md:py-4 md:shadow-[1px_0_0_0_rgba(0,0,0,0.05)] dark:md:shadow-[1px_0_0_0_rgba(255,255,255,0.1)] print:hidden"
       >
         {/* Desktop: spacer so the icons sit in the middle. */}
         <div className="hidden md:block md:size-11" aria-hidden />

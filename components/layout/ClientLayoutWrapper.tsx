@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ExploreSidebar } from './ExploreSidebar';
 import { NavRail, RAIL_WIDTH } from './NavRail';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import {
@@ -24,6 +23,7 @@ export function ClientLayoutWrapper({
   const { isOpen, setIsOpen, sidebarWidth, setSidebarWidth } =
     useSidebarStore();
   const pathname = usePathname();
+  const router = useRouter();
   // The panel's contents are only mounted while it is open or sliding shut, so
   // a closed panel doesn't load people or grab focus.
   const [panelMounted, setPanelMounted] = useState(false);
@@ -43,15 +43,15 @@ export function ClientLayoutWrapper({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Cmd/Ctrl+E or Cmd/Ctrl+Shift+E toggles Explore.
+      // Cmd/Ctrl+E (or with Shift) opens Explore.
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'e') {
         e.preventDefault();
-        setIsOpen((prev) => !prev);
+        router.push('/explore');
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [setIsOpen]);
+  }, [router]);
 
   // Close Explore when navigating on a phone, where it covers the page.
   useEffect(() => {
@@ -73,34 +73,7 @@ export function ClientLayoutWrapper({
   return (
     <TooltipProvider delayDuration={0}>
       <div className="relative flex min-h-screen w-full overflow-x-hidden bg-surface-1 font-sans">
-        <NavRail
-          exploreOpen={isOpen}
-          onToggleExplore={() => setIsOpen((prev) => !prev)}
-        />
-
-        {/* Explore panel, sliding out from behind the rail */}
-        <motion.div
-          className="fixed bottom-14 left-0 top-0 z-40 md:bottom-0 md:left-[60px] print:hidden"
-          style={{ width: sidebarWidth }}
-          initial={{ x: -sidebarWidth - RAIL_WIDTH }}
-          animate={{ x: isOpen ? 0 : -sidebarWidth - RAIL_WIDTH }}
-          transition={SIDEBAR_SLIDE}
-          onAnimationComplete={() => {
-            if (!isOpen) setPanelMounted(false);
-          }}
-          aria-hidden={!isOpen}
-          inert={!isOpen}
-        >
-          {panelMounted && <ExploreSidebar onClose={() => setIsOpen(false)} />}
-        </motion.div>
-
-        {/* Click-away overlay */}
-        {isOpen && (
-          <div
-            className="fixed inset-0 z-30 bg-transparent"
-            onClick={() => setIsOpen(false)}
-          />
-        )}
+        <NavRail />
 
         {/* Main content layer: clear of the rail, pushed over by the panel */}
         <motion.div
