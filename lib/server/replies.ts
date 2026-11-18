@@ -11,6 +11,8 @@ import {
   type ReplyContext,
   type ReplyTarget,
   type ReportReason,
+  type RepliesFrom,
+  acceptsReplies,
 } from '../replies';
 import type { ResumeData } from './dbActions';
 
@@ -37,7 +39,7 @@ interface Person {
   username: string;
   name: string | null;
   image: string | null;
-  repliesEnabled: boolean;
+  repliesFrom: RepliesFrom;
   statusEmoji: string | null;
   statusText: string | null;
 }
@@ -45,7 +47,7 @@ interface Person {
 async function findPersonByUsername(username: string): Promise<Person | null> {
   const [row] = await sql`
     SELECT id, username, name, COALESCE(custom_image, image) AS image,
-           replies_enabled, status_emoji, status_text
+           replies_from, status_emoji, status_text
     FROM users
     WHERE username = ${normalizeUsername(username)}
   `;
@@ -67,15 +69,32 @@ async function blockState(me: string, other: string) {
 }
 
 /** Can `senderId` send `recipient` a message right now? */
+/** Does `followerId` follow `followeeId`? */
+async function follows(followerId: string, followeeId: string) {
+  const [row] = await sql`
+    SELECT 1 FROM follows
+    WHERE follower_id = ${followerId} AND followee_id = ${followeeId}
+  `;
+  return !!row;
+}
+
 async function checkCanMessage(
   senderId: string,
-  recipient: Pick<Person, 'id' | 'repliesEnabled'>,
+  recipient: Pick<Person, 'id' | 'repliesFrom'>,
 ): Promise<ReplyFailure | null> {
   if (recipient.id === senderId) return 'self';
-  const { blockedByMe, blockedMe } = await blockState(senderId, recipient.id);
+  const [{ blockedByMe, blockedMe }, recipientFollowsSender] =
+    await Promise.all([
+      blockState(senderId, recipient.id),
+      recipient.repliesFrom === 'following'
+        ? follows(recipient.id, senderId)
+        : Promise.resolve(false),
+    ]);
   if (blockedMe) return 'not_accepting';
   if (blockedByMe) return 'blocked_by_you';
-  if (!recipient.repliesEnabled) return 'not_accepting';
+  if (!acceptsReplies(recipient.repliesFrom, recipientFollowsSender)) {
+    return 'not_accepting';
+  }
   return null;
 }
 
@@ -213,7 +232,12 @@ async function loadMembership(userId: string, conversationId: string) {
   const [row] = await sql`
     SELECT o.id AS other_id, o.username, o.name,
            COALESCE(o.custom_image, o.image) AS image,
-           o.replies_enabled, me.last_read_at
+           o.replies_from,
+           EXISTS (
+             SELECT 1 FROM follows f
+             WHERE f.follower_id = o.id AND f.followee_id = ${userId}
+           ) AS follows_you,
+           me.last_read_at
     FROM conversations c
     JOIN conversation_members me
       ON me.conversation_id = c.id AND me.user_id = ${userId}
@@ -227,7 +251,9 @@ async function loadMembership(userId: string, conversationId: string) {
         username: string;
         name: string | null;
         image: string | null;
-        repliesEnabled: boolean;
+        repliesFrom: RepliesFrom;
+        /** Whether the other person follows the user. */
+        followsYou: boolean;
         lastReadAt: Date;
       }
     | undefined;
@@ -244,7 +270,7 @@ export async function sendInConversation(args: {
 
   const refusal = await checkCanMessage(args.senderId, {
     id: member.otherId,
-    repliesEnabled: member.repliesEnabled,
+    repliesFrom: member.repliesFrom,
   });
   if (refusal) return { ok: false, reason: refusal };
 
@@ -432,7 +458,10 @@ export async function getThread(
     },
     messages,
     hasMore,
-    canReply: !blockedByMe && !blockedMe && member.repliesEnabled,
+    canReply:
+      !blockedByMe &&
+      !blockedMe &&
+      acceptsReplies(member.repliesFrom, member.followsYou),
     blockedByYou: blockedByMe,
   };
 }
@@ -478,6 +507,12 @@ export async function setBlocked(
       INSERT INTO user_blocks (blocker_id, blocked_id)
       VALUES (${blockerId}, ${target.id})
       ON CONFLICT DO NOTHING
+    `;
+    // Blocking also ends following in both directions.
+    await sql`
+      DELETE FROM follows
+      WHERE (follower_id = ${blockerId} AND followee_id = ${target.id})
+         OR (follower_id = ${target.id} AND followee_id = ${blockerId})
     `;
   } else {
     await sql`
@@ -528,16 +563,22 @@ export async function reportConversation(args: {
   return { ok: true };
 }
 
-export async function getRepliesEnabled(userId: string): Promise<boolean> {
+export async function getRepliesFrom(userId: string): Promise<RepliesFrom> {
   const [row] = await sql`
-    SELECT replies_enabled FROM users WHERE id = ${userId}
+    SELECT replies_from FROM users WHERE id = ${userId}
   `;
-  return row ? (row.repliesEnabled as boolean) : true;
+  return (row?.repliesFrom as RepliesFrom | undefined) ?? 'everyone';
 }
 
-export async function setRepliesEnabled(
+/** Saves who may reply. replies_enabled is kept in step for older code. */
+export async function setRepliesFrom(
   userId: string,
-  enabled: boolean,
+  repliesFrom: RepliesFrom,
 ): Promise<void> {
-  await sql`UPDATE users SET replies_enabled = ${enabled} WHERE id = ${userId}`;
+  await sql`
+    UPDATE users
+    SET replies_from = ${repliesFrom},
+        replies_enabled = ${repliesFrom !== 'nobody'}
+    WHERE id = ${userId}
+  `;
 }

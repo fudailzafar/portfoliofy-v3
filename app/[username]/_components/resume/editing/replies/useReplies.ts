@@ -7,6 +7,7 @@ import {
   type QueryClient,
 } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import type { RepliesFrom } from '@/lib/replies';
 import { repliesApi } from './api';
 
 export const REPLIES_KEYS = {
@@ -123,7 +124,9 @@ export function useRepliesSetting() {
     mutationFn: repliesApi.setSetting,
     onMutate: async (next) => {
       await queryClient.cancelQueries({ queryKey: REPLIES_KEYS.settings });
-      const previous = queryClient.getQueryData<boolean>(REPLIES_KEYS.settings);
+      const previous = queryClient.getQueryData<RepliesFrom>(
+        REPLIES_KEYS.settings,
+      );
       queryClient.setQueryData(REPLIES_KEYS.settings, next);
       return { previous };
     },

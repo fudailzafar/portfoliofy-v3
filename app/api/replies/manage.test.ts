@@ -6,8 +6,8 @@ const mocks = vi.hoisted(() => ({
   auth: vi.fn(),
   setBlocked: vi.fn(),
   reportConversation: vi.fn(),
-  getRepliesEnabled: vi.fn(),
-  setRepliesEnabled: vi.fn(),
+  getRepliesFrom: vi.fn(),
+  setRepliesFrom: vi.fn(),
   markConversationRead: vi.fn(),
   hideConversation: vi.fn(),
   countUnreadConversations: vi.fn(),
@@ -18,8 +18,8 @@ vi.mock('@/auth', () => ({ auth: mocks.auth }));
 vi.mock('@/lib/server/replies', () => ({
   setBlocked: mocks.setBlocked,
   reportConversation: mocks.reportConversation,
-  getRepliesEnabled: mocks.getRepliesEnabled,
-  setRepliesEnabled: mocks.setRepliesEnabled,
+  getRepliesFrom: mocks.getRepliesFrom,
+  setRepliesFrom: mocks.setRepliesFrom,
   markConversationRead: mocks.markConversationRead,
   hideConversation: mocks.hideConversation,
   countUnreadConversations: mocks.countUnreadConversations,
@@ -65,7 +65,7 @@ describe('every route needs a signed-in user', () => {
     ]);
     expect(responses.map((r) => r.status)).toEqual(Array(7).fill(401));
     expect(mocks.setBlocked).not.toHaveBeenCalled();
-    expect(mocks.setRepliesEnabled).not.toHaveBeenCalled();
+    expect(mocks.setRepliesFrom).not.toHaveBeenCalled();
   });
 });
 
@@ -159,17 +159,24 @@ describe('POST /api/replies/reports', () => {
 
 describe('/api/replies/settings', () => {
   it('reads and writes the setting', async () => {
-    mocks.getRepliesEnabled.mockResolvedValue(true);
-    expect(await (await getSetting()).json()).toEqual({ repliesEnabled: true });
+    mocks.getRepliesFrom.mockResolvedValue('everyone');
+    expect(await (await getSetting()).json()).toEqual({
+      repliesFrom: 'everyone',
+    });
 
-    const res = await putSetting(json({ repliesEnabled: false }));
-    expect(await res.json()).toEqual({ repliesEnabled: false });
-    expect(mocks.setRepliesEnabled).toHaveBeenCalledWith('me', false);
+    const res = await putSetting(json({ repliesFrom: 'following' }));
+    expect(await res.json()).toEqual({ repliesFrom: 'following' });
+    expect(mocks.setRepliesFrom).toHaveBeenCalledWith('me', 'following');
   });
 
-  it('rejects a non-boolean', async () => {
-    expect((await putSetting(json({ repliesEnabled: 'no' }))).status).toBe(400);
-    expect(mocks.setRepliesEnabled).not.toHaveBeenCalled();
+  it('rejects anything but the three choices', async () => {
+    expect((await putSetting(json({ repliesFrom: 'friends' }))).status).toBe(
+      400,
+    );
+    expect((await putSetting(json({ repliesEnabled: false }))).status).toBe(
+      400,
+    );
+    expect(mocks.setRepliesFrom).not.toHaveBeenCalled();
   });
 });
 

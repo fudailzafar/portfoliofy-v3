@@ -270,3 +270,20 @@ export function buildStatusContext(
   if (!cleanEmoji && !cleanText) return null;
   return { kind: 'status', emoji: cleanEmoji, text: cleanText };
 }
+
+/** Who may start or continue a conversation with someone, as on read.cv. */
+export const REPLIES_FROM = ['everyone', 'following', 'nobody'] as const;
+export type RepliesFrom = (typeof REPLIES_FROM)[number];
+
+/**
+ * Whether a person with this setting accepts a reply from someone.
+ * `recipientFollowsSender` only matters for 'following'.
+ */
+export function acceptsReplies(
+  repliesFrom: RepliesFrom,
+  recipientFollowsSender: boolean,
+): boolean {
+  if (repliesFrom === 'everyone') return true;
+  if (repliesFrom === 'following') return recipientFollowsSender;
+  return false;
+}
