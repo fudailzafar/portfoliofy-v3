@@ -21,6 +21,8 @@ export interface UserProfile {
   createdAt?: Date | null;
   // Whether other people can reply to this profile. On unless turned off.
   repliesEnabled?: boolean;
+  // Who may reply: 'everyone', 'following' (people this user follows) or 'nobody'.
+  repliesFrom?: 'everyone' | 'following' | 'nobody';
 }
 
 export const getCachedUserProfile = cache(
@@ -29,7 +31,7 @@ export const getCachedUserProfile = cache(
       async () => {
         try {
           const [row] =
-            await sql`SELECT name, email, image, custom_image, status_emoji, status_text, status_updated_at, created_at, replies_enabled FROM users WHERE id = ${userId}`;
+            await sql`SELECT name, email, image, custom_image, status_emoji, status_text, status_updated_at, created_at, replies_enabled, replies_from FROM users WHERE id = ${userId}`;
           if (!row) return null;
 
           const profile: UserProfile = {
@@ -42,6 +44,7 @@ export const getCachedUserProfile = cache(
             statusUpdatedAt: row.statusUpdatedAt,
             createdAt: row.createdAt,
             repliesEnabled: row.repliesEnabled !== false,
+            repliesFrom: row.repliesFrom ?? 'everyone',
           };
 
           profile.avatarUrl = profile.customImage ?? profile.image ?? undefined;

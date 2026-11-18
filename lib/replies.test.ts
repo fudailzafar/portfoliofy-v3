@@ -230,3 +230,13 @@ describe('ReportSchema', () => {
     ).toBe(false);
   });
 });
+
+describe('acceptsReplies', () => {
+  it('follows the three settings', async () => {
+    const { acceptsReplies } = await import('./replies');
+    expect(acceptsReplies('everyone', false)).toBe(true);
+    expect(acceptsReplies('following', true)).toBe(true);
+    expect(acceptsReplies('following', false)).toBe(false);
+    expect(acceptsReplies('nobody', true)).toBe(false);
+  });
+});

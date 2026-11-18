@@ -1,4 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
+import { isFollowing } from '@/lib/server/follows';
+import { acceptsReplies } from '@/lib/replies';
+import { FollowButton } from '@/components/follow/FollowButton';
 import { PrintResumeWrapper } from '@/app/[username]/_components/resume/PrintResumeWrapper';
 import { FullResume } from '@/app/[username]/_components/resume/FullResume';
 import { Metadata } from 'next';
@@ -134,6 +137,23 @@ export default async function ProfilePage({
   // Locked pages reach visitors as stubs; only the owner gets their content.
   const ownerResume = toOwnerResume(resume.resumeData);
 
+  // Signed-in visitors on the main site can follow, and may be able to reply
+  // depending on the owner's setting. Following is on Portfoliofy only, so
+  // personal domains don't show it.
+  const viewerId = !isOwner && !isPersonalDomainView ? userId : undefined;
+  const repliesFrom = userProfile?.repliesFrom ?? 'everyone';
+  const [viewerFollows, ownerFollowsViewer] = viewerId
+    ? await Promise.all([
+        isFollowing(viewerId, user_id),
+        repliesFrom === 'following'
+          ? isFollowing(user_id, viewerId)
+          : Promise.resolve(false),
+      ])
+    : [false, false];
+  // Signed-out visitors see the reply bar when replies are open to everyone,
+  // and are asked to sign in when they use it.
+  const canReply = acceptsReplies(repliesFrom, ownerFollowsViewer);
+
   return (
     <ProfileUrlProvider isPersonalDomainView={isPersonalDomainView}>
       <div className="flex min-h-screen flex-col font-sans">
@@ -186,8 +206,14 @@ export default async function ProfilePage({
                   !!resume?.resumeData?.design?.hideSocialFeatures
                 }
                 isPersonalDomainView={isPersonalDomainView}
-                repliesEnabled={userProfile?.repliesEnabled !== false}
+                repliesEnabled={canReply}
               />
+              {viewerId && (
+                <FollowButton
+                  username={username}
+                  initialFollowing={viewerFollows}
+                />
+              )}
             </div>
           )}
         </div>

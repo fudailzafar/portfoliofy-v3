@@ -1,7 +1,7 @@
 // Client side of /api/replies: request helpers and the shapes they return.
 
 import type { InboxItem, Thread, ThreadMessage } from '@/lib/server/replies';
-import type { ReplyTarget, ReportReason } from '@/lib/replies';
+import type { RepliesFrom, ReplyTarget, ReportReason } from '@/lib/replies';
 
 // As sent over JSON, where dates arrive as strings.
 export type InboxEntry = Omit<InboxItem, 'lastMessage' | 'lastMessageAt'> & {
@@ -108,13 +108,13 @@ export const repliesApi = {
   }) => request<{ success: true }>('/api/replies/reports', json('POST', args)),
 
   getSetting: () =>
-    request<{ repliesEnabled: boolean }>('/api/replies/settings').then(
-      (data) => data.repliesEnabled,
+    request<{ repliesFrom: RepliesFrom }>('/api/replies/settings').then(
+      (data) => data.repliesFrom,
     ),
 
-  setSetting: (repliesEnabled: boolean) =>
-    request<{ repliesEnabled: boolean }>(
+  setSetting: (repliesFrom: RepliesFrom) =>
+    request<{ repliesFrom: RepliesFrom }>(
       '/api/replies/settings',
-      json('PUT', { repliesEnabled }),
+      json('PUT', { repliesFrom }),
     ),
 };

@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { z } from 'zod';
-import { getRepliesEnabled, setRepliesEnabled } from '@/lib/server/replies';
+import { getRepliesFrom, setRepliesFrom } from '@/lib/server/replies';
+import { REPLIES_FROM } from '@/lib/replies';
 import {
   LIMITS,
   jsonError,
@@ -10,16 +11,16 @@ import {
   requireUser,
 } from '@/lib/server/replyRoutes';
 
-const BodySchema = z.object({ repliesEnabled: z.boolean() });
+const BodySchema = z.object({ repliesFrom: z.enum(REPLIES_FROM) });
 
-/** Whether other people can reply to the signed-in user. */
+/** Who can reply to the signed-in user: everyone, people they follow, or nobody. */
 export async function GET() {
   try {
     const user = await requireUser();
     if ('response' in user) return user.response;
 
     return NextResponse.json({
-      repliesEnabled: await getRepliesEnabled(user.userId),
+      repliesFrom: await getRepliesFrom(user.userId),
     });
   } catch (error) {
     console.error('Failed to read replies setting:', error);
@@ -27,7 +28,7 @@ export async function GET() {
   }
 }
 
-/** Turns replies from other people on or off. You can still reply to them. */
+/** Changes who can reply. You can always reply to others yourself. */
 export async function PUT(request: Request) {
   try {
     const user = await requireUser();
@@ -42,10 +43,10 @@ export async function PUT(request: Request) {
     const parsed = BodySchema.safeParse(json.body);
     if (!parsed.success) return jsonError('That request was not valid.', 400);
 
-    await setRepliesEnabled(user.userId, parsed.data.repliesEnabled);
+    await setRepliesFrom(user.userId, parsed.data.repliesFrom);
     // The public profile reads this from a cached copy of the user.
-    revalidateTag(`user-${user.userId}`, 'max' as any);
-    return NextResponse.json({ repliesEnabled: parsed.data.repliesEnabled });
+    revalidateTag(`user-${user.userId}`, { expire: 0 });
+    return NextResponse.json({ repliesFrom: parsed.data.repliesFrom });
   } catch (error) {
     console.error('Failed to update replies setting:', error);
     return jsonError('Something went wrong. Try again.', 500);
