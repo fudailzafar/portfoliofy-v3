@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { UsersIcon } from '@phosphor-icons/react/ssr';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
+import { PostStatusBadge } from '@/app/[username]/[slug]/PostStatusBadge';
 import { PersonAvatar } from '@/app/[username]/_components/resume/editing/replies/PersonAvatar';
 import {
   displayName,
@@ -68,8 +69,14 @@ export function FollowingPage() {
 
             {data.followers.slice(0, EVENT_LIMIT).map((person) => (
               <div key={person.id} className="flex items-center gap-4">
-                <Link href={`/${person.username}`} className="shrink-0">
+                <Link
+                  href={`/${person.username}`}
+                  className="relative shrink-0"
+                >
                   <PersonAvatar person={person} />
+                  {person.statusEmoji && (
+                    <PostStatusBadge emoji={person.statusEmoji} />
+                  )}
                 </Link>
                 <p className="min-w-0 flex-1 text-theme-secondary">
                   <Link
