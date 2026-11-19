@@ -6,6 +6,7 @@ import sql from './db';
 import { normalizeUsername } from '../validation/username';
 import {
   buildItemContext,
+  buildPageContext,
   buildStatusContext,
   isEmojiOnly,
   type ReplyContext,
@@ -125,6 +126,10 @@ async function resolveContext(
   }
 
   const resumeData = await getLiveResumeData(recipient.id);
+  if (target.kind === 'page') {
+    const context = buildPageContext(resumeData, target.pageId);
+    return context ? { ok: true, context } : { ok: false };
+  }
   const context = buildItemContext(resumeData, target.section, target.itemId);
   return context ? { ok: true, context } : { ok: false };
 }

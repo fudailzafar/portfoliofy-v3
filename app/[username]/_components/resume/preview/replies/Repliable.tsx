@@ -133,7 +133,11 @@ export function Repliable({
   if (!profile?.enabled) return <>{children}</>;
 
   const noun =
-    target.kind === 'status' ? 'status' : REPLY_SECTION_NOUN[target.section];
+    target.kind === 'status'
+      ? 'status'
+      : target.kind === 'page'
+        ? 'page'
+        : REPLY_SECTION_NOUN[target.section];
   const label = `Reply to ${profile.name}’s ${noun}`;
 
   const begin = () => {

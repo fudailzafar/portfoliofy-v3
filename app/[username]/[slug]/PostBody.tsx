@@ -3,6 +3,7 @@ import { LockIcon } from '@phosphor-icons/react/ssr';
 import { PageContent } from '@/components/composite/PageContent';
 import { ShareButton } from './ShareButton';
 import { PostStatusBadge } from './PostStatusBadge';
+import { PageReply, type PageReplyTarget } from './PageReply';
 
 type NextPage =
   | { href: string; locked: true }
@@ -22,6 +23,8 @@ export interface PostBodyProps {
   statusEmoji?: string | null;
   profileHref: string;
   nextPage: NextPage | null;
+  /** Who to reply to about this page; null when replies aren't open. */
+  reply?: PageReplyTarget | null;
 }
 
 // The post itself. Rendered by the page and, once unlocked, by unlockPage.
@@ -33,6 +36,7 @@ export function PostBody({
   statusEmoji,
   profileHref,
   nextPage,
+  reply,
 }: PostBodyProps) {
   return (
     // Vertical insets: 24px top on phones, 48px up to 636px, then growing to
@@ -64,8 +68,14 @@ export function PostBody({
 
       <PageContent html={content} />
 
-      {nextPage && (
+      {reply && (
         <div className="mt-16">
+          <PageReply {...reply} />
+        </div>
+      )}
+
+      {nextPage && (
+        <div className={reply ? '' : 'mt-16'}>
           <p className="text-xs font-normal text-theme-muted">
             More from {ownerName}
           </p>
