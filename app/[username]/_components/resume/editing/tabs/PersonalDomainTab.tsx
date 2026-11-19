@@ -537,14 +537,6 @@ export function PersonalDomainTab({ username }: { username: string }) {
                   fg: '#0066cc',
                   border: 'transparent',
                 },
-                {
-                  value: 'albers',
-                  label: 'Albers',
-                  description: 'Interaction of Color.',
-                  bg: '#f7e3ea',
-                  fg: '#4c3e51',
-                  border: 'transparent',
-                },
               ] as const
             ).map(({ value, label, description, bg, fg, border }) => (
               <div

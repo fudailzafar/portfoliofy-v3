@@ -8,8 +8,7 @@ import { PageAttachmentCard } from '@/components/composite/PageAttachmentCard';
 import { usePersonalDomainView } from '@/lib/ProfileUrlContext';
 import { useResumePages } from '@/lib/ResumePagesContext';
 
-const THEME_CLASS =
-  /^theme-(default|brutalist|swiss|klein|red|green|blue|albers)$/;
+const THEME_CLASS = /^theme-(default|brutalist|swiss|klein|red|green|blue)$/;
 const CARRIED_CLASS = /^(theme-\w+|typography-\w+|font-(sans|serif|mono))$/;
 
 // The theme, typography and font classes of the nearest themed ancestor.

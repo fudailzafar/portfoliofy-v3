@@ -679,7 +679,6 @@ export const ResumeDataSchema = z.object({
           'red',
           'green',
           'blue',
-          'albers',
         ])
         .optional()
         .default('default'),

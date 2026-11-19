@@ -55,9 +55,7 @@ export function FollowListDialog({
                   : 'border-transparent text-content-muted hover:text-content-secondary',
               )}
             >
-              {id === 'followers'
-                ? `Followers · ${data.followers.length}`
-                : `Following · ${data.following.length}`}
+              {id === 'followers' ? 'Followers' : 'Following'}
             </button>
           ))}
         </div>

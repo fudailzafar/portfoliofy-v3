@@ -5,12 +5,13 @@
 // at the bottom opens a menu with Edit profile, Settings and Log out. On a
 // phone the same buttons become a bar along the bottom.
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import {
+  ArrowLeftIcon,
   CheckIcon,
   GearIcon,
   LinkSimpleIcon,
@@ -127,6 +128,32 @@ export function NavRail() {
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [copied, setCopied] = useState(false);
 
+  // read.cv shows a back arrow at the top of the rail once you've moved
+  // between pages in the app. Count in-app page changes: forward navigation
+  // adds one, Back (ours or the browser's) takes one off.
+  const [depth, setDepth] = useState(0);
+  const firstPath = useRef<string | null>(null);
+  const goingBack = useRef(false);
+  useEffect(() => {
+    const onPop = () => {
+      goingBack.current = true;
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+  useEffect(() => {
+    if (firstPath.current === null) {
+      firstPath.current = pathname;
+      return;
+    }
+    if (goingBack.current) {
+      goingBack.current = false;
+      setDepth((d) => Math.max(0, d - 1));
+    } else {
+      setDepth((d) => d + 1);
+    }
+  }, [pathname]);
+
   const signedIn = !!session;
   // Only ask the server while signed in.
   const { data: unreadReplies = 0 } = useUnreadCount(signedIn);
@@ -240,8 +267,26 @@ export function NavRail() {
         aria-label="Main"
         className="fixed bottom-0 left-0 z-50 flex h-14 w-full items-center justify-around border-t border-border-subtle bg-surface-1 md:inset-y-0 md:h-auto md:w-[60px] md:flex-col md:justify-between md:border-0 md:py-4 md:shadow-[1px_0_0_0_rgba(0,0,0,0.05)] dark:md:shadow-[1px_0_0_0_rgba(255,255,255,0.1)] print:hidden"
       >
-        {/* Desktop: spacer so the icons sit in the middle. */}
-        <div className="hidden md:block md:size-11" aria-hidden />
+        {/* Desktop: the back arrow, or a spacer so the icons stay centred. */}
+        {depth > 0 ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={() => router.back()}
+                aria-label="Back"
+                className="hidden size-11 place-items-center rounded-lg text-[#aaa] transition-colors hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring dark:text-[#777] dark:hover:text-content-primary md:grid"
+              >
+                <ArrowLeftIcon size={24} weight="light" aria-hidden />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={8}>
+              Back
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <div className="hidden md:block md:size-11" aria-hidden />
+        )}
 
         <ul className="flex items-center gap-1 max-md:flex-1 max-md:justify-around md:flex-col md:gap-2">
           {items.map((item) => (
