@@ -15,8 +15,6 @@ import { createPortal } from 'react-dom';
 import { useResumeStore } from '@/store/useResumeStore';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { arrayMove } from '@dnd-kit/sortable';
-import { DragEndEvent } from '@dnd-kit/core';
 import { ResumeData } from '@/lib/server/dbActions';
 import { useUserActions } from '@/hooks/useUserActions';
 import {
@@ -450,20 +448,14 @@ export function EditProfileDialog({
     triggerSave,
   ]);
 
-  const handleDragEnd = useCallback(
-    (event: DragEndEvent) => {
-      const { active, over } = event;
-      if (over && active.id !== over.id) {
-        const oldIndex = sectionOrder.indexOf(active.id as string);
-        const newIndex = sectionOrder.indexOf(over.id as string);
-        const newOrder = arrayMove(sectionOrder, oldIndex, newIndex);
-
-        setSectionOrder(newOrder);
-        useResumeStore.getState().updateResume({ sectionOrder: newOrder });
-        setHasUnsavedChanges(true);
-      }
+  // Called live while a section is dragged (and on arrow-key moves).
+  const handleReorder = useCallback(
+    (newOrder: string[]) => {
+      setSectionOrder(newOrder);
+      useResumeStore.getState().updateResume({ sectionOrder: newOrder });
+      setHasUnsavedChanges(true);
     },
-    [sectionOrder, setHasUnsavedChanges],
+    [setHasUnsavedChanges],
   );
 
   const editButton = mounted
@@ -534,7 +526,7 @@ export function EditProfileDialog({
                 sectionOrder={sectionOrder}
                 setSectionOrder={setSectionOrder}
                 tabDefinitions={TAB_DEFINITIONS}
-                onDragEnd={handleDragEnd}
+                onReorder={handleReorder}
               />
 
               {/* Content Area */}
