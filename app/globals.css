@@ -191,7 +191,7 @@
   --theme-secondary: #555555;
   --theme-muted: #999999;
   --theme-border: #e5e5e5;
-  --theme-accent: #0788f5;
+  --theme-border-secondary: #f2f2f2;
 }
 
 .dark .theme-default {
@@ -200,7 +200,7 @@
   --theme-secondary: #bbbbbb;
   --theme-muted: #888888;
   --theme-border: #333333;
-  --theme-accent: #0788f5;
+  --theme-border-secondary: #333333;
 }
 
 .theme-brutalist {
@@ -208,8 +208,8 @@
   --theme-primary: #000000;
   --theme-secondary: #555555;
   --theme-muted: #777777;
-  --theme-border: #e5e5e5;
-  --theme-accent: #000000;
+  --theme-border: #aaaaaa;
+  --theme-border-secondary: #afafaf;
 }
 
 .theme-swiss {
@@ -218,7 +218,7 @@
   --theme-secondary: #f6cbc3;
   --theme-muted: #ee9886;
   --theme-border: #e66d54;
-  --theme-accent: #ffffff;
+  --theme-border-secondary: #e35e43;
 }
 
 .theme-klein {
@@ -227,7 +227,7 @@
   --theme-secondary: #bfcbe9;
   --theme-muted: #8097d3;
   --theme-border: #3359b9;
-  --theme-accent: #ffffff;
+  --theme-border-secondary: #1944b0;
 }
 
 .theme-red {
@@ -236,7 +236,7 @@
   --theme-secondary: #ec4e48;
   --theme-muted: #f39491;
   --theme-border: #f9cfcd;
-  --theme-accent: #e50800;
+  --theme-border-secondary: #fbe0df;
 }
 
 .theme-green {
@@ -245,7 +245,7 @@
   --theme-secondary: #47a547;
   --theme-muted: #8eca8e;
   --theme-border: #bee3be;
-  --theme-accent: #008000;
+  --theme-border-secondary: #d5f0d5;
 }
 
 .theme-blue {
@@ -254,7 +254,7 @@
   --theme-secondary: #4791db;
   --theme-muted: #8ebce9;
   --theme-border: #bed8f3;
-  --theme-accent: #0066cc;
+  --theme-border-secondary: #d5e7f8;
 }
 
 /* Code in posts. Default light and dark use Material palettes; the coloured
