@@ -1,4 +1,20 @@
-import { Reorder } from 'framer-motion';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
+  restrictToVerticalAxis,
+  restrictToParentElement,
+} from '@dnd-kit/modifiers';
 import { cn } from '@/lib/utils';
 import { SortableSidebarItem } from './SortableSidebarItem';
 import { SidebarButton } from './SidebarButton';
@@ -21,8 +37,7 @@ interface ProfileSidebarProps {
   sectionOrder: string[];
   setSectionOrder: (order: string[]) => void;
   tabDefinitions: Record<string, { label: string; disabled: boolean }>;
-  /** The full new order, while dragging and on arrow-key moves. */
-  onReorder: (order: string[]) => void;
+  onDragEnd: (event: DragEndEvent) => void;
 }
 
 const WRITING_TABS = ['writing_all', 'writing_published', 'writing_drafts'];
@@ -34,22 +49,12 @@ export function ProfileSidebar({
   showMobileMenu,
   sectionOrder,
   tabDefinitions,
-  onReorder,
+  onDragEnd,
 }: ProfileSidebarProps) {
-  // Only sections with a tab are listed; any others keep their slots.
-  const visible = sectionOrder.filter((id) => tabDefinitions[id]);
-  const reorderVisible = (next: string[]) => {
-    let i = 0;
-    onReorder(sectionOrder.map((id) => (tabDefinitions[id] ? next[i++] : id)));
-  };
-  const move = (id: string, dir: -1 | 1) => {
-    const i = visible.indexOf(id);
-    const j = i + dir;
-    if (j < 0 || j >= visible.length) return;
-    const next = [...visible];
-    [next[i], next[j]] = [next[j], next[i]];
-    reorderVisible(next);
-  };
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor),
+  );
 
   const accountTabs = [
     'personal_domain',
@@ -154,31 +159,37 @@ export function ProfileSidebar({
                 }}
               />
 
-              {/* Drag a row by its handle; the others slide out of its way. */}
-              <Reorder.Group
-                axis="y"
-                values={visible}
-                onReorder={reorderVisible}
-                className="relative flex flex-col"
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={onDragEnd}
+                modifiers={[restrictToVerticalAxis, restrictToParentElement]}
               >
-                {visible.map((id) => {
-                  const def = tabDefinitions[id];
-                  return (
-                    <SortableSidebarItem
-                      key={id}
-                      id={id}
-                      label={def.label}
-                      disabled={def.disabled}
-                      isActive={activeTab === id}
-                      onMove={(dir) => move(id, dir)}
-                      onClick={() => {
-                        setActiveTab(id);
-                        setShowMobileMenu(false);
-                      }}
-                    />
-                  );
-                })}
-              </Reorder.Group>
+                <div className="flex flex-col">
+                  <SortableContext
+                    items={sectionOrder}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {sectionOrder.map((id) => {
+                      const def = tabDefinitions[id];
+                      if (!def) return null;
+                      return (
+                        <SortableSidebarItem
+                          key={id}
+                          id={id}
+                          label={def.label}
+                          disabled={def.disabled}
+                          isActive={activeTab === id}
+                          onClick={() => {
+                            setActiveTab(id);
+                            setShowMobileMenu(false);
+                          }}
+                        />
+                      );
+                    })}
+                  </SortableContext>
+                </div>
+              </DndContext>
             </>
           ) : activeGroup === 'writing' ? (
             <>
