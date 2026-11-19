@@ -240,3 +240,30 @@ describe('acceptsReplies', () => {
     expect(acceptsReplies('nobody', true)).toBe(false);
   });
 });
+
+describe('buildPageContext', () => {
+  it('quotes a public page and hides a locked one', async () => {
+    const { buildPageContext } = await import('./replies');
+    const data = {
+      pages: [
+        { id: 'p1', title: 'Hello', content: '<p>Some <b>text</b></p>' },
+        { id: 'p2', title: 'Secret', content: '<p>x</p>', passwordHash: 'h' },
+        { id: 'p3', title: 'Hidden', content: '', hidden: true },
+      ],
+    } as never;
+    expect(buildPageContext(data, 'p1')).toEqual({
+      kind: 'page',
+      pageId: 'p1',
+      title: 'Hello',
+      excerpt: 'Some text',
+    });
+    expect(buildPageContext(data, 'p2')).toEqual({
+      kind: 'page',
+      pageId: 'p2',
+      title: 'A private page',
+      excerpt: null,
+    });
+    expect(buildPageContext(data, 'p3')).toBeNull();
+    expect(buildPageContext(data, 'nope')).toBeNull();
+  });
+});

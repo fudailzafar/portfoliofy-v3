@@ -58,6 +58,7 @@ export const ReplyTargetSchema = z.discriminatedUnion('kind', [
     section: z.enum(REPLYABLE_SECTIONS),
     itemId: z.string().min(1).max(200),
   }),
+  z.object({ kind: z.literal('page'), pageId: z.string().min(1).max(200) }),
 ]);
 
 export type ReplyTarget = z.infer<typeof ReplyTargetSchema>;
@@ -98,7 +99,8 @@ export type ReplyContext =
       subtitle: string | null;
       year: string | null;
       excerpt: string | null;
-    };
+    }
+  | { kind: 'page'; pageId: string; title: string; excerpt: string | null };
 
 // Emoji, joiners, variation selectors, skin tones and flag letters, with
 // whitespace between. Digits and punctuation are not emoji, so "123" is text.
@@ -257,6 +259,28 @@ export function buildItemContext(
     subtitle: blank(fields.subtitle as string),
     year: fields.year,
     excerpt: toExcerpt(fields.excerpt as string),
+  };
+}
+
+/**
+ * Freezes the page being replied to. Null when it doesn't exist or isn't
+ * public. A password-protected page is quoted without its title or text, so a
+ * reply can't be used to read it.
+ */
+export function buildPageContext(
+  resumeData: ResumeData | null | undefined,
+  pageId: string,
+): Extract<ReplyContext, { kind: 'page' }> | null {
+  const page = resumeData?.pages?.find((candidate) => candidate.id === pageId);
+  if (!page || page.hidden || page.isBlurred) return null;
+  if (page.passwordHash) {
+    return { kind: 'page', pageId, title: 'A private page', excerpt: null };
+  }
+  return {
+    kind: 'page',
+    pageId,
+    title: blank(page.title) ?? 'Untitled',
+    excerpt: toExcerpt(page.content),
   };
 }
 

@@ -20,6 +20,15 @@ function ContextCard({ context }: { context: ReplyContext }) {
           {context.emoji && <span className="mr-1.5">{context.emoji}</span>}
           {context.text}
         </p>
+      ) : context.kind === 'page' ? (
+        <>
+          <p className="text-theme-primary">{context.title}</p>
+          {context.excerpt && (
+            <p className="line-clamp-3 text-theme-secondary">
+              {context.excerpt}
+            </p>
+          )}
+        </>
       ) : (
         <>
           {context.year && (
@@ -44,7 +53,11 @@ function contextLabel(
   otherName: string,
 ): string {
   const noun =
-    context.kind === 'status' ? 'status' : REPLY_SECTION_NOUN[context.section];
+    context.kind === 'status'
+      ? 'status'
+      : context.kind === 'page'
+        ? 'page'
+        : REPLY_SECTION_NOUN[context.section];
   return mine
     ? `You replied to ${otherName}’s ${noun}`
     : `${otherName} replied to your ${noun}`;

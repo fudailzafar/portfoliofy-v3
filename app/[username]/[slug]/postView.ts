@@ -10,6 +10,8 @@ import {
 import { getOptimizedImageUrl } from '@/lib/utils';
 import { classifyHost } from '@/lib/site';
 import type { PostBodyProps } from './PostBody';
+import { acceptsReplies } from '@/lib/replies';
+import { isFollowing } from '@/lib/server/follows';
 
 // Shared by the post page and the unlock action, so an unlocked page renders
 // exactly like an open one.
@@ -55,7 +57,7 @@ export function postRootClassName(design: ResumeDataSchemaType['design']) {
 
 export async function getPostViewProps(
   username: string,
-  { page, resumeData, userProfile }: ResolvedPage,
+  { page, resumeData, userProfile, user_id }: ResolvedPage,
 ): Promise<PostBodyProps> {
   const design = resumeData.design;
   const isSubdomainView =
@@ -80,7 +82,31 @@ export async function getPostViewProps(
         : publishedPages[currentIndex - 1]
       : null;
 
+  // Replies need a Portfoliofy sign-in, which a personal domain can't share,
+  // and the owner can't reply to themselves. The owner's setting decides who
+  // else may: signed-out visitors see it when it's open to everyone and are
+  // asked to log in when they use it.
+  let reply: PostBodyProps['reply'] = null;
+  if (!isPersonalDomainView) {
+    const viewerId = (await auth())?.user?.id;
+    if (viewerId !== user_id) {
+      const repliesFrom = userProfile?.repliesFrom ?? 'everyone';
+      const ownerFollowsViewer =
+        repliesFrom === 'following' && viewerId
+          ? await isFollowing(user_id, viewerId)
+          : false;
+      if (acceptsReplies(repliesFrom, ownerFollowsViewer)) {
+        reply = {
+          username,
+          name: resumeData.header.name || username,
+          pageId: page.id,
+        };
+      }
+    }
+  }
+
   return {
+    reply,
     title: page.title || '',
     content: page.content || '',
     ownerName: resumeData.header.name,
