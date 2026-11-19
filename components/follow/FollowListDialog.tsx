@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { PersonAvatar } from '@/app/[username]/_components/resume/editing/replies/PersonAvatar';
 import { displayName } from '@/app/[username]/_components/resume/editing/replies/format';
+import { PostStatusBadge } from '@/app/[username]/[slug]/PostStatusBadge';
 import { cn } from '@/lib/utils';
 import { FollowToggle } from './FollowToggle';
 import type { FollowData } from './useFollows';
@@ -73,8 +74,14 @@ export function FollowListDialog({
           ) : (
             list.map((person) => (
               <li key={person.id} className="flex items-center gap-3 py-2.5">
-                <Link href={`/${person.username}`} className="shrink-0">
+                <Link
+                  href={`/${person.username}`}
+                  className="relative shrink-0"
+                >
                   <PersonAvatar person={person} />
+                  {person.statusEmoji && (
+                    <PostStatusBadge emoji={person.statusEmoji} />
+                  )}
                 </Link>
                 <Link
                   href={`/${person.username}`}
