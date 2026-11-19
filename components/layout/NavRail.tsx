@@ -98,7 +98,7 @@ function RailButton({ item }: { item: RailItem }) {
             type="button"
             onClick={item.onClick}
             aria-label={item.label}
-            aria-pressed={item.active}
+            aria-haspopup="dialog"
             className={className}
           >
             {inner}
@@ -165,6 +165,9 @@ export function NavRail() {
     }
   };
 
+  // Signed out, Profile, Replies and Following still show, and ask you to log
+  // in when clicked.
+  const needsLogin = () => openAuth('login');
   const items: RailItem[] = [
     {
       key: 'home',
@@ -173,17 +176,22 @@ export function NavRail() {
       href: '/',
       active: pathname === '/' || pathname === '/about',
     },
-    ...(signedIn && profilePath
-      ? [
-          {
-            key: 'profile',
-            label: 'Profile',
-            icon: UserIcon,
-            href: profilePath,
-            active: pathname === profilePath,
-          },
-        ]
-      : []),
+    signedIn
+      ? {
+          key: 'profile',
+          label: 'Profile',
+          icon: UserIcon,
+          // Before a username is claimed there's no profile yet.
+          href: profilePath ?? '/',
+          active: !!profilePath && pathname === profilePath,
+        }
+      : {
+          key: 'profile',
+          label: 'Profile',
+          icon: UserIcon,
+          onClick: needsLogin,
+          active: false,
+        },
     {
       key: 'explore',
       label: 'Explore',
@@ -192,32 +200,36 @@ export function NavRail() {
       href: '/explore',
       active: pathname.startsWith('/explore'),
     },
-    ...(signedIn
-      ? [
-          {
-            key: 'replies',
-            label: 'Replies',
-            icon: PaperPlaneTiltIcon,
+    {
+      key: 'replies',
+      label: 'Replies',
+      icon: PaperPlaneTiltIcon,
+      ...(signedIn
+        ? {
             href: '/replies',
             active: pathname.startsWith('/replies'),
             badge:
               unreadReplies > 0
                 ? `${unreadReplies} unread ${unreadReplies === 1 ? 'conversation' : 'conversations'}`
                 : undefined,
-          },
-          {
-            key: 'following',
-            label: 'Following',
-            icon: RssSimpleIcon,
+          }
+        : { onClick: needsLogin, active: false }),
+    },
+    {
+      key: 'following',
+      label: 'Following',
+      icon: RssSimpleIcon,
+      ...(signedIn
+        ? {
             href: '/following',
             active: pathname.startsWith('/following'),
             badge:
               newFollowers > 0
                 ? `${newFollowers} new ${newFollowers === 1 ? 'follower' : 'followers'}`
                 : undefined,
-          },
-        ]
-      : []),
+          }
+        : { onClick: needsLogin, active: false }),
+    },
   ];
 
   const initial = (displayName || username || '?').charAt(0).toUpperCase();
