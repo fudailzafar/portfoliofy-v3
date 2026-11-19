@@ -39,6 +39,7 @@ export function PageReply({ username, name, pageId }: PageReplyTarget) {
       <div className="relative">
         <ReplyComposer
           label={`Reply to ${name}’s page`}
+          onPage
           signedIn={status === 'authenticated'}
           onRequireSignIn={() => setSignInOpen(true)}
           onSend={async (body, reaction) => {

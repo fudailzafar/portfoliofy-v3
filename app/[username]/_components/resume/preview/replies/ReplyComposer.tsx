@@ -40,6 +40,7 @@ export function ReplyComposer({
   padded = false,
   clearOnSend = true,
   focusOnMount = false,
+  onPage = false,
 }: {
   /** Names what is being replied to, for screen readers. */
   label: string;
@@ -52,6 +53,12 @@ export function ReplyComposer({
   padded?: boolean;
   clearOnSend?: boolean;
   focusOnMount?: boolean;
+  /**
+   * On the page itself rather than inside a bubble or popover: the field keeps
+   * read.cv's input grey in dark mode too (#333 on #222), instead of matching
+   * the background it sits on.
+   */
+  onPage?: boolean;
 }) {
   const [value, setValue] = useState('');
   const [sending, setSending] = useState(false);
@@ -138,7 +145,10 @@ export function ReplyComposer({
         >
           <div
             ref={fieldRef}
-            className="relative flex h-9 items-center rounded-lg bg-[var(--theme-wash)] px-3 dark:bg-theme-bg"
+            className={cn(
+              'relative flex h-9 items-center rounded-lg bg-[var(--theme-wash)] px-3',
+              !onPage && 'dark:bg-theme-bg',
+            )}
           >
             <input
               ref={inputRef}
