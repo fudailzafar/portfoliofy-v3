@@ -15,13 +15,13 @@ import {
   CheckIcon,
   GearIcon,
   LinkSimpleIcon,
-  GlobeIcon,
+  MagnifyingGlassIcon,
+  NewspaperIcon,
   PaperPlaneTiltIcon,
   PencilSimpleIcon,
   RssSimpleIcon,
   SignOutIcon,
   UserIcon,
-  UsersIcon,
 } from '@phosphor-icons/react/ssr';
 import type { Icon } from '@phosphor-icons/react';
 import { AuthDialog } from '@/components/auth/AuthDialog';
@@ -69,16 +69,11 @@ function RailButton({ item }: { item: RailItem }) {
   );
   const inner = (
     <>
-      <Glyph
-        size={28}
-        // the original: outline when idle, filled on the current page.
-        weight={item.active ? 'fill' : 'light'}
-        aria-hidden
-      />
+      <Glyph size={28} weight="light" aria-hidden />
       {item.badge && (
         <>
           <span
-            className="absolute right-2 top-2 size-1.5 rounded-full bg-[#f04b4b]"
+            className="absolute right-2 top-2 size-1.5 rounded-full bg-red-500"
             aria-hidden
           />
           <span className="sr-only">{item.badge}</span>
@@ -204,7 +199,7 @@ export function NavRail() {
     {
       key: 'home',
       label: 'Home',
-      icon: RssSimpleIcon,
+      icon: NewspaperIcon,
       href: '/',
       active: pathname === '/' || pathname === '/about',
     },
@@ -228,7 +223,7 @@ export function NavRail() {
       key: 'explore',
       label: 'Explore',
       hint: '⌘ E',
-      icon: GlobeIcon,
+      icon: MagnifyingGlassIcon,
       href: '/explore',
       active: pathname.startsWith('/explore'),
     },
@@ -250,7 +245,7 @@ export function NavRail() {
     {
       key: 'following',
       label: 'Following',
-      icon: UsersIcon,
+      icon: RssSimpleIcon,
       ...(signedIn
         ? {
             href: '/following',
