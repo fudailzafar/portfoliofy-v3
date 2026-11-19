@@ -11,6 +11,7 @@ import Image from 'next/image';
 import Twemoji from 'react-twemoji';
 import { MagnifyingGlassIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
+import { StatusText } from '@/components/composite/StatusText';
 import { ExploreSort, ExploreUser, useExplore } from '@/hooks/useExplore';
 import { getOptimizedImageUrl } from '@/lib/utils';
 import { cn } from '@/lib/utils';
@@ -123,9 +124,10 @@ function Post({ user }: { user: ExploreUser }) {
           </span>
         </div>
         {user.statusText ? (
-          <p className="mt-1 whitespace-pre-wrap break-words text-theme-secondary">
-            {user.statusText}
-          </p>
+          <StatusText
+            text={user.statusText}
+            className="mt-1 text-theme-secondary"
+          />
         ) : (
           user.shortAbout && (
             <p className="mt-1 text-theme-secondary">{user.shortAbout}</p>

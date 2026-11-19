@@ -111,13 +111,7 @@ export function FollowButton({
           <span className="invisible" aria-hidden>
             Following
           </span>
-          <span
-            className={cn(
-              'absolute inset-0 flex items-center justify-center transition-colors',
-              !following && 'text-content-primary',
-            )}
-            style={following ? { color: BLUE } : undefined}
-          >
+          <span className="absolute inset-0 flex items-center justify-center text-content-primary">
             {following ? 'Following' : 'Follow'}
           </span>
         </motion.button>
