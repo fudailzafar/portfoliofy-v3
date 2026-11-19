@@ -87,8 +87,12 @@ export async function getPostViewProps(
   // else may: signed-out visitors see it when it's open to everyone and are
   // asked to log in when they use it.
   let reply: PostBodyProps['reply'] = null;
+  // The owner gets "Edit page", which opens this page in their editor.
+  let editHref: PostBodyProps['editHref'] = null;
   if (!isPersonalDomainView) {
     const viewerId = (await auth())?.user?.id;
+    if (viewerId && viewerId === user_id)
+      editHref = `/${username}?edit=page&page=${encodeURIComponent(page.id)}`;
     if (viewerId !== user_id) {
       const repliesFrom = userProfile?.repliesFrom ?? 'everyone';
       const ownerFollowsViewer =
@@ -107,6 +111,7 @@ export async function getPostViewProps(
 
   return {
     reply,
+    editHref,
     title: page.title || '',
     content: page.content || '',
     ownerName: resumeData.header.name,

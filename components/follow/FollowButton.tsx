@@ -97,7 +97,7 @@ export function FollowButton({
         animate={{ x: isSidebarOpen ? sidebarWidth : 0 }}
         transition={SIDEBAR_SLIDE}
         style={{ position: 'fixed', zIndex: 50 }}
-        className="bottom-[86px] left-6 w-fit md:bottom-[30px] md:left-[80px] print:hidden"
+        className="bottom-[86px] left-6 w-fit md:bottom-[14px] md:left-[80px] print:hidden"
       >
         <motion.button
           type="button"

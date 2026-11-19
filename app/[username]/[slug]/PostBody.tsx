@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { EditPageButton } from './EditPageButton';
 import { LockIcon } from '@phosphor-icons/react/ssr';
 import { PageContent } from '@/components/composite/PageContent';
 import { ShareButton } from './ShareButton';
@@ -25,6 +26,8 @@ export interface PostBodyProps {
   nextPage: NextPage | null;
   /** Who to reply to about this page; null when replies aren't open. */
   reply?: PageReplyTarget | null;
+  /** The owner's link to edit this page; null for everyone else. */
+  editHref?: string | null;
 }
 
 // The post itself. Rendered by the page and, once unlocked, by unlockPage.
@@ -37,11 +40,13 @@ export function PostBody({
   profileHref,
   nextPage,
   reply,
+  editHref,
 }: PostBodyProps) {
   return (
     // Vertical insets: 24px top on phones, 48px up to 636px, then growing to
     // 72px; 96px at the bottom until 685px, then 72px.
     <div className="mx-auto w-full max-w-[540px] flex-1 px-6 pb-24 pt-6 min-[481px]:pt-12 min-[637px]:pt-[calc(50vw-270px)] sm:px-0 min-[685px]:pb-[72px] min-[685px]:pt-[72px]">
+      {editHref && <EditPageButton href={editHref} />}
       <Link
         href={profileHref}
         className="flex w-fit flex-col items-start gap-4"
