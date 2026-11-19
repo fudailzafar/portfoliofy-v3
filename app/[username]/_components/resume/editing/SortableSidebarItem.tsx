@@ -13,16 +13,12 @@ interface SortableSidebarItemProps {
 }
 
 // The dragged row lifts a little, the original style, while the rest slide around it.
-const LIFT = {
-  scale: 1.02,
-  boxShadow: '0 0 0 1px rgb(0 0 0 / .05), 0 4px 16px rgb(0 0 0 / .1)',
-  zIndex: 10,
-};
-const REST = {
-  scale: 1,
-  boxShadow: '0 0 0 0px rgb(0 0 0 / 0), 0 0px 0px rgb(0 0 0 / 0)',
-  zIndex: 0,
-};
+// The outline and shadow come from CSS classes so they suit both themes:
+// the original's 1px 5%-black ring in light, a 10%-white ring in dark.
+const LIFT = { scale: 1.02, zIndex: 10 };
+const REST = { scale: 1, zIndex: 0 };
+const LIFTED_CLASS =
+  'rounded-lg shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_4px_16px_rgba(0,0,0,0.1)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.5)]';
 
 export function SortableSidebarItem({
   id,
@@ -60,6 +56,7 @@ export function SortableSidebarItem({
       style={{ position: 'relative' }}
       className={cn(
         'flex cursor-pointer select-none items-center justify-between bg-surface-1 py-2.5 pl-10 pr-6 text-sm transition-colors',
+        lifted && LIFTED_CLASS,
         isActive
           ? 'bg-surface-2 text-content-primary'
           : 'text-content-muted hover:bg-surface-2 hover:text-content-primary dark:hover:bg-surface-card',
