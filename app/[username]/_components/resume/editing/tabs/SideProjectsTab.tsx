@@ -16,7 +16,7 @@ const RichTextEditor = dynamic(
     ),
   { ssr: false },
 );
-import { FolderSimpleIcon } from '@phosphor-icons/react/ssr';
+import { LaptopIcon } from '@phosphor-icons/react/ssr';
 import {
   Select,
   SelectContent,
@@ -78,7 +78,7 @@ export function SideProjectsTab({
       }}
       addButtonText="Add side project"
       emptyState={{
-        icon: FolderSimpleIcon,
+        icon: LaptopIcon,
         buttonText: "Add a side project you're proud of",
       }}
       renderList={() => (

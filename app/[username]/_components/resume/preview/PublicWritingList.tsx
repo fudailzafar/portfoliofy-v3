@@ -115,6 +115,7 @@ export function PublicWritingList({
                           : page.title || 'Untitled'}
                         {page.passwordProtected && !redacted && (
                           <LockIcon
+                            weight="fill"
                             aria-label="Password protected"
                             className="relative -top-px ml-1.5 inline h-3.5 w-3.5 text-theme-muted"
                           />
@@ -143,7 +144,10 @@ export function PublicWritingList({
                     className="relative flex h-[90px] w-[30%] min-w-[40px] max-w-[152px] shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[var(--theme-thumb-bg)] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-[var(--theme-faint-border)] max-[480px]:w-[37.5%]"
                   >
                     {redacted && (
-                      <LockIcon className="h-4 w-4 text-theme-muted" />
+                      <LockIcon
+                        weight="fill"
+                        className="h-4 w-4 text-theme-muted"
+                      />
                     )}
                     {page.url && (
                       // eslint-disable-next-line @next/next/no-img-element

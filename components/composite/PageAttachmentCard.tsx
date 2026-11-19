@@ -15,7 +15,11 @@ export function PageAttachmentCard({
     <div className="flex h-[90px] w-full max-w-[415px] shrink-0 overflow-hidden rounded-lg border border-theme-border bg-theme-border">
       <div className="flex h-full w-[152px] shrink-0 items-center justify-center overflow-hidden rounded-l-md border-none bg-black/5 dark:border dark:border-[#383838] dark:bg-[#222]">
         {redacted ? (
-          <LockIcon aria-hidden="true" className="h-4 w-4 text-theme-muted" />
+          <LockIcon
+            weight="fill"
+            aria-hidden="true"
+            className="h-4 w-4 text-theme-muted"
+          />
         ) : attachment.url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -30,6 +34,7 @@ export function PageAttachmentCard({
           {redacted ? 'This page is private' : attachment.title || 'Untitled'}
           {attachment.passwordProtected && !redacted && (
             <LockIcon
+              weight="fill"
               aria-label="Password protected"
               className="relative -top-px ml-1.5 inline h-3.5 w-3.5 text-theme-muted"
             />
