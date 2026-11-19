@@ -436,6 +436,7 @@ export function PageEditorView({
             {status === 'published' ? 'Published' : 'Draft'}
             {passwordProtected && (
               <LockIcon
+                weight="fill"
                 aria-label="Password protected"
                 className="ml-2 h-3.5 w-3.5"
               />

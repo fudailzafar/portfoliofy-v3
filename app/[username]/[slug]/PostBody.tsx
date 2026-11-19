@@ -86,6 +86,7 @@ export function PostBody({
             <div className="flex h-full w-[108px] shrink-0 items-center justify-center overflow-hidden bg-[color-mix(in_srgb,var(--theme-border)_40%,transparent)] sm:w-[152px]">
               {nextPage.locked ? (
                 <LockIcon
+                  weight="fill"
                   aria-hidden="true"
                   className="h-4 w-4 text-theme-muted"
                 />

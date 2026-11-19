@@ -133,6 +133,7 @@ export function WritingTab({
                     {page.title || 'Untitled'}
                     {page.passwordProtected && (
                       <LockIcon
+                        weight="fill"
                         aria-label="Password protected"
                         className="relative -top-px ml-1.5 inline h-3.5 w-3.5 text-content-muted"
                       />
