@@ -107,7 +107,7 @@ function Member({ user, detail }: { user: ExploreUser; detail?: string }) {
 function Post({ user }: { user: ExploreUser }) {
   const when = user.statusUpdatedAt || user.updatedAt;
   return (
-    <div className="flex border-b border-[var(--theme-wash,#f2f2f2)] py-6 last:border-b-0">
+    <div className="flex border-b border-theme-border-secondary py-6 last:border-b-0">
       <Link href={`/${user.username}`} className="h-fit shrink-0">
         <Photo user={user} showStatus />
       </Link>
@@ -227,7 +227,7 @@ export function ExplorePage() {
             </button>
           </div>
         ) : users.length === 0 ? (
-          <div className="mt-9 flex h-[100px] flex-col justify-center rounded-3xl px-12 text-center text-theme-muted shadow-[0_0_0_1px_var(--theme-border)]">
+          <div className="mt-9 flex h-[100px] flex-col justify-center rounded-3xl px-12 text-center text-theme-muted shadow-[0_0_0_1px_var(--theme-border-secondary)]">
             <span className="truncate">
               {searching
                 ? `No results for ‘${query.trim()}’`

@@ -26,7 +26,7 @@ export function RepliesPage({
       <section
         aria-label="Replies"
         className={cn(
-          'scrollbar-hide h-full w-full shrink-0 overflow-y-auto md:w-[330px] md:border-x md:border-theme-border',
+          'scrollbar-hide h-full w-full shrink-0 overflow-y-auto md:w-[330px] md:border-x md:border-theme-border-secondary',
           showingThread ? 'hidden md:block' : 'block',
         )}
       >
@@ -42,7 +42,7 @@ export function RepliesPage({
       <section
         aria-label="Conversation"
         className={cn(
-          'h-full w-full min-w-0 flex-col md:w-[540px] md:shrink-0 md:border-r md:border-theme-border',
+          'h-full w-full min-w-0 flex-col md:w-[540px] md:shrink-0 md:border-r md:border-theme-border-secondary',
           showingThread ? 'flex' : 'hidden md:flex',
         )}
       >
