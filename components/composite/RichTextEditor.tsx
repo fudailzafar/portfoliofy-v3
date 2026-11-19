@@ -45,7 +45,10 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          'min-h-[120px] w-full bg-transparent px-3 py-3 text-sm placeholder:text-content-muted focus:outline-none prose prose-sm dark:prose-invert max-w-none dark:border-none dark:bg-border-subtle',
+          // Same spacing as the public page (preview/Summary.tsx): no list
+          // indent, so bullets hang into the padding, 4px between items and
+          // a 16px gap between paragraphs.
+          'min-h-[120px] w-full bg-transparent px-6 py-3 text-sm placeholder:text-content-muted focus:outline-none prose prose-sm dark:prose-invert max-w-none dark:border-none dark:bg-border-subtle [--tw-prose-bullets:currentColor] [--tw-prose-counters:currentColor] [--tw-prose-invert-bullets:currentColor] [--tw-prose-invert-counters:currentColor] prose-p:my-0 prose-ol:my-4 prose-ol:pl-0 prose-ul:my-4 prose-ul:pl-0 prose-li:my-0 prose-li:py-1 prose-li:pl-0 [&>:first-child]:mt-0 [&>:last-child]:mb-0 [&_p+p:not(:empty)]:mt-4',
       },
     },
     onUpdate: ({ editor }) => {
