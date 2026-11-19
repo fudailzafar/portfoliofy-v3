@@ -37,7 +37,8 @@ const config: Config = {
           secondary: 'var(--theme-secondary)',
           muted: 'var(--theme-muted)',
           border: 'var(--theme-border)',
-          accent: 'var(--theme-accent)',
+          'border-secondary': 'var(--theme-border-secondary)',
+          'faint-border': 'var(--theme-faint-border)',
         },
         design: {
           black: '#1f1f1f',
