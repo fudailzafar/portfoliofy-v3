@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { motion } from 'framer-motion';
 import { useDebounce } from 'use-debounce';
 import {
   Dialog,
@@ -10,15 +9,8 @@ import {
   DialogTrigger,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { Spinner } from '@/components/ui/spinner';
-import { PencilSimpleIcon } from '@phosphor-icons/react/ssr';
-import { SIDEBAR_SLIDE, useSidebarStore } from '@/store/useSidebarStore';
+import { EditFab } from '@/components/layout/EditFab';
 import { createPortal } from 'react-dom';
 import { useResumeStore } from '@/store/useResumeStore';
 import { signOut } from 'next-auth/react';
@@ -164,6 +156,8 @@ export function EditProfileDialog({
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [mounted, setMounted] = useState(false);
+  // Set when the page editor was opened from a post page's "Edit page".
+  const returnToPageId = useRef<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -175,11 +169,25 @@ export function EditProfileDialog({
     const params = new URLSearchParams(window.location.search);
     const edit = params.get('edit');
     if (edit) {
-      useResumeStore
-        .getState()
-        .setActiveTab(edit === 'settings' ? 'settings' : 'general');
+      const store = useResumeStore.getState();
+      // A post page's "Edit page" lands here with that page's id: open its
+      // editor, and go back to the post when it closes.
+      const pageId = params.get('page');
+      const page =
+        edit === 'page' && pageId
+          ? (store.resume?.pages ?? resume.pages ?? []).find(
+              (p) => p.id === pageId,
+            )
+          : undefined;
+      if (page) {
+        store.setEditingPage({ attachment: page });
+        returnToPageId.current = page.id;
+      } else {
+        store.setActiveTab(edit === 'settings' ? 'settings' : 'general');
+      }
       setOpen(true);
       params.delete('edit');
+      params.delete('page');
       const query = params.toString();
       window.history.replaceState(
         null,
@@ -188,9 +196,9 @@ export function EditProfileDialog({
       );
     }
     return () => window.removeEventListener('open-editor', handleOpenEditor);
+    // Runs once on arrival: the ?edit= link is read a single time.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const { isOpen: isSidebarOpen, sidebarWidth } = useSidebarStore();
 
   const isInitialUsername = uname === username;
 
@@ -460,28 +468,9 @@ export function EditProfileDialog({
 
   const editButton = mounted
     ? createPortal(
-        <TooltipProvider delayDuration={0}>
-          <Tooltip>
-            <DialogTrigger asChild>
-              <TooltipTrigger asChild>
-                <motion.button
-                  initial={false}
-                  animate={{ x: isSidebarOpen ? sidebarWidth : 0 }}
-                  transition={SIDEBAR_SLIDE}
-                  whileTap={{ scale: 0.9 }}
-                  aria-label="Edit Profile"
-                  style={{ position: 'fixed', zIndex: 50 }}
-                  className="bottom-[86px] left-6 flex size-[48px] items-center justify-center rounded-full border border-border-strong bg-surface-1 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1 dark:border-none dark:bg-[#333] md:bottom-[30px] md:left-[80px] print:hidden"
-                >
-                  <PencilSimpleIcon className="h-[18px] w-[18px] text-content-primary" />
-                </motion.button>
-              </TooltipTrigger>
-            </DialogTrigger>
-            <TooltipContent side="top" sideOffset={12}>
-              <span>Edit profile</span>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>,
+        <DialogTrigger asChild>
+          <EditFab label="Edit profile" />
+        </DialogTrigger>,
         document.body,
       )
     : null;
@@ -512,7 +501,19 @@ export function EditProfileDialog({
                 <PageEditorView
                   page={editingPage.attachment}
                   usedSlugs={usedPageSlugs}
-                  onClose={() => setEditingPage(null)}
+                  onClose={() => {
+                    const pageId = returnToPageId.current;
+                    returnToPageId.current = null;
+                    setEditingPage(null);
+                    if (!pageId) return;
+                    // Back to the post (its slug may have changed); if it
+                    // was deleted, stay on the profile.
+                    const page = useResumeStore
+                      .getState()
+                      .resume?.pages?.find((p) => p.id === pageId);
+                    setOpen(false);
+                    if (page?.slug) router.push(`/${username}/${page.slug}`);
+                  }}
                 />
               </div>
             )}
