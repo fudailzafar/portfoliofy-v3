@@ -227,14 +227,14 @@ export function StatusEditor({
               {!text.trim() ? (
                 <button
                   onClick={handleClear}
-                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-strong dark:active:bg-[#555]"
+                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-[#444] dark:active:bg-[#555]"
                 >
                   Clear status
                 </button>
               ) : (
                 <button
                   onClick={handleSave}
-                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-border-strong dark:active:bg-[#555]"
+                  className="h-9 rounded-md border border-border-strong bg-surface-card px-6 text-sm font-medium text-content-primary shadow-sm active:bg-surface-2 dark:border-none dark:bg-[#444] dark:active:bg-[#555]"
                 >
                   Set status
                 </button>

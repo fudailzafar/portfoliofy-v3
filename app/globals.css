@@ -16,8 +16,8 @@
     --content-muted: #6b7280;
 
     /* Borders */
-    --border-subtle: #f3f4f6;
-    --border-strong: #e5e7eb;
+    --border-subtle: #f2f2f2;
+    --border-strong: #e5e5e5;
 
     /* Actions */
     --action-primary: #111827;
@@ -59,7 +59,7 @@
     --content-muted: #9ca3af;
 
     --border-subtle: #333333;
-    --border-strong: #444444;
+    --border-strong: #333333;
 
     --action-primary: #ffffff;
     --action-primary-hover: #e5e7eb;

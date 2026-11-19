@@ -76,7 +76,7 @@ export function CollaboratorsField({
             {value.map((collaborator) => (
               <div
                 key={collaborator.id}
-                className="flex items-center gap-0.5 rounded-full border border-border-strong pr-2 dark:bg-[#333] dark:bg-border-strong"
+                className="flex items-center gap-0.5 rounded-full border border-border-strong pr-2 dark:bg-border-strong"
               >
                 <Avatar className="size-8 shrink-0 p-0.5">
                   <AvatarImage
