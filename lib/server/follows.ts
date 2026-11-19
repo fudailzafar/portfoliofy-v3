@@ -12,6 +12,8 @@ export interface FollowPerson {
   username: string;
   name: string | null;
   image: string | null;
+  /** The emoji on their status, shown as a badge on their avatar. */
+  statusEmoji: string | null;
   followedAt: Date;
   /** Whether the signed-in user follows this person. */
   youFollow: boolean;
@@ -85,6 +87,7 @@ type Row = {
   username: string;
   name: string | null;
   image: string | null;
+  statusEmoji: string | null;
   followedAt: Date;
   youFollow: boolean;
 };
@@ -97,6 +100,7 @@ export async function getFollowOverview(
     sql`
       SELECT u.id, u.username, u.name,
              COALESCE(u.custom_image, u.image) AS image,
+             NULLIF(u.status_emoji, '') AS status_emoji,
              f.created_at AS followed_at,
              EXISTS (
                SELECT 1 FROM follows mine
@@ -111,6 +115,7 @@ export async function getFollowOverview(
     sql`
       SELECT u.id, u.username, u.name,
              COALESCE(u.custom_image, u.image) AS image,
+             NULLIF(u.status_emoji, '') AS status_emoji,
              f.created_at AS followed_at,
              TRUE AS you_follow
       FROM follows f
