@@ -85,22 +85,16 @@ export function PagePasswordDialog({
         >
           <AlertDialogHeader className="flex flex-col gap-1.5 space-y-0">
             <AlertDialogTitle className="text-left text-lg font-medium tracking-tight text-content-primary">
-              Password protect
+              Password protect this page
             </AlertDialogTitle>
             <AlertDialogDescription className="text-left text-[14px] leading-snug text-content-secondary">
               {isProtected
-                ? 'Only people with the password can read this page. Set a new password or remove it to make the page public.'
-                : 'Only people with the password will be able to read this page. It also stays out of search results.'}
+                ? 'Only people who enter the password you set can view this page. Enter a new one, or remove it to make the page public.'
+                : 'Only people who enter the password you set will be able to view this page.'}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
           <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="page-password-input"
-              className="text-[13px] text-content-muted"
-            >
-              {isProtected ? 'New password' : 'Password'}
-            </label>
             <input
               id="page-password-input"
               name="new-password"
@@ -108,18 +102,21 @@ export function PagePasswordDialog({
               autoComplete="new-password"
               autoFocus
               value={password}
+              aria-label={isProtected ? 'New password' : 'Password'}
               aria-invalid={!!error}
-              aria-describedby="page-password-hint"
+              aria-describedby={error ? 'page-password-error' : undefined}
               onChange={(e) => setPassword(e.target.value)}
               className="h-9 rounded-md border border-border-strong bg-surface-1 px-3 text-[16px] text-content-primary outline-none focus-visible:ring-2 focus-visible:ring-border-strong dark:border-none dark:bg-border-subtle sm:text-[14px]"
             />
-            <p
-              id="page-password-hint"
-              aria-live="polite"
-              className={`text-[12px] ${error ? 'text-red-600' : 'text-content-muted'}`}
-            >
-              {error || `At least ${MIN_LENGTH} characters.`}
-            </p>
+            {error && (
+              <p
+                id="page-password-error"
+                aria-live="polite"
+                className="text-[12px] text-red-600"
+              >
+                {error}
+              </p>
+            )}
           </div>
 
           <AlertDialogFooter className="mt-1 flex !flex-row items-center justify-end gap-2 space-x-0">
@@ -139,17 +136,26 @@ export function PagePasswordDialog({
             <AlertDialogCancel
               type="button"
               disabled={!!pending}
-              className="border-none bg-surface-1 px-4 py-2 text-sm font-medium text-content-primary hover:bg-surface-1 hover:underline hover:underline-offset-4"
+              className="border-none bg-surface-1 px-4 py-2 text-sm font-medium text-content-primary underline underline-offset-4 hover:bg-surface-1"
             >
               Cancel
             </AlertDialogCancel>
             <button
               type="submit"
               disabled={!!pending}
-              className="flex h-9 items-center gap-1.5 whitespace-nowrap rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 disabled:opacity-50 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
+              aria-busy={pending === 'save'}
+              className="relative flex h-9 items-center justify-center whitespace-nowrap rounded-md border border-border-strong bg-surface-card px-4 text-[13px] font-medium text-content-primary shadow-sm transition-all active:bg-surface-2 disabled:opacity-50 dark:border-none dark:bg-border-subtle dark:active:bg-border-strong"
             >
-              {pending === 'save' && <Spinner size={12} fill="currentColor" />}
-              Save password
+              {/* The label stays in place (hidden) while saving so the button
+                  keeps its width; the spinner sits over it. */}
+              <span className={pending === 'save' ? 'invisible' : undefined}>
+                Save
+              </span>
+              {pending === 'save' && (
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <Spinner size={14} fill="currentColor" />
+                </span>
+              )}
             </button>
           </AlertDialogFooter>
         </form>
