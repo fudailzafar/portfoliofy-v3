@@ -9,6 +9,29 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const RESUME_JSON_SCHEMA = zodToJsonSchema(ResumeDataSchema, 'ResumeData');
 
+// Google retires models without much warning (2.5 Flash now 404s for new API
+// keys), so the model can be changed with GEMINI_MODEL in Vercel, no deploy.
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+
+// Gemini sometimes answers 503 "high demand" for a moment and then succeeds,
+// so those (and only those) are retried a couple of times.
+const GEMINI_ATTEMPTS = 3;
+const GEMINI_RETRY_DELAY_MS = 1500;
+
+async function generateWithRetry(
+  request: Parameters<typeof ai.models.generateContent>[0],
+) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await ai.models.generateContent(request);
+    } catch (error) {
+      const status = (error as { status?: number } | null)?.status;
+      if (status !== 503 || attempt >= GEMINI_ATTEMPTS) throw error;
+      await new Promise((r) => setTimeout(r, GEMINI_RETRY_DELAY_MS * attempt));
+    }
+  }
+}
+
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB — generous for a resume PDF
 const RATE_LIMIT_MAX_REQUESTS = 5;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
@@ -76,8 +99,8 @@ Schema:
 ${JSON.stringify(RESUME_JSON_SCHEMA, null, 2)}`;
 
     // Call Gemini to structure the data natively from the PDF
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+    const response = await generateWithRetry({
+      model: GEMINI_MODEL,
       contents: [
         {
           role: 'user',
@@ -131,7 +154,23 @@ ${JSON.stringify(RESUME_JSON_SCHEMA, null, 2)}`;
 
     return NextResponse.json({ success: true, data: salvaged });
   } catch (error) {
-    console.error('Resume parsing error:', error);
+    // Log the message and status explicitly: the log viewer collapses an
+    // ApiError object to {…}, which hid the real cause of a failure.
+    console.error(
+      'Resume parsing error:',
+      error instanceof Error ? error.message : error,
+      (error as { status?: number } | null)?.status ?? '',
+    );
+    // Still overloaded after the retries: say so, rather than blaming the file.
+    if ((error as { status?: number } | null)?.status === 503) {
+      return NextResponse.json(
+        {
+          error:
+            'Our resume reader is busy right now. Please try again in a minute.',
+        },
+        { status: 503 },
+      );
+    }
     return NextResponse.json(
       { error: 'An unexpected error occurred while parsing the resume' },
       { status: 500 },
