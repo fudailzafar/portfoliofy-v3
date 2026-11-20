@@ -4,6 +4,13 @@ import { GoogleGenAI } from '@google/genai';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { ResumeDataSchema } from '@/lib/resume';
 import { checkRateLimit } from '@/lib/server/rateLimit';
+import {
+  GROQ_MAX_TEXT_CHARS,
+  GROQ_MIN_TEXT_CHARS,
+  extractPdfText,
+  groqEnabled,
+  parseResumeTextWithGroq,
+} from '@/lib/server/resumeParsing';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -82,9 +89,34 @@ export async function POST(req: NextRequest) {
     // Convert File to Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    const base64Data = buffer.toString('base64');
+    // First choice: read the PDF's text and have Groq structure it (fast, and
+    // free). Anything unusual (no key, a scanned PDF, a long one, a Groq error)
+    // falls through to Gemini, which reads the PDF itself.
+    let parsedData: unknown;
+    if (groqEnabled()) {
+      try {
+        const text = await extractPdfText(buffer);
+        if (
+          text.length >= GROQ_MIN_TEXT_CHARS &&
+          text.length <= GROQ_MAX_TEXT_CHARS
+        ) {
+          parsedData = await parseResumeTextWithGroq(text);
+        } else {
+          console.info(
+            `Resume parse: using Gemini (PDF text is ${text.length} characters)`,
+          );
+        }
+      } catch (error) {
+        console.error(
+          'Resume parse: Groq failed, falling back to Gemini:',
+          error instanceof Error ? error.message : error,
+        );
+      }
+    }
 
-    const prompt = `You are an expert data extraction assistant. I have provided a PDF document of a resume or a LinkedIn profile export.
+    if (parsedData === undefined) {
+      const base64Data = buffer.toString('base64');
+      const prompt = `You are an expert data extraction assistant. I have provided a PDF document of a resume or a LinkedIn profile export.
 Your task is to extract all the relevant information and structure it perfectly according to the provided JSON schema.
 
 Instructions:
@@ -98,37 +130,37 @@ CRITICAL CONSTRAINTS:
 Schema:
 ${JSON.stringify(RESUME_JSON_SCHEMA, null, 2)}`;
 
-    // Call Gemini to structure the data natively from the PDF
-    const response = await generateWithRetry({
-      model: GEMINI_MODEL,
-      contents: [
-        {
-          role: 'user',
-          parts: [
-            { inlineData: { data: base64Data, mimeType: 'application/pdf' } },
-            { text: prompt },
-          ],
+      // Call Gemini to structure the data natively from the PDF
+      const response = await generateWithRetry({
+        model: GEMINI_MODEL,
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              { inlineData: { data: base64Data, mimeType: 'application/pdf' } },
+              { text: prompt },
+            ],
+          },
+        ],
+        config: {
+          responseMimeType: 'application/json',
         },
-      ],
-      config: {
-        responseMimeType: 'application/json',
-      },
-    });
+      });
 
-    const outputText = response.text;
-    if (!outputText) {
-      throw new Error('Gemini returned an empty response');
-    }
+      const outputText = response.text;
+      if (!outputText) {
+        throw new Error('Gemini returned an empty response');
+      }
 
-    let parsedData;
-    try {
-      parsedData = JSON.parse(outputText);
-    } catch (e) {
-      console.error('Failed to parse Gemini output as JSON:', outputText);
-      return NextResponse.json(
-        { error: 'Failed to process resume data into structured format' },
-        { status: 500 },
-      );
+      try {
+        parsedData = JSON.parse(outputText);
+      } catch (e) {
+        console.error('Failed to parse Gemini output as JSON:', outputText);
+        return NextResponse.json(
+          { error: 'Failed to process resume data into structured format' },
+          { status: 500 },
+        );
+      }
     }
 
     // Validate the extracted data against our Zod schema.
