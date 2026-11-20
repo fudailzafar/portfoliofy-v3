@@ -49,15 +49,20 @@ export function HomeHero() {
         </h1>
 
         <div className="mb-8 mt-4 grid grid-cols-[repeat(6,minmax(16px,72px))] items-center [gap:var(--hero-gap,22px)] min-[481px]:mb-12 min-[481px]:mt-8 min-[637px]:mb-[calc(50vw_-_270px)] min-[685px]:mb-[72px]">
-          {FEATURED_PROFILE_SEEDS.map((seed) => (
+          {FEATURED_PROFILE_SEEDS.map((seed, i) => (
             <div
               key={seed}
               className="aspect-square w-full overflow-hidden rounded-full bg-surface-3"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={`https://api.dicebear.com/10.x/glyphs/svg?seed=${seed}`}
+                src={`/avatars/glyphs/${seed}.svg`}
                 alt=""
+                // The first row is the largest thing on the page (its LCP),
+                // so it's fetched first. Served from our own domain: a
+                // third-party avatar API cost a connection and ~470ms.
+                fetchPriority={i < 6 ? 'high' : 'auto'}
+                decoding="async"
                 className="h-full w-full object-cover"
               />
             </div>
