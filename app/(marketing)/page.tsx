@@ -337,8 +337,10 @@ export default async function Home() {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     key={seed}
-                    src={`https://api.dicebear.com/10.x/glyphs/svg?seed=${seed}`}
+                    src={`/avatars/glyphs/${seed}.svg`}
                     alt=""
+                    loading="lazy"
+                    decoding="async"
                     className={`absolute top-[26.5cqw] size-[8.55cqw] rounded-full border border-black/10 bg-surface-3 dark:border-white/10 ${
                       ['left-[8.55cqw]', 'left-[19.66cqw]', 'left-[30.98cqw]'][
                         i
@@ -425,8 +427,10 @@ export default async function Home() {
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={`https://api.dicebear.com/10.x/glyphs/svg?seed=${result.seed}`}
+                      src={`/avatars/glyphs/${result.seed}.svg`}
                       alt=""
+                      loading="lazy"
+                      decoding="async"
                       className="absolute left-0 top-0 size-[15.38cqw] rounded-full bg-surface-3"
                     />
                     <div className="absolute left-[19.02cqw] top-0 whitespace-nowrap text-[length:6.41cqw] leading-[7.69cqw] text-[#aaa] dark:text-content-muted">
@@ -454,8 +458,10 @@ export default async function Home() {
                   <div className="absolute inset-[0.855cqw] rounded-full bg-[#fff] dark:bg-[#222]" />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="https://api.dicebear.com/10.x/glyphs/svg?seed=Tom"
+                    src="/avatars/glyphs/Tom.svg"
                     alt=""
+                    loading="lazy"
+                    decoding="async"
                     className="absolute inset-[1.5cqw] size-[22.86cqw] rounded-full bg-surface-3 object-cover"
                   />
                 </div>

@@ -111,9 +111,11 @@ export default async function RootLayout({
             {/* rest of your scripts go under */}
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-              strategy="afterInteractive"
+              // Loads when the browser is idle so it doesn't compete with
+              // the page's own images (it's ~170 KiB).
+              strategy="lazyOnload"
             />
-            <Script id="google-analytics" strategy="afterInteractive">
+            <Script id="google-analytics" strategy="lazyOnload">
               {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${gaId}');`}
             </Script>
           </head>

@@ -11,37 +11,40 @@ export function Footer({ className }: { className?: string }) {
     >
       <div className="mx-auto flex w-full max-w-4xl items-center justify-center">
         {/* Navigation Links */}
-        <div className="grid grid-cols-[repeat(3,max-content)] gap-x-12 gap-y-0 text-[14px] font-medium leading-[1.6] text-[#aaa] dark:text-[#777]">
-          <Link href="/" className="underline-offset-[3px] hover:underline">
+        <div className="grid grid-cols-[repeat(3,max-content)] gap-x-12 gap-y-0 text-[14px] font-medium leading-[1.6] text-[#767676] dark:text-[#999]">
+          <Link
+            href="/"
+            className="py-1 underline-offset-[3px] hover:underline"
+          >
             About
           </Link>
           <Link
             href="/support/faq"
-            className="underline-offset-[3px] hover:underline"
+            className="py-1 underline-offset-[3px] hover:underline"
           >
             FAQs
           </Link>
           <Link
             href="/terms"
-            className="underline-offset-[3px] hover:underline"
+            className="py-1 underline-offset-[3px] hover:underline"
           >
             Terms
           </Link>
           <Link
             href="/connect"
-            className="underline-offset-[3px] hover:underline"
+            className="py-1 underline-offset-[3px] hover:underline"
           >
             MCP
           </Link>
           <Link
             href="/support"
-            className="underline-offset-[3px] hover:underline"
+            className="py-1 underline-offset-[3px] hover:underline"
           >
             Support
           </Link>
           <Link
             href="/privacy"
-            className="underline-offset-[3px] hover:underline"
+            className="py-1 underline-offset-[3px] hover:underline"
           >
             Privacy
           </Link>
