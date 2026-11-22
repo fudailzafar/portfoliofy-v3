@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { niceCountTicks } from '@/lib/chartTicks';
 import {
   Select,
   SelectContent,
@@ -75,6 +76,12 @@ export function InsightsTab() {
   const [data, setData] = useState<InsightsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const yAxis = useMemo(
+    () =>
+      niceCountTicks(Math.max(0, ...(data?.series ?? []).map((p) => p.views))),
+    [data],
+  );
+
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
@@ -103,47 +110,45 @@ export function InsightsTab() {
       </div>
 
       <div className="space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h3 className="text-[18px] font-medium text-content-primary">
-            {isLoading ? '—' : (data?.total ?? 0)} page views
-          </h3>
-
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-subtle pb-6">
+          {/* Only worth choosing between profiles once a custom domain exists. */}
+          {data?.hasCustomDomain && (
             <Select
               value={domain}
               onValueChange={(value) =>
                 setDomain(value as 'portfoliofy' | 'custom')
               }
-              disabled={!data?.hasCustomDomain}
             >
-              <SelectTrigger className="h-9 w-[160px] border border-border-strong bg-surface-card text-content-primary shadow-sm dark:border-none dark:bg-border-subtle">
+              <SelectTrigger className="h-10 w-auto gap-3 border border-border-strong bg-surface-card font-medium text-content-primary shadow-sm dark:border-none dark:bg-border-subtle">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="portfoliofy">Portfoliofy profile</SelectItem>
-                {data?.hasCustomDomain && (
-                  <SelectItem value="custom">{data.customDomain}</SelectItem>
-                )}
+                <SelectItem value="custom">{data.customDomain}</SelectItem>
               </SelectContent>
             </Select>
+          )}
 
-            <Select
-              value={range}
-              onValueChange={(value) => setRange(value as PageViewRange)}
-            >
-              <SelectTrigger className="h-9 w-[130px] border border-border-strong bg-surface-card text-content-primary shadow-sm dark:border-none dark:bg-border-subtle">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {(Object.keys(RANGE_LABELS) as PageViewRange[]).map((key) => (
-                  <SelectItem key={key} value={key}>
-                    {RANGE_LABELS[key]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <Select
+            value={range}
+            onValueChange={(value) => setRange(value as PageViewRange)}
+          >
+            <SelectTrigger className="ml-auto h-10 w-auto gap-3 border border-border-strong bg-surface-card font-medium text-content-primary shadow-sm dark:border-none dark:bg-border-subtle">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {(Object.keys(RANGE_LABELS) as PageViewRange[]).map((key) => (
+                <SelectItem key={key} value={key}>
+                  {RANGE_LABELS[key]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
+
+        <h3 className="text-[18px] font-medium tabular-nums text-content-primary">
+          {isLoading ? '—' : (data?.total ?? 0)} page views
+        </h3>
 
         <div className="h-[300px] w-full overflow-hidden rounded-2xl border border-border-subtle bg-surface-card p-4">
           {data?.series?.length ? (
@@ -183,6 +188,8 @@ export function InsightsTab() {
                   style={{ fontSize: 14 }}
                 />
                 <YAxis
+                  domain={[0, yAxis.top]}
+                  ticks={yAxis.ticks}
                   allowDecimals={false}
                   tickLine={false}
                   axisLine={false}
