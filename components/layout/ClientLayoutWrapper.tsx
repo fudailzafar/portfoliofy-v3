@@ -106,7 +106,7 @@ export function ClientLayoutWrapper({
           animate={{ x: isOpen ? 0 : -sidebarWidth }}
           transition={SIDEBAR_SLIDE}
           style={{ width: sidebarWidth }}
-          className="fixed inset-y-0 left-0 z-0 hidden border-r border-theme-border-secondary bg-surface-1 pl-[60px] md:block print:hidden"
+          className="fixed inset-y-0 left-0 z-0 hidden bg-surface-1 pl-[60px] shadow-[inset_-1px_0_0_0_rgba(0,0,0,0.05)] dark:shadow-[inset_-1px_0_0_0_rgba(255,255,255,0.1)] md:block print:hidden"
         >
           {panelMounted && <ExplorePanel onClose={() => setIsOpen(false)} />}
         </motion.aside>
