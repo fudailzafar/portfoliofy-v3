@@ -80,7 +80,7 @@ export function ExplorePage() {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Name, location, title…"
               aria-label="Search by name, location or title"
-              className="h-9 w-full rounded-full bg-[var(--theme-wash,#f2f2f2)] pl-9 pr-3 text-[14px] text-theme-primary placeholder:text-theme-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="h-9 w-full rounded-full bg-[var(--theme-wash,#f2f2f2)] pl-9 pr-3 text-[14px] text-theme-primary placeholder:text-theme-muted focus:outline-none"
             />
           </label>
         </div>
@@ -116,7 +116,7 @@ export function ExplorePage() {
                 user={user}
                 detail={
                   !searching && sort === 'new'
-                    ? `joined ${relativeTime(user.createdAt)}`
+                    ? `Joined ${relativeTime(user.createdAt)}`
                     : undefined
                 }
                 line={searching || sort === 'a-z' ? 'title' : 'handle'}

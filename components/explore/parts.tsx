@@ -98,7 +98,8 @@ export function Member({
   if (line === 'title') {
     second = [title || `@${user.username}`, place].filter(Boolean).join(' · ');
   } else {
-    second = [`@${user.username}`, detail].filter(Boolean).join(' · ');
+    // New shows only when they joined, without the @username.
+    second = detail ?? `@${user.username}`;
   }
   return (
     <Link

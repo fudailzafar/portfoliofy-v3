@@ -21,13 +21,7 @@ const UNDERLINE_SPRING = {
 } as const;
 const FADE = { duration: 0.3 } as const;
 
-export function ExplorePanel({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) {
+export function ExplorePanel({ onClose }: { onClose: () => void }) {
   const [sort, setSort] = useState<ExploreSort>('activity');
   const [query, setQuery] = useState('');
   const searching = query.trim().length > 0;
@@ -43,11 +37,6 @@ export function ExplorePanel({
     isFetchingNextPage,
   } = useExplore(query.trim(), searching ? 'a-z' : sort);
   const users = data?.pages.flatMap((page) => page.users) ?? [];
-
-  // Focus the search whenever the panel opens.
-  useEffect(() => {
-    if (open) inputRef.current?.focus();
-  }, [open]);
 
   // Load more when the end of the list scrolls into view.
   useEffect(() => {
@@ -90,7 +79,7 @@ export function ExplorePanel({
               aria-label="Search by name, location or title"
               autoComplete="off"
               className={cn(
-                'h-9 w-full rounded-full bg-[var(--theme-wash,#f2f2f2)] pl-9 text-[14px] text-theme-primary placeholder:text-theme-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                'h-9 w-full rounded-full bg-[var(--theme-wash,#f2f2f2)] pl-9 text-[14px] text-theme-primary placeholder:text-theme-muted focus:outline-none',
                 query ? 'pr-9' : 'pr-3',
               )}
             />
@@ -195,7 +184,7 @@ export function ExplorePanel({
                     user={user}
                     detail={
                       !searching && sort === 'new'
-                        ? `joined ${relativeTime(user.createdAt)}`
+                        ? `Joined ${relativeTime(user.createdAt)}`
                         : undefined
                     }
                     line={searching || sort === 'a-z' ? 'title' : 'handle'}

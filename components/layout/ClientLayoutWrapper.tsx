@@ -108,9 +108,7 @@ export function ClientLayoutWrapper({
           style={{ width: sidebarWidth }}
           className="fixed inset-y-0 left-0 z-0 hidden border-r border-theme-border-secondary bg-surface-1 pl-[60px] md:block print:hidden"
         >
-          {panelMounted && (
-            <ExplorePanel open={isOpen} onClose={() => setIsOpen(false)} />
-          )}
+          {panelMounted && <ExplorePanel onClose={() => setIsOpen(false)} />}
         </motion.aside>
 
         {/* Main content layer: clear of the rail, pushed over by the panel */}
