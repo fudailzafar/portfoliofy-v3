@@ -12,7 +12,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import Twemoji from 'react-twemoji';
 import dynamic from 'next/dynamic';
 
 const StatusEditor = dynamic(
@@ -93,13 +92,9 @@ export function Header({
                       aria-label="Set status"
                       className="absolute bottom-0 right-0 flex h-6 w-8 items-center justify-center rounded-full bg-theme-bg text-base text-theme-primary shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000001a] transition-transform active:scale-95 dark:bg-theme-border dark:shadow-none"
                     >
-                      <Twemoji
-                        tag="span"
-                        className="flex items-center justify-center leading-none"
-                        options={{ className: 'h-[1em] w-[1em]' }}
-                      >
+                      <span className="flex items-center justify-center font-emoji leading-none">
                         {currentStatus.emoji || <SmileyIcon size={16} />}
-                      </Twemoji>
+                      </span>
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -110,13 +105,9 @@ export function Header({
             )}
             {!isOwner && currentStatus.emoji && (
               <div className="absolute bottom-0 right-0 flex h-6 w-8 items-center justify-center rounded-full bg-theme-bg text-base text-theme-primary shadow-[0_0_0_1px_#0000000d,0_1px_4px_#0000001a] dark:bg-theme-border dark:shadow-none">
-                <Twemoji
-                  tag="span"
-                  className="flex items-center justify-center leading-none"
-                  options={{ className: 'h-[1em] w-[1em]' }}
-                >
+                <span className="flex items-center justify-center font-emoji leading-none">
                   {currentStatus.emoji}
-                </Twemoji>
+                </span>
               </div>
             )}
           </div>

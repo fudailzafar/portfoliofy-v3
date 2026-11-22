@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EmojiPickerPopover } from '@/components/composite/EmojiPicker';
-import Twemoji from 'react-twemoji';
 import {
   Tooltip,
   TooltipContent,
@@ -172,13 +171,9 @@ export function StatusEditor({
                     aria-expanded={showEmojiPicker}
                     className="bg-theme-bg-hover flex size-10 shrink-0 items-center justify-center rounded-full text-xl transition-colors hover:opacity-80"
                   >
-                    <Twemoji
-                      tag="span"
-                      className="flex items-center justify-center leading-none"
-                      options={{ className: 'h-[1em] w-[1em]' }}
-                    >
+                    <span className="flex items-center justify-center font-emoji leading-none">
                       {emoji}
-                    </Twemoji>
+                    </span>
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>

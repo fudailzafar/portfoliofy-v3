@@ -5,7 +5,6 @@ import { getOptimizedImageUrl } from '@/lib/utils';
 import { XIcon } from '@phosphor-icons/react/ssr';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import Twemoji from 'react-twemoji';
 import { Spinner } from '@/components/ui/spinner';
 import { shortenLinksInText } from '@/lib/displayUrl';
 
@@ -178,13 +177,9 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                     </div>
                     {sort === 'activity' && user.statusEmoji && (
                       <div className="absolute -bottom-1 -right-2 z-10 flex h-[18px] w-6 items-center justify-center rounded-full border-[0.5px] border-border-strong bg-surface-1 shadow-sm">
-                        <Twemoji
-                          tag="span"
-                          className="flex items-center justify-center text-[9px] leading-none"
-                          options={{ className: 'h-[1.2em] w-[1.2em]' }}
-                        >
+                        <span className="flex items-center justify-center font-emoji text-[11px] leading-none">
                           {user.statusEmoji}
-                        </Twemoji>
+                        </span>
                       </div>
                     )}
                   </div>

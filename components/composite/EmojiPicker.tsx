@@ -125,7 +125,7 @@ export function EmojiPicker({
           >
             <span
               aria-hidden
-              className="absolute left-1/2 top-1/2 block leading-none [transform:translate(-50%,-50%)_scale(.5)]"
+              className="absolute left-1/2 top-1/2 block font-emoji leading-none [transform:translate(-50%,-50%)_scale(.5)]"
               style={{ fontSize }}
             >
               {emoji}
@@ -168,7 +168,7 @@ export function EmojiPicker({
         >
           <span
             aria-hidden
-            className="absolute left-1/2 top-1/2 block text-[40px] leading-none [transform:translate(-50%,-50%)_scale(.5)]"
+            className="absolute left-1/2 top-1/2 block font-emoji text-[40px] leading-none [transform:translate(-50%,-50%)_scale(.5)]"
           >
             {SKIN_TONE_PREVIEWS[tone]}
           </span>
