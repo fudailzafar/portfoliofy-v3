@@ -6,6 +6,7 @@ import { CollaboratorSchemaType } from '@/lib/resume';
 import { cn, ensureHttps } from '@/lib/utils';
 import type { ReplyTarget } from '@/lib/replies';
 import { Repliable } from '../replies/Repliable';
+import { shortenLinkText } from '@/lib/displayUrl';
 
 export interface PreviewListItemProps {
   leftContent: React.ReactNode;
@@ -91,7 +92,7 @@ export function PreviewListItem({
               fontSize: 'var(--type-size)',
               lineHeight: 'var(--line-height)',
             }}
-            dangerouslySetInnerHTML={{ __html: description }}
+            dangerouslySetInnerHTML={{ __html: shortenLinkText(description) }}
           />
         )}
 

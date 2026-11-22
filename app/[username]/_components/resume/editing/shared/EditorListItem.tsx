@@ -6,6 +6,7 @@ import { EditDeleteButtons } from '../EditDeleteButtons';
 import { ItemAction, ItemActionsMenu } from '../ItemActionsMenu';
 import { SortButtons } from '../SortButtons';
 import { ensureHttps } from '@/lib/utils';
+import { shortenLinkText } from '@/lib/displayUrl';
 
 export interface EditorListItemProps {
   isHidden?: boolean;
@@ -93,7 +94,7 @@ export function EditorListItem({
           {description && description !== '<p></p>' && (
             <div
               className="prose prose-sm max-w-none text-sm leading-relaxed text-content-muted prose-p:my-1 prose-p:text-content-muted prose-strong:text-content-primary prose-ol:pl-0 prose-ul:my-1 prose-ul:pl-0 prose-ul:text-content-muted prose-li:pl-0 prose-li:text-content-muted"
-              dangerouslySetInnerHTML={{ __html: description }}
+              dangerouslySetInnerHTML={{ __html: shortenLinkText(description) }}
             />
           )}
 

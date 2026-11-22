@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import { cn } from '@/lib/utils';
 import { parseStatusText, type Inline } from '@/lib/statusText';
+import { shortenUrl } from '@/lib/displayUrl';
 
 function Inlines({ parts }: { parts: Inline[] }) {
   return (
@@ -12,10 +13,11 @@ function Inlines({ parts }: { parts: Inline[] }) {
             href={part.href}
             target="_blank"
             rel="noopener noreferrer nofollow"
+            title={part.href}
             className="break-all underline underline-offset-4 hover:text-theme-primary"
             onClick={(event) => event.stopPropagation()}
           >
-            {part.text}
+            {shortenUrl(part.text)}
           </a>
         ) : (
           <Fragment key={i}>{part.text}</Fragment>

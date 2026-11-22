@@ -1,4 +1,5 @@
 import { ResumeDataSchemaType } from '@/lib/resume';
+import { shortenLinkText } from '@/lib/displayUrl';
 
 interface AboutProps {
   summary: ResumeDataSchemaType['summary'];
@@ -18,7 +19,7 @@ export function Summary({ summary }: AboutProps) {
           lineHeight: 'var(--line-height)',
         }}
         aria-labelledby="about-section"
-        dangerouslySetInnerHTML={{ __html: summary }}
+        dangerouslySetInnerHTML={{ __html: shortenLinkText(summary) }}
       />
     </section>
   );
