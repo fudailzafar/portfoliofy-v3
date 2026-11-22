@@ -7,7 +7,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react/ssr';
+import { XIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
 import { ExploreSort, useExplore } from '@/hooks/useExplore';
 import { searchWords } from '@/lib/exploreSearch';
@@ -67,11 +67,7 @@ export function ExplorePanel({ onClose }: { onClose: () => void }) {
     >
       <div className="z-10 shrink-0 bg-theme-bg px-5 pt-6">
         <div className="flex h-9 items-center gap-3">
-          <label className="relative flex h-9 min-w-0 flex-1 items-center">
-            <MagnifyingGlassIcon
-              aria-hidden
-              className="pointer-events-none absolute left-3 size-4 text-theme-muted"
-            />
+          <label className="relative flex h-[38px] min-w-0 flex-1 items-center">
             <input
               ref={inputRef}
               type="text"
@@ -81,8 +77,8 @@ export function ExplorePanel({ onClose }: { onClose: () => void }) {
               aria-label="Search by name, location or title"
               autoComplete="off"
               className={cn(
-                'h-9 w-full rounded-full bg-[var(--theme-wash,#f2f2f2)] pl-9 text-[14px] text-theme-primary placeholder:text-theme-muted focus:outline-none',
-                query ? 'pr-9' : 'pr-3',
+                'h-[38px] w-full rounded-full bg-[var(--theme-wash,#f2f2f2)] pl-4 text-[14px] text-theme-primary placeholder:text-theme-muted focus:outline-none',
+                query ? 'pr-9' : 'pr-4',
               )}
             />
             {query && (
@@ -186,6 +182,7 @@ export function ExplorePanel({ onClose }: { onClose: () => void }) {
                     user={user}
                     tab={sort}
                     words={words}
+                    compact
                   />
                 ))}
               </div>

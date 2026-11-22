@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Twemoji from 'react-twemoji';
 import { StatusText } from '@/components/composite/StatusText';
 import { ExploreSort, ExploreUser } from '@/hooks/useExplore';
-import { getOptimizedImageUrl } from '@/lib/utils';
+import { cn, getOptimizedImageUrl } from '@/lib/utils';
 import { shortenLinksInText } from '@/lib/displayUrl';
 import { highlightParts, matchedLine } from '@/lib/exploreSearch';
 
@@ -36,35 +36,54 @@ export function relativeTime(dateString: string) {
   return years <= 1 ? 'a year ago' : `${years} years ago`;
 }
 
-/** 48px photo with the status emoji on its corner, as the original showed it. */
+/**
+ * A photo with the status emoji on its corner, as the original showed it: 48px on
+ * the Explore page, 34px (`compact`) in the side panel, where rows are tighter.
+ */
 export function Photo({
   user,
   showStatus,
+  compact = false,
 }: {
   user: ExploreUser;
   showStatus: boolean;
+  compact?: boolean;
 }) {
   const src = user.customImage || user.userImage;
   const name = user.name || user.username;
   return (
-    <div className="relative size-12 shrink-0">
+    <div
+      className={cn('relative shrink-0', compact ? 'size-[34px]' : 'size-12')}
+    >
       <div className="relative size-full overflow-hidden rounded-full bg-[var(--theme-wash,#f2f2f2)]">
         {src ? (
           <Image
             src={getOptimizedImageUrl(src) || ''}
             alt=""
             fill
-            sizes="48px"
+            sizes={compact ? '34px' : '48px'}
             className="object-cover"
           />
         ) : (
-          <div className="flex size-full items-center justify-center text-[16px] text-theme-secondary">
+          <div
+            className={cn(
+              'flex size-full items-center justify-center text-theme-secondary',
+              compact ? 'text-[14px]' : 'text-[16px]',
+            )}
+          >
             {name.charAt(0).toUpperCase()}
           </div>
         )}
       </div>
       {showStatus && user.statusEmoji && (
-        <div className="absolute -bottom-0.5 -right-1.5 flex h-5 w-[26px] items-center justify-center rounded-full bg-theme-bg shadow-[0_0_0_1px_var(--theme-border)]">
+        <div
+          className={cn(
+            'absolute flex items-center justify-center rounded-full bg-theme-bg shadow-[0_0_0_1px_var(--theme-border)]',
+            compact
+              ? '-bottom-0.5 -right-1.5 h-[18px] w-[22px]'
+              : '-bottom-0.5 -right-1.5 h-5 w-[26px]',
+          )}
+        >
           <Twemoji
             tag="span"
             className="flex items-center justify-center text-[10px] leading-none"
@@ -93,17 +112,20 @@ export function Member({
   user,
   tab,
   words = [],
+  compact = false,
 }: {
   user: ExploreUser;
   tab: ExploreSort;
   words?: string[];
+  /** The side panel's tighter row, measured from the original's own. */
+  compact?: boolean;
 }) {
   const matched = words.length ? matchedLine(user, words) : null;
   let second: React.ReactNode;
   if (matched) {
     second = highlightParts(matched, words).map((part, i) =>
       part.match ? (
-        <strong key={i} className="font-medium text-theme-primary">
+        <strong key={i} className="font-medium">
           {part.text}
         </strong>
       ) : (
@@ -120,10 +142,18 @@ export function Member({
   return (
     <Link
       href={`/${user.username}`}
-      className="flex min-h-[68px] items-center py-2.5"
+      className={cn(
+        'flex items-center',
+        compact ? 'min-h-[51px] py-[7px]' : 'min-h-[68px] py-2.5',
+      )}
     >
-      <Photo user={user} showStatus />
-      <div className="ml-4 flex min-w-0 flex-col justify-center">
+      <Photo user={user} showStatus compact={compact} />
+      <div
+        className={cn(
+          'flex min-w-0 flex-col justify-center',
+          compact ? 'ml-3' : 'ml-4',
+        )}
+      >
         <h3 className="truncate font-normal leading-[1.3] text-theme-primary">
           {user.name || user.username}
         </h3>

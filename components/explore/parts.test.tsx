@@ -50,9 +50,7 @@ describe('Member second line follows the tab', () => {
 describe('Member while searching', () => {
   it('shows a matched title with the match in bold', () => {
     const out = html({ user: user(), tab: 'a-z', words: ['design'] });
-    expect(out).toContain(
-      '<strong class="font-medium text-theme-primary">Design</strong>er',
-    );
+    expect(out).toContain('<strong class="font-medium">Design</strong>er');
     expect(out).not.toContain('Chennai');
   });
   it('shows a matched location', () => {
