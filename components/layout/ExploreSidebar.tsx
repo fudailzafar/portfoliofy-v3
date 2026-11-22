@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Twemoji from 'react-twemoji';
 import { Spinner } from '@/components/ui/spinner';
+import { shortenLinksInText } from '@/lib/displayUrl';
 
 interface ExploreSidebarProps {
   onClose: () => void;
@@ -199,7 +200,7 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                       <>
                         {user.statusText && (
                           <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
-                            {user.statusText}
+                            {shortenLinksInText(user.statusText)}
                           </span>
                         )}
                         <span className="text-content-muted/60 mt-1.5 text-[12px]">
@@ -209,11 +210,10 @@ export function ExploreSidebar({ onClose }: ExploreSidebarProps) {
                         </span>
                       </>
                     ) : (
-                      user.shortAbout && (
-                        <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
-                          {user.shortAbout}
-                        </span>
-                      )
+                      // Their title, or @username when they haven't written one.
+                      <span className="mt-0.5 line-clamp-2 text-[13px] leading-tight text-content-muted">
+                        {user.shortAbout?.trim() || `@${user.username}`}
+                      </span>
                     )}
                   </div>
                 </button>

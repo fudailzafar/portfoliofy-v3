@@ -1,5 +1,6 @@
 'use client';
 
+import { StatusText } from '@/components/composite/StatusText';
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AvatarPlaceholderIcon } from '@/components/composite/AvatarPlaceholderIcon';
@@ -261,9 +262,10 @@ export function Header({
               </filter>
             </defs>
           </svg>
-          <span className="whitespace-pre-wrap text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary">
-            {currentStatus.text}
-          </span>
+          <StatusText
+            text={currentStatus.text}
+            className="text-[length:var(--type-size)] leading-[var(--line-height)] text-theme-secondary"
+          />
           <span className="text-[length:var(--secondary-type-size)] leading-[var(--line-height)] text-theme-muted">
             {getRelativeTime(currentStatus.updatedAt)}
           </span>

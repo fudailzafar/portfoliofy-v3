@@ -6,6 +6,8 @@ const config: Config = {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
+    // lib/displayUrl.ts builds link markup that uses print: classes.
+    './lib/displayUrl.ts',
     '*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
