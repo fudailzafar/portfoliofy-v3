@@ -43,6 +43,7 @@ import { useUserActions } from '@/hooks/useUserActions';
 import { useResumeStore } from '@/store/useResumeStore';
 import { SITE_URL } from '@/lib/site';
 import { cn } from '@/lib/utils';
+import { useSidebarStore } from '@/store/useSidebarStore';
 
 export const RAIL_WIDTH = 60;
 
@@ -53,7 +54,7 @@ interface RailItem {
   hint?: string;
   icon: Icon;
   href?: string;
-  onClick?: () => void;
+  onClick?: (event?: React.MouseEvent) => void;
   active: boolean;
   /** A dot for something unread, with its spoken form. */
   badge?: string;
@@ -88,6 +89,7 @@ function RailButton({ item }: { item: RailItem }) {
         {item.href ? (
           <Link
             href={item.href}
+            onClick={item.onClick}
             aria-label={item.label}
             aria-current={item.active ? 'page' : undefined}
             className={className}
@@ -124,6 +126,8 @@ export function NavRail() {
   const { data: session } = useSession();
   const { usernameQuery, resumeQuery } = useUserActions();
   const setActiveTab = useResumeStore((state) => state.setActiveTab);
+  const sidebarOpen = useSidebarStore((state) => state.isOpen);
+  const setSidebarOpen = useSidebarStore((state) => state.setIsOpen);
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [copied, setCopied] = useState(false);
@@ -225,7 +229,15 @@ export function NavRail() {
       hint: '⌘ E',
       icon: MagnifyingGlassIcon,
       href: '/explore',
-      active: pathname.startsWith('/explore'),
+      // On a computer Explore is a panel beside the page; the link is for
+      // phones, new tabs and anyone who goes straight to /explore.
+      onClick: (event) => {
+        if (window.innerWidth >= 768) {
+          event?.preventDefault();
+          setSidebarOpen((open) => !open);
+        }
+      },
+      active: sidebarOpen || pathname.startsWith('/explore'),
     },
     {
       key: 'replies',

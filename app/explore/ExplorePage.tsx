@@ -6,137 +6,11 @@
 // the search swaps the list for matching people.
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import Twemoji from 'react-twemoji';
 import { MagnifyingGlassIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
-import { StatusText } from '@/components/composite/StatusText';
-import { ExploreSort, ExploreUser, useExplore } from '@/hooks/useExplore';
-import { getOptimizedImageUrl } from '@/lib/utils';
+import { ExploreSort, useExplore } from '@/hooks/useExplore';
+import { Member, Post, TABS, relativeTime } from '@/components/explore/parts';
 import { cn } from '@/lib/utils';
-
-const TABS: { id: ExploreSort; label: string }[] = [
-  { id: 'activity', label: 'Activity' },
-  { id: 'new', label: 'New' },
-  { id: 'a-z', label: 'A–Z' },
-];
-
-function relativeTime(dateString: string) {
-  const seconds = Math.floor(
-    (Date.now() - new Date(dateString).getTime()) / 1000,
-  );
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  if (minutes < 1) return 'just now';
-  if (minutes < 60)
-    return minutes === 1 ? 'a minute ago' : `${minutes} minutes ago`;
-  if (hours < 24) return hours === 1 ? 'an hour ago' : `${hours} hours ago`;
-  if (days < 30) return days === 1 ? 'a day ago' : `${days} days ago`;
-  const months = Math.floor(days / 30);
-  if (months < 12) return months <= 1 ? 'a month ago' : `${months} months ago`;
-  const years = Math.floor(days / 365);
-  return years <= 1 ? 'a year ago' : `${years} years ago`;
-}
-
-/** 48px photo with the status emoji on its corner, as the original showed it. */
-function Photo({
-  user,
-  showStatus,
-}: {
-  user: ExploreUser;
-  showStatus: boolean;
-}) {
-  const src = user.customImage || user.userImage;
-  const name = user.name || user.username;
-  return (
-    <div className="relative size-12 shrink-0">
-      <div className="relative size-full overflow-hidden rounded-full bg-[var(--theme-wash,#f2f2f2)]">
-        {src ? (
-          <Image
-            src={getOptimizedImageUrl(src) || ''}
-            alt=""
-            fill
-            sizes="48px"
-            className="object-cover"
-          />
-        ) : (
-          <div className="flex size-full items-center justify-center text-[16px] text-theme-secondary">
-            {name.charAt(0).toUpperCase()}
-          </div>
-        )}
-      </div>
-      {showStatus && user.statusEmoji && (
-        <div className="absolute -bottom-0.5 -right-1.5 flex h-5 w-[26px] items-center justify-center rounded-full bg-theme-bg shadow-[0_0_0_1px_var(--theme-border)]">
-          <Twemoji
-            tag="span"
-            className="flex items-center justify-center text-[10px] leading-none"
-            options={{ className: 'h-[1.2em] w-[1.2em]' }}
-          >
-            {user.statusEmoji}
-          </Twemoji>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/** A person row (New, A–Z and search results). */
-function Member({ user, detail }: { user: ExploreUser; detail?: string }) {
-  return (
-    <Link
-      href={`/${user.username}`}
-      className="flex min-h-[68px] items-center py-2.5"
-    >
-      <Photo user={user} showStatus />
-      <div className="ml-4 flex min-w-0 flex-col justify-center">
-        <h3 className="truncate font-normal leading-[1.3] text-theme-primary">
-          {user.name || user.username}
-        </h3>
-        <span className="truncate leading-[1.3] text-theme-muted">
-          @{user.username}
-          {detail && <> · {detail}</>}
-        </span>
-      </div>
-    </Link>
-  );
-}
-
-/** A status in the Activity feed. */
-function Post({ user }: { user: ExploreUser }) {
-  const when = user.statusUpdatedAt || user.updatedAt;
-  return (
-    <div className="flex border-b border-theme-border-secondary py-6 last:border-b-0">
-      <Link href={`/${user.username}`} className="h-fit shrink-0">
-        <Photo user={user} showStatus />
-      </Link>
-      <div className="ml-4 min-w-0 flex-1">
-        <div className="flex flex-wrap items-baseline gap-x-2">
-          <Link
-            href={`/${user.username}`}
-            className="text-theme-primary hover:underline hover:underline-offset-4"
-          >
-            {user.name || user.username}
-          </Link>
-          <span className="text-[length:var(--secondary-type-size)] text-theme-muted">
-            {relativeTime(when)}
-          </span>
-        </div>
-        {user.statusText ? (
-          <StatusText
-            text={user.statusText}
-            className="mt-1 text-theme-secondary"
-          />
-        ) : (
-          user.shortAbout && (
-            <p className="mt-1 text-theme-secondary">{user.shortAbout}</p>
-          )
-        )}
-      </div>
-    </div>
-  );
-}
 
 export function ExplorePage() {
   const [sort, setSort] = useState<ExploreSort>('activity');
@@ -204,8 +78,8 @@ export function ExplorePage() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Find people"
-              aria-label="Find people"
+              placeholder="Name, location, title…"
+              aria-label="Search by name, location or title"
               className="h-9 w-full rounded-full bg-[var(--theme-wash,#f2f2f2)] pl-9 pr-3 text-[14px] text-theme-primary placeholder:text-theme-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
           </label>
@@ -245,6 +119,8 @@ export function ExplorePage() {
                     ? `joined ${relativeTime(user.createdAt)}`
                     : undefined
                 }
+                line={searching || sort === 'a-z' ? 'title' : 'handle'}
+                showLocation={searching}
               />
             ))}
           </div>

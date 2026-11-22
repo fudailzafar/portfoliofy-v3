@@ -31,7 +31,8 @@ export async function GET(request: Request) {
       }
     }
 
-    const searchQuery = `%${q}%`;
+    // Escape LIKE wildcards so a search for "50%" or "a_b" means those characters.
+    const searchQuery = `%${q.replace(/[\\%_]/g, '\\$&')}%`;
     const limit = 20;
 
     const users = await sql`
@@ -41,6 +42,7 @@ export async function GET(request: Request) {
         u.custom_image,
         ((r.resume_data#>>'{}')::jsonb)->'header'->>'name' as name,
         ((r.resume_data#>>'{}')::jsonb)->'header'->>'shortAbout' as short_about,
+        ((r.resume_data#>>'{}')::jsonb)->'header'->>'location' as location,
         u.status_emoji as status_emoji,
         u.status_text as status_text,
         u.status_updated_at as status_updated_at,
@@ -53,6 +55,7 @@ export async function GET(request: Request) {
           u.username ILIKE ${searchQuery}
           OR (((r.resume_data#>>'{}')::jsonb)->'header'->>'name') ILIKE ${searchQuery}
           OR (((r.resume_data#>>'{}')::jsonb)->'header'->>'shortAbout') ILIKE ${searchQuery}
+          OR (((r.resume_data#>>'{}')::jsonb)->'header'->>'location') ILIKE ${searchQuery}
         )
         ${extraFilter}
         ${cursorCondition}
