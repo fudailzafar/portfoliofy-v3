@@ -19,11 +19,18 @@ describe('shortenUrl', () => {
 });
 
 describe('shortenLinkText', () => {
+  it('drops https and www even from short addresses, keeping the full text for print', () => {
+    expect(
+      shortenLinkText('<a href="https://a.co">https://www.a.co/</a>'),
+    ).toBe(
+      '<a href="https://a.co"><span class="print:hidden">a.co</span><span class="hidden print:inline">https://www.a.co/</span></a>',
+    );
+  });
   it('shortens links whose text is an address', () => {
     const html =
       '<p><a href="https://nts.live/shows/the-do-your-thing" target="_blank">https://nts.live/shows/the-do-your-thing</a></p>';
     expect(shortenLinkText(html)).toBe(
-      '<p><a href="https://nts.live/shows/the-do-your-thing" target="_blank">nts.live/shows/the-do-you…</a></p>',
+      '<p><a href="https://nts.live/shows/the-do-your-thing" target="_blank"><span class="print:hidden">nts.live/shows/the-do-you…</span><span class="hidden print:inline">https://nts.live/shows/the-do-your-thing</span></a></p>',
     );
   });
   it('leaves links with words as their text', () => {
@@ -35,7 +42,9 @@ describe('shortenLinkText', () => {
       shortenLinkText(
         '<a href="x">https://e.com/?a=1&amp;b=2&amp;c=3&amp;d=4&amp;e=5&amp;f=6</a>',
       ),
-    ).toBe('<a href="x">e.com/?a=1&amp;b=2&amp;c=3&amp;d=4&amp;e=…</a>');
+    ).toBe(
+      '<a href="x"><span class="print:hidden">e.com/?a=1&amp;b=2&amp;c=3&amp;d=4&amp;e=…</span><span class="hidden print:inline">https://e.com/?a=1&amp;b=2&amp;c=3&amp;d=4&amp;e=5&amp;f=6</span></a>',
+    );
   });
   it('returns html without links unchanged', () => {
     expect(shortenLinkText('<p>hello</p>')).toBe('<p>hello</p>');

@@ -21,12 +21,16 @@ const ANCHOR = /(<a\b[^>]*>)([^<]*)(<\/a>)/gi;
 /**
  * In rich-text HTML, shortens the visible text of links whose text is itself a
  * web address. Links with words as their text ("my portfolio") are left alone.
+ * The full address stays in the page for printing and saving as PDF, which
+ * should show it in full: the short text hides and the full text shows there.
  */
 export function shortenLinkText(html: string): string {
   if (!html || !html.includes('<a')) return html;
   return html.replace(ANCHOR, (whole, open: string, text: string, close) => {
     const plain = text.replace(/&amp;/g, '&');
     if (!WEB_ADDRESS.test(plain.trim())) return whole;
-    return `${open}${shortenUrl(plain).replace(/&/g, '&amp;')}${close}`;
+    const short = shortenUrl(plain).replace(/&/g, '&amp;');
+    if (short === text) return whole;
+    return `${open}<span class="print:hidden">${short}</span><span class="hidden print:inline">${text}</span>${close}`;
   });
 }
