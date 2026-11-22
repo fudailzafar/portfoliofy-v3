@@ -1,3 +1,5 @@
+import { linkify } from './statusText';
+
 // How web addresses are shown in statuses and descriptions: without
 // "https://" or "www.", and cut to a short length with an ellipsis, like
 // the original's "nts.live/shows/the-do-y…". Only the text changes; the link still
@@ -13,6 +15,16 @@ export function shortenUrl(url: string, max = URL_DISPLAY_MAX): string {
     .replace(/^www\./i, '')
     .replace(/\/+$/, '');
   return bare.length > max ? `${bare.slice(0, max)}…` : bare;
+}
+
+/**
+ * Plain text with its web addresses shortened, for places that can't hold a
+ * link (a row that is itself a button).
+ */
+export function shortenLinksInText(text: string): string {
+  return linkify(text)
+    .map((part) => (part.type === 'link' ? shortenUrl(part.text) : part.text))
+    .join('');
 }
 
 const WEB_ADDRESS = /^(?:https?:\/\/|www\.)\S+$/i;

@@ -10,7 +10,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
 import { ExploreSort, useExplore } from '@/hooks/useExplore';
-import { Member, Post, TABS, relativeTime } from './parts';
+import { searchWords } from '@/lib/exploreSearch';
+import { Member, Post, TABS } from './parts';
 import { cn } from '@/lib/utils';
 
 // the original's tab underline: a very stiff spring, so it snaps with no overshoot.
@@ -24,7 +25,8 @@ const FADE = { duration: 0.3 } as const;
 export function ExplorePanel({ onClose }: { onClose: () => void }) {
   const [sort, setSort] = useState<ExploreSort>('activity');
   const [query, setQuery] = useState('');
-  const searching = query.trim().length > 0;
+  const words = searchWords(query);
+  const searching = words.length > 0;
   const inputRef = useRef<HTMLInputElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const {
@@ -35,7 +37,7 @@ export function ExplorePanel({ onClose }: { onClose: () => void }) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useExplore(query.trim(), searching ? 'a-z' : sort);
+  } = useExplore(query.trim(), sort);
   const users = data?.pages.flatMap((page) => page.users) ?? [];
 
   // Load more when the end of the list scrolls into view.
@@ -182,13 +184,8 @@ export function ExplorePanel({ onClose }: { onClose: () => void }) {
                   <Member
                     key={user.username}
                     user={user}
-                    detail={
-                      !searching && sort === 'new'
-                        ? `Joined ${relativeTime(user.createdAt)}`
-                        : undefined
-                    }
-                    line={searching || sort === 'a-z' ? 'title' : 'handle'}
-                    showLocation={searching}
+                    tab={sort}
+                    words={words}
                   />
                 ))}
               </div>

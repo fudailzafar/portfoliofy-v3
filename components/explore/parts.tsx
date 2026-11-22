@@ -2,12 +2,15 @@
 
 // Pieces of the Explore lists shared by the /explore page and the Explore panel.
 
+import { Fragment } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Twemoji from 'react-twemoji';
 import { StatusText } from '@/components/composite/StatusText';
 import { ExploreSort, ExploreUser } from '@/hooks/useExplore';
 import { getOptimizedImageUrl } from '@/lib/utils';
+import { shortenLinksInText } from '@/lib/displayUrl';
+import { highlightParts, matchedLine } from '@/lib/exploreSearch';
 
 export const TABS: { id: ExploreSort; label: string }[] = [
   { id: 'activity', label: 'Activity' },
@@ -75,31 +78,44 @@ export function Photo({
   );
 }
 
+/** Their title, or @username when they haven't written one. */
+function titleOrHandle(user: ExploreUser) {
+  return user.shortAbout?.trim() || `@${user.username}`;
+}
+
 /**
- * A person row. The second line is "@username · detail" by default (New, with
- * when they joined). With `line="title"` (A–Z and search) it is their title,
- * or @username when they haven't written one, so no row is left half empty.
- * Searching also shows their location, since it can be what matched.
+ * A person row (New, A–Z and search results). The second line follows the tab:
+ * when they joined (New), their status (Activity) or their title, or @username
+ * without one (A–Z). While searching, a title or location that matched the
+ * words is shown instead, with the matching part in bold, as on the original.
  */
 export function Member({
   user,
-  detail,
-  line = 'handle',
-  showLocation = false,
+  tab,
+  words = [],
 }: {
   user: ExploreUser;
-  detail?: string;
-  line?: 'handle' | 'title';
-  showLocation?: boolean;
+  tab: ExploreSort;
+  words?: string[];
 }) {
-  const title = user.shortAbout?.trim();
-  const place = showLocation ? user.location?.trim() : '';
-  let second: string;
-  if (line === 'title') {
-    second = [title || `@${user.username}`, place].filter(Boolean).join(' · ');
+  const matched = words.length ? matchedLine(user, words) : null;
+  let second: React.ReactNode;
+  if (matched) {
+    second = highlightParts(matched, words).map((part, i) =>
+      part.match ? (
+        <strong key={i} className="font-medium text-theme-primary">
+          {part.text}
+        </strong>
+      ) : (
+        <Fragment key={i}>{part.text}</Fragment>
+      ),
+    );
+  } else if (tab === 'new') {
+    second = `Joined ${relativeTime(user.createdAt)}`;
+  } else if (tab === 'activity' && user.statusText?.trim()) {
+    second = shortenLinksInText(user.statusText.trim());
   } else {
-    // New shows only when they joined, without the @username.
-    second = detail ?? `@${user.username}`;
+    second = titleOrHandle(user);
   }
   return (
     <Link

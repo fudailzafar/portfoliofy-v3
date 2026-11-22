@@ -1,5 +1,14 @@
 import { NextResponse } from 'next/server';
 import sql from '@/lib/server/db';
+import { searchWords } from '@/lib/exploreSearch';
+
+const PAGE_SIZE = 20;
+const MAX_SEARCH_OFFSET = 1000;
+
+// "50%" or "a_b" should mean those characters, not LIKE wildcards.
+const escapeLike = (value: string) => value.replace(/[\\%_]/g, '\\$&');
+const escapeRegex = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export async function GET(request: Request) {
   try {
@@ -31,18 +40,55 @@ export async function GET(request: Request) {
       }
     }
 
-    // Escape LIKE wildcards so a search for "50%" or "a_b" means those characters.
-    const searchQuery = `%${q.replace(/[\\%_]/g, '\\$&')}%`;
-    const limit = 20;
+    const limit = PAGE_SIZE;
+    const words = searchWords(q);
+    const header = sql`((r.resume_data#>>'{}')::jsonb)->'header'`;
+
+    // Searching: every word must match name, username, title or location.
+    // Results are ordered by how well they match, not by the tab, and paged by
+    // offset since that order has no single column to continue from.
+    let searchFilter = sql``;
+    let searchOrder = sql``;
+    let offset = 0;
+    if (words.length > 0) {
+      for (const word of words) {
+        // The word must start a word in the text: at its start or after a
+        // character that isn't a letter or digit.
+        const atWordStart = `(^|[^[:alnum:]])${escapeRegex(word)}`;
+        searchFilter = sql`${searchFilter} AND (
+          u.username ~* ${atWordStart}
+          OR ${header}->>'name' ~* ${atWordStart}
+          OR ${header}->>'shortAbout' ~* ${atWordStart}
+          OR ${header}->>'location' ~* ${atWordStart}
+        )`;
+      }
+      const first = escapeLike(words[0]);
+      const firstAtStart = `(^|[^[:alnum:]])${escapeRegex(words[0])}`;
+      searchOrder = sql`
+        CASE
+          WHEN u.username ILIKE ${first + '%'} OR ${header}->>'name' ILIKE ${first + '%'} THEN 0
+          WHEN u.username ~* ${firstAtStart} OR ${header}->>'name' ~* ${firstAtStart} THEN 1
+          WHEN ${header}->>'shortAbout' ~* ${firstAtStart} THEN 2
+          ELSE 3
+        END,
+        LOWER(${header}->>'name'), u.username`;
+      orderBy = searchOrder;
+      extraFilter = sql``;
+      cursorCondition = sql``;
+      const parsed = Number.parseInt(cursor ?? '', 10);
+      offset = Number.isFinite(parsed)
+        ? Math.min(Math.max(parsed, 0), MAX_SEARCH_OFFSET)
+        : 0;
+    }
 
     const users = await sql`
       SELECT 
         u.username,
         u.image as user_image,
         u.custom_image,
-        ((r.resume_data#>>'{}')::jsonb)->'header'->>'name' as name,
-        ((r.resume_data#>>'{}')::jsonb)->'header'->>'shortAbout' as short_about,
-        ((r.resume_data#>>'{}')::jsonb)->'header'->>'location' as location,
+        ${header}->>'name' as name,
+        ${header}->>'shortAbout' as short_about,
+        ${header}->>'location' as location,
         u.status_emoji as status_emoji,
         u.status_text as status_text,
         u.status_updated_at as status_updated_at,
@@ -51,16 +97,11 @@ export async function GET(request: Request) {
       FROM users u
       JOIN resumes r ON u.id = r.user_id
       WHERE r.status = 'live'
-        AND (
-          u.username ILIKE ${searchQuery}
-          OR (((r.resume_data#>>'{}')::jsonb)->'header'->>'name') ILIKE ${searchQuery}
-          OR (((r.resume_data#>>'{}')::jsonb)->'header'->>'shortAbout') ILIKE ${searchQuery}
-          OR (((r.resume_data#>>'{}')::jsonb)->'header'->>'location') ILIKE ${searchQuery}
-        )
+        ${searchFilter}
         ${extraFilter}
         ${cursorCondition}
       ORDER BY ${orderBy}
-      LIMIT ${limit + 1}
+      LIMIT ${limit + 1} OFFSET ${offset}
     `;
 
     const hasNextPage = users.length > limit;
@@ -69,7 +110,9 @@ export async function GET(request: Request) {
     let nextCursor = null;
     if (hasNextPage) {
       const lastItem = results[results.length - 1];
-      if (sort === 'new') {
+      if (words.length > 0) {
+        nextCursor = String(offset + limit);
+      } else if (sort === 'new') {
         nextCursor = lastItem.createdAt;
       } else if (sort === 'a-z') {
         nextCursor = lastItem.name?.toLowerCase();

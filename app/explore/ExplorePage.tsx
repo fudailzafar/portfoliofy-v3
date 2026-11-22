@@ -9,13 +9,15 @@ import { useEffect, useState } from 'react';
 import { MagnifyingGlassIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';
 import { ExploreSort, useExplore } from '@/hooks/useExplore';
-import { Member, Post, TABS, relativeTime } from '@/components/explore/parts';
+import { searchWords } from '@/lib/exploreSearch';
+import { Member, Post, TABS } from '@/components/explore/parts';
 import { cn } from '@/lib/utils';
 
 export function ExplorePage() {
   const [sort, setSort] = useState<ExploreSort>('activity');
   const [query, setQuery] = useState('');
-  const searching = query.trim().length > 0;
+  const words = searchWords(query);
+  const searching = words.length > 0;
   const {
     data,
     isLoading,
@@ -24,7 +26,7 @@ export function ExplorePage() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useExplore(query.trim(), searching ? 'a-z' : sort);
+  } = useExplore(query.trim(), sort);
   const users = data?.pages.flatMap((page) => page.users) ?? [];
 
   // Load more as the page nears the bottom.
@@ -114,13 +116,8 @@ export function ExplorePage() {
               <Member
                 key={user.username}
                 user={user}
-                detail={
-                  !searching && sort === 'new'
-                    ? `Joined ${relativeTime(user.createdAt)}`
-                    : undefined
-                }
-                line={searching || sort === 'a-z' ? 'title' : 'handle'}
-                showLocation={searching}
+                tab={sort}
+                words={words}
               />
             ))}
           </div>

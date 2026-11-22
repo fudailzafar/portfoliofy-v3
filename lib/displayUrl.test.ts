@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { shortenLinkText, shortenUrl } from './displayUrl';
+import { shortenLinkText, shortenLinksInText, shortenUrl } from './displayUrl';
 
 describe('shortenUrl', () => {
   it('drops the scheme, www and trailing slash', () => {
@@ -48,5 +48,18 @@ describe('shortenLinkText', () => {
   });
   it('returns html without links unchanged', () => {
     expect(shortenLinkText('<p>hello</p>')).toBe('<p>hello</p>');
+  });
+});
+
+describe('shortenLinksInText', () => {
+  it('shortens addresses inside plain text', () => {
+    expect(
+      shortenLinksInText(
+        'Happy Monday — https://www.nts.live/shows/the-do-your-thing',
+      ),
+    ).toBe('Happy Monday — nts.live/shows/the-do-you…');
+  });
+  it('leaves text without addresses alone', () => {
+    expect(shortenLinksInText('just words')).toBe('just words');
   });
 });
