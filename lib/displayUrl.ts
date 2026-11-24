@@ -1,10 +1,5 @@
 import { linkify } from './statusText';
 
-// How web addresses are shown in statuses and descriptions: without
-// "https://" or "www.", and cut to a short length with an ellipsis, like
-// the original's "nts.live/shows/the-do-y…". Only the text changes; the link still
-// goes to the full address.
-
 export const URL_DISPLAY_MAX = 25;
 
 /** "https://www.nts.live/shows/the-do-your-thing/" -> "nts.live/shows/the-do-y…" */

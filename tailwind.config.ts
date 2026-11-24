@@ -13,8 +13,6 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        // Emoji are drawn in the device's own emoji font, as the original did, so the
-        // picker and everywhere a status shows use the same glyphs.
         emoji: [
           '"Apple Color Emoji"',
           '"Segoe UI Emoji"',

@@ -1,7 +1,3 @@
-// Turns a status's plain text into blocks for display, the way the original did:
-// lines starting "* " or "- " become a bulleted list, lines starting "1. "
-// a numbered list, and web addresses inside the text become links.
-
 export type Inline =
   | { type: 'text'; text: string }
   | { type: 'link'; text: string; href: string };

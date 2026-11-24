@@ -27,10 +27,6 @@ function Inlines({ parts }: { parts: Inline[] }) {
   );
 }
 
-/**
- * A status as the original showed it: "* item" and "1. item" lines become lists and
- * web addresses become links. Styling comes from the caller's className.
- */
 export function StatusText({
   text,
   className,
