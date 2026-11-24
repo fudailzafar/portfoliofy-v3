@@ -1,6 +1,5 @@
 'use client';
 
-
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { MotionConfig, motion } from 'framer-motion';
 import { EmojiPickerPopover } from '@/components/composite/EmojiPicker';

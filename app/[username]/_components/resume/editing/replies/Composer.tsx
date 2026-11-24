@@ -1,6 +1,5 @@
 'use client';
 
-
 import { useEffect, useRef, useState } from 'react';
 import { EmojiPickerPopover } from '@/components/composite/EmojiPicker';
 import { Spinner } from '@/components/ui/spinner';

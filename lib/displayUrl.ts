@@ -1,6 +1,5 @@
 import { linkify } from './statusText';
 
-
 export const URL_DISPLAY_MAX = 25;
 
 /** "https://www.nts.live/shows/the-do-your-thing/" -> "nts.live/shows/the-do-y…" */

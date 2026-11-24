@@ -1,6 +1,5 @@
 'use client';
 
-
 import { useEffect, useState } from 'react';
 import { MagnifyingGlassIcon } from '@phosphor-icons/react/ssr';
 import { Spinner } from '@/components/ui/spinner';

@@ -1,6 +1,5 @@
 'use client';
 
-
 import { cn } from '@/lib/utils';
 import { REPLY_SECTION_NOUN, type ReplyContext } from '@/lib/replies';
 import { PersonAvatar } from './PersonAvatar';

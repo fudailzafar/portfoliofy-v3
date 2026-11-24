@@ -1,6 +1,5 @@
 'use client';
 
-
 import { forwardRef, type ComponentPropsWithoutRef } from 'react';
 import { motion } from 'framer-motion';
 import { PencilSimpleIcon } from '@phosphor-icons/react/ssr';
