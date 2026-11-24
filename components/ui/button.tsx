@@ -11,10 +11,8 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-        // the original's "warning": red text on a faint red fill.
         destructive:
           'border border-red-600/10 bg-red-600/5 text-[#f00000] hover:bg-red-600/10 active:bg-red-600/10',
-        // the original's plain button: white with a light border, #333 in dark.
         outline:
           'border border-[#e5e5e5] bg-white text-[#111] active:bg-[#f2f2f2] dark:border-none dark:bg-[#333] dark:text-[#eee] dark:active:bg-[#444]',
         secondary:

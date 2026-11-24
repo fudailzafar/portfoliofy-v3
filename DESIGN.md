@@ -32,7 +32,7 @@ Defined in `app/globals.css` under `:root` and `.dark`, exposed in Tailwind as `
 
 ### Profile themes (profile, posts, lightbox)
 
-A profile sets `theme-<name>` on its root. Tailwind exposes the tokens as `theme-bg`, `theme-primary`, `theme-secondary`, `theme-muted`, `theme-border`, `theme-border-secondary` and `theme-faint-border`, all with the original's values.
+A profile sets `theme-<name>` on its root. Tailwind exposes the tokens as `theme-bg`, `theme-primary`, `theme-secondary`, `theme-muted`, `theme-border`, `theme-border-secondary` and `theme-faint-border`.
 
 | Theme          | Background | Primary   | Secondary | Muted     | Border    |
 | -------------- | ---------- | --------- | --------- | --------- | --------- |

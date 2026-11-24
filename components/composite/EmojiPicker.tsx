@@ -1,7 +1,5 @@
 'use client';
 
-// the original's emoji picker, rebuilt: a search field and a skin-tone toggle in
-// a 39px header, then a scrolling grid that only renders the rows in view.
 
 import {
   useEffect,
@@ -53,7 +51,6 @@ export function EmojiPicker({
   onSelect: (emoji: string) => void;
   columnCount?: number;
   cellSize?: number;
-  /** Drawn at twice this and scaled by half, as the original does, for crispness. */
   fontSize?: number;
 }) {
   const [all, setAll] = useState<PickerEmoji[] | null>(null);
@@ -110,7 +107,6 @@ export function EmojiPicker({
           className="absolute flex flex-col justify-center rounded-[4px] text-center hover:bg-black/5 dark:hover:bg-white/10"
           style={{
             left: column * cellSize,
-            // the original nudges every cell 5px down from the grid's top edge.
             top: row * cellSize + 5,
             width: cellSize,
             height: cellSize,
@@ -156,7 +152,6 @@ export function EmojiPicker({
           aria-label="Search emoji"
           autoComplete="off"
           spellCheck={false}
-          // 16px on phones so iOS doesn't zoom; the original's 14px from sm up.
           className="h-9 min-w-0 flex-1 bg-transparent text-base text-theme-primary outline-none placeholder:text-theme-muted sm:text-[length:var(--type-size)]"
         />
         <button
@@ -209,11 +204,6 @@ const PICKER_HEIGHT = HEADER_HEIGHT + GRID_HEIGHT;
 const SPACE_NEEDED_BELOW = 336;
 const GAP = 6;
 
-/**
- * The picker in the original's popover: 260×319, centred on the button that opened
- * it, below the field when there's room and above it otherwise. Closes on a
- * click elsewhere or Escape, and hands focus back to the button.
- */
 export function EmojiPickerPopover({
   open,
   onClose,
@@ -230,7 +220,6 @@ export function EmojiPickerPopover({
   anchorRef: RefObject<HTMLElement | null>;
   /** The field it belongs to, used to decide above or below. */
   measureRef?: RefObject<HTMLElement | null>;
-  /** Centred on the button (the original's replies), or lined up with its left edge. */
   align?: 'center' | 'start';
   className?: string;
 }) {

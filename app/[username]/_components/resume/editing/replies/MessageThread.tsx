@@ -1,10 +1,5 @@
 'use client';
 
-// the original's conversation, at its measured sizes: no bubbles, a 24px avatar in
-// the gutter at the start of each block, text in one column 36px in. Replies
-// to a profile item open with a 12px grey line ("John S replied to your
-// project") and the quoted item at 12px behind a rule; messages are 14px.
-// Times stay out of sight: on hover, and for screen readers.
 
 import { cn } from '@/lib/utils';
 import { REPLY_SECTION_NOUN, type ReplyContext } from '@/lib/replies';

@@ -1,7 +1,3 @@
-// The sentence at the top of the Following page, worded as the original did:
-// "Ana followed you recently." / "Ana and Ben ..." / "Ana, Ben, and 3 other
-// people ...". Names come newest first.
-
 export type SentencePart = { name: string; username: string } | string;
 
 export function recentFollowersSentence(

@@ -1,9 +1,5 @@
 'use client';
 
-// The "Edit profile" / "Edit page" pill in the bottom-left corner, where other
-// people's profiles show Follow. Like the original, it has a label as well as the
-// pencil, and its centre lines up with the account avatar at the foot of the
-// rail.
 
 import { forwardRef, type ComponentPropsWithoutRef } from 'react';
 import { motion } from 'framer-motion';

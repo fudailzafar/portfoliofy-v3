@@ -36,10 +36,6 @@ export function relativeTime(dateString: string) {
   return years <= 1 ? 'a year ago' : `${years} years ago`;
 }
 
-/**
- * A photo with the status emoji on its corner, as the original showed it: 48px on
- * the Explore page, 34px (`compact`) in the side panel, where rows are tighter.
- */
 export function Photo({
   user,
   showStatus,
@@ -102,12 +98,6 @@ function titleOrHandle(user: ExploreUser) {
   return user.shortAbout?.trim() || `@${user.username}`;
 }
 
-/**
- * A person row (New, A–Z and search results). The second line follows the tab:
- * when they joined (New), their status (Activity) or their title, or @username
- * without one (A–Z). While searching, a title or location that matched the
- * words is shown instead, with the matching part in bold, as on the original.
- */
 export function Member({
   user,
   tab,
@@ -117,7 +107,6 @@ export function Member({
   user: ExploreUser;
   tab: ExploreSort;
   words?: string[];
-  /** The side panel's tighter row, measured from the original's own. */
   compact?: boolean;
 }) {
   const matched = words.length ? matchedLine(user, words) : null;

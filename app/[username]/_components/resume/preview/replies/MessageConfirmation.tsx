@@ -3,11 +3,6 @@
 import { motion } from 'framer-motion';
 import { REPLY_SPRING } from './spring';
 
-/**
- * the original's "Sent" pill: black, rises in from below the thing replied to and
- * leaves upwards. Shown for a second after a reply goes out. Positioned
- * against the nearest positioned ancestor.
- */
 export function MessageConfirmation({ emoji }: { emoji?: string | null }) {
   return (
     <motion.div

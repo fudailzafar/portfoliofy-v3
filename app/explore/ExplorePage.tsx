@@ -1,9 +1,5 @@
 'use client';
 
-// Explore, laid out like the original's 2020 page: one 540px column with the tabs
-// (Activity, New, A–Z) on the left and a "Find people" search on the right.
-// Activity is a feed of statuses; New and A–Z are lists of people. Typing in
-// the search swaps the list for matching people.
 
 import { useEffect, useState } from 'react';
 import { MagnifyingGlassIcon } from '@phosphor-icons/react/ssr';

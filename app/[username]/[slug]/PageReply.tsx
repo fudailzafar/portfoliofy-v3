@@ -1,8 +1,5 @@
 'use client';
 
-// the original's page footer reply: a 12px grey "Send {name} a reply about this
-// page", 8px above the reply composer, with 48px below the group. After
-// sending, a "Sent" pill shows under the composer for a second.
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';

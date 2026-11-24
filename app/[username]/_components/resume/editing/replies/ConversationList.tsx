@@ -1,8 +1,5 @@
 'use client';
 
-// the original's inbox rows, at its measured sizes: 64px rows 12px in from the
-// column edges with 8px corners, a 40px avatar, the name and a one-line
-// preview at 14px, and the time at 12px. Unread rows are brighter, not dotted.
 
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -12,7 +9,6 @@ import { PersonAvatar } from './PersonAvatar';
 import { displayName, fullTime, shortTime } from './format';
 import type { InboxEntry } from './api';
 
-// the original's input grey: #f2f2f2 on white, #333 on #222.
 const ROW_FILL = 'bg-[var(--theme-wash)]';
 
 function Preview({ entry }: { entry: InboxEntry }) {

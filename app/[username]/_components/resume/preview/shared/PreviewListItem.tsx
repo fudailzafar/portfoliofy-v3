@@ -34,8 +34,6 @@ export function PreviewListItem({
 }: PreviewListItemProps) {
   const item = (
     <div className="flex flex-col min-[481px]:flex-row min-[481px]:gap-[36px] print:mb-6">
-      {/* the original sizes this column by the widest range it could hold
-          ("0000 — 0000"), set invisibly after the real text, in tabular digits. */}
       <div className="relative shrink-0 whitespace-nowrap text-[length:var(--type-size)] tabular-nums leading-[var(--line-height)] text-theme-muted min-[481px]:after:invisible min-[481px]:after:content-['0000_—_0000']">
         <span className="min-[481px]:absolute">{leftContent}</span>
       </div>
@@ -84,7 +82,6 @@ export function PreviewListItem({
         {description && description !== '<p></p>' && (
           <div
             className={cn(
-              // the original: 8px under a location, nothing right under the title.
               location && 'mt-2',
               'prose prose-sm max-w-none text-theme-secondary [--tw-prose-bullets:var(--theme-secondary)] [--tw-prose-counters:var(--theme-secondary)] prose-p:my-0 prose-p:text-theme-secondary prose-strong:text-theme-primary prose-ol:my-4 prose-ol:pl-0 prose-ul:my-4 prose-ul:pl-0 prose-ul:text-theme-secondary prose-li:py-1 prose-li:pl-0 prose-li:text-theme-secondary [&>:first-child]:mt-0 [&>:last-child]:mb-0 [&_p+p:not(:empty)]:mt-4',
             )}
@@ -97,7 +94,6 @@ export function PreviewListItem({
         )}
 
         <AttachmentsPreview attachments={attachments} />
-        {/* the original: 24px avatars, 8px apart, 8px below (16px below attachments). */}
         <AvatarStack
           collaborators={collaborators}
           size="sm"

@@ -1,10 +1,5 @@
 'use client';
 
-// the original's reply composer, rebuilt from its stylesheet and script.
-// One 36px row: the field and the quick emoji share the same grid cell. The
-// field is as wide as the row minus the emoji (36px each, plus 10px); once
-// you type it widens to leave 46px, the emoji fade and slide away, and a send
-// button springs in 41px past the field's right edge.
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { MotionConfig, motion } from 'framer-motion';
@@ -15,9 +10,7 @@ import { SendIcon, SmileyIcon } from './icons';
 import { REPLY_SPRING } from './spring';
 import { useIsTouchDevice } from './useIsTouchDevice';
 
-// the original's four, in its order.
 export const QUICK_REACTIONS = ['🔥', '🤙', '😯', '📈'] as const;
-// Below this window width the original keeps only the first one.
 const NARROW_WINDOW = 436;
 const REACTION_SIZE = 36;
 
@@ -49,15 +42,9 @@ export function ReplyComposer({
   onRequireSignIn: () => void;
   /** The quick emoji used, if any, is passed for the "Sent" pill. */
   onSend: (body: string, reaction?: string) => Promise<unknown>;
-  /** 12px around the row, as in the original's item popover; none in the status. */
   padded?: boolean;
   clearOnSend?: boolean;
   focusOnMount?: boolean;
-  /**
-   * On the page itself rather than inside a bubble or popover: the field keeps
-   * the original's input grey in dark mode too (#333 on #222), instead of matching
-   * the background it sits on.
-   */
   onPage?: boolean;
 }) {
   const [value, setValue] = useState('');
@@ -172,7 +159,6 @@ export function ReplyComposer({
               placeholder="Reply directly…"
               aria-label="Reply directly"
               autoComplete="off"
-              // 16px on phones so iOS doesn't zoom; the original's 14px from sm up.
               className="mr-7 h-9 w-full border-none bg-transparent text-base leading-9 text-theme-primary outline-none placeholder:text-theme-muted sm:text-[length:var(--type-size)]"
             />
           </div>

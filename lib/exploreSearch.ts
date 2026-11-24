@@ -1,9 +1,3 @@
-// How Explore searches people, as on the original: every word you type has to match
-// the start of a word in their name, username, title (headline) or location,
-// case-insensitively. "designer chennai" finds designers in Chennai, "austr"
-// finds "Sydney, Australia", and "ai" finds "AI Engineer" but not "Chennai".
-// Shared by the search API and the lists that show which part matched.
-
 export const MAX_SEARCH_WORDS = 5;
 export const MAX_WORD_LENGTH = 50;
 

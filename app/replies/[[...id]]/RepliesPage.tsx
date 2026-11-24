@@ -1,9 +1,5 @@
 'use client';
 
-// The Replies screen, laid out like the original's (measured from its screens and
-// stylesheet): a 330px inbox and a 540px conversation, centred together with
-// hairlines on both sides and between them. On a phone, one at a time.
-// Each conversation has its own URL.
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -21,7 +17,6 @@ export function RepliesPage({
   const showingThread = conversationId !== null;
 
   return (
-    // theme-default: the original's palette (#222 / #eee / #bbb / #888 / #333).
     <div className="theme-default typography-sans flex h-dvh min-h-0 w-full justify-center bg-theme-bg font-sans text-[length:var(--type-size)] leading-[var(--line-height)]">
       <section
         aria-label="Replies"

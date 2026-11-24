@@ -4,8 +4,6 @@
 -- except copying "replies off" into the new setting.
 -- Apply to staging first. Production only once the feature ships.
 
--- A follows B. Follower lists are private: only the person themselves sees
--- who follows them, as on the original, so there are no public counts.
 create table if not exists public.follows (
   follower_id text not null references public.users (id) on delete cascade,
   followee_id text not null references public.users (id) on delete cascade,
@@ -21,10 +19,6 @@ create index if not exists follows_followee_idx
 alter table public.users
   add column if not exists following_seen_at timestamptz;
 
--- Who may start or continue a conversation with this user, as on the original:
--- 'everyone', 'following' (only people this user follows) or 'nobody'.
--- replies_enabled stays and is kept in step ('nobody' = false) so older code
--- keeps working.
 alter table public.users
   add column if not exists replies_from text not null default 'everyone';
 do $$

@@ -27,7 +27,6 @@ export function RepliesTab({
   /** Called when the conversation is removed or can't be opened. */
   onClose: () => void;
 }) {
-  // the original leaves the column empty until a conversation is picked.
   if (!conversationId) return null;
 
   // Keyed so switching conversations resets scroll, drafts and older pages.

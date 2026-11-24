@@ -1,9 +1,5 @@
 'use client';
 
-// the original's message box: a 36px field (8px corners, #f2f2f2 / #333) that grows
-// with the text, the smiley inside on the right, and beside it a 🔥 that
-// sends at once, which turns into the send arrow while you type. Enter sends,
-// Shift+Enter adds a line.
 
 import { useEffect, useRef, useState } from 'react';
 import { EmojiPickerPopover } from '@/components/composite/EmojiPicker';
@@ -51,7 +47,6 @@ export function Composer({
     }
   };
 
-  // the original closes the picker once an emoji is picked.
   const insertEmoji = (emoji: string) => {
     setPickerOpen(false);
     const el = textareaRef.current;
@@ -88,7 +83,6 @@ export function Composer({
           }}
           placeholder="Send a message"
           aria-label="Message"
-          // 16px on phones so iOS doesn't zoom; the original's 14px from sm up.
           className="block max-h-40 min-h-9 w-full resize-none bg-transparent py-[7px] pl-3 pr-10 text-base leading-[22px] text-theme-primary outline-none placeholder:text-theme-muted sm:text-[length:var(--type-size)]"
         />
         <div className="absolute bottom-0.5 right-0">

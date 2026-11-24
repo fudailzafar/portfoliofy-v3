@@ -96,8 +96,6 @@ export const PrintResume = ({
     if (printHiddenSections.includes(id)) return null;
     if (!content) return null;
 
-    // the original: the heading sits inside the 100mm column, with 16px before
-    // the first item and 36px after the section.
     return (
       <section className="mb-9 break-inside-auto">
         <h3 className="break-after-avoid font-normal text-black">{title}</h3>
@@ -322,9 +320,6 @@ export const PrintResume = ({
     summary !== '<p></p>';
 
   return (
-    // the original's print page: greys all print black on white at 10px, the name
-    // block is a 60mm column at the left, and the sections are a 100mm column
-    // starting 70mm in. Photos, collaborators and links are left out.
     <div
       className={cn(
         'relative w-full bg-white text-[10px] leading-[1.6] text-black',

@@ -8,12 +8,6 @@ export interface PrintListItemProps {
   description?: string;
 }
 
-/**
- * One item in the printed profile, as the original prints it: the date column is
- * sized by the widest range it could hold ("0000 — 0000") with a 36px gap,
- * and an item never splits across a page. Links, attachments and collaborators
- * are not printed.
- */
 export function PrintListItem({
   leftContent,
   title,

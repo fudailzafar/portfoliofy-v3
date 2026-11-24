@@ -1,13 +1,5 @@
 'use client';
 
-// The Follow pill on someone else's profile. It sits where the owner sees the
-// Edit profile button, bottom left beside the sidebar, as on the original.
-//
-// Rebuilt from the original's ProfileFollowButton (same particles in its 2021 and
-// 2025 builds): the button shrinks to 0.9 while pressed; following bursts 20
-// blue dots out of it, in a layer turned 180°, each flying to its own offset
-// while it grows a little and fades; unfollowing has no burst. The button is
-// as wide as "Following" either way, so it never changes size.
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -18,8 +10,6 @@ import { SIDEBAR_SLIDE, useSidebarStore } from '@/store/useSidebarStore';
 import { cn } from '@/lib/utils';
 import { FOLLOW_KEYS, followsApi } from './useFollows';
 
-// the original's particles: where each dot ends up, how long it takes (doubled when
-// animated) and how big it is.
 const PARTICLES = [
   { x: -20, y: 100, duration: 0.2, scale: 0.5 },
   { x: -35, y: 50, duration: 0.4, scale: 0.4 },
@@ -61,8 +51,6 @@ export function FollowButton({
 
   useEffect(() => setMounted(true), []);
 
-  // the original mounts the dots and removes them 10ms later; their exit animation
-  // is the burst.
   useEffect(() => {
     if (!burst) return;
     const timer = setTimeout(() => setBurst(false), 10);

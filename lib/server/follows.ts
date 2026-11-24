@@ -1,7 +1,3 @@
-// Following: who follows whom. As on the original, follower lists are private:
-// only the person themselves can see who follows them and whom they follow,
-// and profiles show no counts.
-
 import sql from './db';
 import { normalizeUsername } from '../validation/username';
 

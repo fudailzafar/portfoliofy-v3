@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-/** True on phones and tablets (no hover, coarse pointer), where the original swipes. */
 export function useIsTouchDevice() {
   const [touch, setTouch] = useState(false);
   useEffect(() => {

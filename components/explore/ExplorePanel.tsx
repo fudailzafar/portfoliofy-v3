@@ -1,9 +1,5 @@
 'use client';
 
-// The Explore panel that slides out beside the page, like the original's sidebar:
-// search on top, then Activity / New / A–Z. It stays mounted while you move
-// from one profile to the next, so the list and its scroll position are
-// untouched and only the page beside it changes.
 
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -14,7 +10,6 @@ import { searchWords } from '@/lib/exploreSearch';
 import { Member, Post, TABS } from './parts';
 import { cn } from '@/lib/utils';
 
-// the original's tab underline: a very stiff spring, so it snaps with no overshoot.
 const UNDERLINE_SPRING = {
   type: 'spring',
   stiffness: 700,

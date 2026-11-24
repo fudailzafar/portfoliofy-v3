@@ -1,8 +1,5 @@
 'use client';
 
-// The Following screen, laid out like the original's: a "Following" heading, a
-// summary row of recent followers with "See all", then one row per follower
-// with a Follow back button. One 540px column, like a profile.
 
 import { Fragment, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';

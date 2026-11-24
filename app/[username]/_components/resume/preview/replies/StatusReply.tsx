@@ -11,12 +11,6 @@ import { ReplyComposer } from './ReplyComposer';
 import { useReplyProfile } from './ReplyProvider';
 import { CONFIRMATION_MS } from './spring';
 
-/**
- * The reply bar under the status, as on the original: a 12px space after the time,
- * then the composer with no padding of its own. After sending, a "Sent" pill
- * appears under the bubble for a second. Must sit directly inside the bubble,
- * which is the pill's positioning parent.
- */
 export function StatusReply() {
   const profile = useReplyProfile();
   const { status } = useSession();

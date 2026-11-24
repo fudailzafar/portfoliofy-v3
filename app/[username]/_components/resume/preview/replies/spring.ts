@@ -1,4 +1,3 @@
-// The spring the original uses for the reply bar, its emoji and the "Sent" pill.
 export const REPLY_SPRING = {
   type: 'spring',
   stiffness: 700,

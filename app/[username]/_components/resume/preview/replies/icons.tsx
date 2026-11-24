@@ -1,5 +1,3 @@
-// the original's own reply icons, 24×24, drawn in the theme's muted colour.
-
 type IconProps = { className?: string };
 
 export function ReplyArrowIcon({ className }: IconProps) {

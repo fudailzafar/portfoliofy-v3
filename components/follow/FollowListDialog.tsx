@@ -1,7 +1,5 @@
 'use client';
 
-// "See all": your followers and the people you follow, in two tabs, as on
-// the original. Each row links to the person and has a follow toggle.
 
 import { useState } from 'react';
 import Link from 'next/link';

@@ -1,6 +1,4 @@
 // Emoji for the picker, loaded on first use so it costs nothing until then.
-// Same source and rules as the original's picker: emojibase data, emoji before
-// Unicode 13 only, searchable by name or tag, five skin tones.
 
 export interface PickerEmoji {
   emoji: string;
@@ -41,7 +39,6 @@ export function loadPickerEmoji(): Promise<PickerEmoji[]> {
   return cache;
 }
 
-/** Matches the original: a name or tag containing the search, lower case. */
 export function searchEmoji(list: PickerEmoji[], query: string): PickerEmoji[] {
   const q = query.trim().toLowerCase();
   if (!q) return list;
@@ -51,8 +48,6 @@ export function searchEmoji(list: PickerEmoji[], query: string): PickerEmoji[] {
   );
 }
 
-// The skin-tone button cycles through these, as on the original: default, then
-// darkest to lightest.
 export const SKIN_TONE_PREVIEWS = ['✌️', '✌🏿', '✌🏾', '✌🏽', '✌🏼', '✌🏻'];
 
 /** The emoji to insert for a skin-tone choice (0 = default yellow). */

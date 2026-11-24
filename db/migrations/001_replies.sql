@@ -3,9 +3,6 @@
 -- column with a default to users; it changes no existing data.
 -- Apply to staging first. Production only once the feature ships.
 
--- Whether other people may start or continue a conversation with this user.
--- Defaults to on, like the original's "Everyone". Turning it off never stops the
--- user from replying to others.
 alter table public.users
   add column if not exists replies_enabled boolean not null default true;
 

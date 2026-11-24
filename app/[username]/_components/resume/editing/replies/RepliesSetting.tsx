@@ -10,7 +10,6 @@ import {
 import type { RepliesFrom } from '@/lib/replies';
 import { useRepliesSetting } from './useReplies';
 
-// the original's wording for each choice.
 const CHOICES: { value: RepliesFrom; label: string; description: string }[] = [
   {
     value: 'everyone',

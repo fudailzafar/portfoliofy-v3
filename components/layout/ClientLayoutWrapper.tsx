@@ -118,7 +118,6 @@ export function ClientLayoutWrapper({
           transition={SIDEBAR_SLIDE}
           className="relative z-10 flex min-h-screen min-w-0 flex-1 flex-col bg-surface-1 max-md:pb-14 md:pl-[60px] print:!ml-0 print:pb-0 print:pl-0 print:shadow-none"
         >
-          {/* Old page fades out, then the new one fades in, like the original */}
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}

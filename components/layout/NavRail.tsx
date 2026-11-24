@@ -1,9 +1,5 @@
 'use client';
 
-// The main navigation: a slim icon rail down the left edge, as on the original.
-// Home, Profile, Explore, Replies and Following sit in the middle; your avatar
-// at the bottom opens a menu with Edit profile, Settings and Log out. On a
-// phone the same buttons become a bar along the bottom.
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
@@ -132,9 +128,6 @@ export function NavRail() {
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [copied, setCopied] = useState(false);
 
-  // the original shows a back arrow at the top of the rail once you've moved
-  // between pages in the app. Count in-app page changes: forward navigation
-  // adds one, Back (ours or the browser's) takes one off.
   const [depth, setDepth] = useState(0);
   const firstPath = useRef<string | null>(null);
   const goingBack = useRef(false);

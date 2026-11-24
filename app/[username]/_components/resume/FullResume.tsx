@@ -179,8 +179,6 @@ export const FullResume = ({
     }
   }, [isWritingEnabled, activeTab]);
 
-  // the original: content is 60px under the tabs, 4px under a bare "About"
-  // heading, and 36px under the header when there is neither.
   const contentOffset = isWritingEnabled
     ? 'mt-[60px]'
     : hasSummary

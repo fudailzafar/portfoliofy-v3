@@ -295,7 +295,6 @@ export function buildStatusContext(
   return { kind: 'status', emoji: cleanEmoji, text: cleanText };
 }
 
-/** Who may start or continue a conversation with someone, as on the original. */
 export const REPLIES_FROM = ['everyone', 'following', 'nobody'] as const;
 export type RepliesFrom = (typeof REPLIES_FROM)[number];
 

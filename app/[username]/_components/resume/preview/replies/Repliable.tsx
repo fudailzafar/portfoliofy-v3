@@ -1,13 +1,5 @@
 'use client';
 
-// the original's reply container for profile items, rebuilt from its stylesheet
-// and script. A 48px column to the right of the item holds the reply arrow,
-// which fades in (0.4s) on hover. On a phone the item itself is dragged: it
-// follows your finger left (elastically, half as far), the arrow slides in
-// from the right and darkens past 100px, and letting go there opens the bar.
-// The arrow opens a 420px popover (16px
-// corners) centred under it, holding the composer with 12px padding. Sending
-// sends the popover up and away, and a "Sent" pill shows for a second.
 
 import {
   useCallback,
@@ -34,7 +26,6 @@ import { CONFIRMATION_MS, REPLY_SPRING } from './spring';
 const POPOVER_WIDTH = 420;
 const VIEWPORT_MARGIN = 8;
 const POPOVER_GAP = 6;
-// the original opens the bar when the item is let go past this far left.
 const DRAG_OPEN_DISTANCE = 100;
 
 export function Repliable({
@@ -50,7 +41,6 @@ export function Repliable({
   const [open, setOpen] = useState(false);
   const [signInOpen, setSignInOpen] = useState(false);
   const [sent, setSent] = useState<{ emoji?: string } | null>(null);
-  // Closing drops the popover 4px; sending sends it 100px up, as the original does.
   const [exit, setExit] = useState({ opacity: 0, y: 4 });
   const [position, setPosition] = useState({ left: 0, top: 0, width: 0 });
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -153,7 +143,6 @@ export function Repliable({
     <motion.div
       ref={wrapRef}
       className="group/reply relative"
-      // the original's drag: left only, snapping back, with a rubber band of 0.5.
       drag={isTouch && !open ? 'x' : false}
       dragConstraints={{ left: 0, right: 0 }}
       dragElastic={{ left: 0.5, right: 0, top: 0, bottom: 0 }}
@@ -229,7 +218,6 @@ export function Repliable({
               label={label}
               padded
               clearOnSend={false}
-              // the original doesn't pop the keyboard up on phones.
               focusOnMount={!isTouch}
               signedIn={signedIn}
               onRequireSignIn={() => {
