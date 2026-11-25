@@ -74,16 +74,25 @@ export const getCachedUserIdByUsername = cache(
   async (username: string): Promise<string | null> => {
     // Normalize the key so casing variants share one cache entry.
     const normalized = normalizeUsername(username);
-    return unstable_cache(
-      async () => {
-        return await getUserIdByUsername(normalized);
-      },
-      [normalized],
-      {
-        tags: ['usernames', `username-${normalized}`],
-        revalidate: 86400, // 1 day
-      },
-    )();
+    // A miss (or a transient DB error, which getUserIdByUsername turns into
+    // null) must not be cached, or a valid profile 404s for a day. unstable_cache
+    // stores whatever the callback returns, so throw on null and catch outside.
+    try {
+      return await unstable_cache(
+        async () => {
+          const id = await getUserIdByUsername(normalized);
+          if (!id) throw new Error('username-not-found');
+          return id;
+        },
+        ['user-id-by-username', normalized],
+        {
+          tags: ['usernames', `username-${normalized}`],
+          revalidate: 86400, // 1 day
+        },
+      )();
+    } catch {
+      return null;
+    }
   },
 );
 
